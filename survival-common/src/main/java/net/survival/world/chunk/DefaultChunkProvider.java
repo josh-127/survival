@@ -51,7 +51,10 @@ public class DefaultChunkProvider implements ChunkProvider
     private void loadEnqueuedChunks() {
         for (int i = 0; !chunksToLoad.isEmpty() && i < 8; ++i) {
             long hashedPos = chunksToLoad.remove();
-            world.addChunk(getChunk(hashedPos));
+            int cx = ChunkPos.chunkXFromHashedPos(hashedPos);
+            int cy = ChunkPos.chunkYFromHashedPos(hashedPos);
+            int cz = ChunkPos.chunkZFromHashedPos(hashedPos);
+            world.addChunk(cx, cy, cz, getChunk(hashedPos));
         }
     }
 
@@ -79,7 +82,7 @@ public class DefaultChunkProvider implements ChunkProvider
 
     @Override
     public Chunk getChunk(int cx, int cy, int cz) {
-        return getChunk(Chunk.hashPos(cx, cy, cz));
+        return getChunk(ChunkPos.hashPos(cx, cy, cz));
     }
     
     private Chunk getChunk(long hashedPos) {
@@ -87,18 +90,21 @@ public class DefaultChunkProvider implements ChunkProvider
         if (loadedChunk != null)
             return loadedChunk;
 
-        Chunk chunk = new Chunk(hashedPos);
+        Chunk chunk = new Chunk();
         
-        if (!chunk.load(getChunkFilePath(chunk))) {
-            chunkGenerator.generateTerrain(chunk);
-            chunkGenerator.populate(chunk);
+        if (!chunk.load(getChunkFilePath(hashedPos))) {
+            int cx = ChunkPos.chunkXFromHashedPos(hashedPos);
+            int cy = ChunkPos.chunkYFromHashedPos(hashedPos);
+            int cz = ChunkPos.chunkZFromHashedPos(hashedPos);
+            chunkGenerator.generateTerrain(cx, cy, cz, chunk);
+            chunkGenerator.populate(cx, cy, cz, chunk);
         }
         
         return chunk;
     }
     
-    private String getChunkFilePath(Chunk chunk) {
+    private String getChunkFilePath(long hashedPos) {
         // TODO: Use proper path concatenation methods
-        return String.format("../.world/%s.chunk", Long.toHexString(Chunk.hashPos(chunk)));
+        return String.format("../.world/%s.chunk", Long.toHexString(hashedPos));
     }
 }

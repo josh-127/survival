@@ -15,7 +15,7 @@ import net.survival.client.input.Keyboard;
 import net.survival.entity.Cow;
 import net.survival.world.EntityPhysics;
 import net.survival.world.World;
-import net.survival.world.chunk.Chunk;
+import net.survival.world.chunk.ChunkPos;
 import net.survival.world.chunk.DefaultChunkProvider;
 import net.survival.world.chunk.EntityRelocator;
 import net.survival.world.chunk.SphericalChunkLoader;
@@ -73,9 +73,9 @@ public class Client implements AutoCloseable
         float yaw = (float) userController.camera.yaw;
         float pitch = (float) userController.camera.pitch;
 
-        int cx = Chunk.toChunkX((int) Math.floor(x));
-        int cy = Chunk.toChunkY((int) Math.floor(y));
-        int cz = Chunk.toChunkZ((int) Math.floor(z));
+        int cx = ChunkPos.toChunkX((int) Math.floor(x));
+        int cy = ChunkPos.toChunkY((int) Math.floor(y));
+        int cz = ChunkPos.toChunkZ((int) Math.floor(z));
         chunkLoader.setCenter(cx, cy, cz);
         
         chunkProvider.tick(elapsedTime);

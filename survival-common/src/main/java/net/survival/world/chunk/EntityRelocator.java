@@ -2,6 +2,7 @@ package net.survival.world.chunk;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Map;
 
 import net.survival.entity.Entity;
 import net.survival.world.World;
@@ -17,13 +18,19 @@ public class EntityRelocator
     public void relocateEntities() {
         ArrayList<Entity> entitiesToRelocate = new ArrayList<>();
         
-        for (Chunk chunk : world.iterateChunks()) {
+        for (Map.Entry<Long, Chunk> entry : world.iterateChunkMap()) {
+            long hashedPos = entry.getKey();
+            Chunk chunk = entry.getValue();
+            
+            int cx = ChunkPos.chunkXFromHashedPos(hashedPos);
+            int cy = ChunkPos.chunkYFromHashedPos(hashedPos);
+            int cz = ChunkPos.chunkZFromHashedPos(hashedPos);
             Iterator<Entity> entities = chunk.iterateEntities().iterator();
             
             while (entities.hasNext()) {
                 Entity entity = entities.next();
                 
-                if (!chunkContainsEntity(chunk, entity)) {
+                if (!chunkContainsEntity(cx, cy, cz, entity)) {
                     entities.remove();
                     entitiesToRelocate.add(entity);
                 }
@@ -34,12 +41,12 @@ public class EntityRelocator
             world.addEntity(entity);
     }
     
-    private boolean chunkContainsEntity(Chunk chunk, Entity entity) {
-        return  entity.getX() >= chunk.getGlobalWestBound() &&
-                entity.getX() <  chunk.getGlobalEastBound() &&
-                entity.getZ() >= chunk.getGlobalNorthBound() &&
-                entity.getZ() <  chunk.getGlobalSouthBound() &&
-                entity.getY() >= chunk.getGlobalBottomBound() &&
-                entity.getY() <  chunk.getGlobalNorthBound();
+    private boolean chunkContainsEntity(int cx, int cy, int cz, Entity entity) {
+        return  entity.getX() >= ChunkPos.getGlobalWestBound(cx) &&
+                entity.getX() <  ChunkPos.getGlobalEastBound(cx) &&
+                entity.getZ() >= ChunkPos.getGlobalNorthBound(cz) &&
+                entity.getZ() <  ChunkPos.getGlobalSouthBound(cz) &&
+                entity.getY() >= ChunkPos.getGlobalBottomBound(cy) &&
+                entity.getY() <  ChunkPos.getGlobalNorthBound(cy);
     }
 }

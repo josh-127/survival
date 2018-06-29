@@ -7,6 +7,7 @@ import net.survival.block.BlockFace;
 import net.survival.client.graphics.opengl.GLMatrixStack;
 import net.survival.world.World;
 import net.survival.world.chunk.Chunk;
+import net.survival.world.chunk.ChunkPos;
 
 class WorldDisplay implements GraphicsResource
 {
@@ -107,9 +108,9 @@ class WorldDisplay implements GraphicsResource
             if (display.isEmpty())
                 continue;
             
-            float globalX = chunk.toGlobalX(0);
-            float globalY = chunk.toGlobalY(0);
-            float globalZ = chunk.toGlobalZ(0);
+            float globalX = ChunkPos.toGlobalX(display.chunkX, 0);
+            float globalY = ChunkPos.toGlobalY(display.chunkY, 0);
+            float globalZ = ChunkPos.toGlobalZ(display.chunkZ, 0);
             
             GLMatrixStack.push();
             GLMatrixStack.translate(globalX, globalY, globalZ);
@@ -141,16 +142,23 @@ class WorldDisplay implements GraphicsResource
         float cameraZ = camera.getZ();
         float maxViewRadiusSquared = maxViewRadius * maxViewRadius;
         
-        for (Chunk chunk : world.iterateChunks()) {
-            float relativeX = chunk.toGlobalX(Chunk.XLENGTH / 2) - cameraX;
-            float relativeZ = chunk.toGlobalZ(Chunk.ZLENGTH / 2) - cameraZ;
+        for (Map.Entry<Long, Chunk> entry : world.iterateChunkMap()) {
+            long hashedPos = entry.getKey();
+            Chunk chunk = entry.getValue();
+            
+            int cx = ChunkPos.chunkXFromHashedPos(hashedPos);
+            int cy = ChunkPos.chunkYFromHashedPos(hashedPos);
+            int cz = ChunkPos.chunkZFromHashedPos(hashedPos);
+            
+            float relativeX = ChunkPos.toGlobalX(cx, Chunk.XLENGTH / 2) - cameraX;
+            float relativeZ = ChunkPos.toGlobalZ(cz, Chunk.ZLENGTH / 2) - cameraZ;
             float squareDistance = (relativeX * relativeX) + (relativeZ * relativeZ);
             
             if (squareDistance >= maxViewRadiusSquared)
                 continue;
             
             ChunkDisplay existingDisplay = faceDisplays.remove(chunk);
-            Chunk adjacentChunk = world.getChunk(chunk.chunkX + dx, chunk.chunkY + dy, chunk.chunkZ + dz);
+            Chunk adjacentChunk = world.getChunk(cx + dx, cy + dy, cz + dz);
             
             boolean useExisting = (existingDisplay != null) &&
                     (existingDisplay.adjacentChunk != null || adjacentChunk == null);
@@ -163,7 +171,7 @@ class WorldDisplay implements GraphicsResource
                     existingDisplay.close();
                 
                 BlockTextureAtlas atlas = blockTextures[blockFace.ordinal()];
-                newFaceDisplays.put(chunk, new ChunkDisplay(chunk, adjacentChunk, blockFace, atlas));
+                newFaceDisplays.put(chunk, new ChunkDisplay(cx, cy, cz, chunk, adjacentChunk, blockFace, atlas));
             }
         }
         

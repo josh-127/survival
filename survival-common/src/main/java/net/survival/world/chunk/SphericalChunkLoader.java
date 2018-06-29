@@ -33,7 +33,7 @@ public class SphericalChunkLoader implements ChunkLoader
                         int cx = offsetCX + x;
                         int cy = offsetCY + y;
                         int cz = offsetCZ + z;
-                        chunkPositions.add(Chunk.hashPos(cx, cy, cz));
+                        chunkPositions.add(ChunkPos.hashPos(cx, cy, cz));
                     }
                 }
             }

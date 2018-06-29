@@ -14,11 +14,15 @@ import net.survival.world.chunk.Chunk;
 class ChunkDisplay implements GraphicsResource
 {
     public final GLDisplayList displayList;
+    public final int chunkX;
+    public final int chunkY;
+    public final int chunkZ;
     public final Chunk chunk;
     public final Chunk adjacentChunk;
     public final BlockFace blockFace;
 
-    public ChunkDisplay(Chunk chunk, Chunk adjacentChunk, BlockFace blockFace, BlockTextureAtlas atlas)
+    public ChunkDisplay(int cx, int cy, int cz, Chunk chunk, Chunk adjacentChunk, BlockFace blockFace,
+            BlockTextureAtlas atlas)
     {
         GLDisplayList.Builder builder = new GLDisplayList.Builder();
         
@@ -255,7 +259,10 @@ class ChunkDisplay implements GraphicsResource
             displayList = null;
             builder.build().close();
         }
-        
+
+        chunkX = cx;
+        chunkY = cy;
+        chunkZ = cz;
         this.chunk = chunk;
         this.adjacentChunk = adjacentChunk;
         this.blockFace = blockFace;

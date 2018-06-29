@@ -2,6 +2,6 @@ package net.survival.world.chunk;
 
 public interface ChunkGenerator
 {
-    void generateTerrain(Chunk chunk);
-    void populate(Chunk chunk);
+    void generateTerrain(int cx, int cy, int cz, Chunk chunk);
+    void populate(int cx, int cy, int cz, Chunk chunk);
 }
