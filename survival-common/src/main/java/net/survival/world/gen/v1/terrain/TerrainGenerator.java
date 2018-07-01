@@ -68,7 +68,7 @@ public class TerrainGenerator
                 stoneLayers[i].generate(globalX, globalZ);
         }
         
-        ChunkPrimer chunkPrimer = new ChunkPrimer();
+        ChunkPrimer chunkPrimer = new ChunkPrimer(cx, cy, cz);
         generateBase(cx, cy, cz, chunkPrimer);
         
         prevChunkX = cx;

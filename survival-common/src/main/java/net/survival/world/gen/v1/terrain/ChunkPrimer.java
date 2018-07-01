@@ -5,9 +5,15 @@ import net.survival.world.chunk.Chunk;
 public class ChunkPrimer
 {
     private final short[] blockIDs;
+    public final int chunkX;
+    public final int chunkY;
+    public final int chunkZ;
     
-    public ChunkPrimer() {
+    public ChunkPrimer(int cx, int cy, int cz) {
         blockIDs = new short[Chunk.VOLUME];
+        chunkX = cx;
+        chunkY = cy;
+        chunkZ = cz;
     }
     
     public short getBlockID(int localX, int localY, int localZ) {
