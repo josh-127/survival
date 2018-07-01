@@ -7,7 +7,6 @@ import net.survival.util.ImprovedNoiseGenerator3D;
 import net.survival.world.chunk.Chunk;
 import net.survival.world.chunk.ChunkGenerator;
 import net.survival.world.chunk.ChunkPos;
-import net.survival.world.gen.v1.biome.BiomeType;
 import net.survival.world.gen.v1.layer.GenLayer;
 import net.survival.world.gen.v1.layer.GenLayerFactory;
 

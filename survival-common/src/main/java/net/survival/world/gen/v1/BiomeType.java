@@ -1,4 +1,4 @@
-package net.survival.world.gen.v1.biome;
+package net.survival.world.gen.v1;
 
 import net.survival.block.BlockType;
 
