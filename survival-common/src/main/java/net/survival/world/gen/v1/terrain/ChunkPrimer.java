@@ -20,7 +20,7 @@ public class ChunkPrimer
         return blockIDs[localXyzToIndex(localX, localY, localZ)];
     }
     
-    public void setBlockID(int localX, int localY, int localZ, short to) {
+    void setBlockID(int localX, int localY, int localZ, short to) {
         blockIDs[localXyzToIndex(localX, localY, localZ)] = to;
     }
 
