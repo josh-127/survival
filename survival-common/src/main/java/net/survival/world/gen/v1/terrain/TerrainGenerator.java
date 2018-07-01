@@ -1,4 +1,4 @@
-package net.survival.world.gen.v1;
+package net.survival.world.gen.v1.terrain;
 
 import net.survival.block.BlockType;
 import net.survival.util.DoubleMap2D;
@@ -6,10 +6,11 @@ import net.survival.util.DoubleMap3D;
 import net.survival.util.ImprovedNoiseGenerator3D;
 import net.survival.world.chunk.Chunk;
 import net.survival.world.chunk.ChunkPos;
+import net.survival.world.gen.v1.BiomeType;
 import net.survival.world.gen.v1.layer.GenLayer;
 import net.survival.world.gen.v1.layer.GenLayerFactory;
 
-class TerrainGenerator
+public class TerrainGenerator
 {
     private final int NBLOCK_YLENGTH = Chunk.YLENGTH / 4;
     private final int NBLOCK_ZLENGTH = Chunk.ZLENGTH / 8;

@@ -2,6 +2,7 @@ package net.survival.world.gen.v1;
 
 import net.survival.world.chunk.Chunk;
 import net.survival.world.chunk.ChunkGenerator;
+import net.survival.world.gen.v1.terrain.TerrainGenerator;
 
 public class V1ChunkGenerator implements ChunkGenerator
 {

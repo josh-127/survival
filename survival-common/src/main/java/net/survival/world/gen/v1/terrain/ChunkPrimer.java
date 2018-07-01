@@ -1,8 +1,8 @@
-package net.survival.world.gen.v1;
+package net.survival.world.gen.v1.terrain;
 
 import net.survival.world.chunk.Chunk;
 
-class ChunkPrimer
+public class ChunkPrimer
 {
     private final short[] blockIDs;
     
