@@ -40,12 +40,6 @@ public class Chunk
         entities.add(entity);
     }
     
-    public boolean load(String filePath) {
-        return false;
-    }
-    
-    public void save(String filePath) {}
-    
     public boolean isInBounds(int lx, int ly, int lz) {
         return lx >= 0 && ly >= 0 && lz >= 0 && lx < XLENGTH && ly < YLENGTH && lz < ZLENGTH;
     }
