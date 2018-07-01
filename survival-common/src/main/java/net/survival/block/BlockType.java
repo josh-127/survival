@@ -275,6 +275,256 @@ public enum BlockType
     }),
     
     //
+    // Leaves
+    //
+    ACACIA_LEAVES((bt) -> {
+        bt.name = "Acacia Leaves";
+        bt.setTextureOnAllFaces("textures/blocks/wood/leaves/acacia.png");
+    }),
+    ASH_LEAVES((bt) -> {
+        bt.name = "Ash Leaves";
+        bt.setTextureOnAllFaces("textures/blocks/wood/leaves/ash.png");
+    }),
+    ASPEN_LEAVES((bt) -> {
+        bt.name = "Aspen Leaves";
+        bt.setTextureOnAllFaces("textures/blocks/wood/leaves/aspen.png");
+    }),
+    BIRCH_LEAVES((bt) -> {
+        bt.name = "Birch Leaves";
+        bt.setTextureOnAllFaces("textures/blocks/wood/leaves/birch.png");
+    }),
+    CHESTNUT_LEAVES((bt) -> {
+        bt.name = "Chestnut Leaves";
+        bt.setTextureOnAllFaces("textures/blocks/wood/leaves/chestnut.png");
+    }),
+    DOUGLAS_FIR_LEAVES((bt) -> {
+        bt.name = "Douglas Fir Leaves";
+        bt.setTextureOnAllFaces("textures/blocks/wood/leaves/douglas_fir.png");
+    }),
+    HICKORY_LEAVES((bt) -> {
+        bt.name = "Hickory Leaves";
+        bt.setTextureOnAllFaces("textures/blocks/wood/leaves/hickory.png");
+    }),
+    KAPOK_LEAVES((bt) -> {
+        bt.name = "Kapok Leaves";
+        bt.setTextureOnAllFaces("textures/blocks/wood/leaves/kapok.png");
+    }),
+    MAPLE_LEAVES((bt) -> {
+        bt.name = "Maple Leaves";
+        bt.setTextureOnAllFaces("textures/blocks/wood/leaves/maple.png");
+    }),
+    OAK_LEAVES((bt) -> {
+        bt.name = "Oak Leaves";
+        bt.setTextureOnAllFaces("textures/blocks/wood/leaves/oak.png");
+    }),
+    PINE_LEAVES((bt) -> {
+        bt.name = "Pine Leaves";
+        bt.setTextureOnAllFaces("textures/blocks/wood/leaves/pine.png");
+    }),
+    SEQUOIA_LEAVES((bt) -> {
+        bt.name = "Sequoia Leaves";
+        bt.setTextureOnAllFaces("textures/blocks/wood/leaves/sequoia.png");
+    }),
+    SPRUCE_LEAVES((bt) -> {
+        bt.name = "Spruce Leaves";
+        bt.setTextureOnAllFaces("textures/blocks/wood/leaves/spruce.png");
+    }),
+    SYCAMORE_LEAVES((bt) -> {
+        bt.name = "Sycamore Leaves";
+        bt.setTextureOnAllFaces("textures/blocks/wood/leaves/sycamore.png");
+    }),
+    WHITE_CEDAR_LEAVES((bt) -> {
+        bt.name = "White Cedar Leaves";
+        bt.setTextureOnAllFaces("textures/blocks/wood/leaves/white_cedar.png");
+    }),
+    WHITE_ELM_LEAVES((bt) -> {
+        bt.name = "White Elm Leaves";
+        bt.setTextureOnAllFaces("textures/blocks/wood/leaves/white_elm.png");
+    }),
+    WILLOW_LEAVES((bt) -> {
+        bt.name = "Willow Leaves";
+        bt.setTextureOnAllFaces("textures/blocks/wood/leaves/willow.png");
+    }),
+    
+    //
+    // Wooden Logs
+    //
+    ACACIA_LOG((bt) -> {
+        bt.name = "Acacia Log";
+        bt.setTextureOnSides("textures/blocks/wood/log/acacia_side.png");
+        bt.setTexture(BlockFace.TOP, "textures/blocks/wood/log/acacia_top.png");
+        bt.setTexture(BlockFace.BOTTOM, "textures/blocks/wood/log/acacia_top.png");
+    }),
+    ASH_LOG((bt) -> {
+        bt.name = "Ash Log";
+        bt.setTextureOnSides("textures/blocks/wood/log/ash_side.png");
+        bt.setTexture(BlockFace.TOP, "textures/blocks/wood/log/ash_top.png");
+        bt.setTexture(BlockFace.BOTTOM, "textures/blocks/wood/log/ash_top.png");
+    }),
+    ASPEN_LOG((bt) -> {
+        bt.name = "Aspen Log";
+        bt.setTextureOnSides("textures/blocks/wood/log/aspen_side.png");
+        bt.setTexture(BlockFace.TOP, "textures/blocks/wood/log/aspen_top.png");
+        bt.setTexture(BlockFace.BOTTOM, "textures/blocks/wood/log/aspen_top.png");
+    }),
+    BIRCH_LOG((bt) -> {
+        bt.name = "Birch Log";
+        bt.setTextureOnSides("textures/blocks/wood/log/birch_side.png");
+        bt.setTexture(BlockFace.TOP, "textures/blocks/wood/log/birch_top.png");
+        bt.setTexture(BlockFace.BOTTOM, "textures/blocks/wood/log/birch_top.png");
+    }),
+    CHESTNUT_LOG((bt) -> {
+        bt.name = "Chestnut Log";
+        bt.setTextureOnSides("textures/blocks/wood/log/chestnut_side.png");
+        bt.setTexture(BlockFace.TOP, "textures/blocks/wood/log/chestnut_top.png");
+        bt.setTexture(BlockFace.BOTTOM, "textures/blocks/wood/log/chestnut_top.png");
+    }),
+    DOUGLAS_FIR_LOG((bt) -> {
+        bt.name = "Douglas Fir Log";
+        bt.setTextureOnSides("textures/blocks/wood/log/douglas_fir_side.png");
+        bt.setTexture(BlockFace.TOP, "textures/blocks/wood/log/douglas_fir_top.png");
+        bt.setTexture(BlockFace.BOTTOM, "textures/blocks/wood/log/douglas_fir_top.png");
+    }),
+    HICKORY_LOG((bt) -> {
+        bt.name = "Hickory Log";
+        bt.setTextureOnSides("textures/blocks/wood/log/hickory_side.png");
+        bt.setTexture(BlockFace.TOP, "textures/blocks/wood/log/hickory_top.png");
+        bt.setTexture(BlockFace.BOTTOM, "textures/blocks/wood/log/hickory_top.png");
+    }),
+    KAPOK_LOG((bt) -> {
+        bt.name = "Kapok Log";
+        bt.setTextureOnSides("textures/blocks/wood/log/kapok_side.png");
+        bt.setTexture(BlockFace.TOP, "textures/blocks/wood/log/kapok_top.png");
+        bt.setTexture(BlockFace.BOTTOM, "textures/blocks/wood/log/kapok_top.png");
+    }),
+    MAPLE_LOG((bt) -> {
+        bt.name = "Maple Log";
+        bt.setTextureOnSides("textures/blocks/wood/log/maple_side.png");
+        bt.setTexture(BlockFace.TOP, "textures/blocks/wood/log/maple_top.png");
+        bt.setTexture(BlockFace.BOTTOM, "textures/blocks/wood/log/maple_top.png");
+    }),
+    OAK_LOG((bt) -> {
+        bt.name = "Oak Log";
+        bt.setTextureOnSides("textures/blocks/wood/log/oak_side.png");
+        bt.setTexture(BlockFace.TOP, "textures/blocks/wood/log/oak_top.png");
+        bt.setTexture(BlockFace.BOTTOM, "textures/blocks/wood/log/oak_top.png");
+    }),
+    PINE_LOG((bt) -> {
+        bt.name = "Pine Log";
+        bt.setTextureOnSides("textures/blocks/wood/log/pine_side.png");
+        bt.setTexture(BlockFace.TOP, "textures/blocks/wood/log/pine_top.png");
+        bt.setTexture(BlockFace.BOTTOM, "textures/blocks/wood/log/pine_top.png");
+    }),
+    SEQUOIA_LOG((bt) -> {
+        bt.name = "Sequoia Log";
+        bt.setTextureOnSides("textures/blocks/wood/log/sequoia_side.png");
+        bt.setTexture(BlockFace.TOP, "textures/blocks/wood/log/sequoia_top.png");
+        bt.setTexture(BlockFace.BOTTOM, "textures/blocks/wood/log/sequoia_top.png");
+    }),
+    SPRUCE_LOG((bt) -> {
+        bt.name = "Spruce Log";
+        bt.setTextureOnSides("textures/blocks/wood/log/spruce_side.png");
+        bt.setTexture(BlockFace.TOP, "textures/blocks/wood/log/spruce_top.png");
+        bt.setTexture(BlockFace.BOTTOM, "textures/blocks/wood/log/spruce_top.png");
+    }),
+    SYCAMORE_LOG((bt) -> {
+        bt.name = "Sycamore Log";
+        bt.setTextureOnSides("textures/blocks/wood/log/sycamore_side.png");
+        bt.setTexture(BlockFace.TOP, "textures/blocks/wood/log/sycamore_top.png");
+        bt.setTexture(BlockFace.BOTTOM, "textures/blocks/wood/log/sycamore_top.png");
+    }),
+    WHITE_CEDAR_LOG((bt) -> {
+        bt.name = "White Cedar Log";
+        bt.setTextureOnSides("textures/blocks/wood/log/white_cedar_side.png");
+        bt.setTexture(BlockFace.TOP, "textures/blocks/wood/log/white_cedar_top.png");
+        bt.setTexture(BlockFace.BOTTOM, "textures/blocks/wood/log/white_cedar_top.png");
+    }),
+    WHITE_ELM_LOG((bt) -> {
+        bt.name = "White Elm Log";
+        bt.setTextureOnSides("textures/blocks/wood/log/white_elm_side.png");
+        bt.setTexture(BlockFace.TOP, "textures/blocks/wood/log/white_elm_top.png");
+        bt.setTexture(BlockFace.BOTTOM, "textures/blocks/wood/log/white_elm_top.png");
+    }),
+    WILLOW_LOG((bt) -> {
+        bt.name = "Willow Log";
+        bt.setTextureOnSides("textures/blocks/wood/log/willow_side.png");
+        bt.setTexture(BlockFace.TOP, "textures/blocks/wood/log/willow_top.png");
+        bt.setTexture(BlockFace.BOTTOM, "textures/blocks/wood/log/willow_top.png");
+    }),
+    
+    //
+    // Wooden Planks
+    //
+    ACACIA_PLANKS((bt) -> {
+        bt.name = "Acacia Planks";
+        bt.setTextureOnAllFaces("textures/blocks/wood/plank/acacia.png");
+    }),
+    ASH_PLANKS((bt) -> {
+        bt.name = "Ash Planks";
+        bt.setTextureOnAllFaces("textures/blocks/wood/plank/ash.png");
+    }),
+    ASPEN_PLANKS((bt) -> {
+        bt.name = "Aspen Planks";
+        bt.setTextureOnAllFaces("textures/blocks/wood/plank/aspen.png");
+    }),
+    BIRCH_PLANKS((bt) -> {
+        bt.name = "Birch Planks";
+        bt.setTextureOnAllFaces("textures/blocks/wood/plank/birch.png");
+    }),
+    CHESTNUT_PLANKS((bt) -> {
+        bt.name = "Chestnut Planks";
+        bt.setTextureOnAllFaces("textures/blocks/wood/plank/chestnut.png");
+    }),
+    DOUGLAS_FIR_PLANKS((bt) -> {
+        bt.name = "Douglas Fir Planks";
+        bt.setTextureOnAllFaces("textures/blocks/wood/plank/douglas_fir.png");
+    }),
+    HICKORY_PLANKS((bt) -> {
+        bt.name = "Hickory Planks";
+        bt.setTextureOnAllFaces("textures/blocks/wood/plank/hickory.png");
+    }),
+    KAPOK_PLANKS((bt) -> {
+        bt.name = "Kapok Planks";
+        bt.setTextureOnAllFaces("textures/blocks/wood/plank/kapok.png");
+    }),
+    MAPLE_PLANKS((bt) -> {
+        bt.name = "Maple Planks";
+        bt.setTextureOnAllFaces("textures/blocks/wood/plank/maple.png");
+    }),
+    OAK_PLANKS((bt) -> {
+        bt.name = "Oak Planks";
+        bt.setTextureOnAllFaces("textures/blocks/wood/plank/oak.png");
+    }),
+    PINE_PLANKS((bt) -> {
+        bt.name = "Pine Planks";
+        bt.setTextureOnAllFaces("textures/blocks/wood/plank/pine.png");
+    }),
+    SEQUOIA_PLANKS((bt) -> {
+        bt.name = "Sequoia Planks";
+        bt.setTextureOnAllFaces("textures/blocks/wood/plank/sequoia.png");
+    }),
+    SPRUCE_PLANKS((bt) -> {
+        bt.name = "Spruce Planks";
+        bt.setTextureOnAllFaces("textures/blocks/wood/plank/spruce.png");
+    }),
+    SYCAMORE_PLANKS((bt) -> {
+        bt.name = "Sycamore Planks";
+        bt.setTextureOnAllFaces("textures/blocks/wood/plank/sycamore.png");
+    }),
+    WHITE_CEDAR_PLANKS((bt) -> {
+        bt.name = "White Cedar Planks";
+        bt.setTextureOnAllFaces("textures/blocks/wood/plank/white_cedar.png");
+    }),
+    WHITE_ELM_PLANKS((bt) -> {
+        bt.name = "White Elm Planks";
+        bt.setTextureOnAllFaces("textures/blocks/wood/plank/white_elm.png");
+    }),
+    WILLOW_PLANKS((bt) -> {
+        bt.name = "Willow Planks";
+        bt.setTextureOnAllFaces("textures/blocks/wood/plank/willow.png");
+    }),
+    
+    //
     // Placeholders
     //
     GRASS((bt) -> {
@@ -315,9 +565,70 @@ public enum BlockType
             PHYLLITE,
             QUARTZITE,
             RHYOLITE,
-            ROCK_SALT,SCHIST,
+            ROCK_SALT,
+            SCHIST,
             SHALE,
             SLATE
+    };
+    
+    private static final BlockType[] leavesTypes = {
+            ACACIA_LEAVES,
+            ASH_LEAVES,
+            ASPEN_LEAVES,
+            BIRCH_LEAVES,
+            CHESTNUT_LEAVES,
+            DOUGLAS_FIR_LEAVES,
+            HICKORY_LEAVES,
+            KAPOK_LEAVES,
+            MAPLE_LEAVES,
+            OAK_LEAVES,
+            PINE_LEAVES,
+            SEQUOIA_LEAVES,
+            SPRUCE_LEAVES,
+            SYCAMORE_LEAVES,
+            WHITE_CEDAR_LEAVES,
+            WHITE_ELM_LEAVES,
+            WILLOW_LEAVES
+    };
+    
+    private static final BlockType[] woodenLogTypes = {
+            ACACIA_LOG,
+            ASH_LOG,
+            ASPEN_LOG,
+            BIRCH_LOG,
+            CHESTNUT_LOG,
+            DOUGLAS_FIR_LOG,
+            HICKORY_LOG,
+            KAPOK_LOG,
+            MAPLE_LOG,
+            OAK_LOG,
+            PINE_LOG,
+            SEQUOIA_LOG,
+            SPRUCE_LOG,
+            SYCAMORE_LOG,
+            WHITE_CEDAR_LOG,
+            WHITE_ELM_LOG,
+            WILLOW_LOG
+    };
+    
+    private static final BlockType[] woodenPlanksTypes = {
+            ACACIA_PLANKS,
+            ASH_PLANKS,
+            ASPEN_PLANKS,
+            BIRCH_PLANKS,
+            CHESTNUT_PLANKS,
+            DOUGLAS_FIR_PLANKS,
+            HICKORY_PLANKS,
+            KAPOK_PLANKS,
+            MAPLE_PLANKS,
+            OAK_PLANKS,
+            PINE_PLANKS,
+            SEQUOIA_PLANKS,
+            SPRUCE_PLANKS,
+            SYCAMORE_PLANKS,
+            WHITE_CEDAR_PLANKS,
+            WHITE_ELM_PLANKS,
+            WILLOW_PLANKS
     };
     
     private final short id;
@@ -342,6 +653,18 @@ public enum BlockType
     
     public static BlockType[] getStoneTypes() {
         return stoneTypes;
+    }
+    
+    public static BlockType[] getLeavesTypes() {
+        return leavesTypes;
+    }
+    
+    public static BlockType[] getWoodenLogTypes() {
+        return woodenLogTypes;
+    }
+    
+    public static BlockType[] getWoodenPlanksTypes() {
+        return woodenPlanksTypes;
     }
     
     public static BlockType byID(short id) {
