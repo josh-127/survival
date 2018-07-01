@@ -90,15 +90,11 @@ public class DefaultChunkProvider implements ChunkProvider
         if (loadedChunk != null)
             return loadedChunk;
 
-        Chunk chunk = new Chunk();
-        
         int cx = ChunkPos.chunkXFromHashedPos(hashedPos);
         int cy = ChunkPos.chunkYFromHashedPos(hashedPos);
         int cz = ChunkPos.chunkZFromHashedPos(hashedPos);
-        chunkGenerator.generateTerrain(cx, cy, cz, chunk);
-        chunkGenerator.populate(cx, cy, cz, chunk);
         
-        return chunk;
+        return chunkGenerator.generate(cx, cy, cz);
     }
     
     private String getChunkFilePath(long hashedPos) {

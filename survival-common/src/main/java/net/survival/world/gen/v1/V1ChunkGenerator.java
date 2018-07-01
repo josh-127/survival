@@ -54,7 +54,7 @@ public class V1ChunkGenerator implements ChunkGenerator
     }
 
     @Override
-    public void generateTerrain(int cx, int cy, int cz, Chunk chunk) {
+    public Chunk generate(int cx, int cy, int cz) {
         int offsetX = cx * (NMAP_XLENGTH - 1);
         int offsetY = cy * (NMAP_YLENGTH - 2);
         int offsetZ = cz * (NMAP_ZLENGTH - 1);
@@ -69,16 +69,15 @@ public class V1ChunkGenerator implements ChunkGenerator
                 stoneLayers[i].generate(globalX, globalZ);
         }
         
+        Chunk chunk = new Chunk();
         generateBase(cx, cy, cz, chunk);
         
         prevChunkX = cx;
         prevChunkZ = cz;
+        
+        return chunk;
     }
 
-    @Override
-    public void populate(int cx, int cy, int cz, Chunk chunk) {
-    }
-    
     private void generateBase(int cx, int cy, int cz, Chunk chunk) {
         generateElevationMaps(minElevationMap, elevationRangeMap, chunk, biomeLayer);
         generateDensityMap(densityMap, cx, cy, cz, chunk, minElevationMap, elevationRangeMap);
