@@ -655,16 +655,45 @@ public enum BlockType
         return stoneTypes;
     }
     
+    public boolean isStone() {
+        return isType(stoneTypes);
+    }
+    
     public static BlockType[] getLeavesTypes() {
         return leavesTypes;
+    }
+    
+    public boolean isLeaves() {
+        return isType(leavesTypes);
     }
     
     public static BlockType[] getWoodenLogTypes() {
         return woodenLogTypes;
     }
     
+    public boolean isWoodenLog() {
+        return isType(woodenLogTypes);
+    }
+    
     public static BlockType[] getWoodenPlanksTypes() {
         return woodenPlanksTypes;
+    }
+    
+    public boolean isWoodenPlanks() {
+        return isType(woodenPlanksTypes);
+    }
+    
+    public boolean isGrass() {
+        return this == GRASS;
+    }
+    
+    private boolean isType(BlockType[] types) {
+        for (int i = 0; i < types.length; ++i) {
+            if (this == types[i])
+                return true;
+        }
+        
+        return false;
     }
     
     public static BlockType byID(short id) {
