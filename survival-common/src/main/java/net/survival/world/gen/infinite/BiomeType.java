@@ -6,38 +6,38 @@ public enum BiomeType
 {
     OCEAN((bt) -> {
         bt.topBlockID = BlockType.LIMESTONE_DIRT.getID();
-        bt.minElevation = -64.0;
-        bt.maxElevation = -16.0;
+        bt.minElevation = 16.0;
+        bt.maxElevation = 64.0;
         bt.biomeViewerColor = 0x000000FF;
     }),
     GRASSLAND((bt) -> {
         bt.topBlockID = BlockType.GRASS.getID();
-        bt.minElevation = 2.0;
-        bt.maxElevation = 8.0;
+        bt.minElevation = 65.0;
+        bt.maxElevation = 72.0;
         bt.biomeViewerColor = 0x0000FF00;
     }),
     FOREST((bt) -> {
         bt.topBlockID = BlockType.GRASS.getID();
-        bt.minElevation = 8.0;
-        bt.maxElevation = 32.0;
+        bt.minElevation = 72.0;
+        bt.maxElevation = 80.0;
         bt.biomeViewerColor = 0x00009F00;
     }),
     EXTREME_HILLS((bt) -> {
         bt.topBlockID = BlockType.GRASS.getID();
-        bt.minElevation = 36.0;
+        bt.minElevation = 72.0;
         bt.maxElevation = 128.0;
         bt.biomeViewerColor = 0x00FF7F00;
     }),
     DESERT((bt) -> {
         bt.topBlockID = BlockType.LIMESTONE_SAND.getID();
-        bt.minElevation = 2.0;
-        bt.maxElevation = 8.0;
+        bt.minElevation = 65.0;
+        bt.maxElevation = 72.0;
         bt.biomeViewerColor = 0x00FFFF00;
     }),
     TUNDRA((bt) -> {
         bt.topBlockID = BlockType.GRASS.getID();
-        bt.minElevation = 2.0;
-        bt.maxElevation = 4.0;
+        bt.minElevation = 65.0;
+        bt.maxElevation = 72.0;
         bt.biomeViewerColor = 0x0000FFFF;
     });
     

@@ -23,14 +23,13 @@ public class EntityRelocator
             Chunk chunk = entry.getValue();
             
             int cx = ChunkPos.chunkXFromHashedPos(hashedPos);
-            int cy = ChunkPos.chunkYFromHashedPos(hashedPos);
             int cz = ChunkPos.chunkZFromHashedPos(hashedPos);
             Iterator<Entity> entities = chunk.iterateEntities().iterator();
             
             while (entities.hasNext()) {
                 Entity entity = entities.next();
                 
-                if (!chunkContainsEntity(cx, cy, cz, entity)) {
+                if (!chunkContainsEntity(cx, cz, entity)) {
                     entities.remove();
                     entitiesToRelocate.add(entity);
                 }
@@ -41,12 +40,10 @@ public class EntityRelocator
             world.addEntity(entity);
     }
     
-    private boolean chunkContainsEntity(int cx, int cy, int cz, Entity entity) {
+    private boolean chunkContainsEntity(int cx, int cz, Entity entity) {
         return  entity.getX() >= ChunkPos.getGlobalWestBound(cx) &&
                 entity.getX() <  ChunkPos.getGlobalEastBound(cx) &&
                 entity.getZ() >= ChunkPos.getGlobalNorthBound(cz) &&
-                entity.getZ() <  ChunkPos.getGlobalSouthBound(cz) &&
-                entity.getY() >= ChunkPos.getGlobalBottomBound(cy) &&
-                entity.getY() <  ChunkPos.getGlobalNorthBound(cy);
+                entity.getZ() <  ChunkPos.getGlobalSouthBound(cz);
     }
 }

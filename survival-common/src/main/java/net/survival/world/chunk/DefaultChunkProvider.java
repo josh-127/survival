@@ -49,12 +49,11 @@ public class DefaultChunkProvider implements ChunkProvider
     }
 
     private void loadEnqueuedChunks() {
-        for (int i = 0; !chunksToLoad.isEmpty() && i < 8; ++i) {
+        for (int i = 0; !chunksToLoad.isEmpty() && i < 2; ++i) {
             long hashedPos = chunksToLoad.remove();
             int cx = ChunkPos.chunkXFromHashedPos(hashedPos);
-            int cy = ChunkPos.chunkYFromHashedPos(hashedPos);
             int cz = ChunkPos.chunkZFromHashedPos(hashedPos);
-            world.addChunk(cx, cy, cz, getChunk(hashedPos));
+            world.addChunk(cx, cz, getChunk(hashedPos));
         }
     }
 
@@ -81,8 +80,8 @@ public class DefaultChunkProvider implements ChunkProvider
     }
 
     @Override
-    public Chunk getChunk(int cx, int cy, int cz) {
-        return getChunk(ChunkPos.hashPos(cx, cy, cz));
+    public Chunk getChunk(int cx, int cz) {
+        return getChunk(ChunkPos.hashPos(cx, cz));
     }
     
     private Chunk getChunk(long hashedPos) {
@@ -91,10 +90,9 @@ public class DefaultChunkProvider implements ChunkProvider
             return loadedChunk;
 
         int cx = ChunkPos.chunkXFromHashedPos(hashedPos);
-        int cy = ChunkPos.chunkYFromHashedPos(hashedPos);
         int cz = ChunkPos.chunkZFromHashedPos(hashedPos);
         
-        return chunkGenerator.generate(cx, cy, cz);
+        return chunkGenerator.generate(cx, cz);
     }
     
     private String getChunkFilePath(long hashedPos) {

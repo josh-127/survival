@@ -18,7 +18,7 @@ import net.survival.world.World;
 import net.survival.world.chunk.ChunkPos;
 import net.survival.world.chunk.DefaultChunkProvider;
 import net.survival.world.chunk.EntityRelocator;
-import net.survival.world.chunk.SphericalChunkLoader;
+import net.survival.world.chunk.CircularChunkLoader;
 import net.survival.world.gen.infinite.InfiniteChunkGenerator;
 
 public class Client implements AutoCloseable
@@ -28,7 +28,7 @@ public class Client implements AutoCloseable
     private final World world;
     
     private final DefaultChunkProvider chunkProvider;
-    private final SphericalChunkLoader chunkLoader;
+    private final CircularChunkLoader chunkLoader;
     private final EntityPhysics entityPhysics;
     private final EntityRelocator entityRelocator;
     
@@ -42,7 +42,7 @@ public class Client implements AutoCloseable
     private Client() {
         world = new World();
         chunkProvider = new DefaultChunkProvider(world, new InfiniteChunkGenerator(0L));
-        chunkLoader = new SphericalChunkLoader(8);
+        chunkLoader = new CircularChunkLoader(8);
         entityPhysics = new EntityPhysics(world);
         entityRelocator = new EntityRelocator(world);
         
@@ -74,9 +74,8 @@ public class Client implements AutoCloseable
         float pitch = (float) userController.camera.pitch;
 
         int cx = ChunkPos.toChunkX((int) Math.floor(x));
-        int cy = ChunkPos.toChunkY((int) Math.floor(y));
         int cz = ChunkPos.toChunkZ((int) Math.floor(z));
-        chunkLoader.setCenter(cx, cy, cz);
+        chunkLoader.setCenter(cx, cz);
         
         chunkProvider.tick(elapsedTime);
         entityPhysics.tick(elapsedTime);

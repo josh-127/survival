@@ -16,8 +16,8 @@ public class InfiniteChunkGenerator implements ChunkGenerator
     }
 
     @Override
-    public Chunk generate(int cx, int cy, int cz) {
-        Chunk chunk = worldDecoratorStub.decorate(cx, cy, cz, worldTerrain);
+    public Chunk generate(int cx, int cz) {
+        Chunk chunk = worldDecoratorStub.decorate(cx, cz, worldTerrain);
         return chunk;
     }
 }

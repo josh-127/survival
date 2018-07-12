@@ -102,18 +102,16 @@ class WorldDisplay implements GraphicsResource
         
         // Block Faces
         for (Map.Entry<Chunk, ChunkDisplay> entry : faceDisplays.entrySet()) {
-            Chunk chunk = entry.getKey();
             ChunkDisplay display = entry.getValue();
             
             if (display.isEmpty())
                 continue;
             
             float globalX = ChunkPos.toGlobalX(display.chunkX, 0);
-            float globalY = ChunkPos.toGlobalY(display.chunkY, 0);
             float globalZ = ChunkPos.toGlobalZ(display.chunkZ, 0);
             
             GLMatrixStack.push();
-            GLMatrixStack.translate(globalX, globalY, globalZ);
+            GLMatrixStack.translate(globalX, 0.0f, globalZ);
             display.displayBlocks(blockTextures[blockFace.ordinal()].blockTextures);
             GLMatrixStack.pop();
         }
@@ -124,16 +122,14 @@ class WorldDisplay implements GraphicsResource
             BlockFace blockFace)
     {
         int dx = 0;
-        int dy = 0;
         int dz = 0;
         
         switch (blockFace) {
-        case TOP:    dy = 1;  break;
-        case BOTTOM: dy = -1; break;
         case FRONT:  dz = 1;  break;
         case BACK:   dz = -1; break;
         case LEFT:   dx = -1; break;
         case RIGHT:  dx = 1;  break;
+        default:              break;
         }
         
         HashMap<Chunk, ChunkDisplay> newFaceDisplays = new HashMap<>();
@@ -147,7 +143,6 @@ class WorldDisplay implements GraphicsResource
             Chunk chunk = entry.getValue();
             
             int cx = ChunkPos.chunkXFromHashedPos(hashedPos);
-            int cy = ChunkPos.chunkYFromHashedPos(hashedPos);
             int cz = ChunkPos.chunkZFromHashedPos(hashedPos);
             
             float relativeX = ChunkPos.toGlobalX(cx, Chunk.XLENGTH / 2) - cameraX;
@@ -158,7 +153,7 @@ class WorldDisplay implements GraphicsResource
                 continue;
             
             ChunkDisplay existingDisplay = faceDisplays.remove(chunk);
-            Chunk adjacentChunk = world.getChunk(cx + dx, cy + dy, cz + dz);
+            Chunk adjacentChunk = world.getChunk(cx + dx, cz + dz);
             
             boolean useExisting = (existingDisplay != null) &&
                     (existingDisplay.adjacentChunk != null || adjacentChunk == null);
@@ -171,7 +166,7 @@ class WorldDisplay implements GraphicsResource
                     existingDisplay.close();
                 
                 BlockTextureAtlas atlas = blockTextures[blockFace.ordinal()];
-                newFaceDisplays.put(chunk, new ChunkDisplay(cx, cy, cz, chunk, adjacentChunk, blockFace, atlas));
+                newFaceDisplays.put(chunk, new ChunkDisplay(cx, cz, chunk, adjacentChunk, blockFace, atlas));
             }
         }
         

@@ -12,7 +12,7 @@ import net.survival.world.gen.infinite.layer.GenLayerFactory;
 
 class TerrainGenerator
 {
-    private final int NBLOCK_YLENGTH = Chunk.YLENGTH / 4;
+    private final int NBLOCK_YLENGTH = Chunk.YLENGTH / 32;
     private final int NBLOCK_ZLENGTH = Chunk.ZLENGTH / 8;
     private final int NBLOCK_XLENGTH = Chunk.XLENGTH / 8;
     private final int NMAP_YLENGTH = (Chunk.YLENGTH / NBLOCK_YLENGTH) + 2;
@@ -26,7 +26,9 @@ class TerrainGenerator
     
     private final int BIOME_TRANSITION_XLENGTH = NBLOCK_XLENGTH * 4;
     private final int BIOME_TRANSITION_ZLENGTH = NBLOCK_ZLENGTH * 4;
-
+    
+    private final int OCEAN_LEVEL = 64;
+    
     private final ImprovedNoiseGenerator3D mainNoiseGenerator;
     private final GenLayer biomeLayer;
     private final GenLayer[] stoneLayers;
@@ -53,14 +55,13 @@ class TerrainGenerator
         elevationRangeMap = new DoubleMap2D(NMAP_XLENGTH, NMAP_ZLENGTH);
     }
     
-    public ChunkPrimer generate(int cx, int cy, int cz) {
+    public ChunkPrimer generate(int cx, int cz) {
         int offsetX = cx * (NMAP_XLENGTH - 1);
-        int offsetY = cy * (NMAP_YLENGTH - 2);
         int offsetZ = cz * (NMAP_ZLENGTH - 1);
         int globalX = ChunkPos.toGlobalX(cx, 0);
         int globalZ = ChunkPos.toGlobalZ(cz, 0);
         
-        mainNoiseGenerator.generate(densityMap, offsetX, offsetY, offsetZ);
+        mainNoiseGenerator.generate(densityMap, offsetX, 0.0, offsetZ);
         
         if (cx != prevChunkX || cz != prevChunkZ) {
             biomeLayer.generate(globalX, globalZ);
@@ -68,8 +69,8 @@ class TerrainGenerator
                 stoneLayers[i].generate(globalX, globalZ);
         }
         
-        ChunkPrimer chunkPrimer = new ChunkPrimer(cx, cy, cz);
-        generateBase(cx, cy, cz, chunkPrimer);
+        ChunkPrimer chunkPrimer = new ChunkPrimer(cx, cz);
+        generateBase(cx, cz, chunkPrimer);
         
         prevChunkX = cx;
         prevChunkZ = cz;
@@ -77,9 +78,9 @@ class TerrainGenerator
         return chunkPrimer;
     }
 
-    private void generateBase(int cx, int cy, int cz, ChunkPrimer chunkPrimer) {
+    private void generateBase(int cx, int cz, ChunkPrimer chunkPrimer) {
         generateElevationMaps(minElevationMap, elevationRangeMap, chunkPrimer, biomeLayer);
-        generateDensityMap(densityMap, cx, cy, cz, chunkPrimer, minElevationMap, elevationRangeMap);
+        generateDensityMap(densityMap, cx, cz, chunkPrimer, minElevationMap, elevationRangeMap);
         
         for (int y = 0; y < Chunk.YLENGTH; ++y) {
             double noiseMapY      = (double) y / NBLOCK_YLENGTH;
@@ -100,7 +101,7 @@ class TerrainGenerator
                         else
                             chunkPrimer.setBlockID(x, y, z, stoneBlockID);
                     }
-                    else if (ChunkPos.toGlobalY(cy, y) <= 0) {
+                    else if (y <= OCEAN_LEVEL) {
                         chunkPrimer.setBlockID(x, y, z, BlockType.WATER.getID());
                     }
                 }
@@ -138,11 +139,11 @@ class TerrainGenerator
         }
     }
 
-    private void generateDensityMap(DoubleMap3D map, int cx, int cy, int cz, ChunkPrimer chunkPrimer,
+    private void generateDensityMap(DoubleMap3D map, int cx, int cz, ChunkPrimer chunkPrimer,
             DoubleMap2D minElevationMap, DoubleMap2D elevationRangeMap)
     {
         for (int y = 0; y < map.lengthY; ++y) {
-            int globalY = (y + (cy * (NMAP_YLENGTH - 2))) * NBLOCK_YLENGTH;
+            int globalY = y * NBLOCK_YLENGTH;
 
             for (int z = 0; z < map.lengthZ; ++z) {
                 for (int x = 0; x < map.lengthX; ++x) {

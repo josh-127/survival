@@ -16,13 +16,13 @@ public class WorldTerrain
         terrainGenerator = new TerrainGenerator(seed);
     }
     
-    public ChunkPrimer getChunkPrimer(int cx, int cy, int cz) {
+    public ChunkPrimer getChunkPrimer(int cx, int cz) {
         for (ChunkPrimer cp : cache) {
-            if (ChunkPos.positionEquals(cp.chunkX, cp.chunkY, cp.chunkZ, cx, cy, cz))
+            if (ChunkPos.positionEquals(cp.chunkX, cp.chunkZ, cx, cz))
                 return cp;
         }
 
-        ChunkPrimer chunkPrimer = terrainGenerator.generate(cx, cy, cz);
+        ChunkPrimer chunkPrimer = terrainGenerator.generate(cx, cz);
         
         if (cache.size() >= CACHE_LIMIT)
             cache.remove(cache.size() - 1);
@@ -33,15 +33,13 @@ public class WorldTerrain
     
     public short getBlockID(int x, int y, int z) {
         int cx = ChunkPos.toChunkX(x);
-        int cy = ChunkPos.toChunkY(y);
         int cz = ChunkPos.toChunkZ(z);
 
-        ChunkPrimer chunkPrimer = getChunkPrimer(cx, cy, cz);
+        ChunkPrimer chunkPrimer = getChunkPrimer(cx, cz);
         
         int localX = ChunkPos.toLocalX(cx, x);
-        int localY = ChunkPos.toLocalY(cy, y);
         int localZ = ChunkPos.toLocalZ(cz, z);
 
-        return chunkPrimer.getBlockID(localX, localY, localZ);
+        return chunkPrimer.getBlockID(localX, y, localZ);
     }
 }

@@ -6,13 +6,11 @@ public class ChunkPrimer
 {
     private final short[] blockIDs;
     public final int chunkX;
-    public final int chunkY;
     public final int chunkZ;
     
-    public ChunkPrimer(int cx, int cy, int cz) {
+    public ChunkPrimer(int cx, int cz) {
         blockIDs = new short[Chunk.VOLUME];
         chunkX = cx;
-        chunkY = cy;
         chunkZ = cz;
     }
     

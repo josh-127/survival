@@ -4,22 +4,21 @@ import java.util.Collections;
 import java.util.Set;
 import java.util.TreeSet;
 
-public class SphericalChunkLoader implements ChunkLoader
+public class CircularChunkLoader implements ChunkLoader
 {
     private final TreeSet<Long> chunkPositions;
     private final int radius;
     
     private int prevOffsetCX;
-    private int prevOffsetCY;
     private int prevOffsetCZ;
     
-    public SphericalChunkLoader(int radius) {
+    public CircularChunkLoader(int radius) {
         chunkPositions = new TreeSet<>();
         this.radius = radius;
     }
     
-    public void setCenter(int offsetCX, int offsetCY, int offsetCZ) {
-        if (offsetCX == prevOffsetCX && offsetCY == prevOffsetCY && offsetCZ == prevOffsetCZ)
+    public void setCenter(int offsetCX, int offsetCZ) {
+        if (offsetCX == prevOffsetCX && offsetCZ == prevOffsetCZ)
             return;
         
         chunkPositions.clear();
@@ -28,13 +27,10 @@ public class SphericalChunkLoader implements ChunkLoader
         
         for (int z = -radius; z < radius; ++z) {
             for (int x = -radius; x < radius; ++x) {
-                for (int y = -radius; y < radius; ++y) {
-                    if (squareDistance(x, y, z) <= radiusSquared) {
-                        int cx = offsetCX + x;
-                        int cy = offsetCY + y;
-                        int cz = offsetCZ + z;
-                        chunkPositions.add(ChunkPos.hashPos(cx, cy, cz));
-                    }
+                if (squareDistance(x, z) <= radiusSquared) {
+                    int cx = offsetCX + x;
+                    int cz = offsetCZ + z;
+                    chunkPositions.add(ChunkPos.hashPos(cx, cz));
                 }
             }
         }
@@ -45,7 +41,7 @@ public class SphericalChunkLoader implements ChunkLoader
         return Collections.unmodifiableSet(chunkPositions);
     }
     
-    private int squareDistance(int x, int y, int z) {
-        return (x * x) + (y * y) + (z * z);
+    private int squareDistance(int x, int z) {
+        return (x * x) + (z * z);
     }
 }

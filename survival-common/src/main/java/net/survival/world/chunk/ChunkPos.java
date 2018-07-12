@@ -4,16 +4,12 @@ public class ChunkPos
 {
     private ChunkPos() {}
 
-    public static boolean positionEquals(int cx1, int cy1, int cz1, int cx2, int cy2, int cz2) {
-        return cx1 == cx2 && cy1 == cy2 && cz1 == cz2;
+    public static boolean positionEquals(int cx1, int cz1, int cx2, int cz2) {
+        return cx1 == cx2 && cz1 == cz2;
     }
 
     public static int toChunkX(int x) {
         return x / Chunk.XLENGTH;
-    }
-    
-    public static int toChunkY(int y) {
-        return y / Chunk.YLENGTH;
     }
 
     public static int toChunkZ(int z) {
@@ -23,10 +19,6 @@ public class ChunkPos
     public static int toLocalX(int cx, int gx) {
         return gx - cx * Chunk.XLENGTH;
     }
-    
-    public static int toLocalY(int cy, int gy) {
-        return gy - cy * Chunk.YLENGTH;
-    }
 
     public static int toLocalZ(int cz, int gz) {
         return gz - cz * Chunk.ZLENGTH;
@@ -34,10 +26,6 @@ public class ChunkPos
 
     public static int toGlobalX(int cx, int lx) {
         return lx + cx * Chunk.XLENGTH;
-    }
-    
-    public static int toGlobalY(int cy, int ly) {
-        return ly + cy * Chunk.YLENGTH;
     }
 
     public static int toGlobalZ(int cz, int lz) {
@@ -60,30 +48,20 @@ public class ChunkPos
         return toGlobalZ(cz, Chunk.ZLENGTH);
     }
     
-    public static int getGlobalBottomBound(int cy) {
-        return toGlobalY(cy, 0);
-    }
-    
-    public static int getGlobalTopBound(int cy) {
-        return toGlobalY(cy, Chunk.YLENGTH);
-    }
-    
     /**
      * Hashes a chunk position into a 64-bit integer.
-     * Bits 0-11: chunk y-position
+     * Bits 0-11: reserved
      * Bits 12-32: chunk x-position
      * Bits 33-53: chunk z-position
      * Bits 53-63: reserved
      * Out-of-bound chunk positions cause undefined behavior.
      * @param cx chunk x-position
-     * @param cy chunk y-position
      * @param cz chunk z-position
      * @return the hashed position
      */
-    public static long hashPos(int cx, int cy, int cz) {
+    public static long hashPos(int cx, int cz) {
         return (((cz + 1048576) & 0x1FFFFFL) << 33L) |
-                (((cx + 1048576) & 0x1FFFFFL) << 12L) |
-                ((cy + 2048) & 0xFFFL);
+                (((cx + 1048576) & 0x1FFFFFL) << 12L);
     }
     
     /**
@@ -93,15 +71,6 @@ public class ChunkPos
      */
     public static int chunkXFromHashedPos(long hashedPos) {
         return (int) ((hashedPos & 0x1FFFFF000L) >>> 12L) - 1048576;
-    }
-    
-    /**
-     * Retrieves the chunk y-position from a hashed position.
-     * @param hashedPos hashed position
-     * @return chunk y-position
-     */
-    public static int chunkYFromHashedPos(long hashedPos) {
-        return (int) (hashedPos & 0xFFFL) - 2048;
     }
     
     /**

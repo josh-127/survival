@@ -15,13 +15,12 @@ class ChunkDisplay implements GraphicsResource
 {
     public final GLDisplayList displayList;
     public final int chunkX;
-    public final int chunkY;
     public final int chunkZ;
     public final Chunk chunk;
     public final Chunk adjacentChunk;
     public final BlockFace blockFace;
 
-    public ChunkDisplay(int cx, int cy, int cz, Chunk chunk, Chunk adjacentChunk, BlockFace blockFace,
+    public ChunkDisplay(int cx, int cz, Chunk chunk, Chunk adjacentChunk, BlockFace blockFace,
             BlockTextureAtlas atlas)
     {
         GLDisplayList.Builder builder = new GLDisplayList.Builder();
@@ -47,20 +46,18 @@ class ChunkDisplay implements GraphicsResource
                 }
             }
 
-            if (adjacentChunk != null) {
-                for (int z = 0; z < Chunk.ZLENGTH; ++z) {
-                    for (int x = 0; x < Chunk.XLENGTH; ++x) {
-                        short blockID = chunk.getBlockID(x, Chunk.YLENGTH - 1, z);
-                        
-                        if (!BlockType.byID(blockID).isVisible())
-                            continue;
-                        
-                        if (BlockType.byID(adjacentChunk.getBlockID(x, 0, z)).isVisible())
-                            continue;
-    
-                        pushTopFace(x, Chunk.YLENGTH - 1, z, atlas, blockID, builder);
-                        ++faceCount;
-                    }
+            for (int z = 0; z < Chunk.ZLENGTH; ++z) {
+                for (int x = 0; x < Chunk.XLENGTH; ++x) {
+                    short blockID = chunk.getBlockID(x, Chunk.YLENGTH - 1, z);
+                    
+                    if (!BlockType.byID(blockID).isVisible())
+                        continue;
+                    
+                    if (BlockType.byID(adjacentChunk.getBlockID(x, 0, z)).isVisible())
+                        continue;
+
+                    pushTopFace(x, Chunk.YLENGTH - 1, z, atlas, blockID, builder);
+                    ++faceCount;
                 }
             }
             
@@ -84,20 +81,18 @@ class ChunkDisplay implements GraphicsResource
                 }
             }
             
-            if (adjacentChunk != null) {
-                for (int z = 0; z < Chunk.ZLENGTH; ++z) {
-                    for (int x = 0; x < Chunk.XLENGTH; ++x) {
-                        short blockID = chunk.getBlockID(x, 0, z);
-                        
-                        if (!BlockType.byID(blockID).isVisible())
-                            continue;
-                        
-                        if (BlockType.byID(adjacentChunk.getBlockID(x, Chunk.YLENGTH - 1, z)).isVisible())
-                            continue;
-                        
-                        pushBottomFace(x, 0, z, atlas, blockID, builder);
-                        ++faceCount;
-                    }
+            for (int z = 0; z < Chunk.ZLENGTH; ++z) {
+                for (int x = 0; x < Chunk.XLENGTH; ++x) {
+                    short blockID = chunk.getBlockID(x, 0, z);
+                    
+                    if (!BlockType.byID(blockID).isVisible())
+                        continue;
+                    
+                    if (BlockType.byID(adjacentChunk.getBlockID(x, Chunk.YLENGTH - 1, z)).isVisible())
+                        continue;
+                    
+                    pushBottomFace(x, 0, z, atlas, blockID, builder);
+                    ++faceCount;
                 }
             }
             
@@ -261,7 +256,6 @@ class ChunkDisplay implements GraphicsResource
         }
 
         chunkX = cx;
-        chunkY = cy;
         chunkZ = cz;
         this.chunk = chunk;
         this.adjacentChunk = adjacentChunk;
