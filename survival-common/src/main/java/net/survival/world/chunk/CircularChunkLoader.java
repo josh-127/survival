@@ -15,12 +15,18 @@ public class CircularChunkLoader implements ChunkLoader
     public CircularChunkLoader(int radius) {
         chunkPositions = new TreeSet<>();
         this.radius = radius;
+        
+        forceSetCenter(0, 0);
     }
     
     public void setCenter(int offsetCX, int offsetCZ) {
         if (offsetCX == prevOffsetCX && offsetCZ == prevOffsetCZ)
             return;
         
+        forceSetCenter(offsetCX, offsetCZ);
+    }
+    
+    private void forceSetCenter(int offsetCX, int offsetCZ) {
         chunkPositions.clear();
         
         int radiusSquared = radius * radius;
@@ -33,8 +39,7 @@ public class CircularChunkLoader implements ChunkLoader
                     chunkPositions.add(ChunkPos.hashPos(cx, cz));
                 }
             }
-        }
-    }
+        }    }
     
     @Override
     public Set<Long> getChunkPositions() {
