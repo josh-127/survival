@@ -81,12 +81,6 @@ public class Client implements AutoCloseable
         entityPhysics.tick(elapsedTime);
         entityRelocator.relocateEntities();
         
-        if (Keyboard.isKeyPressed(Key.T)) {
-            Cow beyonce = new Cow();
-            beyonce.moveTo(Math.random() * 32.0, 64.0f, Math.random() * 32.0);
-            world.addEntity(beyonce);
-        }
-        
         clientDisplay.getCamera().moveTo(x, y, z);
         clientDisplay.getCamera().orient(yaw, pitch);
         clientDisplay.getCamera().setFov((float) Math.toRadians(60.0));
