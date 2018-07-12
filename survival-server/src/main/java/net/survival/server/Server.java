@@ -3,7 +3,7 @@ package net.survival.server;
 import net.survival.world.World;
 import net.survival.world.chunk.DefaultChunkProvider;
 import net.survival.world.chunk.EntityRelocator;
-import net.survival.world.gen.v1.V1ChunkGenerator;
+import net.survival.world.gen.infinite.InfiniteChunkGenerator;
 
 public class Server
 {
@@ -14,7 +14,7 @@ public class Server
     
     private Server() {
         world = new World();
-        chunkProvider = new DefaultChunkProvider(world, new V1ChunkGenerator(0L));
+        chunkProvider = new DefaultChunkProvider(world, new InfiniteChunkGenerator(0L));
         entityRelocator = new EntityRelocator(world);
     }
 

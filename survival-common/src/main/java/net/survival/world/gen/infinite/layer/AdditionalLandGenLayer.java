@@ -1,8 +1,8 @@
-package net.survival.world.gen.v1.layer;
+package net.survival.world.gen.infinite.layer;
 
 import java.util.Random;
 
-import net.survival.world.gen.v1.BiomeType;
+import net.survival.world.gen.infinite.BiomeType;
 
 class AdditionalLandGenLayer extends GenLayer
 {

@@ -1,4 +1,4 @@
-package net.survival.world.gen.v1.terrain;
+package net.survival.world.gen.infinite.terrain;
 
 import net.survival.block.BlockType;
 import net.survival.util.DoubleMap2D;
@@ -6,9 +6,9 @@ import net.survival.util.DoubleMap3D;
 import net.survival.util.ImprovedNoiseGenerator3D;
 import net.survival.world.chunk.Chunk;
 import net.survival.world.chunk.ChunkPos;
-import net.survival.world.gen.v1.BiomeType;
-import net.survival.world.gen.v1.layer.GenLayer;
-import net.survival.world.gen.v1.layer.GenLayerFactory;
+import net.survival.world.gen.infinite.BiomeType;
+import net.survival.world.gen.infinite.layer.GenLayer;
+import net.survival.world.gen.infinite.layer.GenLayerFactory;
 
 class TerrainGenerator
 {

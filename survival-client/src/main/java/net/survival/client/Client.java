@@ -19,7 +19,7 @@ import net.survival.world.chunk.ChunkPos;
 import net.survival.world.chunk.DefaultChunkProvider;
 import net.survival.world.chunk.EntityRelocator;
 import net.survival.world.chunk.SphericalChunkLoader;
-import net.survival.world.gen.v1.V1ChunkGenerator;
+import net.survival.world.gen.infinite.InfiniteChunkGenerator;
 
 public class Client implements AutoCloseable
 {
@@ -41,7 +41,7 @@ public class Client implements AutoCloseable
     
     private Client() {
         world = new World();
-        chunkProvider = new DefaultChunkProvider(world, new V1ChunkGenerator(0L));
+        chunkProvider = new DefaultChunkProvider(world, new InfiniteChunkGenerator(0L));
         chunkLoader = new SphericalChunkLoader(8);
         entityPhysics = new EntityPhysics(world);
         entityRelocator = new EntityRelocator(world);

@@ -1,4 +1,4 @@
-package net.survival.world.gen.v1.layer;
+package net.survival.world.gen.infinite.layer;
 
 public interface GenLayerFactory
 {

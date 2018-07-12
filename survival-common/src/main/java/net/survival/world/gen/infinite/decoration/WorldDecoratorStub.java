@@ -1,7 +1,7 @@
-package net.survival.world.gen.v1.decoration;
+package net.survival.world.gen.infinite.decoration;
 
 import net.survival.world.chunk.Chunk;
-import net.survival.world.gen.v1.terrain.WorldTerrain;
+import net.survival.world.gen.infinite.terrain.WorldTerrain;
 
 public class WorldDecoratorStub implements WorldDecorator
 {

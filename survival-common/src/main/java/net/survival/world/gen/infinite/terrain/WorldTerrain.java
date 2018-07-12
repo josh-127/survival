@@ -1,4 +1,4 @@
-package net.survival.world.gen.v1.terrain;
+package net.survival.world.gen.infinite.terrain;
 
 import java.util.ArrayList;
 
