@@ -50,18 +50,14 @@ public class ChunkPos
     
     /**
      * Hashes a chunk position into a 64-bit integer.
-     * Bits 0-11: reserved
-     * Bits 12-32: chunk x-position
-     * Bits 33-53: chunk z-position
-     * Bits 53-63: reserved
-     * Out-of-bound chunk positions cause undefined behavior.
+     * Bits 0-31: chunk x-position
+     * Bits 32-63: chunk z-position
      * @param cx chunk x-position
      * @param cz chunk z-position
      * @return the hashed position
      */
     public static long hashPos(int cx, int cz) {
-        return (((cz + 1048576) & 0x1FFFFFL) << 33L) |
-                (((cx + 1048576) & 0x1FFFFFL) << 12L);
+        return ((cz & 0xFFFFFFFFL) << 32L) | (cx & 0xFFFFFFFFL);
     }
     
     /**
@@ -70,7 +66,7 @@ public class ChunkPos
      * @return chunk x-position
      */
     public static int chunkXFromHashedPos(long hashedPos) {
-        return (int) ((hashedPos & 0x1FFFFF000L) >>> 12L) - 1048576;
+        return (int) (hashedPos & 0x00000000FFFFFFFFL);
     }
     
     /**
@@ -79,6 +75,6 @@ public class ChunkPos
      * @return chunk z-position
      */
     public static int chunkZFromHashedPos(long hashedPos) {
-        return (int) ((hashedPos & 0x3FFFFE00000000L) >>> 33L) - 1048576;
+        return (int) ((hashedPos & 0xFFFFFFFF00000000L) >>> 32L);
     }
 }

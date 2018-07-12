@@ -28,68 +28,64 @@ public class ChunkPosTest
     @SuppressWarnings("unused")
     private Object getSetOfGeneralCasePositions() {
         return new Object[] {
-                new Object[] {  96,  31, 0x100060000L | 0x20003E00000000L },
-                new Object[] {  60,  69, 0x10003C000L | 0x20008A00000000L },
-                new Object[] { -88,  33, 0xFFFA8000L  | 0x20004200000000L },
-                new Object[] {  85, -71, 0x100055000L | 0x1FFF7200000000L },
-                new Object[] { -25, -76, 0xFFFE7000L  | 0x1FFF6800000000L },
-                new Object[] { -6,   63, 0xFFFFA000L  | 0x20007E00000000L },
-                new Object[] { -58, -28, 0xFFFC6000L  | 0x1FFFC800000000L },
-                new Object[] {  62, -56, 0x10003E000L | 0x1FFF9000000000L },
+                new Object[] {  96,  31, 0x60L       | 0x1F00000000L       },
+                new Object[] {  60,  69, 0x3CL       | 0x4500000000L       },
+                new Object[] { -88,  33, 0xFFFFFFA8L | 0x2100000000L       },
+                new Object[] {  85, -71, 0x55L       | 0xFFFFFFB900000000L },
+                new Object[] { -25, -76, 0xFFFFFFE7L | 0xFFFFFFB400000000L },
+                new Object[] { -6,   63, 0xFFFFFFFAL | 0x3F00000000L       },
+                new Object[] { -58, -28, 0xFFFFFFC6L | 0xFFFFFFE400000000L },
+                new Object[] {  62, -56, 0x3EL       | 0xFFFFFFC800000000L },
         };
     }
     
     @Test
     public void hashPos_givenAPositionAtTheOrigin_returnsCorrectResult() {
-        assertEquals(0x20000100000000L, ChunkPos.hashPos(0, 0));
+        assertEquals(0L, ChunkPos.hashPos(0, 0));
     }
     @Test
     public void chunkXZFromHashedPos_givenAPositionAtTheOrigin_returnsCorrectResult() {
-        assertEquals(0, ChunkPos.chunkXFromHashedPos(0x20000100000000L));
-        assertEquals(0, ChunkPos.chunkZFromHashedPos(0x20000100000000L));
+        assertEquals(0, ChunkPos.chunkXFromHashedPos(0L));
+        assertEquals(0, ChunkPos.chunkZFromHashedPos(0L));
     }
     
     @Test
     public void hashPos_givenAMaximumPositiveXPosition_returnsCorrectResult() {
-        // cx: (2^21) / 2 - 1
-        assertEquals(0x200001FFFFF000L, ChunkPos.hashPos(1048575, 0));
+        assertEquals(0x7FFFFFFFL, ChunkPos.hashPos(0x7FFFFFFF, 0));
     }
     @Test
-    public void chunkXYZFromHashedPos_givenAMaximumPositiveXPosition_returnsCorrectResult() {
-        assertEquals(1048575, ChunkPos.chunkXFromHashedPos(0x200001FFFFF000L));
-        assertEquals(0,       ChunkPos.chunkZFromHashedPos(0x200001FFFFF000L));
+    public void chunkXZFromHashedPos_givenAMaximumPositiveXPosition_returnsCorrectResult() {
+        assertEquals(0x7FFFFFFF, ChunkPos.chunkXFromHashedPos(0x7FFFFFFFL));
+        assertEquals(0,          ChunkPos.chunkZFromHashedPos(0x7FFFFFFFL));
     }
     
     @Test
     public void hashPos_givenAMaximumNegativeXPosition_returnsCorrectResult() {
-        // cx: -(2^21) / 2
-        assertEquals(0x20000000000000L, ChunkPos.hashPos(-1048576, 0));
+        assertEquals(0x80000000L, ChunkPos.hashPos(0x80000000, 0));
     }
     @Test
-    public void chunkXYZFromHashedPos_givenAMaximumNegativeXPosition_returnsCorrectResult() {
-        assertEquals(-1048576, ChunkPos.chunkXFromHashedPos(0x20000000000000L));
-        assertEquals(0,        ChunkPos.chunkZFromHashedPos(0x20000000000000L));
+    public void chunkXZFromHashedPos_givenAMaximumNegativeXPosition_returnsCorrectResult() {
+        assertEquals(0x80000000, ChunkPos.chunkXFromHashedPos(0x80000000L));
+        assertEquals(0,          ChunkPos.chunkZFromHashedPos(0x80000000L));
     }
     
     @Test
     public void hashPos_givenAMaximumPositiveZPosition_returnsCorrectResult() {
-        // cz: (2^21) / 2 - 1
-        assertEquals(0x3FFFFF00000000L, ChunkPos.hashPos(0, 1048575));
+        assertEquals(0x7FFFFFFF00000000L, ChunkPos.hashPos(0, 0x7FFFFFFF));
     }
     @Test
-    public void chunkXYZFromHashedPos_givenAMaximumPositiveZPosition_returnsCorrectResult() {
-        assertEquals(0,       ChunkPos.chunkXFromHashedPos(0x3FFFFF00000000L));
-        assertEquals(1048575, ChunkPos.chunkZFromHashedPos(0x3FFFFF00000000L));
+    public void chunkXZFromHashedPos_givenAMaximumPositiveZPosition_returnsCorrectResult() {
+        assertEquals(0,          ChunkPos.chunkXFromHashedPos(0x7FFFFFFF00000000L));
+        assertEquals(0x7FFFFFFF, ChunkPos.chunkZFromHashedPos(0x7FFFFFFF00000000L));
     }
     
     @Test
     public void hashPos_givenAMaximumNegativeZPosition_returnsCorrectResult() {
-        // cz: -(2^21) / 2
-        assertEquals(0x100000000L, ChunkPos.hashPos(0, -1048576));
+        assertEquals(0x8000000000000000L, ChunkPos.hashPos(0, 0x80000000));
     }
     @Test
-    public void chunkXYZFromHashedPos_givenAMaximumNegativeZPosition_returnsCorrectResult() {
-        assertEquals(0,        ChunkPos.chunkXFromHashedPos(0x100000000L));
-        assertEquals(-1048576, ChunkPos.chunkZFromHashedPos(0x100000000L));
+    public void chunkXZFromHashedPos_givenAMaximumNegativeZPosition_returnsCorrectResult() {
+        assertEquals(0,          ChunkPos.chunkXFromHashedPos(0x8000000000000000L));
+        assertEquals(0x80000000, ChunkPos.chunkZFromHashedPos(0x8000000000000000L));
     }
 }
