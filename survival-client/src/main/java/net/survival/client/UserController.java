@@ -11,7 +11,7 @@ class UserController
     public FpsCamera camera;
 
     public UserController() {
-        camera = new FpsCamera(new Vector3d(0.0, 64.0f, 0.0), 0.0, -1.0);
+        camera = new FpsCamera(new Vector3d(0.0, 72.0f, 0.0), 0.0, -1.0);
     }
 
     public void tick(double elapsedTime) {
