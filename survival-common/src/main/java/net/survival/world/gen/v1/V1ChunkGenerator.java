@@ -2,18 +2,22 @@ package net.survival.world.gen.v1;
 
 import net.survival.world.chunk.Chunk;
 import net.survival.world.chunk.ChunkGenerator;
-import net.survival.world.gen.v1.terrain.CachedTerrainGenerator;
+import net.survival.world.gen.v1.decoration.WorldDecoratorStub;
+import net.survival.world.gen.v1.terrain.WorldTerrain;
 
 public class V1ChunkGenerator implements ChunkGenerator
 {
-    private final CachedTerrainGenerator terrainGenerator;
+    private final WorldTerrain worldTerrain;
+    private final WorldDecoratorStub worldDecoratorStub;
     
     public V1ChunkGenerator(long seed) {
-        terrainGenerator = new CachedTerrainGenerator(seed);
+        worldTerrain = new WorldTerrain(seed);
+        worldDecoratorStub = new WorldDecoratorStub();
     }
 
     @Override
     public Chunk generate(int cx, int cy, int cz) {
-        return terrainGenerator.generate(cx, cy, cz).toChunk();
+        Chunk chunk = worldDecoratorStub.decorate(cx, cy, cz, worldTerrain);
+        return chunk;
     }
 }

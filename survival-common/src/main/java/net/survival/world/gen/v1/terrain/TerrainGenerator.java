@@ -10,7 +10,7 @@ import net.survival.world.gen.v1.BiomeType;
 import net.survival.world.gen.v1.layer.GenLayer;
 import net.survival.world.gen.v1.layer.GenLayerFactory;
 
-public class TerrainGenerator
+class TerrainGenerator
 {
     private final int NBLOCK_YLENGTH = Chunk.YLENGTH / 4;
     private final int NBLOCK_ZLENGTH = Chunk.ZLENGTH / 8;

@@ -1,10 +1,9 @@
 package net.survival.world.gen.v1.decoration;
 
-import net.survival.world.World;
 import net.survival.world.chunk.Chunk;
-import net.survival.world.chunk.ChunkProvider;
+import net.survival.world.gen.v1.terrain.WorldTerrain;
 
-public abstract class WorldDecorator
+public interface WorldDecorator
 {
-    public abstract void decorate(World world, Chunk chunk, ChunkProvider chunkProvider);
+    public abstract Chunk decorate(int cx, int cy, int cz, WorldTerrain worldTerrain);
 }
