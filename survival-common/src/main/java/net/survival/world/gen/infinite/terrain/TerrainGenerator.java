@@ -24,8 +24,8 @@ class TerrainGenerator
     private final double MAIN_NOISE_ZSCALE = 1.0 / 128.0;
     private final int MAIN_NOISE_OCTAVE_COUNT = 8;
     
-    private final int BIOME_TRANSITION_XLENGTH = NBLOCK_XLENGTH * 4;
-    private final int BIOME_TRANSITION_ZLENGTH = NBLOCK_ZLENGTH * 4;
+    private final int BIOME_TRANSITION_XLENGTH = NBLOCK_XLENGTH * 8;
+    private final int BIOME_TRANSITION_ZLENGTH = NBLOCK_ZLENGTH * 8;
     
     private final int OCEAN_LEVEL = 64;
     
