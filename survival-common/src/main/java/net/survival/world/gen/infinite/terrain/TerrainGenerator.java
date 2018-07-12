@@ -12,22 +12,22 @@ import net.survival.world.gen.infinite.layer.GenLayerFactory;
 
 class TerrainGenerator
 {
-    private final int NBLOCK_YLENGTH = Chunk.YLENGTH / 32;
-    private final int NBLOCK_ZLENGTH = Chunk.ZLENGTH / 8;
-    private final int NBLOCK_XLENGTH = Chunk.XLENGTH / 8;
-    private final int NMAP_YLENGTH = (Chunk.YLENGTH / NBLOCK_YLENGTH) + 2;
-    private final int NMAP_ZLENGTH = (Chunk.ZLENGTH / NBLOCK_ZLENGTH) + 1;
-    private final int NMAP_XLENGTH = (Chunk.XLENGTH / NBLOCK_XLENGTH) + 1;
+    private static final int NBLOCK_YLENGTH = Chunk.YLENGTH / 32;
+    private static final int NBLOCK_ZLENGTH = Chunk.ZLENGTH / 8;
+    private static final int NBLOCK_XLENGTH = Chunk.XLENGTH / 8;
+    private static final int NMAP_YLENGTH = (Chunk.YLENGTH / NBLOCK_YLENGTH) + 2;
+    private static final int NMAP_ZLENGTH = (Chunk.ZLENGTH / NBLOCK_ZLENGTH) + 1;
+    private static final int NMAP_XLENGTH = (Chunk.XLENGTH / NBLOCK_XLENGTH) + 1;
     
-    private final double MAIN_NOISE_XSCALE = 1.0 / 128.0;
-    private final double MAIN_NOISE_YSCALE = 1.0 / 96.0;
-    private final double MAIN_NOISE_ZSCALE = 1.0 / 128.0;
-    private final int MAIN_NOISE_OCTAVE_COUNT = 8;
+    private static final double MAIN_NOISE_XSCALE = 1.0 / 128.0;
+    private static final double MAIN_NOISE_YSCALE = 1.0 / 96.0;
+    private static final double MAIN_NOISE_ZSCALE = 1.0 / 128.0;
+    private static final int MAIN_NOISE_OCTAVE_COUNT = 8;
     
-    private final int BIOME_TRANSITION_XLENGTH = NBLOCK_XLENGTH * 8;
-    private final int BIOME_TRANSITION_ZLENGTH = NBLOCK_ZLENGTH * 8;
+    private static final int BIOME_TRANSITION_XLENGTH = NBLOCK_XLENGTH * 8;
+    private static final int BIOME_TRANSITION_ZLENGTH = NBLOCK_ZLENGTH * 8;
     
-    private final int OCEAN_LEVEL = 64;
+    private static final int OCEAN_LEVEL = 64;
     
     private final ImprovedNoiseGenerator3D mainNoiseGenerator;
     private final GenLayer biomeLayer;
