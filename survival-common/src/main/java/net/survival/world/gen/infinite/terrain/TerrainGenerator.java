@@ -37,9 +37,6 @@ class TerrainGenerator
     private final DoubleMap2D minElevationMap;
     private final DoubleMap2D elevationRangeMap;
     
-    private int prevChunkX;
-    private int prevChunkZ;
-    
     public TerrainGenerator(long seed) {
         mainNoiseGenerator = new ImprovedNoiseGenerator3D(MAIN_NOISE_XSCALE, MAIN_NOISE_YSCALE, MAIN_NOISE_ZSCALE,
                 MAIN_NOISE_OCTAVE_COUNT, seed);
@@ -62,18 +59,12 @@ class TerrainGenerator
         int globalZ = ChunkPos.toGlobalZ(cz, 0);
         
         mainNoiseGenerator.generate(densityMap, offsetX, 0.0, offsetZ);
-        
-        if (cx != prevChunkX || cz != prevChunkZ) {
-            biomeLayer.generate(globalX, globalZ);
-            for (int i = 0; i < stoneLayers.length; ++i)
-                stoneLayers[i].generate(globalX, globalZ);
-        }
+        biomeLayer.generate(globalX, globalZ);
+        for (int i = 0; i < stoneLayers.length; ++i)
+            stoneLayers[i].generate(globalX, globalZ);
         
         ChunkPrimer chunkPrimer = new ChunkPrimer(cx, cz);
         generateBase(cx, cz, chunkPrimer);
-        
-        prevChunkX = cx;
-        prevChunkZ = cz;
         
         return chunkPrimer;
     }
