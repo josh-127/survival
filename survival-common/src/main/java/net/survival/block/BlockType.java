@@ -541,6 +541,9 @@ public enum BlockType
     //
     // Special
     //
+    TEMP_SOLID((bt) -> {
+        bt.name = "<TEMP_SOLID>";
+    }),
     UNDEFINED((bt) -> {
         bt.name = "<UNDEFINED>";
     });
