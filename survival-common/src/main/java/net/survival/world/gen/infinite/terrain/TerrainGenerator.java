@@ -71,17 +71,41 @@ class TerrainGenerator
     }
     
     private void replaceBlocks(ChunkPrimer chunkPrimer) {
-        for (int y = 0; y < Chunk.YLENGTH - 1; ++y) {
-            for (int z = 0; z < Chunk.ZLENGTH; ++z) {
-                for (int x = 0; x < Chunk.XLENGTH; ++x) {
-                    BiomeType biome = BiomeType.byID(biomeLayer.sampleNearest(x, z));
-                    short stoneBlockID = BlockType.getStoneTypes()[stoneLayers[0].sampleNearest(x, z)].getID();
-
-                    if (chunkPrimer.getBlockID(x, y, z) == BlockType.TEMP_SOLID.getID()) {
-                        if (chunkPrimer.getBlockID(x, y + 1, z) == BlockType.EMPTY.getID())
-                            chunkPrimer.setBlockID(x, y, z, biome.getTopBlockID());
-                        else
-                            chunkPrimer.setBlockID(x, y, z, stoneBlockID);
+        for (int z = 0; z < Chunk.ZLENGTH; ++z) {
+            for (int x = 0; x < Chunk.XLENGTH; ++x) {
+                BiomeType biome = BiomeType.byID(biomeLayer.sampleNearest(x, z));
+                short stoneBlockID = BlockType.getStoneTypes()[stoneLayers[0].sampleNearest(x, z)].getID();
+                int state = 0;
+                int counter = 3;
+                
+                for (int y = Chunk.YLENGTH - 1; y > 0; --y) {
+                    switch (state) {
+                    case 0:
+                        if (chunkPrimer.getBlockID(x, y - 1, z) == BlockType.TEMP_SOLID.getID())
+                            ++state;
+                        break;
+                        
+                    case 1:
+                        chunkPrimer.setBlockID(x, y, z, biome.getTopBlockID());
+                        ++state;
+                        break;
+                        
+                    case 2:
+                        if (counter > 0) {
+                            chunkPrimer.setBlockID(x, y, z, BlockType.GRANITE_DIRT.getID());
+                            --counter;
+                            
+                            if (counter == 0) {
+                                --state;
+                                counter = 8;
+                            }
+                        }
+                        
+                        break;
+                        
+                    case 3:
+                        chunkPrimer.setBlockID(x, y, z, stoneBlockID);
+                        break;
                     }
                 }
             }
