@@ -13,8 +13,8 @@ import net.survival.world.gen.infinite.layer.GenLayerFactory;
 class TerrainGenerator
 {
     private static final int NBLOCK_YLENGTH = Chunk.YLENGTH / 32;
-    private static final int NBLOCK_ZLENGTH = Chunk.ZLENGTH / 8;
-    private static final int NBLOCK_XLENGTH = Chunk.XLENGTH / 8;
+    private static final int NBLOCK_ZLENGTH = Chunk.ZLENGTH / 4;
+    private static final int NBLOCK_XLENGTH = Chunk.XLENGTH / 4;
     private static final int NMAP_YLENGTH = (Chunk.YLENGTH / NBLOCK_YLENGTH) + 1;
     private static final int NMAP_ZLENGTH = (Chunk.ZLENGTH / NBLOCK_ZLENGTH) + 1;
     private static final int NMAP_XLENGTH = (Chunk.XLENGTH / NBLOCK_XLENGTH) + 1;
