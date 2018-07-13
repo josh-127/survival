@@ -96,7 +96,7 @@ class TerrainGenerator
                             --counter;
                             
                             if (counter == 0) {
-                                --state;
+                                ++state;
                                 counter = 8;
                             }
                         }
