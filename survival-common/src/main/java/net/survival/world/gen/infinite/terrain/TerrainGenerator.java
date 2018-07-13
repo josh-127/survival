@@ -15,7 +15,7 @@ class TerrainGenerator
     private static final int NBLOCK_YLENGTH = Chunk.YLENGTH / 32;
     private static final int NBLOCK_ZLENGTH = Chunk.ZLENGTH / 8;
     private static final int NBLOCK_XLENGTH = Chunk.XLENGTH / 8;
-    private static final int NMAP_YLENGTH = (Chunk.YLENGTH / NBLOCK_YLENGTH) + 2;
+    private static final int NMAP_YLENGTH = (Chunk.YLENGTH / NBLOCK_YLENGTH) + 1;
     private static final int NMAP_ZLENGTH = (Chunk.ZLENGTH / NBLOCK_ZLENGTH) + 1;
     private static final int NMAP_XLENGTH = (Chunk.XLENGTH / NBLOCK_XLENGTH) + 1;
     
@@ -64,18 +64,37 @@ class TerrainGenerator
             stoneLayers[i].generate(globalX, globalZ);
         
         ChunkPrimer chunkPrimer = new ChunkPrimer(cx, cz);
-        generateBase(cx, cz, chunkPrimer);
+        generateBase(chunkPrimer);
+        replaceBlocks(chunkPrimer);
         
         return chunkPrimer;
     }
+    
+    private void replaceBlocks(ChunkPrimer chunkPrimer) {
+        for (int y = 0; y < Chunk.YLENGTH - 1; ++y) {
+            for (int z = 0; z < Chunk.ZLENGTH; ++z) {
+                for (int x = 0; x < Chunk.XLENGTH; ++x) {
+                    BiomeType biome = BiomeType.byID(biomeLayer.sampleNearest(x, z));
+                    short stoneBlockID = BlockType.getStoneTypes()[stoneLayers[0].sampleNearest(x, z)].getID();
 
-    private void generateBase(int cx, int cz, ChunkPrimer chunkPrimer) {
+                    if (chunkPrimer.getBlockID(x, y, z) == BlockType.TEMP_SOLID.getID()) {
+                        if (chunkPrimer.getBlockID(x, y + 1, z) == BlockType.EMPTY.getID())
+                            chunkPrimer.setBlockID(x, y, z, biome.getTopBlockID());
+                        else
+                            chunkPrimer.setBlockID(x, y, z, stoneBlockID);
+                    }
+                }
+            }
+        }
+    }
+    
+    private void generateBase(ChunkPrimer chunkPrimer) {
         generateElevationMaps(minElevationMap, elevationRangeMap, chunkPrimer, biomeLayer);
-        generateDensityMap(densityMap, cx, cz, chunkPrimer, minElevationMap, elevationRangeMap);
+        generateDensityMap(densityMap, chunkPrimer.chunkX, chunkPrimer.chunkZ, chunkPrimer, minElevationMap,
+                elevationRangeMap);
         
         for (int y = 0; y < Chunk.YLENGTH; ++y) {
-            double noiseMapY      = (double) y / NBLOCK_YLENGTH;
-            double noiseMapYAbove = (double) (y + 1) / NBLOCK_YLENGTH;
+            double noiseMapY = (double) y / NBLOCK_YLENGTH;
             
             for (int z = 0; z < Chunk.ZLENGTH; ++z) {
                 double noiseMapZ = (double) z / NBLOCK_ZLENGTH;
@@ -83,18 +102,10 @@ class TerrainGenerator
                 for (int x = 0; x < Chunk.XLENGTH; ++x) {
                     double noiseMapX = (double) x / NBLOCK_XLENGTH;
                     
-                    BiomeType biome = BiomeType.byID(biomeLayer.sampleNearest(x, z));
-                    short stoneBlockID = BlockType.getStoneTypes()[stoneLayers[0].sampleNearest(x, z)].getID();
-                    
-                    if (densityMap.sampleLinear(noiseMapX, noiseMapY, noiseMapZ) >= 0) {
-                        if (densityMap.sampleLinear(noiseMapX, noiseMapYAbove, noiseMapZ) < 0)
-                            chunkPrimer.setBlockID(x, y, z, biome.getTopBlockID());
-                        else
-                            chunkPrimer.setBlockID(x, y, z, stoneBlockID);
-                    }
-                    else if (y <= OCEAN_LEVEL) {
+                    if (densityMap.sampleLinear(noiseMapX, noiseMapY, noiseMapZ) >= 0)
+                        chunkPrimer.setBlockID(x, y, z, BlockType.TEMP_SOLID.getID());
+                    else if (y <= OCEAN_LEVEL)
                         chunkPrimer.setBlockID(x, y, z, BlockType.WATER.getID());
-                    }
                 }
             }
         }
