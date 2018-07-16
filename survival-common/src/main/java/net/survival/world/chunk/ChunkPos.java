@@ -48,6 +48,13 @@ public class ChunkPos
         return toGlobalZ(cz, Chunk.ZLENGTH);
     }
     
+    public static boolean isInBounds(int lx, int ly, int lz) {
+        return
+                lx >= 0 && lx < Chunk.XLENGTH &&
+                ly >= 0 && ly < Chunk.YLENGTH &&
+                lz >= 0 && lz < Chunk.ZLENGTH;
+    }
+    
     /**
      * Hashes a chunk position into a 64-bit integer.
      * Bits 0-31: chunk x-position
