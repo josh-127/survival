@@ -1,8 +1,8 @@
-package net.survival.world.gen.infinite;
+package net.survival.world.gen;
 
 import net.survival.world.chunk.Chunk;
 import net.survival.world.chunk.ChunkGenerator;
-import net.survival.world.gen.infinite.terrain.WorldTerrain;
+import net.survival.world.gen.terrain.WorldTerrain;
 
 public class InfiniteChunkGenerator implements ChunkGenerator
 {

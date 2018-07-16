@@ -1,4 +1,4 @@
-package net.survival.world.gen.infinite;
+package net.survival.world.gen;
 
 import net.survival.block.BlockType;
 

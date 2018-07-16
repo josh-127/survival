@@ -10,9 +10,9 @@ import java.awt.event.KeyListener;
 import javax.swing.JComponent;
 import javax.swing.Timer;
 
-import net.survival.world.gen.infinite.BiomeType;
-import net.survival.world.gen.infinite.layer.GenLayer;
-import net.survival.world.gen.infinite.layer.GenLayerFactory;
+import net.survival.world.gen.BiomeType;
+import net.survival.world.gen.layer.GenLayer;
+import net.survival.world.gen.layer.GenLayerFactory;
 
 public class ViewportComponent extends JComponent implements ActionListener, KeyListener
 {

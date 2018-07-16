@@ -1,4 +1,4 @@
-package net.survival.world.gen.infinite.layer;
+package net.survival.world.gen.layer;
 
 class BoxMagnifiedGenLayer extends GenLayer
 {

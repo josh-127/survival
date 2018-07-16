@@ -18,8 +18,8 @@ import net.survival.world.World;
 import net.survival.world.chunk.ChunkPos;
 import net.survival.world.chunk.DefaultChunkProvider;
 import net.survival.world.chunk.EntityRelocator;
+import net.survival.world.gen.InfiniteChunkGenerator;
 import net.survival.world.chunk.CircularChunkLoader;
-import net.survival.world.gen.infinite.InfiniteChunkGenerator;
 
 public class Client implements AutoCloseable
 {
