@@ -7,7 +7,7 @@ public enum BiomeType
     OCEAN((bt) -> {
         bt.topBlockID = BlockType.LIMESTONE_DIRT.getID();
         bt.minElevation = 16.0;
-        bt.maxElevation = 48.0;
+        bt.maxElevation = 61.0;
         bt.biomeViewerColor = 0x000000FF;
     }),
     GRASSLAND((bt) -> {
@@ -19,7 +19,7 @@ public enum BiomeType
     FOREST((bt) -> {
         bt.topBlockID = BlockType.GRASS.getID();
         bt.minElevation = 72.0;
-        bt.maxElevation = 80.0;
+        bt.maxElevation = 86.0;
         bt.biomeViewerColor = 0x00009F00;
     }),
     EXTREME_HILLS((bt) -> {

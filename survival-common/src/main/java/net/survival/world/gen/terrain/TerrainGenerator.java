@@ -19,13 +19,13 @@ class TerrainGenerator
     private static final int NMAP_ZLENGTH = (Chunk.ZLENGTH / NBLOCK_ZLENGTH) + 1;
     private static final int NMAP_XLENGTH = (Chunk.XLENGTH / NBLOCK_XLENGTH) + 1;
     
-    private static final double MAIN_NOISE_XSCALE = 1.0 / 4096.0;
-    private static final double MAIN_NOISE_YSCALE = 1.0 / 1024.0;
-    private static final double MAIN_NOISE_ZSCALE = 1.0 / 4096.0;
-    private static final int MAIN_NOISE_OCTAVE_COUNT = 12;
+    private static final double MAIN_NOISE_XSCALE = 1.0 / 128.0;
+    private static final double MAIN_NOISE_YSCALE = 1.0 / 128.0;
+    private static final double MAIN_NOISE_ZSCALE = 1.0 / 128.0;
+    private static final int MAIN_NOISE_OCTAVE_COUNT = 6;
     
-    private static final int BIOME_TRANSITION_XLENGTH = NBLOCK_XLENGTH * 8;
-    private static final int BIOME_TRANSITION_ZLENGTH = NBLOCK_ZLENGTH * 8;
+    private static final int BIOME_TRANSITION_XLENGTH = NBLOCK_XLENGTH * 4;
+    private static final int BIOME_TRANSITION_ZLENGTH = NBLOCK_ZLENGTH * 4;
     private static final int BIOME_TRANSITION_AREA = BIOME_TRANSITION_XLENGTH * BIOME_TRANSITION_ZLENGTH;
     
     private static final int OCEAN_LEVEL = 64;
@@ -42,15 +42,15 @@ class TerrainGenerator
         mainNoiseGenerator = new ImprovedNoiseGenerator3D(MAIN_NOISE_XSCALE, MAIN_NOISE_YSCALE, MAIN_NOISE_ZSCALE,
                 MAIN_NOISE_OCTAVE_COUNT, seed);
 
-        biomeLayer = GenLayerFactory.createBiomeLayer(64, 64, seed);
+        biomeLayer = GenLayerFactory.createBiomeLayer(Chunk.XLENGTH * 4, Chunk.ZLENGTH * 4, seed);
         stoneLayers = new GenLayer[BlockType.getStoneTypes().length];
         
         for (int i = 0; i < stoneLayers.length; ++i)
-            stoneLayers[i] = GenLayerFactory.createStoneLayer(64, 64, seed + i + 1L);
+            stoneLayers[i] = GenLayerFactory.createStoneLayer(Chunk.XLENGTH * 4, Chunk.ZLENGTH * 4, seed + i + 1L);
         
         densityMap = new DoubleMap3D(NMAP_XLENGTH, NMAP_YLENGTH, NMAP_ZLENGTH);
-        minElevationMap = new DoubleMap2D(NMAP_XLENGTH, NMAP_ZLENGTH);
-        elevationRangeMap = new DoubleMap2D(NMAP_XLENGTH, NMAP_ZLENGTH);
+        minElevationMap = new DoubleMap2D(Chunk.XLENGTH, Chunk.ZLENGTH);
+        elevationRangeMap = new DoubleMap2D(Chunk.XLENGTH, Chunk.ZLENGTH);
     }
     
     public ChunkPrimer generate(int cx, int cz) {
@@ -79,19 +79,20 @@ class TerrainGenerator
                 int state = 0;
                 int counter = 3;
                 
-                for (int y = Chunk.YLENGTH - 1; y > 0; --y) {
+                for (int y = Chunk.YLENGTH - 1; y >= 0; --y) {
+                    if (chunkPrimer.getBlockID(x, y, z) != BlockType.TEMP_SOLID.getID()) {
+                        state = 0;
+                        counter = 3;
+                        continue;
+                    }
+                    
                     switch (state) {
                     case 0:
-                        if (chunkPrimer.getBlockID(x, y - 1, z) == BlockType.TEMP_SOLID.getID())
-                            ++state;
-                        break;
-                        
-                    case 1:
                         chunkPrimer.setBlockID(x, y, z, biome.getTopBlockID());
                         ++state;
                         break;
                         
-                    case 2:
+                    case 1:
                         if (counter > 0) {
                             chunkPrimer.setBlockID(x, y, z, BlockType.GRANITE_DIRT.getID());
                             --counter;
@@ -104,7 +105,7 @@ class TerrainGenerator
                         
                         break;
                         
-                    case 3:
+                    case 2:
                         chunkPrimer.setBlockID(x, y, z, stoneBlockID);
                         break;
                     }
@@ -115,8 +116,6 @@ class TerrainGenerator
     
     private void generateBase(ChunkPrimer chunkPrimer) {
         generateElevationMaps(minElevationMap, elevationRangeMap, chunkPrimer, biomeLayer);
-        generateDensityMap(densityMap, chunkPrimer.chunkX, chunkPrimer.chunkZ, chunkPrimer, minElevationMap,
-                elevationRangeMap);
         
         for (int y = 0; y < Chunk.YLENGTH; ++y) {
             double noiseMapY = (double) y / NBLOCK_YLENGTH;
@@ -127,7 +126,13 @@ class TerrainGenerator
                 for (int x = 0; x < Chunk.XLENGTH; ++x) {
                     double noiseMapX = (double) x / NBLOCK_XLENGTH;
                     
-                    if (densityMap.sampleLinear(noiseMapX, noiseMapY, noiseMapZ) >= 0)
+                    double density = densityMap.sampleLinear(noiseMapX, noiseMapY, noiseMapZ);
+                    
+                    double minElevation = minElevationMap.sampleNearest(x, z);
+                    double elevationRange = elevationRangeMap.sampleNearest(x, z);
+                    double threshold = (y - minElevation) / elevationRange;
+                    
+                    if (density >= threshold)
                         chunkPrimer.setBlockID(x, y, z, BlockType.TEMP_SOLID.getID());
                     else if (y <= OCEAN_LEVEL)
                         chunkPrimer.setBlockID(x, y, z, BlockType.WATER.getID());
@@ -139,17 +144,14 @@ class TerrainGenerator
     private void generateElevationMaps(DoubleMap2D minElevationMap, DoubleMap2D elevationRangeMap,
             ChunkPrimer chunkPrimer, GenLayer genLayer)
     {
-        for (int blockZ = 0; blockZ < NMAP_ZLENGTH; ++blockZ) {
-            for (int blockX = 0; blockX < NMAP_XLENGTH; ++blockX) {
+        for (int z = 0; z < Chunk.ZLENGTH; ++z) {
+            for (int x = 0; x < Chunk.XLENGTH; ++x) {
                 double avgMinElevation = 0.0;
                 double avgMaxElevation = 0.0;
                 
                 for (int subZ = 0; subZ < BIOME_TRANSITION_ZLENGTH; ++subZ) {
                     for (int subX = 0; subX < BIOME_TRANSITION_XLENGTH; ++subX) {
-                        int x = subX + blockX * NBLOCK_XLENGTH;
-                        int z = subZ + blockZ * NBLOCK_ZLENGTH;
-                        BiomeType biome = BiomeType.byID(genLayer.sampleNearest(x, z));
-                        
+                        BiomeType biome = BiomeType.byID(genLayer.sampleNearest(x + subX, z + subZ));
                         avgMinElevation += biome.getMinElevation();
                         avgMaxElevation += biome.getMaxElevation();
                     }
@@ -157,27 +159,9 @@ class TerrainGenerator
                 
                 avgMinElevation /= BIOME_TRANSITION_AREA;
                 avgMaxElevation /= BIOME_TRANSITION_AREA;
-
-                minElevationMap.setPoint(blockX, blockZ, avgMinElevation);
-                elevationRangeMap.setPoint(blockX, blockZ, avgMaxElevation - avgMinElevation);
-            }
-        }
-    }
-
-    private void generateDensityMap(DoubleMap3D map, int cx, int cz, ChunkPrimer chunkPrimer,
-            DoubleMap2D minElevationMap, DoubleMap2D elevationRangeMap)
-    {
-        for (int y = 0; y < map.lengthY; ++y) {
-            int globalY = y * NBLOCK_YLENGTH;
-
-            for (int z = 0; z < map.lengthZ; ++z) {
-                for (int x = 0; x < map.lengthX; ++x) {
-                    double density = map.sampleNearest(x, y, z);
-                    double elevationRange = elevationRangeMap.sampleNearest(x, z);
-                    double minElevation = minElevationMap.sampleNearest(x, z);
-                    density -= (globalY - minElevation) / elevationRange;
-                    map.setPoint(x, y, z, density);
-                }
+                
+                minElevationMap.setPoint(x, z, avgMinElevation);
+                elevationRangeMap.setPoint(x, z, avgMaxElevation);
             }
         }
     }
