@@ -20,7 +20,7 @@ class LandGenLayer extends GenLayer
             for (int x = 0; x < lengthX; ++x) {
                 random = rngFromPosition(random, offsetX + x, offsetZ + z);
                 int dstIndex = x + z * lengthX;
-                if (random.nextInt(5) == 0)
+                if (random.nextInt(2) == 0)
                     map[dstIndex] = (byte) (random.nextInt(BiomeType.getCachedValues().length - 1) + 1);
                 else
                     map[dstIndex] = 0;
