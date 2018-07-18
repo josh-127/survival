@@ -32,7 +32,6 @@ class TerrainGenerator
     
     private final ImprovedNoiseGenerator3D mainNoiseGenerator;
     private final GenLayer biomeLayer;
-    private final GenLayer[] stoneLayers;
     
     private final DoubleMap3D densityMap;
     private final DoubleMap2D minElevationMap;
@@ -43,10 +42,6 @@ class TerrainGenerator
                 MAIN_NOISE_OCTAVE_COUNT, seed);
 
         biomeLayer = GenLayerFactory.createBiomeLayer(Chunk.XLENGTH * 4, Chunk.ZLENGTH * 4, seed);
-        stoneLayers = new GenLayer[BlockType.getStoneTypes().length];
-        
-        for (int i = 0; i < stoneLayers.length; ++i)
-            stoneLayers[i] = GenLayerFactory.createStoneLayer(Chunk.XLENGTH * 4, Chunk.ZLENGTH * 4, seed + i + 1L);
         
         densityMap = new DoubleMap3D(NMAP_XLENGTH, NMAP_YLENGTH, NMAP_ZLENGTH);
         minElevationMap = new DoubleMap2D(Chunk.XLENGTH, Chunk.ZLENGTH);
@@ -61,8 +56,6 @@ class TerrainGenerator
         
         mainNoiseGenerator.generate(densityMap, offsetX, 0.0, offsetZ);
         biomeLayer.generate(globalX, globalZ);
-        for (int i = 0; i < stoneLayers.length; ++i)
-            stoneLayers[i].generate(globalX, globalZ);
         
         ChunkPrimer chunkPrimer = new ChunkPrimer(cx, cz);
         generateBase(chunkPrimer);
@@ -75,7 +68,6 @@ class TerrainGenerator
         for (int z = 0; z < Chunk.ZLENGTH; ++z) {
             for (int x = 0; x < Chunk.XLENGTH; ++x) {
                 BiomeType biome = BiomeType.byID(biomeLayer.sampleNearest(x, z));
-                short stoneBlockID = BlockType.getStoneTypes()[stoneLayers[0].sampleNearest(x, z)].getID();
                 int state = 0;
                 int counter = 3;
                 
@@ -94,7 +86,7 @@ class TerrainGenerator
                         
                     case 1:
                         if (counter > 0) {
-                            chunkPrimer.setBlockID(x, y, z, BlockType.GRANITE_DIRT.getID());
+                            chunkPrimer.setBlockID(x, y, z, BlockType.DIRT.getID());
                             --counter;
                             
                             if (counter == 0) {
@@ -106,7 +98,7 @@ class TerrainGenerator
                         break;
                         
                     case 2:
-                        chunkPrimer.setBlockID(x, y, z, stoneBlockID);
+                        chunkPrimer.setBlockID(x, y, z, BlockType.STONE.getID());
                         break;
                     }
                 }

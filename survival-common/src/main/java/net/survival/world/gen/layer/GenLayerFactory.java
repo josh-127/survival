@@ -27,26 +27,4 @@ public interface GenLayerFactory
                                 )
                         ).create(lengthX, lengthZ, baseSeed);
     }
-    
-    public static GenLayer createStoneLayer(int lengthX, int lengthZ, long baseSeed) {
-        // TODO: Replace this mess.
-        return
-                new FuzzyMagnifiedGenLayer.Factory(
-                        new FuzzyMagnifiedGenLayer.Factory(
-                                new FuzzyMagnifiedGenLayer.Factory(
-                                        new FuzzyMagnifiedGenLayer.Factory(
-                                                new FuzzyMagnifiedGenLayer.Factory(
-                                                        new FuzzyMagnifiedGenLayer.Factory(
-                                                                new FuzzyMagnifiedGenLayer.Factory(
-                                                                        new FuzzyMagnifiedGenLayer.Factory(
-                                                                                new StoneGenLayer.Factory()
-                                                                                )
-                                                                        )
-                                                                )
-                                                        )
-                                                )
-                                        )
-                                )
-                        ).create(lengthX, lengthZ, baseSeed);
-    }
 }

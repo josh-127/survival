@@ -5,7 +5,7 @@ import net.survival.block.BlockType;
 public enum BiomeType
 {
     OCEAN((bt) -> {
-        bt.topBlockID = BlockType.LIMESTONE_DIRT.getID();
+        bt.topBlockID = BlockType.DIRT.getID();
         bt.minElevation = 16.0;
         bt.maxElevation = 61.0;
         bt.biomeViewerColor = 0x000000FF;
@@ -29,7 +29,7 @@ public enum BiomeType
         bt.biomeViewerColor = 0x00FF7F00;
     }),
     DESERT((bt) -> {
-        bt.topBlockID = BlockType.LIMESTONE_SAND.getID();
+        bt.topBlockID = BlockType.SAND.getID();
         bt.minElevation = 65.0;
         bt.maxElevation = 72.0;
         bt.biomeViewerColor = 0x00FFFF00;
@@ -51,7 +51,7 @@ public enum BiomeType
     private int biomeViewerColor;
     
     private BiomeType(Builder builder) {
-        topBlockID = BlockType.GRANITE.getID();
+        topBlockID = BlockType.STONE.getID();
         minElevation = 0.0;
         maxElevation = 1.0;
         builder.build(this);
