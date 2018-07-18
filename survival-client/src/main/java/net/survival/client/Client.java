@@ -16,10 +16,11 @@ import net.survival.entity.Cow;
 import net.survival.world.EntityPhysics;
 import net.survival.world.World;
 import net.survival.world.chunk.ChunkPos;
-import net.survival.world.chunk.DefaultChunkProvider;
+import net.survival.world.chunk.ChunkSystem;
 import net.survival.world.chunk.EntityRelocator;
 import net.survival.world.gen.InfiniteChunkGenerator;
 import net.survival.world.chunk.CircularChunkLoader;
+import net.survival.world.chunk.DefaultChunkDatabase;
 
 public class Client implements AutoCloseable
 {
@@ -27,10 +28,13 @@ public class Client implements AutoCloseable
 
     private final World world;
     
-    private final DefaultChunkProvider chunkProvider;
     private final CircularChunkLoader chunkLoader;
     private final EntityPhysics entityPhysics;
     private final EntityRelocator entityRelocator;
+    
+    private final DefaultChunkDatabase chunkDatabase;
+    private final InfiniteChunkGenerator chunkGenerator;
+    private final ChunkSystem chunkSystem;
     
     private final Control control;
     
@@ -41,12 +45,13 @@ public class Client implements AutoCloseable
     
     private Client() {
         world = new World();
-        chunkProvider = new DefaultChunkProvider(world, new InfiniteChunkGenerator(0L));
         chunkLoader = new CircularChunkLoader(8);
         entityPhysics = new EntityPhysics(world);
         entityRelocator = new EntityRelocator(world);
         
-        chunkProvider.addChunkLoader(chunkLoader);
+        chunkDatabase = new DefaultChunkDatabase();
+        chunkGenerator = new InfiniteChunkGenerator(0L);
+        chunkSystem = new ChunkSystem(chunkDatabase, chunkGenerator);
         
         control = new Control();
         control.getClientRectangle().setRight(0.1);
@@ -77,7 +82,7 @@ public class Client implements AutoCloseable
         int cz = ChunkPos.toChunkZ((int) Math.floor(z));
         chunkLoader.setCenter(cx, cz);
         
-        chunkProvider.tick(elapsedTime);
+        chunkSystem.update(world, chunkLoader);
         entityPhysics.tick(elapsedTime);
         entityRelocator.relocateEntities();
         

@@ -43,7 +43,7 @@ public class CircularChunkLoader implements ChunkLoader
     
     @Override
     public Set<Long> getChunkPositions() {
-        return Collections.unmodifiableSet(chunkPositions);
+        return new TreeSet<>(chunkPositions);
     }
     
     private int squareDistance(int x, int z) {
