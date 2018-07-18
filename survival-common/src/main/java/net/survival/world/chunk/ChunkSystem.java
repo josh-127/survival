@@ -21,32 +21,37 @@ public class ChunkSystem
 
     public void update(World world, ChunkLoader chunkLoader) {
         Set<Long> chunksToLoad = chunkLoader.getChunkPositions();
-
-        for (Map.Entry<Long, Chunk> entry : world.iterateChunkMap()) {
+        
+        Iterator<Map.Entry<Long, Chunk>> chunkMapIt = world.iterateChunkMap().iterator();
+        while (chunkMapIt.hasNext()) {
+            Map.Entry<Long, Chunk> entry = chunkMapIt.next();
             long hashedPos = entry.getKey();
-            chunksToLoad.remove(hashedPos);
+            if (chunksToLoad.contains(hashedPos))
+                chunksToLoad.remove(hashedPos);
+            else
+                chunkMapIt.remove();
         }
 
-        Iterator<Long> iterator = chunksToLoad.iterator();
-        for (int i = 0; i < DATABASE_LOAD_RATE && iterator.hasNext(); ++i) {
-            long hashedPos = iterator.next();
+        Iterator<Long> chunksToLoadIt = chunksToLoad.iterator();
+        for (int i = 0; i < DATABASE_LOAD_RATE && chunksToLoadIt.hasNext(); ++i) {
+            long hashedPos = chunksToLoadIt.next();
             int cx = ChunkPos.chunkXFromHashedPos(hashedPos);
             int cz = ChunkPos.chunkZFromHashedPos(hashedPos);
             Chunk loadedChunk = chunkDatabase.loadChunk(cx, cz);
             if (loadedChunk != null) {
                 world.addChunk(cx, cz, loadedChunk);
-                iterator.remove();
+                chunksToLoadIt.remove();
             }
         }
 
-        iterator = chunksToLoad.iterator();
-        for (int i = 0; i < GENERATOR_LOAD_RATE && iterator.hasNext(); ++i) {
-            long hashedPos = iterator.next();
+        chunksToLoadIt = chunksToLoad.iterator();
+        for (int i = 0; i < GENERATOR_LOAD_RATE && chunksToLoadIt.hasNext(); ++i) {
+            long hashedPos = chunksToLoadIt.next();
             int cx = ChunkPos.chunkXFromHashedPos(hashedPos);
             int cz = ChunkPos.chunkZFromHashedPos(hashedPos);
             Chunk generatedChunk = chunkGenerator.generate(cx, cz);
             world.addChunk(cx, cz, generatedChunk);
-            iterator.remove();
+            chunksToLoadIt.remove();
         }
     }
 }
