@@ -26,6 +26,7 @@ class TerrainGenerator
     
     private static final int BIOME_TRANSITION_XLENGTH = NBLOCK_XLENGTH * 8;
     private static final int BIOME_TRANSITION_ZLENGTH = NBLOCK_ZLENGTH * 8;
+    private static final int BIOME_TRANSITION_AREA = BIOME_TRANSITION_XLENGTH * BIOME_TRANSITION_ZLENGTH;
     
     private static final int OCEAN_LEVEL = 64;
     
@@ -138,8 +139,6 @@ class TerrainGenerator
     private void generateElevationMaps(DoubleMap2D minElevationMap, DoubleMap2D elevationRangeMap,
             ChunkPrimer chunkPrimer, GenLayer genLayer)
     {
-        final int NBLOCK_BASE_AREA = BIOME_TRANSITION_XLENGTH * BIOME_TRANSITION_ZLENGTH;
-        
         for (int blockZ = 0; blockZ < NMAP_ZLENGTH; ++blockZ) {
             for (int blockX = 0; blockX < NMAP_XLENGTH; ++blockX) {
                 double avgMinElevation = 0.0;
@@ -156,8 +155,8 @@ class TerrainGenerator
                     }
                 }
                 
-                avgMinElevation /= NBLOCK_BASE_AREA;
-                avgMaxElevation /= NBLOCK_BASE_AREA;
+                avgMinElevation /= BIOME_TRANSITION_AREA;
+                avgMaxElevation /= BIOME_TRANSITION_AREA;
 
                 minElevationMap.setPoint(blockX, blockZ, avgMinElevation);
                 elevationRangeMap.setPoint(blockX, blockZ, avgMaxElevation - avgMinElevation);
