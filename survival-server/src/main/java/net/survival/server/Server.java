@@ -1,25 +1,20 @@
 package net.survival.server;
 
 import net.survival.world.World;
-import net.survival.world.chunk.DefaultChunkProvider;
 import net.survival.world.chunk.EntityRelocator;
-import net.survival.world.gen.InfiniteChunkGenerator;
 
 public class Server
 {
     private final World world;
     
-    private final DefaultChunkProvider chunkProvider;
     private final EntityRelocator entityRelocator;
     
     private Server() {
         world = new World();
-        chunkProvider = new DefaultChunkProvider(world, new InfiniteChunkGenerator(0L));
         entityRelocator = new EntityRelocator(world);
     }
 
     public void tick(double elapsedTime) {
-        chunkProvider.tick(elapsedTime);
         entityRelocator.relocateEntities();
     }
 
