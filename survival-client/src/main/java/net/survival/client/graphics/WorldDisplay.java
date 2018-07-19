@@ -4,7 +4,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import net.survival.block.BlockFace;
+import net.survival.client.graphics.opengl.GLFilterMode;
 import net.survival.client.graphics.opengl.GLMatrixStack;
+import net.survival.client.graphics.opengl.GLTexture;
+import net.survival.client.graphics.opengl.GLWrapMode;
 import net.survival.world.World;
 import net.survival.world.chunk.Chunk;
 import net.survival.world.chunk.ChunkPos;
@@ -25,6 +28,7 @@ class WorldDisplay implements GraphicsResource
     private HashMap<Chunk, ChunkDisplay> frontFaceDisplays;
     private HashMap<Chunk, ChunkDisplay> backFaceDisplays;
     private final BlockTextureAtlas[] blockTextures;
+    private final GLTexture overlayTexture;
     
     private final Camera camera;
     private final float maxViewRadius;
@@ -42,6 +46,17 @@ class WorldDisplay implements GraphicsResource
         blockTextures = new BlockTextureAtlas[BlockFace.values().length];
         for (int i = 0; i < blockTextures.length; ++i)
             blockTextures[i] = new BlockTextureAtlas(BlockFace.values()[i]);
+        
+        Bitmap overlayBitmap = Bitmap.fromFile("../assets/textures/overlays/low_contrast.png");
+        overlayTexture = new GLTexture();
+        overlayTexture.beginBind()
+                .setMinFilter(GLFilterMode.LINEAR_MIPMAP_LINEAR)
+                .setMagFilter(GLFilterMode.LINEAR)
+                .setWrapS(GLWrapMode.REPEAT)
+                .setWrapT(GLWrapMode.REPEAT)
+                .setMipmapEnabled(true)
+                .setData(overlayBitmap)
+                .endBind();
         
         this.camera = camera;
         this.maxViewRadius = maxViewRadius;
@@ -86,7 +101,6 @@ class WorldDisplay implements GraphicsResource
         drawFaceDisplays(backFaceDisplays, BlockFace.BACK, false);
         
         GLMatrixStack.pop();
-
     }
 
     private void drawFaceDisplays(HashMap<Chunk, ChunkDisplay> faceDisplays, BlockFace blockFace,
@@ -113,6 +127,14 @@ class WorldDisplay implements GraphicsResource
             GLMatrixStack.push();
             GLMatrixStack.translate(globalX, 0.0f, globalZ);
             display.displayBlocks(blockTextures[blockFace.ordinal()].blockTextures);
+            
+            // TODO: Make OpenGL wrapper class.
+            org.lwjgl.opengl.GL11.glEnable(org.lwjgl.opengl.GL11.GL_BLEND);
+            org.lwjgl.opengl.GL11.glBlendFunc(org.lwjgl.opengl.GL11.GL_ZERO, org.lwjgl.opengl.GL11.GL_SRC_COLOR);
+            display.overlayDisplay.displayBlocks(overlayTexture);
+            org.lwjgl.opengl.GL11.glBlendFunc(org.lwjgl.opengl.GL11.GL_ONE, org.lwjgl.opengl.GL11.GL_ZERO);
+            org.lwjgl.opengl.GL11.glDisable(org.lwjgl.opengl.GL11.GL_BLEND);
+            
             GLMatrixStack.pop();
         }
     }

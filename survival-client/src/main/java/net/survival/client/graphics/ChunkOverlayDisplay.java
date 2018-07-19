@@ -2,28 +2,29 @@ package net.survival.client.graphics;
 
 import net.survival.block.BlockFace;
 import net.survival.block.BlockType;
-import net.survival.client.graphics.model.ModelRenderer;
-import net.survival.client.graphics.model.StaticModel;
 import net.survival.client.graphics.opengl.GLDisplayList;
-import net.survival.client.graphics.opengl.GLMatrixStack;
 import net.survival.client.graphics.opengl.GLRenderContext;
 import net.survival.client.graphics.opengl.GLTexture;
-import net.survival.entity.Entity;
 import net.survival.world.chunk.Chunk;
+import net.survival.world.chunk.ChunkPos;
 
-class ChunkDisplay implements GraphicsResource
+//
+// Temporary code.
+//
+class ChunkOverlayDisplay implements GraphicsResource
 {
+    private static final int OVERLAY_SIZE = 64;
+    private static final float OVERLAY_SIZE_F = OVERLAY_SIZE;
+    private static final float INV_OVERLAY_SIZE_F = 1.0f / OVERLAY_SIZE_F;
+    
     public final GLDisplayList displayList;
     public final int chunkX;
     public final int chunkZ;
     public final Chunk chunk;
     public final Chunk adjacentChunk;
     public final BlockFace blockFace;
-    
-    public final ChunkOverlayDisplay overlayDisplay;
 
-    public ChunkDisplay(int cx, int cz, Chunk chunk, Chunk adjacentChunk, BlockFace blockFace,
-            BlockTextureAtlas atlas)
+    public ChunkOverlayDisplay(int cx, int cz, Chunk chunk, Chunk adjacentChunk, BlockFace blockFace)
     {
         GLDisplayList.Builder builder = new GLDisplayList.Builder();
         
@@ -38,11 +39,15 @@ class ChunkDisplay implements GraphicsResource
                         
                         if (!BlockType.byID(blockID).isVisible())
                             continue;
+                        
+                        if (blockID == BlockType.WATER.getID())
+                            continue;
 
                         if (BlockType.byID(chunk.getBlockID(x, y + 1, z)).isVisible())
                             continue;
 
-                        pushTopFace(x, y, z, atlas, blockID, builder);
+                        pushTopFace(x, y, z, ChunkPos.toGlobalX(cx, x), ChunkPos.toGlobalZ(cz, z),
+                                blockID, builder);
                         ++faceCount;
                     }
                 }
@@ -55,10 +60,14 @@ class ChunkDisplay implements GraphicsResource
                     if (!BlockType.byID(blockID).isVisible())
                         continue;
                     
+                    if (blockID == BlockType.WATER.getID())
+                        continue;
+                    
                     if (BlockType.byID(adjacentChunk.getBlockID(x, 0, z)).isVisible())
                         continue;
 
-                    pushTopFace(x, Chunk.YLENGTH - 1, z, atlas, blockID, builder);
+                    pushTopFace(x, Chunk.YLENGTH - 1, z, ChunkPos.toGlobalX(cx, x),
+                            ChunkPos.toGlobalZ(cz, z), blockID, builder);
                     ++faceCount;
                 }
             }
@@ -73,11 +82,15 @@ class ChunkDisplay implements GraphicsResource
                         
                         if (!BlockType.byID(blockID).isVisible())
                             continue;
+                        
+                        if (blockID == BlockType.WATER.getID())
+                            continue;
 
                         if (BlockType.byID(chunk.getBlockID(x, y - 1, z)).isVisible())
                             continue;
 
-                        pushBottomFace(x, y, z, atlas, blockID, builder);
+                        pushBottomFace(x, y, z, ChunkPos.toGlobalX(cx, x),
+                                ChunkPos.toGlobalZ(cz, z), blockID, builder);
                         ++faceCount;
                     }
                 }
@@ -90,10 +103,14 @@ class ChunkDisplay implements GraphicsResource
                     if (!BlockType.byID(blockID).isVisible())
                         continue;
                     
-                    if (BlockType.byID(adjacentChunk.getBlockID(x, Chunk.YLENGTH - 1, z)).isVisible())
+                    if (blockID == BlockType.WATER.getID())
                         continue;
                     
-                    pushBottomFace(x, 0, z, atlas, blockID, builder);
+                    if (BlockType.byID(adjacentChunk.getBlockID(x, Chunk.YLENGTH - 1, z)).isVisible())
+                        continue;
+
+                    pushBottomFace(x, 0, z, ChunkPos.toGlobalX(cx, x),
+                            ChunkPos.toGlobalZ(cz, z), blockID, builder);
                     ++faceCount;
                 }
             }
@@ -108,11 +125,14 @@ class ChunkDisplay implements GraphicsResource
                         
                         if (!BlockType.byID(blockID).isVisible())
                             continue;
+                        
+                        if (blockID == BlockType.WATER.getID())
+                            continue;
 
                         if (BlockType.byID(chunk.getBlockID(x, y, z + 1)).isVisible())
                             continue;
 
-                        pushFrontFace(x, y, z, atlas, blockID, builder);
+                        pushFrontFace(x, y, z, ChunkPos.toGlobalX(cx, x), blockID, builder);
                         ++faceCount;
                     }
                 }
@@ -129,7 +149,7 @@ class ChunkDisplay implements GraphicsResource
                         if (BlockType.byID(adjacentChunk.getBlockID(x, y, 0)).isVisible())
                             continue;
 
-                        pushFrontFace(x, y, Chunk.ZLENGTH - 1, atlas, blockID, builder);
+                        pushFrontFace(x, y, Chunk.ZLENGTH - 1, ChunkPos.toGlobalX(cx, x), blockID, builder);
                         ++faceCount;
                     }
                 }
@@ -145,11 +165,14 @@ class ChunkDisplay implements GraphicsResource
                         
                         if (!BlockType.byID(blockID).isVisible())
                             continue;
+                        
+                        if (blockID == BlockType.WATER.getID())
+                            continue;
 
                         if (BlockType.byID(chunk.getBlockID(x, y, z - 1)).isVisible())
                             continue;
 
-                        pushBackFace(x, y, z, atlas, blockID, builder);
+                        pushBackFace(x, y, z, ChunkPos.toGlobalX(cx, x), blockID, builder);
                         ++faceCount;
                     }
                 }
@@ -162,11 +185,14 @@ class ChunkDisplay implements GraphicsResource
                         
                         if (!BlockType.byID(blockID).isVisible())
                             continue;
+                        
+                        if (blockID == BlockType.WATER.getID())
+                            continue;
 
                         if (BlockType.byID(adjacentChunk.getBlockID(x, y, Chunk.ZLENGTH - 1)).isVisible())
                             continue;
 
-                        pushBackFace(x, y, 0, atlas, blockID, builder);
+                        pushBackFace(x, y, 0, ChunkPos.toGlobalX(cx, x), blockID, builder);
                         ++faceCount;
                     }
                 }
@@ -182,11 +208,14 @@ class ChunkDisplay implements GraphicsResource
                         
                         if (!BlockType.byID(blockID).isVisible())
                             continue;
+                        
+                        if (blockID == BlockType.WATER.getID())
+                            continue;
 
                         if (BlockType.byID(chunk.getBlockID(x - 1, y, z)).isVisible())
                             continue;
 
-                        pushLeftFace(x, y, z, atlas, blockID, builder);
+                        pushLeftFace(x, y, z, ChunkPos.toGlobalZ(cz, z), blockID, builder);
                         ++faceCount;
                     }
                 }
@@ -199,11 +228,14 @@ class ChunkDisplay implements GraphicsResource
                         
                         if (!BlockType.byID(blockID).isVisible())
                             continue;
+                        
+                        if (blockID == BlockType.WATER.getID())
+                            continue;
 
                         if (BlockType.byID(adjacentChunk.getBlockID(Chunk.XLENGTH - 1, y, z)).isVisible())
                             continue;
 
-                        pushLeftFace(0, y, z, atlas, blockID, builder);
+                        pushLeftFace(0, y, z, ChunkPos.toGlobalZ(cz, z), blockID, builder);
                         ++faceCount;
                     }
                 }
@@ -219,11 +251,14 @@ class ChunkDisplay implements GraphicsResource
                         
                         if (!BlockType.byID(blockID).isVisible())
                             continue;
+                        
+                        if (blockID == BlockType.WATER.getID())
+                            continue;
 
                         if (BlockType.byID(chunk.getBlockID(x + 1, y, z)).isVisible())
                             continue;
 
-                        pushRightFace(x, y, z, atlas, blockID, builder);
+                        pushRightFace(x, y, z, ChunkPos.toGlobalZ(cz, z), blockID, builder);
                         ++faceCount;
                     }
                 }
@@ -236,11 +271,14 @@ class ChunkDisplay implements GraphicsResource
                         
                         if (!BlockType.byID(blockID).isVisible())
                             continue;
+                        
+                        if (blockID == BlockType.WATER.getID())
+                            continue;
 
                         if (BlockType.byID(adjacentChunk.getBlockID(0, y, z)).isVisible())
                             continue;
 
-                        pushRightFace(Chunk.XLENGTH - 1, y, z, atlas, blockID, builder);
+                        pushRightFace(Chunk.XLENGTH - 1, y, z, ChunkPos.toGlobalZ(cz, z), blockID, builder);
                         ++faceCount;
                     }
                 }
@@ -262,8 +300,6 @@ class ChunkDisplay implements GraphicsResource
         this.chunk = chunk;
         this.adjacentChunk = adjacentChunk;
         this.blockFace = blockFace;
-        
-        overlayDisplay = new ChunkOverlayDisplay(cx, cz, chunk, adjacentChunk, blockFace);
     }
     
     @Override
@@ -280,106 +316,89 @@ class ChunkDisplay implements GraphicsResource
             GLRenderContext.callDisplayList(displayList, texture);
     }
     
-    /**
-     * Displays the chunk's containing entities.
-     */
-    public void displayEntities() {
-        for (Entity entity : chunk.iterateEntities()) {
-            GLMatrixStack.push();
-            GLMatrixStack.translate((float) entity.getX(), (float) entity.getY(), (float) entity.getZ());
-            
-            StaticModel model = StaticModel.fromEntity(entity);
-            ModelRenderer.displayStaticModel(model);
-            
-            GLMatrixStack.pop();
-        }
-    }
-    
     public boolean isEmpty() {
         return displayList == null;
     }
 
-    private void pushTopFace(int x, int y, int z, BlockTextureAtlas atlas, short blockID, GLDisplayList.Builder builder) {
-        float shade = 1.0f;
-        float u1 = atlas.getTexCoordU1(blockID);
-        float u2 = atlas.getTexCoordU2(blockID);
-        float v1 = atlas.getTexCoordV1(blockID);
-        float v2 = atlas.getTexCoordV2(blockID);
-        builder.pushVertex(x,        y + 1.0f, z + 1.0f, u1, v1, shade, shade, shade);
-        builder.pushVertex(x + 1.0f, y + 1.0f, z + 1.0f, u2, v1, shade, shade, shade);
-        builder.pushVertex(x + 1.0f, y + 1.0f, z,        u2, v2, shade, shade, shade);
-        builder.pushVertex(x + 1.0f, y + 1.0f, z,        u2, v2, shade, shade, shade);
-        builder.pushVertex(x,        y + 1.0f, z,        u1, v2, shade, shade, shade);
-        builder.pushVertex(x,        y + 1.0f, z + 1.0f, u1, v1, shade, shade, shade);
+    private void pushTopFace(int x, int y, int z, float gx, float gz, short blockID,
+            GLDisplayList.Builder builder)
+    {
+        float u1 = gx * INV_OVERLAY_SIZE_F;
+        float u2 = (gx + 1) * INV_OVERLAY_SIZE_F;
+        float v1 = (gz + 1) * INV_OVERLAY_SIZE_F;
+        float v2 = gz * INV_OVERLAY_SIZE_F;
+        builder.pushVertex(x, y + 1.0f, z + 1.0f, u1, v1, 1.0f, 1.0f, 1.0f);
+        builder.pushVertex(x + 1.0f, y + 1.0f, z + 1.0f, u2, v1, 1.0f, 1.0f, 1.0f);
+        builder.pushVertex(x + 1.0f, y + 1.0f, z, u2, v2, 1.0f, 1.0f, 1.0f);
+        builder.pushVertex(x + 1.0f, y + 1.0f, z, u2, v2, 1.0f, 1.0f, 1.0f);
+        builder.pushVertex(x, y + 1.0f, z, u1, v2, 1.0f, 1.0f, 1.0f);
+        builder.pushVertex(x, y + 1.0f, z + 1.0f, u1, v1, 1.0f, 1.0f, 1.0f);
     }
 
-    private void pushBottomFace(int x, int y, int z, BlockTextureAtlas atlas, short blockID, GLDisplayList.Builder builder) {
-        float shade = 0.25f;
-        float u1 = atlas.getTexCoordU1(blockID);
-        float u2 = atlas.getTexCoordU2(blockID);
-        float v1 = atlas.getTexCoordV1(blockID);
-        float v2 = atlas.getTexCoordV2(blockID);
-        builder.pushVertex(x,        y, z,        u1, v1, shade, shade, shade);
-        builder.pushVertex(x + 1.0f, y, z,        u2, v1, shade, shade, shade);
-        builder.pushVertex(x + 1.0f, y, z + 1.0f, u2, v2, shade, shade, shade);
-        builder.pushVertex(x + 1.0f, y, z + 1.0f, u2, v2, shade, shade, shade);
-        builder.pushVertex(x,        y, z + 1.0f, u1, v2, shade, shade, shade);
-        builder.pushVertex(x,        y, z,        u1, v1, shade, shade, shade);
+    private void pushBottomFace(int x, int y, int z, float gx, float gz, short blockID,
+            GLDisplayList.Builder builder)
+    {
+        float u1 = gx * INV_OVERLAY_SIZE_F;
+        float u2 = (gx + 1) * INV_OVERLAY_SIZE_F;
+        float v1 = (gz + 1) * INV_OVERLAY_SIZE_F;
+        float v2 = gz * INV_OVERLAY_SIZE_F;
+        builder.pushVertex(x, y, z, u1, v1, 1.0f, 1.0f, 1.0f);
+        builder.pushVertex(x + 1.0f, y, z, u2, v1, 1.0f, 1.0f, 1.0f);
+        builder.pushVertex(x + 1.0f, y, z + 1.0f, u2, v2, 1.0f, 1.0f, 1.0f);
+        builder.pushVertex(x + 1.0f, y, z + 1.0f, u2, v2, 1.0f, 1.0f, 1.0f);
+        builder.pushVertex(x, y, z + 1.0f, u1, v2, 1.0f, 1.0f, 1.0f);
+        builder.pushVertex(x, y, z, u1, v1, 1.0f, 1.0f, 1.0f);
     }
 
-    private void pushFrontFace(int x, int y, int z, BlockTextureAtlas atlas, short blockID, GLDisplayList.Builder builder) {
-        float shade = 0.75f;
-        float u1 = atlas.getTexCoordU1(blockID);
-        float u2 = atlas.getTexCoordU2(blockID);
-        float v1 = atlas.getTexCoordV1(blockID);
-        float v2 = atlas.getTexCoordV2(blockID);
-        builder.pushVertex(x,        y,        z + 1.0f, u1, v1, shade, shade, shade);
-        builder.pushVertex(x + 1.0f, y,        z + 1.0f, u2, v1, shade, shade, shade);
-        builder.pushVertex(x + 1.0f, y + 1.0f, z + 1.0f, u2, v2, shade, shade, shade);
-        builder.pushVertex(x + 1.0f, y + 1.0f, z + 1.0f, u2, v2, shade, shade, shade);
-        builder.pushVertex(x,        y + 1.0f, z + 1.0f, u1, v2, shade, shade, shade);
-        builder.pushVertex(x,        y,        z + 1.0f, u1, v1, shade, shade, shade);
+    private void pushFrontFace(int x, int y, int z, float gx, short blockID, GLDisplayList.Builder builder) {
+        float u1 = gx * INV_OVERLAY_SIZE_F;
+        float u2 = (gx + 1) * INV_OVERLAY_SIZE_F;
+        float v1 = y * INV_OVERLAY_SIZE_F;
+        float v2 = (y + 1) * INV_OVERLAY_SIZE_F;
+        builder.pushVertex(x,        y,        z + 1.0f, u1, v1, 1.0f, 1.0f, 1.0f);
+        builder.pushVertex(x + 1.0f, y,        z + 1.0f, u2, v1, 1.0f, 1.0f, 1.0f);
+        builder.pushVertex(x + 1.0f, y + 1.0f, z + 1.0f, u2, v2, 1.0f, 1.0f, 1.0f);
+        builder.pushVertex(x + 1.0f, y + 1.0f, z + 1.0f, u2, v2, 1.0f, 1.0f, 1.0f);
+        builder.pushVertex(x,        y + 1.0f, z + 1.0f, u1, v2, 1.0f, 1.0f, 1.0f);
+        builder.pushVertex(x,        y,        z + 1.0f, u1, v1, 1.0f, 1.0f, 1.0f);
     }
 
-    private void pushBackFace(int x, int y, int z, BlockTextureAtlas atlas, short blockID, GLDisplayList.Builder builder) {
-        float shade = 0.75f;
-        float u1 = atlas.getTexCoordU1(blockID);
-        float u2 = atlas.getTexCoordU2(blockID);
-        float v1 = atlas.getTexCoordV1(blockID);
-        float v2 = atlas.getTexCoordV2(blockID);
-        builder.pushVertex(x + 1.0f, y,        z, u1, v1, shade, shade, shade);
-        builder.pushVertex(x,        y,        z, u2, v1, shade, shade, shade);
-        builder.pushVertex(x,        y + 1.0f, z, u2, v2, shade, shade, shade);
-        builder.pushVertex(x,        y + 1.0f, z, u2, v2, shade, shade, shade);
-        builder.pushVertex(x + 1.0f, y + 1.0f, z, u1, v2, shade, shade, shade);
-        builder.pushVertex(x + 1.0f, y,        z, u1, v1, shade, shade, shade);
+    private void pushBackFace(int x, int y, int z, float gx, short blockID, GLDisplayList.Builder builder) {
+        float u1 = gx * INV_OVERLAY_SIZE_F;
+        float u2 = (gx + 1) * INV_OVERLAY_SIZE_F;
+        float v1 = y * INV_OVERLAY_SIZE_F;
+        float v2 = (y + 1) * INV_OVERLAY_SIZE_F;
+        builder.pushVertex(x + 1.0f, y,        z, u1, v1, 1.0f, 1.0f, 1.0f);
+        builder.pushVertex(x,        y,        z, u2, v1, 1.0f, 1.0f, 1.0f);
+        builder.pushVertex(x,        y + 1.0f, z, u2, v2, 1.0f, 1.0f, 1.0f);
+        builder.pushVertex(x,        y + 1.0f, z, u2, v2, 1.0f, 1.0f, 1.0f);
+        builder.pushVertex(x + 1.0f, y + 1.0f, z, u1, v2, 1.0f, 1.0f, 1.0f);
+        builder.pushVertex(x + 1.0f, y,        z, u1, v1, 1.0f, 1.0f, 1.0f);
     }
 
-    private void pushLeftFace(int x, int y, int z, BlockTextureAtlas atlas, short blockID, GLDisplayList.Builder builder) {
-        float shade = 0.5f;
-        float u1 = atlas.getTexCoordU1(blockID);
-        float u2 = atlas.getTexCoordU2(blockID);
-        float v1 = atlas.getTexCoordV1(blockID);
-        float v2 = atlas.getTexCoordV2(blockID);
-        builder.pushVertex(x, y,        z,        u1, v1, shade, shade, shade);
-        builder.pushVertex(x, y,        z + 1.0f, u2, v1, shade, shade, shade);
-        builder.pushVertex(x, y + 1.0f, z + 1.0f, u2, v2, shade, shade, shade);
-        builder.pushVertex(x, y + 1.0f, z + 1.0f, u2, v2, shade, shade, shade);
-        builder.pushVertex(x, y + 1.0f, z,        u1, v2, shade, shade, shade);
-        builder.pushVertex(x, y,        z,        u1, v1, shade, shade, shade);
+    private void pushLeftFace(int x, int y, int z, float gz, short blockID, GLDisplayList.Builder builder) {
+        float u1 = gz * INV_OVERLAY_SIZE_F;
+        float u2 = (gz + 1) * INV_OVERLAY_SIZE_F;
+        float v1 = y * INV_OVERLAY_SIZE_F;
+        float v2 = (y + 1) * INV_OVERLAY_SIZE_F;
+        builder.pushVertex(x, y,        z,        u1, v1, 1.0f, 1.0f, 1.0f);
+        builder.pushVertex(x, y,        z + 1.0f, u2, v1, 1.0f, 1.0f, 1.0f);
+        builder.pushVertex(x, y + 1.0f, z + 1.0f, u2, v2, 1.0f, 1.0f, 1.0f);
+        builder.pushVertex(x, y + 1.0f, z + 1.0f, u2, v2, 1.0f, 1.0f, 1.0f);
+        builder.pushVertex(x, y + 1.0f, z,        u1, v2, 1.0f, 1.0f, 1.0f);
+        builder.pushVertex(x, y,        z,        u1, v1, 1.0f, 1.0f, 1.0f);
     }
 
-    private void pushRightFace(int x, int y, int z, BlockTextureAtlas atlas, short blockID, GLDisplayList.Builder builder) {
-        float shade = 0.5f;
-        float u1 = atlas.getTexCoordU1(blockID);
-        float u2 = atlas.getTexCoordU2(blockID);
-        float v1 = atlas.getTexCoordV1(blockID);
-        float v2 = atlas.getTexCoordV2(blockID);
-        builder.pushVertex(x + 1.0f, y,        z + 1.0f, u1, v1, shade, shade, shade);
-        builder.pushVertex(x + 1.0f, y,        z,        u2, v1, shade, shade, shade);
-        builder.pushVertex(x + 1.0f, y + 1.0f, z,        u2, v2, shade, shade, shade);
-        builder.pushVertex(x + 1.0f, y + 1.0f, z,        u2, v2, shade, shade, shade);
-        builder.pushVertex(x + 1.0f, y + 1.0f, z + 1.0f, u1, v2, shade, shade, shade);
-        builder.pushVertex(x + 1.0f, y,        z + 1.0f, u1, v1, shade, shade, shade);
+    private void pushRightFace(int x, int y, int z, float gz, short blockID, GLDisplayList.Builder builder) {
+        float u1 = gz * INV_OVERLAY_SIZE_F;
+        float u2 = (gz + 1) * INV_OVERLAY_SIZE_F;
+        float v1 = y * INV_OVERLAY_SIZE_F;
+        float v2 = (y + 1) * INV_OVERLAY_SIZE_F;
+        builder.pushVertex(x + 1.0f, y,        z + 1.0f, u1, v1, 1.0f, 1.0f, 1.0f);
+        builder.pushVertex(x + 1.0f, y,        z,        u2, v1, 1.0f, 1.0f, 1.0f);
+        builder.pushVertex(x + 1.0f, y + 1.0f, z,        u2, v2, 1.0f, 1.0f, 1.0f);
+        builder.pushVertex(x + 1.0f, y + 1.0f, z,        u2, v2, 1.0f, 1.0f, 1.0f);
+        builder.pushVertex(x + 1.0f, y + 1.0f, z + 1.0f, u1, v2, 1.0f, 1.0f, 1.0f);
+        builder.pushVertex(x + 1.0f, y,        z + 1.0f, u1, v1, 1.0f, 1.0f, 1.0f);
     }
 }
