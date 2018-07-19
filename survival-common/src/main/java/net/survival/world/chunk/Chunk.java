@@ -7,7 +7,7 @@ import net.survival.entity.Entity;
 public class Chunk
 {
     public static final int XLENGTH = 16;
-    public static final int YLENGTH = 128;
+    public static final int YLENGTH = 256;
     public static final int ZLENGTH = 16;
     public static final int BASE_AREA = XLENGTH * ZLENGTH;
     public static final int VOLUME = BASE_AREA * YLENGTH;

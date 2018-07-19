@@ -12,7 +12,7 @@ import net.survival.world.gen.layer.GenLayerFactory;
 
 public class InfiniteChunkGenerator implements ChunkGenerator
 {
-    private static final int NBLOCK_YLENGTH = Chunk.YLENGTH / 32;
+    private static final int NBLOCK_YLENGTH = Chunk.YLENGTH / 64;
     private static final int NBLOCK_ZLENGTH = Chunk.ZLENGTH / 4;
     private static final int NBLOCK_XLENGTH = Chunk.XLENGTH / 4;
     private static final int NMAP_YLENGTH = (Chunk.YLENGTH / NBLOCK_YLENGTH) + 1;
