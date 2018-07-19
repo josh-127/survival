@@ -124,10 +124,6 @@ public enum BlockType
         return cachedValues;
     }
     
-    public boolean isGrass() {
-        return this == GRASS;
-    }
-    
     public static BlockType byID(short id) {
         return cachedValues[id];
     }
@@ -182,6 +178,6 @@ public enum BlockType
     
     private interface Builder
     {
-        abstract void build(BlockType bt);
+        void build(BlockType bt);
     }
 }
