@@ -9,11 +9,11 @@ public class ChunkPos
     }
 
     public static int toChunkX(int x) {
-        return x / Chunk.XLENGTH;
+        return (int) Math.floor((double) x / Chunk.XLENGTH);
     }
 
     public static int toChunkZ(int z) {
-        return z / Chunk.ZLENGTH;
+        return (int) Math.floor((double) z / Chunk.ZLENGTH);
     }
 
     public static int toLocalX(int cx, int gx) {
