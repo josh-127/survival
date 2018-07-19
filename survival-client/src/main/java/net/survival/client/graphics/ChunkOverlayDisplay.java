@@ -40,7 +40,7 @@ class ChunkOverlayDisplay implements GraphicsResource
                         if (!BlockType.byID(blockID).isVisible())
                             continue;
                         
-                        if (blockID == BlockType.WATER.getID())
+                        if (blockID == BlockType.WATER.id)
                             continue;
 
                         if (BlockType.byID(chunk.getBlockID(x, y + 1, z)).isVisible())
@@ -60,7 +60,7 @@ class ChunkOverlayDisplay implements GraphicsResource
                     if (!BlockType.byID(blockID).isVisible())
                         continue;
                     
-                    if (blockID == BlockType.WATER.getID())
+                    if (blockID == BlockType.WATER.id)
                         continue;
                     
                     if (BlockType.byID(adjacentChunk.getBlockID(x, 0, z)).isVisible())
@@ -83,7 +83,7 @@ class ChunkOverlayDisplay implements GraphicsResource
                         if (!BlockType.byID(blockID).isVisible())
                             continue;
                         
-                        if (blockID == BlockType.WATER.getID())
+                        if (blockID == BlockType.WATER.id)
                             continue;
 
                         if (BlockType.byID(chunk.getBlockID(x, y - 1, z)).isVisible())
@@ -103,7 +103,7 @@ class ChunkOverlayDisplay implements GraphicsResource
                     if (!BlockType.byID(blockID).isVisible())
                         continue;
                     
-                    if (blockID == BlockType.WATER.getID())
+                    if (blockID == BlockType.WATER.id)
                         continue;
                     
                     if (BlockType.byID(adjacentChunk.getBlockID(x, Chunk.YLENGTH - 1, z)).isVisible())
@@ -126,7 +126,7 @@ class ChunkOverlayDisplay implements GraphicsResource
                         if (!BlockType.byID(blockID).isVisible())
                             continue;
                         
-                        if (blockID == BlockType.WATER.getID())
+                        if (blockID == BlockType.WATER.id)
                             continue;
 
                         if (BlockType.byID(chunk.getBlockID(x, y, z + 1)).isVisible())
@@ -166,7 +166,7 @@ class ChunkOverlayDisplay implements GraphicsResource
                         if (!BlockType.byID(blockID).isVisible())
                             continue;
                         
-                        if (blockID == BlockType.WATER.getID())
+                        if (blockID == BlockType.WATER.id)
                             continue;
 
                         if (BlockType.byID(chunk.getBlockID(x, y, z - 1)).isVisible())
@@ -186,7 +186,7 @@ class ChunkOverlayDisplay implements GraphicsResource
                         if (!BlockType.byID(blockID).isVisible())
                             continue;
                         
-                        if (blockID == BlockType.WATER.getID())
+                        if (blockID == BlockType.WATER.id)
                             continue;
 
                         if (BlockType.byID(adjacentChunk.getBlockID(x, y, Chunk.ZLENGTH - 1)).isVisible())
@@ -209,7 +209,7 @@ class ChunkOverlayDisplay implements GraphicsResource
                         if (!BlockType.byID(blockID).isVisible())
                             continue;
                         
-                        if (blockID == BlockType.WATER.getID())
+                        if (blockID == BlockType.WATER.id)
                             continue;
 
                         if (BlockType.byID(chunk.getBlockID(x - 1, y, z)).isVisible())
@@ -229,7 +229,7 @@ class ChunkOverlayDisplay implements GraphicsResource
                         if (!BlockType.byID(blockID).isVisible())
                             continue;
                         
-                        if (blockID == BlockType.WATER.getID())
+                        if (blockID == BlockType.WATER.id)
                             continue;
 
                         if (BlockType.byID(adjacentChunk.getBlockID(Chunk.XLENGTH - 1, y, z)).isVisible())
@@ -252,7 +252,7 @@ class ChunkOverlayDisplay implements GraphicsResource
                         if (!BlockType.byID(blockID).isVisible())
                             continue;
                         
-                        if (blockID == BlockType.WATER.getID())
+                        if (blockID == BlockType.WATER.id)
                             continue;
 
                         if (BlockType.byID(chunk.getBlockID(x + 1, y, z)).isVisible())
@@ -272,7 +272,7 @@ class ChunkOverlayDisplay implements GraphicsResource
                         if (!BlockType.byID(blockID).isVisible())
                             continue;
                         
-                        if (blockID == BlockType.WATER.getID())
+                        if (blockID == BlockType.WATER.id)
                             continue;
 
                         if (BlockType.byID(adjacentChunk.getBlockID(0, y, z)).isVisible())

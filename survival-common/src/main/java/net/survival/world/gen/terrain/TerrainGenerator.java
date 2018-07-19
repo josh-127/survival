@@ -72,7 +72,7 @@ class TerrainGenerator
                 int counter = 3;
                 
                 for (int y = Chunk.YLENGTH - 1; y >= 0; --y) {
-                    if (chunkPrimer.getBlockID(x, y, z) != BlockType.TEMP_SOLID.getID()) {
+                    if (chunkPrimer.getBlockID(x, y, z) != BlockType.TEMP_SOLID.id) {
                         state = 0;
                         counter = 3;
                         continue;
@@ -86,7 +86,7 @@ class TerrainGenerator
                         
                     case 1:
                         if (counter > 0) {
-                            chunkPrimer.setBlockID(x, y, z, BlockType.DIRT.getID());
+                            chunkPrimer.setBlockID(x, y, z, BlockType.DIRT.id);
                             --counter;
                             
                             if (counter == 0) {
@@ -98,7 +98,7 @@ class TerrainGenerator
                         break;
                         
                     case 2:
-                        chunkPrimer.setBlockID(x, y, z, BlockType.STONE.getID());
+                        chunkPrimer.setBlockID(x, y, z, BlockType.STONE.id);
                         break;
                     }
                 }
@@ -125,9 +125,9 @@ class TerrainGenerator
                     double threshold = (y - minElevation) / elevationRange;
                     
                     if (density >= threshold)
-                        chunkPrimer.setBlockID(x, y, z, BlockType.TEMP_SOLID.getID());
+                        chunkPrimer.setBlockID(x, y, z, BlockType.TEMP_SOLID.id);
                     else if (y <= OCEAN_LEVEL)
-                        chunkPrimer.setBlockID(x, y, z, BlockType.WATER.getID());
+                        chunkPrimer.setBlockID(x, y, z, BlockType.WATER.id);
                 }
             }
         }

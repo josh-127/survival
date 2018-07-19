@@ -103,7 +103,8 @@ public enum BlockType
     
     private static final BlockType[] cachedValues = values();
     
-    private final short id;
+    public final short id;
+    
     private String name;
     private final String[] textures;
     private boolean solid;
@@ -145,10 +146,6 @@ public enum BlockType
                 return index < cachedValues.length;
             }
         };
-    }
-    
-    public short getID() {
-        return id;
     }
     
     public String getName() {
