@@ -8,7 +8,6 @@ import org.lwjgl.assimp.AIScene;
 import org.lwjgl.assimp.AIString;
 import org.lwjgl.assimp.AIVector3D;
 
-import net.survival.entity.Cow;
 import net.survival.entity.Entity;
 
 import static org.lwjgl.assimp.Assimp.*;
@@ -35,10 +34,7 @@ public class StaticModel
     }
     
     public static StaticModel fromEntity(Entity entity) {
-        if (entity instanceof Cow)
-            return cow;
-        
-        return null;
+        return cow;
     }
     
     public static StaticModel fromFile(String filePath) {

@@ -5,6 +5,7 @@ import net.survival.block.BlockType;
 import net.survival.client.graphics.model.ModelRenderer;
 import net.survival.client.graphics.model.StaticModel;
 import net.survival.client.graphics.opengl.GLDisplayList;
+import net.survival.client.graphics.opengl.GLImmediateDrawCall;
 import net.survival.client.graphics.opengl.GLMatrixStack;
 import net.survival.client.graphics.opengl.GLRenderContext;
 import net.survival.client.graphics.opengl.GLTexture;
@@ -286,10 +287,47 @@ class ChunkDisplay implements GraphicsResource
     public void displayEntities() {
         for (Entity entity : chunk.iterateEntities()) {
             GLMatrixStack.push();
-            GLMatrixStack.translate((float) entity.getX(), (float) entity.getY(), (float) entity.getZ());
+            GLMatrixStack.translate((float) entity.x, (float) entity.y, (float) entity.z);
             
             StaticModel model = StaticModel.fromEntity(entity);
             ModelRenderer.displayStaticModel(model);
+
+            final float BOX_R = 1.0f;
+            final float BOX_G = 0.0f;
+            final float BOX_B = 1.0f;
+            
+            float cbrX = (float) entity.collisionBoxRadiusX;
+            float cbrY = (float) entity.collisionBoxRadiusY;
+            float cbrZ = (float) entity.collisionBoxRadiusZ;
+            
+            GLImmediateDrawCall.beginLines(null)
+                    .coloredVertex(-cbrX,  cbrY, -cbrZ, BOX_R, BOX_G, BOX_B)
+                    .coloredVertex( cbrX,  cbrY, -cbrZ, BOX_R, BOX_G, BOX_B)
+                    .coloredVertex(-cbrX,  cbrY,  cbrZ, BOX_R, BOX_G, BOX_B)
+                    .coloredVertex( cbrX,  cbrY,  cbrZ, BOX_R, BOX_G, BOX_B)
+                    .coloredVertex(-cbrX,  cbrY, -cbrZ, BOX_R, BOX_G, BOX_B)
+                    .coloredVertex(-cbrX,  cbrY,  cbrZ, BOX_R, BOX_G, BOX_B)
+                    .coloredVertex( cbrX,  cbrY, -cbrZ, BOX_R, BOX_G, BOX_B)
+                    .coloredVertex( cbrX,  cbrY,  cbrZ, BOX_R, BOX_G, BOX_B)
+
+                    .coloredVertex(-cbrX, -cbrY, -cbrZ, BOX_R, BOX_G, BOX_B)
+                    .coloredVertex( cbrX, -cbrY, -cbrZ, BOX_R, BOX_G, BOX_B)
+                    .coloredVertex(-cbrX, -cbrY,  cbrZ, BOX_R, BOX_G, BOX_B)
+                    .coloredVertex( cbrX, -cbrY,  cbrZ, BOX_R, BOX_G, BOX_B)
+                    .coloredVertex(-cbrX, -cbrY, -cbrZ, BOX_R, BOX_G, BOX_B)
+                    .coloredVertex(-cbrX, -cbrY,  cbrZ, BOX_R, BOX_G, BOX_B)
+                    .coloredVertex( cbrX, -cbrY, -cbrZ, BOX_R, BOX_G, BOX_B)
+                    .coloredVertex( cbrX, -cbrY,  cbrZ, BOX_R, BOX_G, BOX_B)
+                    
+                    .coloredVertex(-cbrX, -cbrY, -cbrZ, BOX_R, BOX_G, BOX_B)
+                    .coloredVertex(-cbrX,  cbrY, -cbrZ, BOX_R, BOX_G, BOX_B)
+                    .coloredVertex( cbrX, -cbrY, -cbrZ, BOX_R, BOX_G, BOX_B)
+                    .coloredVertex( cbrX,  cbrY, -cbrZ, BOX_R, BOX_G, BOX_B)
+                    .coloredVertex(-cbrX, -cbrY,  cbrZ, BOX_R, BOX_G, BOX_B)
+                    .coloredVertex(-cbrX,  cbrY,  cbrZ, BOX_R, BOX_G, BOX_B)
+                    .coloredVertex( cbrX, -cbrY,  cbrZ, BOX_R, BOX_G, BOX_B)
+                    .coloredVertex( cbrX,  cbrY,  cbrZ, BOX_R, BOX_G, BOX_B)
+                    .end();
             
             GLMatrixStack.pop();
         }

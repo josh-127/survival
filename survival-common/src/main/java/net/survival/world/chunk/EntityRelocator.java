@@ -41,9 +41,9 @@ public class EntityRelocator
     }
     
     private boolean chunkContainsEntity(int cx, int cz, Entity entity) {
-        return  entity.getX() >= ChunkPos.getGlobalWestBound(cx) &&
-                entity.getX() <  ChunkPos.getGlobalEastBound(cx) &&
-                entity.getZ() >= ChunkPos.getGlobalNorthBound(cz) &&
-                entity.getZ() <  ChunkPos.getGlobalSouthBound(cz);
+        return  entity.x >= ChunkPos.getGlobalWestBound(cx) &&
+                entity.x <  ChunkPos.getGlobalEastBound(cx) &&
+                entity.z >= ChunkPos.getGlobalNorthBound(cz) &&
+                entity.z <  ChunkPos.getGlobalSouthBound(cz);
     }
 }

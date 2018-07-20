@@ -1,7 +1,9 @@
 package net.survival.client;
 
+import org.joml.Vector3d;
 import org.lwjgl.glfw.GLFW;
 
+import net.survival.block.BlockType;
 import net.survival.client.graphics.ClientDisplay;
 import net.survival.client.graphics.GraphicsSettings;
 import net.survival.client.graphics.gui.GuiDisplay;
@@ -12,7 +14,8 @@ import net.survival.client.input.GlfwKeyboardProvider;
 import net.survival.client.input.GlfwMouseProvider;
 import net.survival.client.input.Key;
 import net.survival.client.input.Keyboard;
-import net.survival.entity.Cow;
+import net.survival.client.input.Mouse;
+import net.survival.entity.Entity;
 import net.survival.world.EntityPhysics;
 import net.survival.world.World;
 import net.survival.world.chunk.ChunkPos;
@@ -41,7 +44,9 @@ public class Client implements AutoCloseable
     private final ClientDisplay clientDisplay;
     private final GuiDisplay guiDisplay;
     
-    private final UserController userController;
+    private final FpsCamera fpsCamera;
+    
+    private Entity player;
     
     private Client() {
         world = new World();
@@ -61,7 +66,7 @@ public class Client implements AutoCloseable
         clientDisplay = new ClientDisplay(world, GraphicsSettings.WINDOW_WIDTH, GraphicsSettings.WINDOW_HEIGHT);
         guiDisplay = new GuiDisplay(control);
         
-        userController = new UserController();
+        fpsCamera = new FpsCamera(new Vector3d(0.0, 72.0, 0.0), 0.0f, -1.0f);
     }
 
     @Override
@@ -70,24 +75,80 @@ public class Client implements AutoCloseable
     }
     
     public void tick(double elapsedTime) {
-        userController.tick(elapsedTime);
+        double cursorDX = Mouse.getDeltaX();
+        double cursorDY = Mouse.getDeltaY();
+        fpsCamera.rotate(-cursorDX / 64.0, -cursorDY / 64.0);
         
-        float x = (float) userController.camera.position.x;
-        float y = (float) userController.camera.position.y;
-        float z = (float) userController.camera.position.z;
-        float yaw = (float) userController.camera.yaw;
-        float pitch = (float) userController.camera.pitch;
-
-        int cx = ChunkPos.toChunkX((int) Math.floor(x));
-        int cz = ChunkPos.toChunkZ((int) Math.floor(z));
+        if (Keyboard.isKeyPressed(Key.R)) {
+            Entity newPlayer = new Entity();
+            newPlayer.x = player != null ? player.x : 0.0;
+            newPlayer.y = player != null ? player.y + 3.0 : 72.0;
+            newPlayer.z = player != null ? player.z : 0.0;
+            newPlayer.collisionBoxRadiusY = 0.9;
+            player = newPlayer;
+            world.addEntity(newPlayer);
+        }
+        
+        if (player != null) {
+            final double FRICTION = 0.5;
+            
+            double speed = 5.0;
+            double joystickX = 0.0;
+            double joystickZ = 0.0;
+            
+            if (Keyboard.isKeyDown(Key.LEFT_CONTROL))
+                speed = 10.0;
+            
+            if (Keyboard.isKeyDown(Key.W)) {
+                joystickX += Math.sin(fpsCamera.yaw);
+                joystickZ -= Math.cos(fpsCamera.yaw);
+            }
+            if (Keyboard.isKeyDown(Key.S)) {
+                joystickX += Math.sin(fpsCamera.yaw + Math.PI);
+                joystickZ -= Math.cos(fpsCamera.yaw + Math.PI);
+            }
+            if (Keyboard.isKeyDown(Key.A)) {
+                joystickX += Math.sin(fpsCamera.yaw - Math.PI / 2.0);
+                joystickZ -= Math.cos(fpsCamera.yaw - Math.PI / 2.0);
+            }
+            if (Keyboard.isKeyDown(Key.D)) {
+                joystickX += Math.sin(fpsCamera.yaw + Math.PI / 2.0);
+                joystickZ -= Math.cos(fpsCamera.yaw + Math.PI / 2.0);
+            }
+            
+            double magnitude = Math.sqrt(joystickX * joystickX + joystickZ * joystickZ);
+            if (magnitude != 0.0) {
+                joystickX *= speed / magnitude;
+                joystickZ *= speed / magnitude;
+                player.velocityX = joystickX;
+                player.velocityZ = joystickZ;
+            }
+            else if (player.velocityY == 0.0) {
+                player.velocityX *= FRICTION;
+                player.velocityZ *= FRICTION;
+            }
+            
+            if (player.velocityY == 0.0 && Keyboard.isKeyPressed(Key.SPACE))
+                player.velocityY = 8.0;
+        }
+        
+        int cx = ChunkPos.toChunkX((int) Math.floor(fpsCamera.position.x));
+        int cz = ChunkPos.toChunkZ((int) Math.floor(fpsCamera.position.z));
         chunkLoader.setCenter(cx, cz);
         
         chunkSystem.update(world, chunkLoader);
         entityPhysics.tick(elapsedTime);
         entityRelocator.relocateEntities();
         
-        clientDisplay.getCamera().moveTo(x, y, z);
-        clientDisplay.getCamera().orient(yaw, pitch);
+        if (player != null) {
+            fpsCamera.position.x = player.x;
+            fpsCamera.position.y = player.y + 1.0;
+            fpsCamera.position.z = player.z;
+        }
+        
+        clientDisplay.getCamera().moveTo(
+                (float) fpsCamera.position.x, (float) fpsCamera.position.y, (float) fpsCamera.position.z);
+        clientDisplay.getCamera().orient((float) fpsCamera.yaw, (float) fpsCamera.pitch);
         clientDisplay.getCamera().setFov((float) Math.toRadians(60.0));
         clientDisplay.getCamera().resize(GraphicsSettings.WINDOW_WIDTH, GraphicsSettings.WINDOW_HEIGHT);
         clientDisplay.getCamera().setClipPlanes(0.0625f, 768.0f);

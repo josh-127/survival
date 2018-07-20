@@ -75,8 +75,8 @@ public class World
     }
     
     public void addEntity(Entity entity) {
-        int cx = ChunkPos.toChunkX((int) entity.getX());
-        int cz = ChunkPos.toChunkZ((int) entity.getZ());
+        int cx = ChunkPos.toChunkX((int) entity.x);
+        int cz = ChunkPos.toChunkZ((int) entity.z);
 
         Chunk chunk = chunks.get(ChunkPos.hashPos(cx, cz));
         if (chunk == null)
