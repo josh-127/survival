@@ -286,6 +286,9 @@ class ChunkDisplay implements GraphicsResource
      */
     public void displayEntities() {
         for (Entity entity : chunk.iterateEntities()) {
+            if (!entity.visible)
+                continue;
+            
             GLMatrixStack.push();
             GLMatrixStack.translate((float) entity.x, (float) entity.y, (float) entity.z);
             
