@@ -23,6 +23,7 @@ import java.nio.file.Paths;
 
 public class StaticModel
 {
+    public static final StaticModel chicken = fromFile("../assets/models/entities/chicken.obj");
     public static final StaticModel cow = fromFile("../assets/models/entities/cow.obj");
     
     public final Mesh[] meshes;
@@ -34,7 +35,7 @@ public class StaticModel
     }
     
     public static StaticModel fromEntity(Entity entity) {
-        return cow;
+        return chicken;
     }
     
     public static StaticModel fromFile(String filePath) {
