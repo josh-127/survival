@@ -47,7 +47,7 @@ class ChunkOverlayDisplay implements GraphicsResource
                             continue;
 
                         pushTopFace(x, y, z, ChunkPos.toGlobalX(cx, x), ChunkPos.toGlobalZ(cz, z),
-                                blockID, builder);
+                                builder);
                         ++faceCount;
                     }
                 }
@@ -67,7 +67,7 @@ class ChunkOverlayDisplay implements GraphicsResource
                         continue;
 
                     pushTopFace(x, Chunk.YLENGTH - 1, z, ChunkPos.toGlobalX(cx, x),
-                            ChunkPos.toGlobalZ(cz, z), blockID, builder);
+                            ChunkPos.toGlobalZ(cz, z), builder);
                     ++faceCount;
                 }
             }
@@ -90,7 +90,7 @@ class ChunkOverlayDisplay implements GraphicsResource
                             continue;
 
                         pushBottomFace(x, y, z, ChunkPos.toGlobalX(cx, x),
-                                ChunkPos.toGlobalZ(cz, z), blockID, builder);
+                                ChunkPos.toGlobalZ(cz, z), builder);
                         ++faceCount;
                     }
                 }
@@ -110,7 +110,7 @@ class ChunkOverlayDisplay implements GraphicsResource
                         continue;
 
                     pushBottomFace(x, 0, z, ChunkPos.toGlobalX(cx, x),
-                            ChunkPos.toGlobalZ(cz, z), blockID, builder);
+                            ChunkPos.toGlobalZ(cz, z), builder);
                     ++faceCount;
                 }
             }
@@ -132,7 +132,7 @@ class ChunkOverlayDisplay implements GraphicsResource
                         if (BlockType.byID(chunk.getBlockID(x, y, z + 1)).isVisible())
                             continue;
 
-                        pushFrontFace(x, y, z, ChunkPos.toGlobalX(cx, x), blockID, builder);
+                        pushFrontFace(x, y, z, ChunkPos.toGlobalX(cx, x), builder);
                         ++faceCount;
                     }
                 }
@@ -149,7 +149,7 @@ class ChunkOverlayDisplay implements GraphicsResource
                         if (BlockType.byID(adjacentChunk.getBlockID(x, y, 0)).isVisible())
                             continue;
 
-                        pushFrontFace(x, y, Chunk.ZLENGTH - 1, ChunkPos.toGlobalX(cx, x), blockID, builder);
+                        pushFrontFace(x, y, Chunk.ZLENGTH - 1, ChunkPos.toGlobalX(cx, x), builder);
                         ++faceCount;
                     }
                 }
@@ -172,7 +172,7 @@ class ChunkOverlayDisplay implements GraphicsResource
                         if (BlockType.byID(chunk.getBlockID(x, y, z - 1)).isVisible())
                             continue;
 
-                        pushBackFace(x, y, z, ChunkPos.toGlobalX(cx, x), blockID, builder);
+                        pushBackFace(x, y, z, ChunkPos.toGlobalX(cx, x), builder);
                         ++faceCount;
                     }
                 }
@@ -192,7 +192,7 @@ class ChunkOverlayDisplay implements GraphicsResource
                         if (BlockType.byID(adjacentChunk.getBlockID(x, y, Chunk.ZLENGTH - 1)).isVisible())
                             continue;
 
-                        pushBackFace(x, y, 0, ChunkPos.toGlobalX(cx, x), blockID, builder);
+                        pushBackFace(x, y, 0, ChunkPos.toGlobalX(cx, x), builder);
                         ++faceCount;
                     }
                 }
@@ -215,7 +215,7 @@ class ChunkOverlayDisplay implements GraphicsResource
                         if (BlockType.byID(chunk.getBlockID(x - 1, y, z)).isVisible())
                             continue;
 
-                        pushLeftFace(x, y, z, ChunkPos.toGlobalZ(cz, z), blockID, builder);
+                        pushLeftFace(x, y, z, ChunkPos.toGlobalZ(cz, z), builder);
                         ++faceCount;
                     }
                 }
@@ -235,7 +235,7 @@ class ChunkOverlayDisplay implements GraphicsResource
                         if (BlockType.byID(adjacentChunk.getBlockID(Chunk.XLENGTH - 1, y, z)).isVisible())
                             continue;
 
-                        pushLeftFace(0, y, z, ChunkPos.toGlobalZ(cz, z), blockID, builder);
+                        pushLeftFace(0, y, z, ChunkPos.toGlobalZ(cz, z), builder);
                         ++faceCount;
                     }
                 }
@@ -258,7 +258,7 @@ class ChunkOverlayDisplay implements GraphicsResource
                         if (BlockType.byID(chunk.getBlockID(x + 1, y, z)).isVisible())
                             continue;
 
-                        pushRightFace(x, y, z, ChunkPos.toGlobalZ(cz, z), blockID, builder);
+                        pushRightFace(x, y, z, ChunkPos.toGlobalZ(cz, z), builder);
                         ++faceCount;
                     }
                 }
@@ -278,7 +278,7 @@ class ChunkOverlayDisplay implements GraphicsResource
                         if (BlockType.byID(adjacentChunk.getBlockID(0, y, z)).isVisible())
                             continue;
 
-                        pushRightFace(Chunk.XLENGTH - 1, y, z, ChunkPos.toGlobalZ(cz, z), blockID, builder);
+                        pushRightFace(Chunk.XLENGTH - 1, y, z, ChunkPos.toGlobalZ(cz, z), builder);
                         ++faceCount;
                     }
                 }
@@ -320,7 +320,7 @@ class ChunkOverlayDisplay implements GraphicsResource
         return displayList == null;
     }
 
-    private void pushTopFace(int x, int y, int z, float gx, float gz, short blockID,
+    private void pushTopFace(int x, int y, int z, float gx, float gz,
             GLDisplayList.Builder builder)
     {
         float u1 = gx * INV_OVERLAY_SIZE_F;
@@ -335,7 +335,7 @@ class ChunkOverlayDisplay implements GraphicsResource
         builder.pushVertex(x, y + 1.0f, z + 1.0f, u1, v1, 1.0f, 1.0f, 1.0f);
     }
 
-    private void pushBottomFace(int x, int y, int z, float gx, float gz, short blockID,
+    private void pushBottomFace(int x, int y, int z, float gx, float gz,
             GLDisplayList.Builder builder)
     {
         float u1 = gx * INV_OVERLAY_SIZE_F;
@@ -350,7 +350,7 @@ class ChunkOverlayDisplay implements GraphicsResource
         builder.pushVertex(x, y, z, u1, v1, 1.0f, 1.0f, 1.0f);
     }
 
-    private void pushFrontFace(int x, int y, int z, float gx, short blockID, GLDisplayList.Builder builder) {
+    private void pushFrontFace(int x, int y, int z, float gx, GLDisplayList.Builder builder) {
         float u1 = gx * INV_OVERLAY_SIZE_F;
         float u2 = (gx + 1) * INV_OVERLAY_SIZE_F;
         float v1 = y * INV_OVERLAY_SIZE_F;
@@ -363,7 +363,7 @@ class ChunkOverlayDisplay implements GraphicsResource
         builder.pushVertex(x,        y,        z + 1.0f, u1, v1, 1.0f, 1.0f, 1.0f);
     }
 
-    private void pushBackFace(int x, int y, int z, float gx, short blockID, GLDisplayList.Builder builder) {
+    private void pushBackFace(int x, int y, int z, float gx, GLDisplayList.Builder builder) {
         float u1 = gx * INV_OVERLAY_SIZE_F;
         float u2 = (gx + 1) * INV_OVERLAY_SIZE_F;
         float v1 = y * INV_OVERLAY_SIZE_F;
@@ -376,7 +376,7 @@ class ChunkOverlayDisplay implements GraphicsResource
         builder.pushVertex(x + 1.0f, y,        z, u1, v1, 1.0f, 1.0f, 1.0f);
     }
 
-    private void pushLeftFace(int x, int y, int z, float gz, short blockID, GLDisplayList.Builder builder) {
+    private void pushLeftFace(int x, int y, int z, float gz, GLDisplayList.Builder builder) {
         float u1 = gz * INV_OVERLAY_SIZE_F;
         float u2 = (gz + 1) * INV_OVERLAY_SIZE_F;
         float v1 = y * INV_OVERLAY_SIZE_F;
@@ -389,7 +389,7 @@ class ChunkOverlayDisplay implements GraphicsResource
         builder.pushVertex(x, y,        z,        u1, v1, 1.0f, 1.0f, 1.0f);
     }
 
-    private void pushRightFace(int x, int y, int z, float gz, short blockID, GLDisplayList.Builder builder) {
+    private void pushRightFace(int x, int y, int z, float gz, GLDisplayList.Builder builder) {
         float u1 = gz * INV_OVERLAY_SIZE_F;
         float u2 = (gz + 1) * INV_OVERLAY_SIZE_F;
         float v1 = y * INV_OVERLAY_SIZE_F;

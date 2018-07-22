@@ -3,6 +3,8 @@ package net.survival.client.graphics;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.joml.Matrix4f;
+
 import net.survival.block.BlockFace;
 import net.survival.client.graphics.opengl.GLFilterMode;
 import net.survival.client.graphics.opengl.GLMatrixStack;
@@ -91,20 +93,36 @@ class WorldDisplay implements GraphicsResource
         
         GLMatrixStack.setProjectionMatrix(camera.getProjectionMatrix());
         GLMatrixStack.push();
-        GLMatrixStack.load(camera.getViewMatrix());
+        GLMatrixStack.loadIdentity();
         
-        drawFaceDisplays(topFaceDisplays, BlockFace.TOP, true);
-        drawFaceDisplays(bottomFaceDisplays, BlockFace.BOTTOM, false);
-        drawFaceDisplays(leftFaceDisplays, BlockFace.LEFT, false);
-        drawFaceDisplays(rightFaceDisplays, BlockFace.RIGHT, false);
-        drawFaceDisplays(frontFaceDisplays, BlockFace.FRONT, false);
-        drawFaceDisplays(backFaceDisplays, BlockFace.BACK, false);
+        Matrix4f viewMatrix = camera.getViewMatrix();
+        
+        drawFaceDisplays(topFaceDisplays, BlockFace.TOP, true, false, viewMatrix);
+        drawFaceDisplays(bottomFaceDisplays, BlockFace.BOTTOM, false, false, viewMatrix);
+        drawFaceDisplays(leftFaceDisplays, BlockFace.LEFT, false, false, viewMatrix);
+        drawFaceDisplays(rightFaceDisplays, BlockFace.RIGHT, false, false, viewMatrix);
+        drawFaceDisplays(frontFaceDisplays, BlockFace.FRONT, false, false, viewMatrix);
+        drawFaceDisplays(backFaceDisplays, BlockFace.BACK, false, false, viewMatrix);
+        
+        // TODO: Make OpenGL wrapper class.
+        org.lwjgl.opengl.GL11.glEnable(org.lwjgl.opengl.GL11.GL_BLEND);
+        org.lwjgl.opengl.GL11.glBlendFunc(org.lwjgl.opengl.GL11.GL_ZERO, org.lwjgl.opengl.GL11.GL_SRC_COLOR);
+        
+        drawFaceDisplays(topFaceDisplays, BlockFace.TOP, false, true, viewMatrix);
+        drawFaceDisplays(bottomFaceDisplays, BlockFace.BOTTOM, false, true, viewMatrix);
+        drawFaceDisplays(leftFaceDisplays, BlockFace.LEFT, false, true, viewMatrix);
+        drawFaceDisplays(rightFaceDisplays, BlockFace.RIGHT, false, true, viewMatrix);
+        drawFaceDisplays(frontFaceDisplays, BlockFace.FRONT, false, true, viewMatrix);
+        drawFaceDisplays(backFaceDisplays, BlockFace.BACK, false, true, viewMatrix);
+        
+        org.lwjgl.opengl.GL11.glBlendFunc(org.lwjgl.opengl.GL11.GL_ONE, org.lwjgl.opengl.GL11.GL_ZERO);
+        org.lwjgl.opengl.GL11.glDisable(org.lwjgl.opengl.GL11.GL_BLEND);
         
         GLMatrixStack.pop();
     }
 
     private void drawFaceDisplays(HashMap<Chunk, ChunkDisplay> faceDisplays, BlockFace blockFace,
-            boolean shouldDrawEntities)
+            boolean shouldDrawEntities, boolean drawOverlay, Matrix4f viewMatrix)
     {
         // Entities
         if (shouldDrawEntities) {
@@ -115,27 +133,37 @@ class WorldDisplay implements GraphicsResource
         }
         
         // Block Faces
-        for (Map.Entry<Chunk, ChunkDisplay> entry : faceDisplays.entrySet()) {
-            ChunkDisplay display = entry.getValue();
-            
-            if (display.isEmpty())
-                continue;
-            
-            float globalX = ChunkPos.toGlobalX(display.chunkX, 0);
-            float globalZ = ChunkPos.toGlobalZ(display.chunkZ, 0);
-            
-            GLMatrixStack.push();
-            GLMatrixStack.translate(globalX, 0.0f, globalZ);
-            display.displayBlocks(blockTextures[blockFace.ordinal()].blockTextures);
-            
-            // TODO: Make OpenGL wrapper class.
-            org.lwjgl.opengl.GL11.glEnable(org.lwjgl.opengl.GL11.GL_BLEND);
-            org.lwjgl.opengl.GL11.glBlendFunc(org.lwjgl.opengl.GL11.GL_ZERO, org.lwjgl.opengl.GL11.GL_SRC_COLOR);
-            display.overlayDisplay.displayBlocks(overlayTexture);
-            org.lwjgl.opengl.GL11.glBlendFunc(org.lwjgl.opengl.GL11.GL_ONE, org.lwjgl.opengl.GL11.GL_ZERO);
-            org.lwjgl.opengl.GL11.glDisable(org.lwjgl.opengl.GL11.GL_BLEND);
-            
-            GLMatrixStack.pop();
+        Matrix4f modelView = new Matrix4f();
+        
+        if (!drawOverlay) {
+            for (Map.Entry<Chunk, ChunkDisplay> entry : faceDisplays.entrySet()) {
+                ChunkDisplay display = entry.getValue();
+                
+                if (display.isEmpty())
+                    continue;
+                
+                float globalX = ChunkPos.toGlobalX(display.chunkX, 0);
+                float globalZ = ChunkPos.toGlobalZ(display.chunkZ, 0);
+                
+                modelView.set(viewMatrix).translate(globalX, 0.0f, globalZ);
+                GLMatrixStack.load(modelView);
+                display.displayBlocks(blockTextures[blockFace.ordinal()].blockTextures);
+            }
+        }
+        else {
+            for (Map.Entry<Chunk, ChunkDisplay> entry : faceDisplays.entrySet()) {
+                ChunkDisplay display = entry.getValue();
+                
+                if (display.isEmpty())
+                    continue;
+                
+                float globalX = ChunkPos.toGlobalX(display.chunkX, 0);
+                float globalZ = ChunkPos.toGlobalZ(display.chunkZ, 0);
+                
+                modelView.set(viewMatrix).translate(globalX, 0.0f, globalZ);
+                GLMatrixStack.load(modelView);
+                display.overlayDisplay.displayBlocks(overlayTexture);
+            }
         }
     }
     
