@@ -12,20 +12,26 @@ public class Chunk
     public static final int BASE_AREA = XLENGTH * ZLENGTH;
     public static final int VOLUME = BASE_AREA * YLENGTH;
     
+    public static final int BLOCKS_MODIFIED = 1;
+    public static final int ENTITIES_MODIFIED = 2;
+    
     public final short[] blockIDs;
     private final ArrayList<Entity> entities;
+    
+    private int modified;
     
     public Chunk() {
         blockIDs = new short[VOLUME];
         entities = new ArrayList<>();
     }
     
-    public short getBlockID(int localX, int localY, int localZ) {
-        return blockIDs[localPositionToIndex(localX, localY, localZ)];
+    public short getBlockID(int lx, int ly, int lz) {
+        return blockIDs[localPositionToIndex(lx, ly, lz)];
     }
     
-    public void setBlockID(int localX, int localY, int localZ, short to) {
-        blockIDs[localPositionToIndex(localX, localY, localZ)] = to;
+    public void setBlockID(int lx, int ly, int lz, short to) {
+        blockIDs[localPositionToIndex(lx, ly, lz)] = to;
+        modified |= BLOCKS_MODIFIED;
     }
 
     public int localPositionToIndex(int x, int y, int z) {
@@ -37,10 +43,32 @@ public class Chunk
     }
     
     public Iterable<Entity> iterateEntities() {
+        modified |= ENTITIES_MODIFIED;
         return entities;
     }
     
     public void addEntity(Entity entity) {
         entities.add(entity);
+        modified |= ENTITIES_MODIFIED;
+    }
+    
+    public int getModificationFlags() {
+        return modified;
+    }
+    
+    public boolean isBlocksModified() {
+        return (modified & BLOCKS_MODIFIED) != 0;
+    }
+    
+    public boolean isEntitiesModified() {
+        return (modified & ENTITIES_MODIFIED) != 0;
+    }
+    
+    public void clearModificationFlags() {
+        modified = 0;
+    }
+    
+    public void setModificationFlags(int to) {
+        modified = to;
     }
 }
