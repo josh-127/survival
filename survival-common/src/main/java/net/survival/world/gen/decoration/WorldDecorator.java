@@ -8,6 +8,6 @@ public interface WorldDecorator
     void decorate(int cx, int cz, Chunk chunk, World world);
     
     public static WorldDecorator createDefault() {
-        throw new RuntimeException("Not implemented yet.");
+        return new SmallTreeDecorator();
     }
 }
