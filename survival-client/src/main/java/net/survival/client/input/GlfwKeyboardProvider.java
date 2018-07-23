@@ -8,7 +8,7 @@ public class GlfwKeyboardProvider extends KeyboardProvider implements GLFWKeyCal
     @Override
     public void invoke(long window, int key, int scancode, int action, int mods) {
         Key convertedKey = null;
-        
+
         switch (key) {
         case GLFW.GLFW_KEY_SPACE:         convertedKey = Key.SPACE;         break;
         case GLFW.GLFW_KEY_APOSTROPHE:    convertedKey = Key.APOSTROPHE;    break;
@@ -131,7 +131,7 @@ public class GlfwKeyboardProvider extends KeyboardProvider implements GLFWKeyCal
         case GLFW.GLFW_KEY_RIGHT_SUPER:   convertedKey = Key.RIGHT_SUPER;   break;
         case GLFW.GLFW_KEY_MENU:          convertedKey = Key.MENU;          break;
         }
-        
+
         if (action == GLFW.GLFW_PRESS)
             pressKey(convertedKey);
         if (action == GLFW.GLFW_RELEASE)

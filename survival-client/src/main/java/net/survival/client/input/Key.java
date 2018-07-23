@@ -55,9 +55,9 @@ public enum Key
     RIGHT_ALT,
     RIGHT_SUPER,
     MENU;
-    
+
     private static final Key[] cachedValues = values();
-    
+
     public static Key[] getCachedValues() {
         return cachedValues;
     }

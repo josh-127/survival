@@ -7,7 +7,7 @@ import net.survival.world.gen.BiomeType;
 class LandGenLayer extends GenLayer
 {
     private Random random;
-    
+
     public LandGenLayer(int lengthX, int lengthZ, long seed) {
         super(lengthX, lengthZ, seed);
     }
@@ -15,7 +15,7 @@ class LandGenLayer extends GenLayer
     @Override
     public void generate(int offsetX, int offsetZ) {
         super.generate(offsetX, offsetZ);
-        
+
         for (int z = 0; z < lengthZ; ++z) {
             for (int x = 0; x < lengthX; ++x) {
                 random = rngFromPosition(random, offsetX + x, offsetZ + z);
@@ -27,7 +27,7 @@ class LandGenLayer extends GenLayer
             }
         }
     }
-    
+
     static class Factory implements GenLayerFactory
     {
         @Override

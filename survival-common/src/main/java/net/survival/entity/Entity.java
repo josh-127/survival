@@ -8,13 +8,13 @@ public class Entity
     public double velocityX;
     public double velocityY;
     public double velocityZ;
-    
+
     public double collisionBoxRadiusX;
     public double collisionBoxRadiusY;
     public double collisionBoxRadiusZ;
-    
+
     public boolean visible;
-    
+
     public Entity() {
         collisionBoxRadiusX = 0.4375;
         collisionBoxRadiusY = 0.4375;

@@ -6,9 +6,9 @@ public class Rectangle
     private double top;
     private double right;
     private double bottom;
-    
+
     public Rectangle() {}
-    
+
     public Rectangle(double left, double top, double right, double bottom) {
         super();
         this.left = left;
@@ -16,7 +16,7 @@ public class Rectangle
         this.right = right;
         this.bottom = bottom;
     }
-    
+
     public double getArea() {
         return Math.abs(right - left) * Math.abs(top - bottom);
     }
@@ -71,17 +71,24 @@ public class Rectangle
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)                  return true;
-        if (obj == null)                  return false;
-        if (getClass() != obj.getClass()) return false;
-        
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+
         Rectangle other = (Rectangle) obj;
-        
-        if (left != other.left)     return false;
-        if (top != other.top)       return false;
-        if (right != other.right)   return false;
-        if (bottom != other.bottom) return false;
-        
+
+        if (left != other.left)
+            return false;
+        if (top != other.top)
+            return false;
+        if (right != other.right)
+            return false;
+        if (bottom != other.bottom)
+            return false;
+
         return true;
     }
 

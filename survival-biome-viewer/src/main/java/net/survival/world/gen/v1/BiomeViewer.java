@@ -14,14 +14,14 @@ public class BiomeViewer extends JFrame
     private static final long serialVersionUID = 1L;
 
     private static final String TITLE = "Biome Viewer";
-    
+
     private final ViewportComponent viewport;
-    
+
     private BiomeViewer(long seed) {
         viewport = new ViewportComponent();
         addKeyListener(viewport);
         setContentPane(viewport);
-        
+
         setJMenuBar(new JMenuBar());
         createGeneratorMenu();
 
@@ -36,19 +36,20 @@ public class BiomeViewer extends JFrame
     public static void main(String[] args) {
         new BiomeViewer(0L);
     }
-    
+
     private void createGeneratorMenu() {
         JFrame parent = this;
         JMenu menu = new JMenu("Generator");
         getJMenuBar().add(menu);
-        
+
         menu.add(new JMenuItem(new AbstractAction("Set Seed") {
             private static final long serialVersionUID = 1L;
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(parent, "Not implemented yet.", "Set Seed", JOptionPane.WARNING_MESSAGE);
-                
+                JOptionPane.showMessageDialog(parent, "Not implemented yet.", "Set Seed",
+                        JOptionPane.WARNING_MESSAGE);
+
                 /*
                 String inputString = null;
                 boolean isValidValue = false;

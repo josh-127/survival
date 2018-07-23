@@ -11,7 +11,7 @@ public class ChunkSystem
 {
     private static final int DATABASE_LOAD_RATE = 2;
     private static final int GENERATOR_LOAD_RATE = 2;
-    
+
     private final ChunkDatabase chunkDatabase;
     private final ChunkGenerator chunkGenerator;
     private final WorldDecorator worldDecorator;
@@ -26,7 +26,7 @@ public class ChunkSystem
 
     public void update(World world, ChunkLoader chunkLoader) {
         Set<Long> chunksToLoad = chunkLoader.getChunkPositions();
-        
+
         Iterator<Map.Entry<Long, Chunk>> chunkMapIt = world.iterateChunkMap().iterator();
         while (chunkMapIt.hasNext()) {
             Map.Entry<Long, Chunk> entry = chunkMapIt.next();
@@ -58,7 +58,7 @@ public class ChunkSystem
             world.addChunk(cx, cz, generatedChunk);
             chunksToLoadIt.remove();
         }
-        
+
         chunkMapIt = world.iterateChunkMap().iterator();
         while (chunkMapIt.hasNext()) {
             Map.Entry<Long, Chunk> entry = chunkMapIt.next();
@@ -74,7 +74,7 @@ public class ChunkSystem
                         isFullySurrounded = false;
                 }
             }
-            
+
             if (!chunk.isDecorated() && isFullySurrounded) {
                 worldDecorator.decorate(cx, cz, chunk, world);
                 chunk.markDecorated();

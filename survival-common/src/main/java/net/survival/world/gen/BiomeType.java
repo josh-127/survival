@@ -40,51 +40,51 @@ public enum BiomeType
         bt.maxElevation = 72.0;
         bt.biomeViewerColor = 0x0000FFFF;
     });
-    
+
     private static final BiomeType[] cachedValues = values();
-    
+
     private short topBlockID;
-    
+
     private double minElevation;
     private double maxElevation;
-    
+
     private int biomeViewerColor;
-    
+
     private BiomeType(Builder builder) {
         topBlockID = BlockType.STONE.id;
         minElevation = 0.0;
         maxElevation = 1.0;
         builder.build(this);
     }
-    
+
     public static BiomeType[] getCachedValues() {
         return cachedValues;
     }
-    
+
     public static BiomeType byID(int id) {
         return cachedValues[id];
     }
-    
+
     public short getTopBlockID() {
         return topBlockID;
     }
-    
+
     public double getMinElevation() {
         return minElevation;
     }
-    
+
     public double getMaxElevation() {
         return maxElevation;
     }
-    
+
     public double getElevationRange() {
         return maxElevation - minElevation;
     }
-    
+
     public int getBiomeViewerColor() {
         return biomeViewerColor;
     }
-    
+
     private interface Builder
     {
         void build(BiomeType bt);

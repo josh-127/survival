@@ -10,7 +10,7 @@ public class ClientMessage extends Message
     private static final byte MESSAGE_TYPE_LOGOUT = 2;
     private static final byte MESSAGE_TYPE_CHUNK = 3;
     private static final byte MESSAGE_TYPE_SET_PROPERTY = 4;
-    
+
     private LoginMessage loginMessage;
     private LogoutMessage logoutMessage;
     private ChunkFragmentMessage chunkFragmentMessage;
@@ -21,7 +21,7 @@ public class ClientMessage extends Message
     @Override
     public void serialize(ByteBuffer buffer) {
         buffer.putInt(MESSAGE_SIGNATURE);
-        
+
         if (loginMessage != null) {
             buffer.put(MESSAGE_TYPE_LOGIN);
         }
@@ -35,17 +35,17 @@ public class ClientMessage extends Message
             buffer.put(MESSAGE_TYPE_SET_PROPERTY);
         }
     }
-    
+
     @Override
     public boolean deserialize(ByteBuffer buffer) {
         reset();
-        
+
         int signature = buffer.getInt();
         if (signature != MESSAGE_SIGNATURE)
             return false;
-        
+
         byte messageType = buffer.get();
-        
+
         if (messageType == MESSAGE_TYPE_LOGIN) {
             LoginMessage message = new LoginMessage();
             if (message.deserialize(buffer))
@@ -70,14 +70,14 @@ public class ClientMessage extends Message
         else if (messageType == MESSAGE_TYPE_SET_PROPERTY) {
             return false;
         }
-        
+
         return true;
     }
-    
+
     public LoginMessage getLoginMessage() {
         return loginMessage;
     }
-    
+
     public LogoutMessage getLogoutMessage() {
         return logoutMessage;
     }
@@ -85,9 +85,8 @@ public class ClientMessage extends Message
     public Iterable<SetPropertyMessage> getSetPropertyMessages() {
         return setPropertyMessages;
     }
-    
-    private void reset()
-    {
+
+    private void reset() {
         loginMessage = null;
         logoutMessage = null;
         chunkFragmentMessage = null;

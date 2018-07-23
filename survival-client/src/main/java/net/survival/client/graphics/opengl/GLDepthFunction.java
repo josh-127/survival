@@ -16,7 +16,7 @@ public enum GLDepthFunction {
         case LEQUAL:    return GL_LEQUAL;
         case GEQUAL:    return GL_GEQUAL;
         }
-        
+
         throw new RuntimeException();
     }
 }

@@ -1,7 +1,5 @@
 package net.survival.world.chunk;
 
-import net.survival.world.World;
-
 public class DefaultChunkDatabase implements ChunkDatabase
 {
     public DefaultChunkDatabase() {}

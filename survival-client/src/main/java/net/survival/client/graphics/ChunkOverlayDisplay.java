@@ -16,7 +16,7 @@ class ChunkOverlayDisplay implements GraphicsResource
     private static final int OVERLAY_SIZE = 64;
     private static final float OVERLAY_SIZE_F = OVERLAY_SIZE;
     private static final float INV_OVERLAY_SIZE_F = 1.0f / OVERLAY_SIZE_F;
-    
+
     public final GLDisplayList displayList;
     public final int chunkX;
     public final int chunkZ;
@@ -24,24 +24,25 @@ class ChunkOverlayDisplay implements GraphicsResource
     public final Chunk adjacentChunk;
     public final BlockFace blockFace;
 
-    public ChunkOverlayDisplay(int cx, int cz, Chunk chunk, Chunk adjacentChunk, BlockFace blockFace)
+    public ChunkOverlayDisplay(int cx, int cz, Chunk chunk, Chunk adjacentChunk,
+            BlockFace blockFace)
     {
         GLDisplayList.Builder builder = new GLDisplayList.Builder();
-        
+
         int faceCount = 0;
-        
+
         builder.setColor(1.0f, 1.0f, 1.0f);
-        
+
         switch (blockFace) {
         case TOP:
             for (int y = 0; y < Chunk.YLENGTH - 1; ++y) {
                 for (int z = 0; z < Chunk.ZLENGTH; ++z) {
                     for (int x = 0; x < Chunk.XLENGTH; ++x) {
                         short blockID = chunk.getBlockID(x, y, z);
-                        
+
                         if (BlockType.byID(blockID).isTransparent())
                             continue;
-                        
+
                         if (BlockType.byID(chunk.getBlockID(x, y + 1, z)).isVisible())
                             continue;
 
@@ -55,10 +56,10 @@ class ChunkOverlayDisplay implements GraphicsResource
             for (int z = 0; z < Chunk.ZLENGTH; ++z) {
                 for (int x = 0; x < Chunk.XLENGTH; ++x) {
                     short blockID = chunk.getBlockID(x, Chunk.YLENGTH - 1, z);
-                    
+
                     if (BlockType.byID(blockID).isTransparent())
                         continue;
-                    
+
                     if (BlockType.byID(adjacentChunk.getBlockID(x, 0, z)).isVisible())
                         continue;
 
@@ -67,15 +68,15 @@ class ChunkOverlayDisplay implements GraphicsResource
                     ++faceCount;
                 }
             }
-            
+
             break;
-            
+
         case BOTTOM:
             for (int y = 1; y < Chunk.YLENGTH; ++y) {
                 for (int z = 0; z < Chunk.ZLENGTH; ++z) {
                     for (int x = 0; x < Chunk.XLENGTH; ++x) {
                         short blockID = chunk.getBlockID(x, y, z);
-                        
+
                         if (BlockType.byID(blockID).isTransparent())
                             continue;
 
@@ -88,15 +89,15 @@ class ChunkOverlayDisplay implements GraphicsResource
                     }
                 }
             }
-            
+
             break;
-            
+
         case FRONT:
             for (int y = 0; y < Chunk.YLENGTH; ++y) {
                 for (int z = 0; z < Chunk.ZLENGTH - 1; ++z) {
                     for (int x = 0; x < Chunk.XLENGTH; ++x) {
                         short blockID = chunk.getBlockID(x, y, z);
-                        
+
                         if (BlockType.byID(blockID).isTransparent())
                             continue;
 
@@ -113,7 +114,7 @@ class ChunkOverlayDisplay implements GraphicsResource
                 for (int y = 0; y < Chunk.YLENGTH; ++y) {
                     for (int x = 0; x < Chunk.XLENGTH; ++x) {
                         short blockID = chunk.getBlockID(x, y, Chunk.ZLENGTH - 1);
-                        
+
                         if (BlockType.byID(blockID).isTransparent())
                             continue;
 
@@ -125,15 +126,15 @@ class ChunkOverlayDisplay implements GraphicsResource
                     }
                 }
             }
-            
+
             break;
-            
+
         case BACK:
             for (int y = 0; y < Chunk.YLENGTH; ++y) {
                 for (int z = 1; z < Chunk.ZLENGTH; ++z) {
                     for (int x = 0; x < Chunk.XLENGTH; ++x) {
                         short blockID = chunk.getBlockID(x, y, z);
-                        
+
                         if (BlockType.byID(blockID).isTransparent())
                             continue;
 
@@ -150,11 +151,12 @@ class ChunkOverlayDisplay implements GraphicsResource
                 for (int y = 0; y < Chunk.YLENGTH; ++y) {
                     for (int x = 0; x < Chunk.XLENGTH; ++x) {
                         short blockID = chunk.getBlockID(x, y, 0);
-                        
+
                         if (BlockType.byID(blockID).isTransparent())
                             continue;
 
-                        if (BlockType.byID(adjacentChunk.getBlockID(x, y, Chunk.ZLENGTH - 1)).isVisible())
+                        if (BlockType.byID(adjacentChunk.getBlockID(x, y, Chunk.ZLENGTH - 1))
+                                .isVisible())
                             continue;
 
                         pushBackFace(x, y, 0, ChunkPos.toGlobalX(cx, x), builder);
@@ -162,15 +164,15 @@ class ChunkOverlayDisplay implements GraphicsResource
                     }
                 }
             }
-            
+
             break;
-            
+
         case LEFT:
             for (int y = 0; y < Chunk.YLENGTH; ++y) {
                 for (int z = 0; z < Chunk.ZLENGTH; ++z) {
                     for (int x = 1; x < Chunk.XLENGTH; ++x) {
                         short blockID = chunk.getBlockID(x, y, z);
-                        
+
                         if (BlockType.byID(blockID).isTransparent())
                             continue;
 
@@ -182,16 +184,17 @@ class ChunkOverlayDisplay implements GraphicsResource
                     }
                 }
             }
-            
+
             if (adjacentChunk != null) {
                 for (int y = 0; y < Chunk.YLENGTH; ++y) {
                     for (int z = 0; z < Chunk.ZLENGTH; ++z) {
                         short blockID = chunk.getBlockID(0, y, z);
-                        
+
                         if (BlockType.byID(blockID).isTransparent())
                             continue;
 
-                        if (BlockType.byID(adjacentChunk.getBlockID(Chunk.XLENGTH - 1, y, z)).isVisible())
+                        if (BlockType.byID(adjacentChunk.getBlockID(Chunk.XLENGTH - 1, y, z))
+                                .isVisible())
                             continue;
 
                         pushLeftFace(0, y, z, ChunkPos.toGlobalZ(cz, z), builder);
@@ -199,15 +202,15 @@ class ChunkOverlayDisplay implements GraphicsResource
                     }
                 }
             }
-            
+
             break;
-            
+
         case RIGHT:
             for (int y = 0; y < Chunk.YLENGTH; ++y) {
                 for (int z = 0; z < Chunk.ZLENGTH; ++z) {
                     for (int x = 0; x < Chunk.XLENGTH - 1; ++x) {
                         short blockID = chunk.getBlockID(x, y, z);
-                        
+
                         if (BlockType.byID(blockID).isTransparent())
                             continue;
 
@@ -224,7 +227,7 @@ class ChunkOverlayDisplay implements GraphicsResource
                 for (int y = 0; y < Chunk.YLENGTH; ++y) {
                     for (int z = 0; z < Chunk.ZLENGTH; ++z) {
                         short blockID = chunk.getBlockID(Chunk.XLENGTH - 1, y, z);
-                        
+
                         if (BlockType.byID(blockID).isTransparent())
                             continue;
 
@@ -236,10 +239,10 @@ class ChunkOverlayDisplay implements GraphicsResource
                     }
                 }
             }
-            
+
             break;
         }
-        
+
         if (faceCount > 0) {
             displayList = builder.build();
         }
@@ -254,13 +257,13 @@ class ChunkOverlayDisplay implements GraphicsResource
         this.adjacentChunk = adjacentChunk;
         this.blockFace = blockFace;
     }
-    
+
     @Override
     public void close() {
         if (displayList != null)
             displayList.close();
     }
-    
+
     /**
      * Displays the chunk's containing blocks.
      */
@@ -268,7 +271,7 @@ class ChunkOverlayDisplay implements GraphicsResource
         if (displayList != null)
             GLRenderContext.callDisplayList(displayList, texture);
     }
-    
+
     public boolean isEmpty() {
         return displayList == null;
     }

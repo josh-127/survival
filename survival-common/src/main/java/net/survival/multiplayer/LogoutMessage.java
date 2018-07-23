@@ -5,8 +5,7 @@ import java.nio.ByteBuffer;
 public class LogoutMessage extends Message
 {
     @Override
-    public void serialize(ByteBuffer buffer) {
-    }
+    public void serialize(ByteBuffer buffer) {}
 
     @Override
     public boolean deserialize(ByteBuffer buffer) {

@@ -18,61 +18,63 @@ class SkyboxDisplay
     public static final float MIDDLE_R = 0.5f * (TOP_R + BOTTOM_R);
     public static final float MIDDLE_G = 0.5f * (TOP_G + BOTTOM_G);
     public static final float MIDDLE_B = 0.5f * (TOP_B + BOTTOM_B);
-    
+
     public void draw(Matrix4f view, Matrix4f projection) {
         Matrix3f tempMatrix = new Matrix3f();
         view.get3x3(tempMatrix);
         Matrix4f viewWithoutTranslation = new Matrix4f(tempMatrix);
-        
+
         GLMatrixStack.setProjectionMatrix(projection);
         GLMatrixStack.load(viewWithoutTranslation);
-        
+
         try (@SuppressWarnings("resource")
-        GLOutputMergerState outputMergerState = new GLOutputMergerState().withDepthWriteMask(false)) {
+        GLOutputMergerState outputMergerState = new GLOutputMergerState()
+                .withDepthWriteMask(false))
+        {
             GLImmediateDrawCall.beginTriangles(null)
-                // Top
-                .coloredVertex(-1.0f, 1.0f, -1.0f,  TOP_R, TOP_G, TOP_B)
-                .coloredVertex(1.0f, 1.0f, -1.0f,   TOP_R, TOP_G, TOP_B)
-                .coloredVertex(1.0f, 1.0f, 1.0f,    TOP_R, TOP_G, TOP_B)
-                .coloredVertex(1.0f, 1.0f, 1.0f,    TOP_R, TOP_G, TOP_B)
-                .coloredVertex(-1.0f, 1.0f, 1.0f,   TOP_R, TOP_G, TOP_B)
-                .coloredVertex(-1.0f, 1.0f, -1.0f,  TOP_R, TOP_G, TOP_B)
-                // Bottom
-                .coloredVertex(-1.0f, -1.0f, 1.0f,  BOTTOM_R, BOTTOM_G, BOTTOM_B)
-                .coloredVertex(1.0f, -1.0f, 1.0f,   BOTTOM_R, BOTTOM_G, BOTTOM_B)
-                .coloredVertex(1.0f, -1.0f, -1.0f,  BOTTOM_R, BOTTOM_G, BOTTOM_B)
-                .coloredVertex(1.0f, -1.0f, -1.0f,  BOTTOM_R, BOTTOM_G, BOTTOM_B)
-                .coloredVertex(-1.0f, -1.0f, -1.0f, BOTTOM_R, BOTTOM_G, BOTTOM_B)
-                .coloredVertex(-1.0f, -1.0f, 1.0f,  BOTTOM_R, BOTTOM_G, BOTTOM_B)
-                // Front
-                .coloredVertex(1.0f, -1.0f, 1.0f,   BOTTOM_R, BOTTOM_G, BOTTOM_B)
-                .coloredVertex(-1.0f, -1.0f, 1.0f,  BOTTOM_R, BOTTOM_G, BOTTOM_B)
-                .coloredVertex(-1.0f, 1.0f, 1.0f,   TOP_R, TOP_G, TOP_B)
-                .coloredVertex(-1.0f, 1.0f, 1.0f,   TOP_R, TOP_G, TOP_B)
-                .coloredVertex(1.0f, 1.0f, 1.0f,    TOP_R, TOP_G, TOP_B)
-                .coloredVertex(1.0f, -1.0f, 1.0f,   BOTTOM_R, BOTTOM_G, BOTTOM_B)
-                // Back
-                .coloredVertex(-1.0f, -1.0f, -1.0f, BOTTOM_R, BOTTOM_G, BOTTOM_B)
-                .coloredVertex(1.0f, -1.0f, -1.0f,  BOTTOM_R, BOTTOM_G, BOTTOM_B)
-                .coloredVertex(1.0f, 1.0f, -1.0f,   TOP_R, TOP_G, TOP_B)
-                .coloredVertex(1.0f, 1.0f, -1.0f,   TOP_R, TOP_G, TOP_B)
-                .coloredVertex(-1.0f, 1.0f, -1.0f,  TOP_R, TOP_G, TOP_B)
-                .coloredVertex(-1.0f, -1.0f, -1.0f, BOTTOM_R, BOTTOM_G, BOTTOM_B)
-                // Left
-                .coloredVertex(-1.0f, -1.0f, 1.0f,  BOTTOM_R, BOTTOM_G, BOTTOM_B)
-                .coloredVertex(-1.0f, -1.0f, -1.0f, BOTTOM_R, BOTTOM_G, BOTTOM_B)
-                .coloredVertex(-1.0f, 1.0f, -1.0f,  TOP_R, TOP_G, TOP_B)
-                .coloredVertex(-1.0f, 1.0f, -1.0f,  TOP_R, TOP_G, TOP_B)
-                .coloredVertex(-1.0f, 1.0f, 1.0f,   TOP_R, TOP_G, TOP_B)
-                .coloredVertex(-1.0f, -1.0f, 1.0f,  BOTTOM_R, BOTTOM_G, BOTTOM_B)
-                // Right
-                .coloredVertex(1.0f, -1.0f, -1.0f,  BOTTOM_R, BOTTOM_G, BOTTOM_B)
-                .coloredVertex(1.0f, -1.0f, 1.0f,   BOTTOM_R, BOTTOM_G, BOTTOM_B)
-                .coloredVertex(1.0f, 1.0f, 1.0f,    TOP_R, TOP_G, TOP_B)
-                .coloredVertex(1.0f, 1.0f, 1.0f,    TOP_R, TOP_G, TOP_B)
-                .coloredVertex(1.0f, 1.0f, -1.0f,   TOP_R, TOP_G, TOP_B)
-                .coloredVertex(1.0f, -1.0f, -1.0f,  BOTTOM_R, BOTTOM_G, BOTTOM_B)
-                .end();
+                    // Top
+                    .coloredVertex(-1.0f, 1.0f, -1.0f, TOP_R, TOP_G, TOP_B)
+                    .coloredVertex(1.0f, 1.0f, -1.0f, TOP_R, TOP_G, TOP_B)
+                    .coloredVertex(1.0f, 1.0f, 1.0f, TOP_R, TOP_G, TOP_B)
+                    .coloredVertex(1.0f, 1.0f, 1.0f, TOP_R, TOP_G, TOP_B)
+                    .coloredVertex(-1.0f, 1.0f, 1.0f, TOP_R, TOP_G, TOP_B)
+                    .coloredVertex(-1.0f, 1.0f, -1.0f, TOP_R, TOP_G, TOP_B)
+                    // Bottom
+                    .coloredVertex(-1.0f, -1.0f, 1.0f, BOTTOM_R, BOTTOM_G, BOTTOM_B)
+                    .coloredVertex(1.0f, -1.0f, 1.0f, BOTTOM_R, BOTTOM_G, BOTTOM_B)
+                    .coloredVertex(1.0f, -1.0f, -1.0f, BOTTOM_R, BOTTOM_G, BOTTOM_B)
+                    .coloredVertex(1.0f, -1.0f, -1.0f, BOTTOM_R, BOTTOM_G, BOTTOM_B)
+                    .coloredVertex(-1.0f, -1.0f, -1.0f, BOTTOM_R, BOTTOM_G, BOTTOM_B)
+                    .coloredVertex(-1.0f, -1.0f, 1.0f, BOTTOM_R, BOTTOM_G, BOTTOM_B)
+                    // Front
+                    .coloredVertex(1.0f, -1.0f, 1.0f, BOTTOM_R, BOTTOM_G, BOTTOM_B)
+                    .coloredVertex(-1.0f, -1.0f, 1.0f, BOTTOM_R, BOTTOM_G, BOTTOM_B)
+                    .coloredVertex(-1.0f, 1.0f, 1.0f, TOP_R, TOP_G, TOP_B)
+                    .coloredVertex(-1.0f, 1.0f, 1.0f, TOP_R, TOP_G, TOP_B)
+                    .coloredVertex(1.0f, 1.0f, 1.0f, TOP_R, TOP_G, TOP_B)
+                    .coloredVertex(1.0f, -1.0f, 1.0f, BOTTOM_R, BOTTOM_G, BOTTOM_B)
+                    // Back
+                    .coloredVertex(-1.0f, -1.0f, -1.0f, BOTTOM_R, BOTTOM_G, BOTTOM_B)
+                    .coloredVertex(1.0f, -1.0f, -1.0f, BOTTOM_R, BOTTOM_G, BOTTOM_B)
+                    .coloredVertex(1.0f, 1.0f, -1.0f, TOP_R, TOP_G, TOP_B)
+                    .coloredVertex(1.0f, 1.0f, -1.0f, TOP_R, TOP_G, TOP_B)
+                    .coloredVertex(-1.0f, 1.0f, -1.0f, TOP_R, TOP_G, TOP_B)
+                    .coloredVertex(-1.0f, -1.0f, -1.0f, BOTTOM_R, BOTTOM_G, BOTTOM_B)
+                    // Left
+                    .coloredVertex(-1.0f, -1.0f, 1.0f, BOTTOM_R, BOTTOM_G, BOTTOM_B)
+                    .coloredVertex(-1.0f, -1.0f, -1.0f, BOTTOM_R, BOTTOM_G, BOTTOM_B)
+                    .coloredVertex(-1.0f, 1.0f, -1.0f, TOP_R, TOP_G, TOP_B)
+                    .coloredVertex(-1.0f, 1.0f, -1.0f, TOP_R, TOP_G, TOP_B)
+                    .coloredVertex(-1.0f, 1.0f, 1.0f, TOP_R, TOP_G, TOP_B)
+                    .coloredVertex(-1.0f, -1.0f, 1.0f, BOTTOM_R, BOTTOM_G, BOTTOM_B)
+                    // Right
+                    .coloredVertex(1.0f, -1.0f, -1.0f, BOTTOM_R, BOTTOM_G, BOTTOM_B)
+                    .coloredVertex(1.0f, -1.0f, 1.0f, BOTTOM_R, BOTTOM_G, BOTTOM_B)
+                    .coloredVertex(1.0f, 1.0f, 1.0f, TOP_R, TOP_G, TOP_B)
+                    .coloredVertex(1.0f, 1.0f, 1.0f, TOP_R, TOP_G, TOP_B)
+                    .coloredVertex(1.0f, 1.0f, -1.0f, TOP_R, TOP_G, TOP_B)
+                    .coloredVertex(1.0f, -1.0f, -1.0f, BOTTOM_R, BOTTOM_G, BOTTOM_B)
+                    .end();
         }
     }
 }

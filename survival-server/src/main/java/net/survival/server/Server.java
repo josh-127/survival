@@ -6,9 +6,9 @@ import net.survival.world.chunk.EntityRelocator;
 public class Server
 {
     private final World world;
-    
+
     private final EntityRelocator entityRelocator;
-    
+
     private Server() {
         world = new World();
         entityRelocator = new EntityRelocator(world);
@@ -25,12 +25,12 @@ public class Server
         long now = System.currentTimeMillis();
         long prevTime = now;
         double unprocessedTicks = 0.0;
-        
+
         for (;;) {
             now = System.currentTimeMillis();
             unprocessedTicks += (now - prevTime) / MILLIS_PER_TICK;
             prevTime = now;
-            
+
             if (unprocessedTicks >= 1.0) {
                 while (unprocessedTicks >= 1.0) {
                     program.tick(World.SECONDS_PER_TICK);

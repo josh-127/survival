@@ -10,7 +10,7 @@ public enum BlockType
         bt.visible = false;
         bt.transparent = true;
     }),
-    
+
     STONE(bt -> {
         bt.name = "Stone";
         bt.setTextureOnAllFaces("ProgrammerArt-v3.0/textures/blocks/stone.png");
@@ -95,7 +95,7 @@ public enum BlockType
         bt.name = "Lapis Block";
         bt.setTextureOnAllFaces("ProgrammerArt-v3.0/textures/blocks/lapis_block.png");
     }),
-    
+
     //
     // Special
     //
@@ -110,17 +110,17 @@ public enum BlockType
         bt.visible = false;
         bt.transparent = true;
     });
-    
+
     private static final BlockType[] cachedValues = values();
-    
+
     public final short id;
-    
+
     private String name;
     private final String[] textures;
     private boolean solid;
     private boolean visible;
     private boolean transparent;
-    
+
     private BlockType(Builder builder) {
         id = (short) ordinal();
         name = "<UNDEFINED>";
@@ -128,70 +128,70 @@ public enum BlockType
         solid = true;
         visible = true;
         transparent = false;
-        
+
         builder.build(this);
     }
-    
+
     public static BlockType[] getCachedValues() {
         return cachedValues;
     }
-    
+
     public static BlockType byID(short id) {
         return cachedValues[id];
     }
-    
+
     public static Iterable<BlockType> iterateAll() {
         return () -> new Iterator<BlockType>() {
             private int index = 0;
-            
+
             @Override
             public BlockType next() {
                 return cachedValues[index++];
             }
-            
+
             @Override
             public boolean hasNext() {
                 return index < cachedValues.length;
             }
         };
     }
-    
+
     public String getName() {
         return name;
     }
-    
+
     public String getTexture(BlockFace blockFace) {
         return textures[blockFace.ordinal()];
     }
-    
+
     private void setTexture(BlockFace blockFace, String to) {
         textures[blockFace.ordinal()] = to;
     }
-    
+
     private void setTextureOnAllFaces(String to) {
         for (int i = 0; i < textures.length; ++i)
             textures[i] = to;
     }
-    
+
     private void setTextureOnSides(String to) {
         textures[BlockFace.LEFT.ordinal()] = to;
         textures[BlockFace.RIGHT.ordinal()] = to;
         textures[BlockFace.FRONT.ordinal()] = to;
         textures[BlockFace.BACK.ordinal()] = to;
     }
-    
+
     public boolean isSolid() {
         return solid;
     }
-    
+
     public boolean isVisible() {
         return visible;
     }
-    
+
     public boolean isTransparent() {
         return transparent;
     }
-    
+
     private interface Builder
     {
         void build(BlockType bt);

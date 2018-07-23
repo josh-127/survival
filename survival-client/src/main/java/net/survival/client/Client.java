@@ -34,44 +34,45 @@ public class Client implements AutoCloseable
     private static final String WINDOW_TITLE = "Survival";
 
     private final World world;
-    
+
     private final CircularChunkLoader chunkLoader;
     private final EntityPhysics entityPhysics;
     private final EntityRelocator entityRelocator;
-    
+
     private final DefaultChunkDatabase chunkDatabase;
     private final InfiniteChunkGenerator chunkGenerator;
     private final WorldDecorator worldDecorator;
     private final ChunkSystem chunkSystem;
-    
+
     private final Control control;
-    
+
     private final ClientDisplay clientDisplay;
     private final GuiDisplay guiDisplay;
-    
+
     private final FpsCamera fpsCamera;
-    
+
     private Entity player;
-    
+
     private Client() {
         world = new World();
         chunkLoader = new CircularChunkLoader(8);
         entityPhysics = new EntityPhysics(world);
         entityRelocator = new EntityRelocator(world);
-        
+
         chunkDatabase = new DefaultChunkDatabase();
         chunkGenerator = new InfiniteChunkGenerator(0L);
         worldDecorator = WorldDecorator.createDefault();
         chunkSystem = new ChunkSystem(chunkDatabase, chunkGenerator, worldDecorator);
-        
+
         control = new Control();
         control.getClientRectangle().setRight(0.1);
         control.getClientRectangle().setBottom(0.025);
         control.setText("");
-        
-        clientDisplay = new ClientDisplay(world, GraphicsSettings.WINDOW_WIDTH, GraphicsSettings.WINDOW_HEIGHT);
+
+        clientDisplay = new ClientDisplay(world, GraphicsSettings.WINDOW_WIDTH,
+                GraphicsSettings.WINDOW_HEIGHT);
         guiDisplay = new GuiDisplay(control);
-        
+
         fpsCamera = new FpsCamera(new Vector3d(0.0, 72.0, 0.0), 0.0f, -1.0f);
     }
 
@@ -79,12 +80,12 @@ public class Client implements AutoCloseable
     public void close() throws RuntimeException {
         clientDisplay.close();
     }
-    
+
     public void tick(double elapsedTime) {
         double cursorDX = Mouse.getDeltaX();
         double cursorDY = Mouse.getDeltaY();
         fpsCamera.rotate(-cursorDX / 64.0, -cursorDY / 64.0);
-        
+
         if (Keyboard.isKeyPressed(Key.R)) {
             Entity newPlayer = new Entity();
             newPlayer.x = player != null ? player.x : 0.0;
@@ -95,17 +96,17 @@ public class Client implements AutoCloseable
             player = newPlayer;
             world.addEntity(newPlayer);
         }
-        
+
         if (player != null) {
             final double FRICTION = 0.5;
-            
+
             double speed = 5.0;
             double joystickX = 0.0;
             double joystickZ = 0.0;
-            
+
             if (Keyboard.isKeyDown(Key.LEFT_CONTROL))
                 speed = 10.0;
-            
+
             if (Keyboard.isKeyDown(Key.W)) {
                 joystickX += Math.sin(fpsCamera.yaw);
                 joystickZ -= Math.cos(fpsCamera.yaw);
@@ -122,7 +123,7 @@ public class Client implements AutoCloseable
                 joystickX += Math.sin(fpsCamera.yaw + Math.PI / 2.0);
                 joystickZ -= Math.cos(fpsCamera.yaw + Math.PI / 2.0);
             }
-            
+
             double magnitude = Math.sqrt(joystickX * joystickX + joystickZ * joystickZ);
             if (magnitude != 0.0) {
                 joystickX *= speed / magnitude;
@@ -134,19 +135,19 @@ public class Client implements AutoCloseable
                 player.velocityX *= FRICTION;
                 player.velocityZ *= FRICTION;
             }
-            
+
             if (/*//player.velocityY == 0.0 &&//*/ Keyboard.isKeyPressed(Key.SPACE))
                 player.velocityY = 8.0;
         }
-        
+
         int cx = ChunkPos.toChunkX((int) Math.floor(fpsCamera.position.x));
         int cz = ChunkPos.toChunkZ((int) Math.floor(fpsCamera.position.z));
         chunkLoader.setCenter(cx, cz);
-        
+
         chunkSystem.update(world, chunkLoader);
         entityPhysics.tick(elapsedTime);
         entityRelocator.relocateEntities();
-        
+
         if (player != null) {
             fpsCamera.position.x = player.x;
             fpsCamera.position.y = player.y + 1.0;
@@ -171,7 +172,7 @@ public class Client implements AutoCloseable
                 }
             }
         }
-        
+
         if (Keyboard.isKeyPressed(Key.T)) {
             Entity entity = new Entity();
             entity.x = fpsCamera.position.x;
@@ -182,22 +183,23 @@ public class Client implements AutoCloseable
             entity.collisionBoxRadiusZ = 1.5;
             world.addEntity(entity);
         }
-        
+
         for (Map.Entry<Long, Chunk> entry : world.iterateChunkMap()) {
             long hashedPos = entry.getKey();
             Chunk chunk = entry.getValue();
-            
+
             if (chunk.isBlocksModified()) {
                 chunk.clearModificationFlags();
                 clientDisplay.redrawChunk(hashedPos);
             }
         }
 
-        clientDisplay.getCamera().moveTo(
-                (float) fpsCamera.position.x, (float) fpsCamera.position.y, (float) fpsCamera.position.z);
+        clientDisplay.getCamera().moveTo((float) fpsCamera.position.x, (float) fpsCamera.position.y,
+                (float) fpsCamera.position.z);
         clientDisplay.getCamera().orient((float) fpsCamera.yaw, (float) fpsCamera.pitch);
         clientDisplay.getCamera().setFov((float) Math.toRadians(60.0));
-        clientDisplay.getCamera().resize(GraphicsSettings.WINDOW_WIDTH, GraphicsSettings.WINDOW_HEIGHT);
+        clientDisplay.getCamera().resize(GraphicsSettings.WINDOW_WIDTH,
+                GraphicsSettings.WINDOW_HEIGHT);
         clientDisplay.getCamera().setClipPlanes(0.0625f, 768.0f);
     }
 
@@ -207,29 +209,32 @@ public class Client implements AutoCloseable
     }
 
     public static void main(String[] args) {
-        GLDisplay display = new GLDisplay(GraphicsSettings.WINDOW_WIDTH, GraphicsSettings.WINDOW_HEIGHT, WINDOW_TITLE);
+        GLDisplay display = new GLDisplay(GraphicsSettings.WINDOW_WIDTH,
+                GraphicsSettings.WINDOW_HEIGHT, WINDOW_TITLE);
         GlfwKeyboardProvider keyboardProvider = new GlfwKeyboardProvider();
         GlfwMouseProvider mouseProvider = new GlfwMouseProvider();
         GLFW.glfwSetKeyCallback(display.getUnderlyingGlfwWindow(), keyboardProvider);
         GLFW.glfwSetCursorPosCallback(display.getUnderlyingGlfwWindow(), mouseProvider);
         GLRenderContext.init();
-        
+
         Client program = new Client();
 
         final double MILLIS_PER_TICK = World.SECONDS_PER_TICK * 1000.0;
         long now = System.currentTimeMillis();
         long prevTime = now;
         double unprocessedTicks = 0.0;
-        
+
         int frameCounter = 0;
         long frameRateTimer = System.currentTimeMillis();
         int frameRate = 0;
 
-        for (boolean running = true; running; running = Keyboard.isKeyUp(Key.ESCAPE) && !display.shouldClose()) {
+        for (boolean running = true; running; running = Keyboard.isKeyUp(Key.ESCAPE)
+                && !display.shouldClose())
+        {
             now = System.currentTimeMillis();
             unprocessedTicks += (now - prevTime) / MILLIS_PER_TICK;
             prevTime = now;
-            
+
             if (unprocessedTicks >= 1.0) {
                 while (unprocessedTicks >= 1.0) {
                     mouseProvider.tick();
@@ -237,18 +242,18 @@ public class Client implements AutoCloseable
                     keyboardProvider.nextInputFrame();
                     unprocessedTicks -= 1.0;
                 }
-                
+
                 ++frameCounter;
                 program.render(frameRate);
                 display.swapBuffers();
             }
-            
+
             if (System.currentTimeMillis() - frameRateTimer > 1000) {
                 frameRateTimer += 1000;
                 frameRate = frameCounter;
                 frameCounter = 0;
             }
-            
+
             GLDisplay.pollEvents();
         }
 

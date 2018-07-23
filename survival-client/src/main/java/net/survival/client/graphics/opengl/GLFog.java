@@ -14,7 +14,7 @@ class GLFog
     private static final Stack<Float> greenArgStack = new Stack<>();
     private static final Stack<Float> blueArgStack = new Stack<>();
     private static final Stack<Float> alphaArgStack = new Stack<>();
-    
+
     public static void pushNoFog() {
         setFog(GLFogMode.NONE, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f);
         fogModeStack.push(GLFogMode.NONE);
@@ -26,7 +26,7 @@ class GLFog
         blueArgStack.push(0.0f);
         alphaArgStack.push(0.0f);
     }
-    
+
     public static void pushLinearFog(float start, float end, float r, float g, float b, float a) {
         setFog(GLFogMode.LINEAR, 0.0f, start, end, r, g, b, a);
         fogModeStack.push(GLFogMode.LINEAR);
@@ -38,7 +38,7 @@ class GLFog
         blueArgStack.push(b);
         alphaArgStack.push(a);
     }
-    
+
     public static void pushExpFog(float density, float r, float g, float b, float a) {
         setFog(GLFogMode.EXP, density, 0.0f, 0.0f, r, g, b, a);
         fogModeStack.push(GLFogMode.EXP);
@@ -50,7 +50,7 @@ class GLFog
         blueArgStack.push(b);
         alphaArgStack.push(a);
     }
-    
+
     public static void pushExp2Fog(float density, float r, float g, float b, float a) {
         setFog(GLFogMode.EXP2, density, 0.0f, 0.0f, r, g, b, a);
         fogModeStack.push(GLFogMode.EXP2);
@@ -62,7 +62,7 @@ class GLFog
         blueArgStack.push(b);
         alphaArgStack.push(a);
     }
-    
+
     public static void popFog() {
         fogModeStack.pop();
         densityArgStack.pop();
@@ -72,7 +72,7 @@ class GLFog
         greenArgStack.pop();
         blueArgStack.pop();
         alphaArgStack.pop();
-        
+
         GLFogMode mode = fogModeStack.peek();
         float density = densityArgStack.peek();
         float start = startArgStack.peek();
@@ -83,9 +83,12 @@ class GLFog
         float a = alphaArgStack.peek();
         setFog(mode, density, start, end, r, g, b, a);
     }
-    
+
     private static float[] glFogfv_color = new float[4];
-    private static void setFog(GLFogMode mode, float density, float start, float end, float r, float g, float b, float a) {
+
+    private static void setFog(GLFogMode mode, float density, float start, float end, float r,
+            float g, float b, float a)
+    {
         if (mode == GLFogMode.NONE) {
             glDisable(GL_FOG);
             return;
@@ -93,12 +96,12 @@ class GLFog
         else {
             glEnable(GL_FOG);
         }
-        
+
         glFogfv_color[0] = r;
         glFogfv_color[1] = g;
         glFogfv_color[2] = b;
         glFogfv_color[3] = a;
-        
+
         glFogi(GL_FOG_MODE, mode.toGLConstant());
         glFogf(GL_FOG_DENSITY, density);
         glFogf(GL_FOG_START, start);

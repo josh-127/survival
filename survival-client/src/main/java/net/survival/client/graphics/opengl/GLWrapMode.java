@@ -6,11 +6,9 @@ public enum GLWrapMode
 {
     REPEAT,
     CLAMP;
-    
-    int toGLConstant()
-    {
-        switch (this)
-        {
+
+    int toGLConstant() {
+        switch (this) {
         case REPEAT: return GL_REPEAT;
         case CLAMP:  return GL_CLAMP;
         }

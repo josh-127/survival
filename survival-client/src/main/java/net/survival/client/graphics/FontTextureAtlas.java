@@ -15,20 +15,20 @@ class FontTextureAtlas implements GraphicsResource
         characters = new GLTexture();
 
         characters.beginBind()
-            .setMipmapEnabled(false)
-            .setData(bitmap)
-            .setMinFilter(GLFilterMode.NEAREST)
-            .setMagFilter(GLFilterMode.NEAREST)
-            .setWrapS(GLWrapMode.REPEAT)
-            .setWrapT(GLWrapMode.REPEAT)
-            .endBind();
+                .setMipmapEnabled(false)
+                .setData(bitmap)
+                .setMinFilter(GLFilterMode.NEAREST)
+                .setMagFilter(GLFilterMode.NEAREST)
+                .setWrapS(GLWrapMode.REPEAT)
+                .setWrapT(GLWrapMode.REPEAT)
+                .endBind();
     }
 
     @Override
     public void close() {
         characters.close();
     }
-    
+
     public float getTexCoordU1(char c) {
         return (c % 16) / 16.0f;
     }

@@ -12,7 +12,7 @@ class BlockTextureAtlas implements GraphicsResource
 {
     public final GLTexture blockTextures;
     public final BlockFace blockFace;
-    
+
     private final float[] texCoords;
 
     public BlockTextureAtlas(BlockFace blockFace) {
@@ -30,28 +30,28 @@ class BlockTextureAtlas implements GraphicsResource
 
         blockTextures = new GLTexture();
         blockTextures.beginBind()
-            .setMinFilter(GLFilterMode.NEAREST_MIPMAP_NEAREST)
-            .setMagFilter(GLFilterMode.NEAREST)
-            .setWrapS(GLWrapMode.REPEAT)
-            .setWrapT(GLWrapMode.REPEAT)
-            .setMipmapEnabled(true)
-            .setMinLod(0)
-            .setMaxLod(4)
-            .setData(atlas)
-            .endBind();
-        
+                .setMinFilter(GLFilterMode.NEAREST_MIPMAP_NEAREST)
+                .setMagFilter(GLFilterMode.NEAREST)
+                .setWrapS(GLWrapMode.REPEAT)
+                .setWrapT(GLWrapMode.REPEAT)
+                .setMipmapEnabled(true)
+                .setMinLod(0)
+                .setMaxLod(4)
+                .setData(atlas)
+                .endBind();
+
         this.blockFace = blockFace;
-        
+
         texCoords = new float[17 * 17 * 4];
         for (int i = 0; i < 128; ++i) {
             int indexU1 = i * 4;
             int indexV1 = indexU1 + 1;
             int indexU2 = indexU1 + 2;
             int indexV2 = indexU1 + 3;
-            
+
             int tileU = (i % 16);
             int tileV = 15 - (i / 16);
-            
+
             texCoords[indexU1] = tileU / 16.0f;
             texCoords[indexV1] = (tileV / 8.0f) + (1.0f / 8.0f);
             texCoords[indexU2] = (tileU / 16.0f) + (1.0f / 16.0f);

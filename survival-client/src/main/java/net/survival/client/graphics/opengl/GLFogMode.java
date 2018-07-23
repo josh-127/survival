@@ -5,7 +5,7 @@ import static org.lwjgl.opengl.GL11.*;
 enum GLFogMode
 {
     NONE, LINEAR, EXP, EXP2;
-    
+
     int toGLConstant() {
         switch (this) {
         case NONE:   throw new RuntimeException();
@@ -13,7 +13,7 @@ enum GLFogMode
         case EXP:    return GL_EXP;
         case EXP2:   return GL_EXP2;
         }
-        
+
         throw new RuntimeException();
     }
 }

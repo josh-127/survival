@@ -17,7 +17,7 @@ import net.survival.world.gen.layer.GenLayerFactory;
 public class ViewportComponent extends JComponent implements ActionListener, KeyListener
 {
     private static final long serialVersionUID = 1L;
-    
+
     private GenLayer map;
     private int offsetX;
     private int offsetZ;
@@ -27,14 +27,14 @@ public class ViewportComponent extends JComponent implements ActionListener, Key
     private boolean downPressed;
     private boolean leftPressed;
     private boolean rightPressed;
-    
+
     public ViewportComponent() {
         map = GenLayerFactory.createBiomeLayer(768, 768, 0L);
-        
+
         map.generate(offsetX, offsetZ);
-        
+
         setBackground(Color.BLACK);
-        
+
         Timer timer = new Timer(67, this);
         timer.setRepeats(true);
         timer.start();
@@ -43,15 +43,15 @@ public class ViewportComponent extends JComponent implements ActionListener, Key
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        
+
         final int VIEWPORT_WIDTH = map.lengthX;
         final int VIEWPORT_HEIGHT = map.lengthZ;
         final int VIEWPORT_X = (getWidth() - VIEWPORT_WIDTH) / 2;
         final int VIEWPORT_Z = (getHeight() - VIEWPORT_HEIGHT) / 2;
-        
+
         g.setColor(Color.BLACK);
         g.fillRect(0, 0, getWidth(), getHeight());
-        
+
         for (int z = 0; z < VIEWPORT_HEIGHT; ++z) {
             for (int x = 0; x < VIEWPORT_WIDTH; ++x) {
                 int biomeID = map.sampleNearest(x, z);
@@ -64,19 +64,23 @@ public class ViewportComponent extends JComponent implements ActionListener, Key
             }
         }
     }
-    
+
     @Override
     public void actionPerformed(ActionEvent e) {
         final int INCREMENT = 7;
-        
+
         prevOffsetX = offsetX;
         prevOffsetZ = offsetZ;
-        
-        if (upPressed)    offsetZ -= INCREMENT;
-        if (downPressed)  offsetZ += INCREMENT;
-        if (leftPressed)  offsetX -= INCREMENT;
-        if (rightPressed) offsetX += INCREMENT;
-        
+
+        if (upPressed)
+            offsetZ -= INCREMENT;
+        if (downPressed)
+            offsetZ += INCREMENT;
+        if (leftPressed)
+            offsetX -= INCREMENT;
+        if (rightPressed)
+            offsetX += INCREMENT;
+
         if (offsetX != prevOffsetX || offsetZ != prevOffsetZ) {
             map.generate(offsetX, offsetZ);
             repaint();
@@ -89,20 +93,36 @@ public class ViewportComponent extends JComponent implements ActionListener, Key
     @Override
     public void keyPressed(KeyEvent e) {
         switch (e.getKeyCode()) {
-        case KeyEvent.VK_UP:    upPressed = true; break;
-        case KeyEvent.VK_DOWN:  downPressed = true; break;
-        case KeyEvent.VK_LEFT:  leftPressed = true; break;
-        case KeyEvent.VK_RIGHT: rightPressed = true; break;
+        case KeyEvent.VK_UP:
+            upPressed = true;
+            break;
+        case KeyEvent.VK_DOWN:
+            downPressed = true;
+            break;
+        case KeyEvent.VK_LEFT:
+            leftPressed = true;
+            break;
+        case KeyEvent.VK_RIGHT:
+            rightPressed = true;
+            break;
         }
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
         switch (e.getKeyCode()) {
-        case KeyEvent.VK_UP:    upPressed = false; break;
-        case KeyEvent.VK_DOWN:  downPressed = false; break;
-        case KeyEvent.VK_LEFT:  leftPressed = false; break;
-        case KeyEvent.VK_RIGHT: rightPressed = false; break;
+        case KeyEvent.VK_UP:
+            upPressed = false;
+            break;
+        case KeyEvent.VK_DOWN:
+            downPressed = false;
+            break;
+        case KeyEvent.VK_LEFT:
+            leftPressed = false;
+            break;
+        case KeyEvent.VK_RIGHT:
+            rightPressed = false;
+            break;
         }
     }
 }
