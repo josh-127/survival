@@ -9,9 +9,6 @@ import net.survival.world.chunk.ChunkPos;
 
 public class World
 {
-    public static final double TICKS_PER_SECOND = 60.0;
-    public static final double SECONDS_PER_TICK = 1.0 / TICKS_PER_SECOND;
-
     private final HashMap<Long, Chunk> chunks;
 
     public World() {

@@ -33,6 +33,9 @@ public class Client implements AutoCloseable
 {
     private static final String WINDOW_TITLE = "Survival";
 
+    private static final double TICKS_PER_SECOND = 60.0;
+    private static final double SECONDS_PER_TICK = 1.0 / TICKS_PER_SECOND;
+
     private final World world;
 
     private final CircularChunkLoader chunkLoader;
@@ -219,7 +222,7 @@ public class Client implements AutoCloseable
 
         Client program = new Client();
 
-        final double MILLIS_PER_TICK = World.SECONDS_PER_TICK * 1000.0;
+        final double MILLIS_PER_TICK = SECONDS_PER_TICK * 1000.0;
         long now = System.currentTimeMillis();
         long prevTime = now;
         double unprocessedTicks = 0.0;
@@ -238,7 +241,7 @@ public class Client implements AutoCloseable
             if (unprocessedTicks >= 1.0) {
                 while (unprocessedTicks >= 1.0) {
                     mouseProvider.tick();
-                    program.tick(World.SECONDS_PER_TICK);
+                    program.tick(SECONDS_PER_TICK);
                     keyboardProvider.nextInputFrame();
                     unprocessedTicks -= 1.0;
                 }
