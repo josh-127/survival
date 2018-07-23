@@ -30,6 +30,8 @@ class ChunkOverlayDisplay implements GraphicsResource
         
         int faceCount = 0;
         
+        builder.setColor(1.0f, 1.0f, 1.0f);
+        
         switch (blockFace) {
         case TOP:
             for (int y = 0; y < Chunk.YLENGTH - 1; ++y) {
@@ -37,12 +39,9 @@ class ChunkOverlayDisplay implements GraphicsResource
                     for (int x = 0; x < Chunk.XLENGTH; ++x) {
                         short blockID = chunk.getBlockID(x, y, z);
                         
-                        if (!BlockType.byID(blockID).isVisible())
+                        if (BlockType.byID(blockID).isTransparent())
                             continue;
                         
-                        if (blockID == BlockType.WATER.id)
-                            continue;
-
                         if (BlockType.byID(chunk.getBlockID(x, y + 1, z)).isVisible())
                             continue;
 
@@ -57,10 +56,7 @@ class ChunkOverlayDisplay implements GraphicsResource
                 for (int x = 0; x < Chunk.XLENGTH; ++x) {
                     short blockID = chunk.getBlockID(x, Chunk.YLENGTH - 1, z);
                     
-                    if (!BlockType.byID(blockID).isVisible())
-                        continue;
-                    
-                    if (blockID == BlockType.WATER.id)
+                    if (BlockType.byID(blockID).isTransparent())
                         continue;
                     
                     if (BlockType.byID(adjacentChunk.getBlockID(x, 0, z)).isVisible())
@@ -80,10 +76,7 @@ class ChunkOverlayDisplay implements GraphicsResource
                     for (int x = 0; x < Chunk.XLENGTH; ++x) {
                         short blockID = chunk.getBlockID(x, y, z);
                         
-                        if (!BlockType.byID(blockID).isVisible())
-                            continue;
-                        
-                        if (blockID == BlockType.WATER.id)
+                        if (BlockType.byID(blockID).isTransparent())
                             continue;
 
                         if (BlockType.byID(chunk.getBlockID(x, y - 1, z)).isVisible())
@@ -96,25 +89,6 @@ class ChunkOverlayDisplay implements GraphicsResource
                 }
             }
             
-            for (int z = 0; z < Chunk.ZLENGTH; ++z) {
-                for (int x = 0; x < Chunk.XLENGTH; ++x) {
-                    short blockID = chunk.getBlockID(x, 0, z);
-                    
-                    if (!BlockType.byID(blockID).isVisible())
-                        continue;
-                    
-                    if (blockID == BlockType.WATER.id)
-                        continue;
-                    
-                    if (BlockType.byID(adjacentChunk.getBlockID(x, Chunk.YLENGTH - 1, z)).isVisible())
-                        continue;
-
-                    pushBottomFace(x, 0, z, ChunkPos.toGlobalX(cx, x),
-                            ChunkPos.toGlobalZ(cz, z), builder);
-                    ++faceCount;
-                }
-            }
-            
             break;
             
         case FRONT:
@@ -123,10 +97,7 @@ class ChunkOverlayDisplay implements GraphicsResource
                     for (int x = 0; x < Chunk.XLENGTH; ++x) {
                         short blockID = chunk.getBlockID(x, y, z);
                         
-                        if (!BlockType.byID(blockID).isVisible())
-                            continue;
-                        
-                        if (blockID == BlockType.WATER.id)
+                        if (BlockType.byID(blockID).isTransparent())
                             continue;
 
                         if (BlockType.byID(chunk.getBlockID(x, y, z + 1)).isVisible())
@@ -143,7 +114,7 @@ class ChunkOverlayDisplay implements GraphicsResource
                     for (int x = 0; x < Chunk.XLENGTH; ++x) {
                         short blockID = chunk.getBlockID(x, y, Chunk.ZLENGTH - 1);
                         
-                        if (!BlockType.byID(blockID).isVisible())
+                        if (BlockType.byID(blockID).isTransparent())
                             continue;
 
                         if (BlockType.byID(adjacentChunk.getBlockID(x, y, 0)).isVisible())
@@ -163,10 +134,7 @@ class ChunkOverlayDisplay implements GraphicsResource
                     for (int x = 0; x < Chunk.XLENGTH; ++x) {
                         short blockID = chunk.getBlockID(x, y, z);
                         
-                        if (!BlockType.byID(blockID).isVisible())
-                            continue;
-                        
-                        if (blockID == BlockType.WATER.id)
+                        if (BlockType.byID(blockID).isTransparent())
                             continue;
 
                         if (BlockType.byID(chunk.getBlockID(x, y, z - 1)).isVisible())
@@ -183,10 +151,7 @@ class ChunkOverlayDisplay implements GraphicsResource
                     for (int x = 0; x < Chunk.XLENGTH; ++x) {
                         short blockID = chunk.getBlockID(x, y, 0);
                         
-                        if (!BlockType.byID(blockID).isVisible())
-                            continue;
-                        
-                        if (blockID == BlockType.WATER.id)
+                        if (BlockType.byID(blockID).isTransparent())
                             continue;
 
                         if (BlockType.byID(adjacentChunk.getBlockID(x, y, Chunk.ZLENGTH - 1)).isVisible())
@@ -206,10 +171,7 @@ class ChunkOverlayDisplay implements GraphicsResource
                     for (int x = 1; x < Chunk.XLENGTH; ++x) {
                         short blockID = chunk.getBlockID(x, y, z);
                         
-                        if (!BlockType.byID(blockID).isVisible())
-                            continue;
-                        
-                        if (blockID == BlockType.WATER.id)
+                        if (BlockType.byID(blockID).isTransparent())
                             continue;
 
                         if (BlockType.byID(chunk.getBlockID(x - 1, y, z)).isVisible())
@@ -226,10 +188,7 @@ class ChunkOverlayDisplay implements GraphicsResource
                     for (int z = 0; z < Chunk.ZLENGTH; ++z) {
                         short blockID = chunk.getBlockID(0, y, z);
                         
-                        if (!BlockType.byID(blockID).isVisible())
-                            continue;
-                        
-                        if (blockID == BlockType.WATER.id)
+                        if (BlockType.byID(blockID).isTransparent())
                             continue;
 
                         if (BlockType.byID(adjacentChunk.getBlockID(Chunk.XLENGTH - 1, y, z)).isVisible())
@@ -249,10 +208,7 @@ class ChunkOverlayDisplay implements GraphicsResource
                     for (int x = 0; x < Chunk.XLENGTH - 1; ++x) {
                         short blockID = chunk.getBlockID(x, y, z);
                         
-                        if (!BlockType.byID(blockID).isVisible())
-                            continue;
-                        
-                        if (blockID == BlockType.WATER.id)
+                        if (BlockType.byID(blockID).isTransparent())
                             continue;
 
                         if (BlockType.byID(chunk.getBlockID(x + 1, y, z)).isVisible())
@@ -269,10 +225,7 @@ class ChunkOverlayDisplay implements GraphicsResource
                     for (int z = 0; z < Chunk.ZLENGTH; ++z) {
                         short blockID = chunk.getBlockID(Chunk.XLENGTH - 1, y, z);
                         
-                        if (!BlockType.byID(blockID).isVisible())
-                            continue;
-                        
-                        if (blockID == BlockType.WATER.id)
+                        if (BlockType.byID(blockID).isTransparent())
                             continue;
 
                         if (BlockType.byID(adjacentChunk.getBlockID(0, y, z)).isVisible())
@@ -327,12 +280,12 @@ class ChunkOverlayDisplay implements GraphicsResource
         float u2 = (gx + 1) * INV_OVERLAY_SIZE_F;
         float v1 = (gz + 1) * INV_OVERLAY_SIZE_F;
         float v2 = gz * INV_OVERLAY_SIZE_F;
-        builder.pushVertex(x, y + 1.0f, z + 1.0f, u1, v1, 1.0f, 1.0f, 1.0f);
-        builder.pushVertex(x + 1.0f, y + 1.0f, z + 1.0f, u2, v1, 1.0f, 1.0f, 1.0f);
-        builder.pushVertex(x + 1.0f, y + 1.0f, z, u2, v2, 1.0f, 1.0f, 1.0f);
-        builder.pushVertex(x + 1.0f, y + 1.0f, z, u2, v2, 1.0f, 1.0f, 1.0f);
-        builder.pushVertex(x, y + 1.0f, z, u1, v2, 1.0f, 1.0f, 1.0f);
-        builder.pushVertex(x, y + 1.0f, z + 1.0f, u1, v1, 1.0f, 1.0f, 1.0f);
+        builder.setTexCoord(u1, v1); builder.pushVertex(x,        y + 1.0f, z + 1.0f);
+        builder.setTexCoord(u2, v1); builder.pushVertex(x + 1.0f, y + 1.0f, z + 1.0f);
+        builder.setTexCoord(u2, v2); builder.pushVertex(x + 1.0f, y + 1.0f, z       );
+        builder.setTexCoord(u2, v2); builder.pushVertex(x + 1.0f, y + 1.0f, z       );
+        builder.setTexCoord(u1, v2); builder.pushVertex(x,        y + 1.0f, z       );
+        builder.setTexCoord(u1, v1); builder.pushVertex(x,        y + 1.0f, z + 1.0f);
     }
 
     private void pushBottomFace(int x, int y, int z, float gx, float gz,
@@ -342,12 +295,12 @@ class ChunkOverlayDisplay implements GraphicsResource
         float u2 = (gx + 1) * INV_OVERLAY_SIZE_F;
         float v1 = (gz + 1) * INV_OVERLAY_SIZE_F;
         float v2 = gz * INV_OVERLAY_SIZE_F;
-        builder.pushVertex(x, y, z, u1, v1, 1.0f, 1.0f, 1.0f);
-        builder.pushVertex(x + 1.0f, y, z, u2, v1, 1.0f, 1.0f, 1.0f);
-        builder.pushVertex(x + 1.0f, y, z + 1.0f, u2, v2, 1.0f, 1.0f, 1.0f);
-        builder.pushVertex(x + 1.0f, y, z + 1.0f, u2, v2, 1.0f, 1.0f, 1.0f);
-        builder.pushVertex(x, y, z + 1.0f, u1, v2, 1.0f, 1.0f, 1.0f);
-        builder.pushVertex(x, y, z, u1, v1, 1.0f, 1.0f, 1.0f);
+        builder.setTexCoord(u1, v1); builder.pushVertex(x,        y, z       );
+        builder.setTexCoord(u2, v1); builder.pushVertex(x + 1.0f, y, z       );
+        builder.setTexCoord(u2, v2); builder.pushVertex(x + 1.0f, y, z + 1.0f);
+        builder.setTexCoord(u2, v2); builder.pushVertex(x + 1.0f, y, z + 1.0f);
+        builder.setTexCoord(u1, v2); builder.pushVertex(x,        y, z + 1.0f);
+        builder.setTexCoord(u1, v1); builder.pushVertex(x,        y, z       );
     }
 
     private void pushFrontFace(int x, int y, int z, float gx, GLDisplayList.Builder builder) {
@@ -355,12 +308,12 @@ class ChunkOverlayDisplay implements GraphicsResource
         float u2 = (gx + 1) * INV_OVERLAY_SIZE_F;
         float v1 = y * INV_OVERLAY_SIZE_F;
         float v2 = (y + 1) * INV_OVERLAY_SIZE_F;
-        builder.pushVertex(x,        y,        z + 1.0f, u1, v1, 1.0f, 1.0f, 1.0f);
-        builder.pushVertex(x + 1.0f, y,        z + 1.0f, u2, v1, 1.0f, 1.0f, 1.0f);
-        builder.pushVertex(x + 1.0f, y + 1.0f, z + 1.0f, u2, v2, 1.0f, 1.0f, 1.0f);
-        builder.pushVertex(x + 1.0f, y + 1.0f, z + 1.0f, u2, v2, 1.0f, 1.0f, 1.0f);
-        builder.pushVertex(x,        y + 1.0f, z + 1.0f, u1, v2, 1.0f, 1.0f, 1.0f);
-        builder.pushVertex(x,        y,        z + 1.0f, u1, v1, 1.0f, 1.0f, 1.0f);
+        builder.setTexCoord(u1, v1); builder.pushVertex(x,        y,        z + 1.0f);
+        builder.setTexCoord(u2, v1); builder.pushVertex(x + 1.0f, y,        z + 1.0f);
+        builder.setTexCoord(u2, v2); builder.pushVertex(x + 1.0f, y + 1.0f, z + 1.0f);
+        builder.setTexCoord(u2, v2); builder.pushVertex(x + 1.0f, y + 1.0f, z + 1.0f);
+        builder.setTexCoord(u1, v2); builder.pushVertex(x,        y + 1.0f, z + 1.0f);
+        builder.setTexCoord(u1, v1); builder.pushVertex(x,        y,        z + 1.0f);
     }
 
     private void pushBackFace(int x, int y, int z, float gx, GLDisplayList.Builder builder) {
@@ -368,12 +321,12 @@ class ChunkOverlayDisplay implements GraphicsResource
         float u2 = (gx + 1) * INV_OVERLAY_SIZE_F;
         float v1 = y * INV_OVERLAY_SIZE_F;
         float v2 = (y + 1) * INV_OVERLAY_SIZE_F;
-        builder.pushVertex(x + 1.0f, y,        z, u1, v1, 1.0f, 1.0f, 1.0f);
-        builder.pushVertex(x,        y,        z, u2, v1, 1.0f, 1.0f, 1.0f);
-        builder.pushVertex(x,        y + 1.0f, z, u2, v2, 1.0f, 1.0f, 1.0f);
-        builder.pushVertex(x,        y + 1.0f, z, u2, v2, 1.0f, 1.0f, 1.0f);
-        builder.pushVertex(x + 1.0f, y + 1.0f, z, u1, v2, 1.0f, 1.0f, 1.0f);
-        builder.pushVertex(x + 1.0f, y,        z, u1, v1, 1.0f, 1.0f, 1.0f);
+        builder.setTexCoord(u1, v1); builder.pushVertex(x + 1.0f, y,        z);
+        builder.setTexCoord(u2, v1); builder.pushVertex(x,        y,        z);
+        builder.setTexCoord(u2, v2); builder.pushVertex(x,        y + 1.0f, z);
+        builder.setTexCoord(u2, v2); builder.pushVertex(x,        y + 1.0f, z);
+        builder.setTexCoord(u1, v2); builder.pushVertex(x + 1.0f, y + 1.0f, z);
+        builder.setTexCoord(u1, v1); builder.pushVertex(x + 1.0f, y,        z);
     }
 
     private void pushLeftFace(int x, int y, int z, float gz, GLDisplayList.Builder builder) {
@@ -381,12 +334,12 @@ class ChunkOverlayDisplay implements GraphicsResource
         float u2 = (gz + 1) * INV_OVERLAY_SIZE_F;
         float v1 = y * INV_OVERLAY_SIZE_F;
         float v2 = (y + 1) * INV_OVERLAY_SIZE_F;
-        builder.pushVertex(x, y,        z,        u1, v1, 1.0f, 1.0f, 1.0f);
-        builder.pushVertex(x, y,        z + 1.0f, u2, v1, 1.0f, 1.0f, 1.0f);
-        builder.pushVertex(x, y + 1.0f, z + 1.0f, u2, v2, 1.0f, 1.0f, 1.0f);
-        builder.pushVertex(x, y + 1.0f, z + 1.0f, u2, v2, 1.0f, 1.0f, 1.0f);
-        builder.pushVertex(x, y + 1.0f, z,        u1, v2, 1.0f, 1.0f, 1.0f);
-        builder.pushVertex(x, y,        z,        u1, v1, 1.0f, 1.0f, 1.0f);
+        builder.setTexCoord(u1, v1); builder.pushVertex(x, y,        z       );
+        builder.setTexCoord(u2, v1); builder.pushVertex(x, y,        z + 1.0f);
+        builder.setTexCoord(u2, v2); builder.pushVertex(x, y + 1.0f, z + 1.0f);
+        builder.setTexCoord(u2, v2); builder.pushVertex(x, y + 1.0f, z + 1.0f);
+        builder.setTexCoord(u1, v2); builder.pushVertex(x, y + 1.0f, z       );
+        builder.setTexCoord(u1, v1); builder.pushVertex(x, y,        z       );
     }
 
     private void pushRightFace(int x, int y, int z, float gz, GLDisplayList.Builder builder) {
@@ -394,11 +347,11 @@ class ChunkOverlayDisplay implements GraphicsResource
         float u2 = (gz + 1) * INV_OVERLAY_SIZE_F;
         float v1 = y * INV_OVERLAY_SIZE_F;
         float v2 = (y + 1) * INV_OVERLAY_SIZE_F;
-        builder.pushVertex(x + 1.0f, y,        z + 1.0f, u1, v1, 1.0f, 1.0f, 1.0f);
-        builder.pushVertex(x + 1.0f, y,        z,        u2, v1, 1.0f, 1.0f, 1.0f);
-        builder.pushVertex(x + 1.0f, y + 1.0f, z,        u2, v2, 1.0f, 1.0f, 1.0f);
-        builder.pushVertex(x + 1.0f, y + 1.0f, z,        u2, v2, 1.0f, 1.0f, 1.0f);
-        builder.pushVertex(x + 1.0f, y + 1.0f, z + 1.0f, u1, v2, 1.0f, 1.0f, 1.0f);
-        builder.pushVertex(x + 1.0f, y,        z + 1.0f, u1, v1, 1.0f, 1.0f, 1.0f);
+        builder.setTexCoord(u1, v1); builder.pushVertex(x + 1.0f, y,        z + 1.0f);
+        builder.setTexCoord(u2, v1); builder.pushVertex(x + 1.0f, y,        z       );
+        builder.setTexCoord(u2, v2); builder.pushVertex(x + 1.0f, y + 1.0f, z       );
+        builder.setTexCoord(u2, v2); builder.pushVertex(x + 1.0f, y + 1.0f, z       );
+        builder.setTexCoord(u1, v2); builder.pushVertex(x + 1.0f, y + 1.0f, z + 1.0f);
+        builder.setTexCoord(u1, v1); builder.pushVertex(x + 1.0f, y,        z + 1.0f);
     }
 }

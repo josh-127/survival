@@ -6,8 +6,10 @@ import java.util.Map;
 import org.joml.Matrix4f;
 
 import net.survival.block.BlockFace;
+import net.survival.client.graphics.opengl.GLDepthFunction;
 import net.survival.client.graphics.opengl.GLFilterMode;
 import net.survival.client.graphics.opengl.GLMatrixStack;
+import net.survival.client.graphics.opengl.GLOutputMergerState;
 import net.survival.client.graphics.opengl.GLTexture;
 import net.survival.client.graphics.opengl.GLWrapMode;
 import net.survival.world.World;
@@ -104,19 +106,26 @@ class WorldDisplay implements GraphicsResource
         drawFaceDisplays(frontFaceDisplays, BlockFace.FRONT, false, false, viewMatrix);
         drawFaceDisplays(backFaceDisplays, BlockFace.BACK, false, false, viewMatrix);
         
-        // TODO: Make OpenGL wrapper class.
-        org.lwjgl.opengl.GL11.glEnable(org.lwjgl.opengl.GL11.GL_BLEND);
-        org.lwjgl.opengl.GL11.glBlendFunc(org.lwjgl.opengl.GL11.GL_ZERO, org.lwjgl.opengl.GL11.GL_SRC_COLOR);
-        
-        drawFaceDisplays(topFaceDisplays, BlockFace.TOP, false, true, viewMatrix);
-        drawFaceDisplays(bottomFaceDisplays, BlockFace.BOTTOM, false, true, viewMatrix);
-        drawFaceDisplays(leftFaceDisplays, BlockFace.LEFT, false, true, viewMatrix);
-        drawFaceDisplays(rightFaceDisplays, BlockFace.RIGHT, false, true, viewMatrix);
-        drawFaceDisplays(frontFaceDisplays, BlockFace.FRONT, false, true, viewMatrix);
-        drawFaceDisplays(backFaceDisplays, BlockFace.BACK, false, true, viewMatrix);
-        
-        org.lwjgl.opengl.GL11.glBlendFunc(org.lwjgl.opengl.GL11.GL_ONE, org.lwjgl.opengl.GL11.GL_ZERO);
-        org.lwjgl.opengl.GL11.glDisable(org.lwjgl.opengl.GL11.GL_BLEND);
+        try (@SuppressWarnings("resource")
+        GLOutputMergerState state = new GLOutputMergerState()
+                .withDepthFunction(GLDepthFunction.EQUAL).withDepthWriteMask(false))
+        {
+            // TODO: Make OpenGL wrapper class.
+            org.lwjgl.opengl.GL11.glEnable(org.lwjgl.opengl.GL11.GL_BLEND);
+            org.lwjgl.opengl.GL11.glBlendFunc(org.lwjgl.opengl.GL11.GL_ZERO,
+                    org.lwjgl.opengl.GL11.GL_SRC_COLOR);
+
+            drawFaceDisplays(topFaceDisplays, BlockFace.TOP, false, true, viewMatrix);
+            drawFaceDisplays(bottomFaceDisplays, BlockFace.BOTTOM, false, true, viewMatrix);
+            drawFaceDisplays(leftFaceDisplays, BlockFace.LEFT, false, true, viewMatrix);
+            drawFaceDisplays(rightFaceDisplays, BlockFace.RIGHT, false, true, viewMatrix);
+            drawFaceDisplays(frontFaceDisplays, BlockFace.FRONT, false, true, viewMatrix);
+            drawFaceDisplays(backFaceDisplays, BlockFace.BACK, false, true, viewMatrix);
+
+            org.lwjgl.opengl.GL11.glBlendFunc(org.lwjgl.opengl.GL11.GL_ONE,
+                    org.lwjgl.opengl.GL11.GL_ZERO);
+            org.lwjgl.opengl.GL11.glDisable(org.lwjgl.opengl.GL11.GL_BLEND);
+        }
         
         GLMatrixStack.pop();
     }

@@ -26,6 +26,21 @@ public class GLDisplayList implements GraphicsResource
             glNewList(displayList, GL_COMPILE);
             glBegin(GL_TRIANGLES);
         }
+        
+        public Builder setColor(float r, float g, float b) {
+            glColor3f(r, g, b);
+            return this;
+        }
+        
+        public Builder setTexCoord(float u, float v) {
+            glTexCoord2f(u, v);
+            return this;
+        }
+        
+        public Builder pushVertex(float x, float y, float z) {
+            glVertex3f(x, y, z);
+            return this;
+        }
 
         public Builder pushVertex(float x, float y, float z, float xt, float yt, float xc, float yc, float zc) {
             glColor3f(xc, yc, zc);

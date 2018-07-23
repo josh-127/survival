@@ -14,6 +14,13 @@ import net.survival.world.chunk.Chunk;
 
 class ChunkDisplay implements GraphicsResource
 {
+    private static final float TOP_FACE_SHADE    = 1.0f;
+    private static final float BOTTOM_FACE_SHADE = 0.25f;
+    private static final float LEFT_FACE_SHADE   = 0.5f;
+    private static final float RIGHT_FACE_SHADE  = 0.5f;
+    private static final float FRONT_FACE_SHADE  = 0.75f;
+    private static final float BACK_FACE_SHADE   = 0.75f;
+    
     public final GLDisplayList displayList;
     public final int chunkX;
     public final int chunkZ;
@@ -29,6 +36,32 @@ class ChunkDisplay implements GraphicsResource
         GLDisplayList.Builder builder = new GLDisplayList.Builder();
         
         int faceCount = 0;
+        
+        switch (blockFace) {
+        case TOP:
+            builder.setColor(TOP_FACE_SHADE, TOP_FACE_SHADE, TOP_FACE_SHADE);
+            break;
+            
+        case BOTTOM:
+            builder.setColor(BOTTOM_FACE_SHADE, BOTTOM_FACE_SHADE, BOTTOM_FACE_SHADE);
+            break;
+            
+        case LEFT:
+            builder.setColor(LEFT_FACE_SHADE, LEFT_FACE_SHADE, LEFT_FACE_SHADE);
+            break;
+            
+        case RIGHT:
+            builder.setColor(RIGHT_FACE_SHADE, RIGHT_FACE_SHADE, RIGHT_FACE_SHADE);
+            break;
+            
+        case FRONT:
+            builder.setColor(FRONT_FACE_SHADE, FRONT_FACE_SHADE, FRONT_FACE_SHADE);
+            break;
+            
+        case BACK:
+            builder.setColor(BACK_FACE_SHADE, BACK_FACE_SHADE, BACK_FACE_SHADE);
+            break;
+        }
         
         switch (blockFace) {
         case TOP:
@@ -81,21 +114,6 @@ class ChunkDisplay implements GraphicsResource
                         pushBottomFace(x, y, z, atlas, blockID, builder);
                         ++faceCount;
                     }
-                }
-            }
-            
-            for (int z = 0; z < Chunk.ZLENGTH; ++z) {
-                for (int x = 0; x < Chunk.XLENGTH; ++x) {
-                    short blockID = chunk.getBlockID(x, 0, z);
-                    
-                    if (!BlockType.byID(blockID).isVisible())
-                        continue;
-                    
-                    if (BlockType.byID(adjacentChunk.getBlockID(x, Chunk.YLENGTH - 1, z)).isVisible())
-                        continue;
-                    
-                    pushBottomFace(x, 0, z, atlas, blockID, builder);
-                    ++faceCount;
                 }
             }
             
@@ -341,86 +359,80 @@ class ChunkDisplay implements GraphicsResource
     }
 
     private void pushTopFace(int x, int y, int z, BlockTextureAtlas atlas, short blockID, GLDisplayList.Builder builder) {
-        float shade = 1.0f;
         float u1 = atlas.getTexCoordU1(blockID);
         float u2 = atlas.getTexCoordU2(blockID);
         float v1 = atlas.getTexCoordV1(blockID);
         float v2 = atlas.getTexCoordV2(blockID);
-        builder.pushVertex(x,        y + 1.0f, z + 1.0f, u1, v1, shade, shade, shade);
-        builder.pushVertex(x + 1.0f, y + 1.0f, z + 1.0f, u2, v1, shade, shade, shade);
-        builder.pushVertex(x + 1.0f, y + 1.0f, z,        u2, v2, shade, shade, shade);
-        builder.pushVertex(x + 1.0f, y + 1.0f, z,        u2, v2, shade, shade, shade);
-        builder.pushVertex(x,        y + 1.0f, z,        u1, v2, shade, shade, shade);
-        builder.pushVertex(x,        y + 1.0f, z + 1.0f, u1, v1, shade, shade, shade);
+        builder.setTexCoord(u1, v1); builder.pushVertex(x,        y + 1.0f, z + 1.0f);
+        builder.setTexCoord(u2, v1); builder.pushVertex(x + 1.0f, y + 1.0f, z + 1.0f);
+        builder.setTexCoord(u2, v2); builder.pushVertex(x + 1.0f, y + 1.0f, z       );
+        builder.setTexCoord(u2, v2); builder.pushVertex(x + 1.0f, y + 1.0f, z       );
+        builder.setTexCoord(u1, v2); builder.pushVertex(x,        y + 1.0f, z       );
+        builder.setTexCoord(u1, v1); builder.pushVertex(x,        y + 1.0f, z + 1.0f);
     }
 
     private void pushBottomFace(int x, int y, int z, BlockTextureAtlas atlas, short blockID, GLDisplayList.Builder builder) {
-        float shade = 0.25f;
         float u1 = atlas.getTexCoordU1(blockID);
         float u2 = atlas.getTexCoordU2(blockID);
         float v1 = atlas.getTexCoordV1(blockID);
         float v2 = atlas.getTexCoordV2(blockID);
-        builder.pushVertex(x,        y, z,        u1, v1, shade, shade, shade);
-        builder.pushVertex(x + 1.0f, y, z,        u2, v1, shade, shade, shade);
-        builder.pushVertex(x + 1.0f, y, z + 1.0f, u2, v2, shade, shade, shade);
-        builder.pushVertex(x + 1.0f, y, z + 1.0f, u2, v2, shade, shade, shade);
-        builder.pushVertex(x,        y, z + 1.0f, u1, v2, shade, shade, shade);
-        builder.pushVertex(x,        y, z,        u1, v1, shade, shade, shade);
+        builder.setTexCoord(u1, v1); builder.pushVertex(x,        y, z       );
+        builder.setTexCoord(u2, v1); builder.pushVertex(x + 1.0f, y, z       );
+        builder.setTexCoord(u2, v2); builder.pushVertex(x + 1.0f, y, z + 1.0f);
+        builder.setTexCoord(u2, v2); builder.pushVertex(x + 1.0f, y, z + 1.0f);
+        builder.setTexCoord(u1, v2); builder.pushVertex(x,        y, z + 1.0f);
+        builder.setTexCoord(u1, v1); builder.pushVertex(x,        y, z       );
     }
 
     private void pushFrontFace(int x, int y, int z, BlockTextureAtlas atlas, short blockID, GLDisplayList.Builder builder) {
-        float shade = 0.75f;
         float u1 = atlas.getTexCoordU1(blockID);
         float u2 = atlas.getTexCoordU2(blockID);
         float v1 = atlas.getTexCoordV1(blockID);
         float v2 = atlas.getTexCoordV2(blockID);
-        builder.pushVertex(x,        y,        z + 1.0f, u1, v1, shade, shade, shade);
-        builder.pushVertex(x + 1.0f, y,        z + 1.0f, u2, v1, shade, shade, shade);
-        builder.pushVertex(x + 1.0f, y + 1.0f, z + 1.0f, u2, v2, shade, shade, shade);
-        builder.pushVertex(x + 1.0f, y + 1.0f, z + 1.0f, u2, v2, shade, shade, shade);
-        builder.pushVertex(x,        y + 1.0f, z + 1.0f, u1, v2, shade, shade, shade);
-        builder.pushVertex(x,        y,        z + 1.0f, u1, v1, shade, shade, shade);
+        builder.setTexCoord(u1, v1); builder.pushVertex(x,        y,        z + 1.0f);
+        builder.setTexCoord(u2, v1); builder.pushVertex(x + 1.0f, y,        z + 1.0f);
+        builder.setTexCoord(u2, v2); builder.pushVertex(x + 1.0f, y + 1.0f, z + 1.0f);
+        builder.setTexCoord(u2, v2); builder.pushVertex(x + 1.0f, y + 1.0f, z + 1.0f);
+        builder.setTexCoord(u1, v2); builder.pushVertex(x,        y + 1.0f, z + 1.0f);
+        builder.setTexCoord(u1, v1); builder.pushVertex(x,        y,        z + 1.0f);
     }
 
     private void pushBackFace(int x, int y, int z, BlockTextureAtlas atlas, short blockID, GLDisplayList.Builder builder) {
-        float shade = 0.75f;
         float u1 = atlas.getTexCoordU1(blockID);
         float u2 = atlas.getTexCoordU2(blockID);
         float v1 = atlas.getTexCoordV1(blockID);
         float v2 = atlas.getTexCoordV2(blockID);
-        builder.pushVertex(x + 1.0f, y,        z, u1, v1, shade, shade, shade);
-        builder.pushVertex(x,        y,        z, u2, v1, shade, shade, shade);
-        builder.pushVertex(x,        y + 1.0f, z, u2, v2, shade, shade, shade);
-        builder.pushVertex(x,        y + 1.0f, z, u2, v2, shade, shade, shade);
-        builder.pushVertex(x + 1.0f, y + 1.0f, z, u1, v2, shade, shade, shade);
-        builder.pushVertex(x + 1.0f, y,        z, u1, v1, shade, shade, shade);
+        builder.setTexCoord(u1, v1); builder.pushVertex(x + 1.0f, y,        z);
+        builder.setTexCoord(u2, v1); builder.pushVertex(x,        y,        z);
+        builder.setTexCoord(u2, v2); builder.pushVertex(x,        y + 1.0f, z);
+        builder.setTexCoord(u2, v2); builder.pushVertex(x,        y + 1.0f, z);
+        builder.setTexCoord(u1, v2); builder.pushVertex(x + 1.0f, y + 1.0f, z);
+        builder.setTexCoord(u1, v1); builder.pushVertex(x + 1.0f, y,        z);
     }
 
     private void pushLeftFace(int x, int y, int z, BlockTextureAtlas atlas, short blockID, GLDisplayList.Builder builder) {
-        float shade = 0.5f;
         float u1 = atlas.getTexCoordU1(blockID);
         float u2 = atlas.getTexCoordU2(blockID);
         float v1 = atlas.getTexCoordV1(blockID);
         float v2 = atlas.getTexCoordV2(blockID);
-        builder.pushVertex(x, y,        z,        u1, v1, shade, shade, shade);
-        builder.pushVertex(x, y,        z + 1.0f, u2, v1, shade, shade, shade);
-        builder.pushVertex(x, y + 1.0f, z + 1.0f, u2, v2, shade, shade, shade);
-        builder.pushVertex(x, y + 1.0f, z + 1.0f, u2, v2, shade, shade, shade);
-        builder.pushVertex(x, y + 1.0f, z,        u1, v2, shade, shade, shade);
-        builder.pushVertex(x, y,        z,        u1, v1, shade, shade, shade);
+        builder.setTexCoord(u1, v1); builder.pushVertex(x, y,        z       );
+        builder.setTexCoord(u2, v1); builder.pushVertex(x, y,        z + 1.0f);
+        builder.setTexCoord(u2, v2); builder.pushVertex(x, y + 1.0f, z + 1.0f);
+        builder.setTexCoord(u2, v2); builder.pushVertex(x, y + 1.0f, z + 1.0f);
+        builder.setTexCoord(u1, v2); builder.pushVertex(x, y + 1.0f, z       );
+        builder.setTexCoord(u1, v1); builder.pushVertex(x, y,        z       );
     }
 
     private void pushRightFace(int x, int y, int z, BlockTextureAtlas atlas, short blockID, GLDisplayList.Builder builder) {
-        float shade = 0.5f;
         float u1 = atlas.getTexCoordU1(blockID);
         float u2 = atlas.getTexCoordU2(blockID);
         float v1 = atlas.getTexCoordV1(blockID);
         float v2 = atlas.getTexCoordV2(blockID);
-        builder.pushVertex(x + 1.0f, y,        z + 1.0f, u1, v1, shade, shade, shade);
-        builder.pushVertex(x + 1.0f, y,        z,        u2, v1, shade, shade, shade);
-        builder.pushVertex(x + 1.0f, y + 1.0f, z,        u2, v2, shade, shade, shade);
-        builder.pushVertex(x + 1.0f, y + 1.0f, z,        u2, v2, shade, shade, shade);
-        builder.pushVertex(x + 1.0f, y + 1.0f, z + 1.0f, u1, v2, shade, shade, shade);
-        builder.pushVertex(x + 1.0f, y,        z + 1.0f, u1, v1, shade, shade, shade);
+        builder.setTexCoord(u1, v1); builder.pushVertex(x + 1.0f, y,        z + 1.0f);
+        builder.setTexCoord(u2, v1); builder.pushVertex(x + 1.0f, y,        z       );
+        builder.setTexCoord(u2, v2); builder.pushVertex(x + 1.0f, y + 1.0f, z       );
+        builder.setTexCoord(u2, v2); builder.pushVertex(x + 1.0f, y + 1.0f, z       );
+        builder.setTexCoord(u1, v2); builder.pushVertex(x + 1.0f, y + 1.0f, z + 1.0f);
+        builder.setTexCoord(u1, v1); builder.pushVertex(x + 1.0f, y,        z + 1.0f);
     }
 }
