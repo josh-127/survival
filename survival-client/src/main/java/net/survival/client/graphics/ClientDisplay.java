@@ -76,7 +76,7 @@ public class ClientDisplay implements GraphicsResource
         GLMatrixStack.loadIdentity();
         GLMatrixStack.translate(-getWindowAspectRatio() * 0.9375f, 0.875f, 0.0f);
         GLMatrixStack.scale(0.05f, 0.05f, 0.05f);
-        fontRenderer.drawText(String.format("%5.2f FPS", frameRate), 0.0f, 0.0f, 0.0f);
+        fontRenderer.drawText(String.valueOf(frameRate), 0.0f, 0.0f, 0.0f);
         GLMatrixStack.pop();
         
         /*
@@ -98,6 +98,10 @@ public class ClientDisplay implements GraphicsResource
         fontRenderer.drawText(String.format("Z: %d", (int) userController.camera.position.z), 0.0f, 0.0f, 0.0f);
         GLMatrixStack.pop();
         */
+    }
+    
+    public void redrawChunk(long hashedPos) {
+        worldDisplay.redrawChunk(hashedPos);
     }
     
     public Camera getCamera() {

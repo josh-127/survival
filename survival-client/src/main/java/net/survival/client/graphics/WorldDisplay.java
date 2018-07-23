@@ -2,6 +2,7 @@ package net.survival.client.graphics;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeSet;
 
 import org.joml.Matrix4f;
 
@@ -34,6 +35,8 @@ class WorldDisplay implements GraphicsResource
     private final BlockTextureAtlas[] blockTextures;
     private final GLTexture overlayTexture;
     
+    private final TreeSet<Long> chunksToRedraw;
+    
     private final Camera camera;
     private final float maxViewRadius;
     
@@ -61,6 +64,8 @@ class WorldDisplay implements GraphicsResource
                 .setMipmapEnabled(true)
                 .setData(overlayBitmap)
                 .endBind();
+        
+        chunksToRedraw = new TreeSet<>();
         
         this.camera = camera;
         this.maxViewRadius = maxViewRadius;
@@ -128,6 +133,8 @@ class WorldDisplay implements GraphicsResource
         }
         
         GLMatrixStack.pop();
+        
+        chunksToRedraw.clear();
     }
 
     private void drawFaceDisplays(HashMap<Chunk, ChunkDisplay> faceDisplays, BlockFace blockFace,
@@ -214,18 +221,19 @@ class WorldDisplay implements GraphicsResource
             ChunkDisplay existingDisplay = faceDisplays.remove(chunk);
             Chunk adjacentChunk = world.getChunk(cx + dx, cz + dz);
             
-            boolean useExisting = (existingDisplay != null) &&
-                    (existingDisplay.adjacentChunk != null || adjacentChunk == null);
-            
-            if (useExisting) {
-                newFaceDisplays.put(chunk, existingDisplay);
-            }
-            else {
+            boolean needsUpdating = existingDisplay == null ||
+                    (existingDisplay.adjacentChunk == null && adjacentChunk != null) ||
+                    chunksToRedraw.contains(hashedPos);
+
+            if (needsUpdating) {
                 if (existingDisplay != null)
                     existingDisplay.close();
                 
                 BlockTextureAtlas atlas = blockTextures[blockFace.ordinal()];
                 newFaceDisplays.put(chunk, new ChunkDisplay(cx, cz, chunk, adjacentChunk, blockFace, atlas));
+            }
+            else {
+                newFaceDisplays.put(chunk, existingDisplay);
             }
         }
         
@@ -233,6 +241,10 @@ class WorldDisplay implements GraphicsResource
             chunkDisplay.close();
         
         return newFaceDisplays;
+    }
+    
+    public void redrawChunk(long hashedPos) {
+        chunksToRedraw.add(hashedPos);
     }
     
     public Camera getCamera() {
