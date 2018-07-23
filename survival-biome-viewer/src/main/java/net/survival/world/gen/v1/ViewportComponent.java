@@ -10,7 +10,7 @@ import java.awt.event.KeyListener;
 import javax.swing.JComponent;
 import javax.swing.Timer;
 
-import net.survival.world.gen.BiomeType;
+import net.survival.world.biome.BiomeType;
 import net.survival.world.gen.layer.GenLayer;
 import net.survival.world.gen.layer.GenLayerFactory;
 

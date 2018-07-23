@@ -4,6 +4,7 @@ import net.survival.block.BlockType;
 import net.survival.util.DoubleMap2D;
 import net.survival.util.DoubleMap3D;
 import net.survival.util.ImprovedNoiseGenerator3D;
+import net.survival.world.biome.BiomeType;
 import net.survival.world.chunk.Chunk;
 import net.survival.world.chunk.ChunkGenerator;
 import net.survival.world.chunk.ChunkPos;
