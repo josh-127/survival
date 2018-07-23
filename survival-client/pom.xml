@@ -25,7 +25,7 @@
 		<dependency><groupId>org.lwjgl</groupId><artifactId>lwjgl-opengl</artifactId><version>3.1.6</version><classifier>natives-windows</classifier></dependency>
 		<dependency><groupId>org.lwjgl</groupId><artifactId>lwjgl-sse</artifactId><version>3.1.6</version><classifier>natives-windows</classifier></dependency>
 		<dependency><groupId>org.lwjgl</groupId><artifactId>lwjgl-stb</artifactId><version>3.1.6</version><classifier>natives-windows</classifier></dependency>
-		<dependency><groupId>org.joml</groupId><artifactId>joml</artifactId><version>1.9.9</version></dependency>
+		<dependency><groupId>org.joml</groupId><artifactId>joml</artifactId><version>1.9.10</version></dependency>
 	</dependencies>
 	<properties>
 		<maven.compiler.target>1.8</maven.compiler.target>
