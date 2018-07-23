@@ -19,6 +19,7 @@ public class Chunk
     private final ArrayList<Entity> entities;
     
     private int modified;
+    private boolean decorated;
     
     public Chunk() {
         blockIDs = new short[VOLUME];
@@ -79,5 +80,13 @@ public class Chunk
     
     public void setModificationFlags(int to) {
         modified = to;
+    }
+    
+    public boolean isDecorated() {
+        return decorated;
+    }
+    
+    public void markDecorated() {
+        decorated = true;
     }
 }

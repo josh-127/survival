@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Set;
 
 import net.survival.world.World;
+import net.survival.world.gen.decoration.WorldDecorator;
 
 public class ChunkSystem
 {
@@ -13,10 +14,14 @@ public class ChunkSystem
     
     private final ChunkDatabase chunkDatabase;
     private final ChunkGenerator chunkGenerator;
+    private final WorldDecorator worldDecorator;
 
-    public ChunkSystem(ChunkDatabase chunkDatabase, ChunkGenerator chunkGenerator) {
+    public ChunkSystem(ChunkDatabase chunkDatabase, ChunkGenerator chunkGenerator,
+            WorldDecorator worldDecorator)
+    {
         this.chunkDatabase = chunkDatabase;
         this.chunkGenerator = chunkGenerator;
+        this.worldDecorator = worldDecorator;
     }
 
     public void update(World world, ChunkLoader chunkLoader) {
@@ -52,6 +57,28 @@ public class ChunkSystem
             Chunk generatedChunk = chunkGenerator.generate(cx, cz);
             world.addChunk(cx, cz, generatedChunk);
             chunksToLoadIt.remove();
+        }
+        
+        chunkMapIt = world.iterateChunkMap().iterator();
+        while (chunkMapIt.hasNext()) {
+            Map.Entry<Long, Chunk> entry = chunkMapIt.next();
+            long hashedPos = entry.getKey();
+            int cx = ChunkPos.chunkXFromHashedPos(hashedPos);
+            int cz = ChunkPos.chunkZFromHashedPos(hashedPos);
+            Chunk chunk = entry.getValue();
+
+            boolean isFullySurrounded = true;
+            for (int z = -1; z <= 1 && isFullySurrounded; ++z) {
+                for (int x = -1; x <= 1 && isFullySurrounded; ++x) {
+                    if (world.getChunk(cx + x, cz + z) == null)
+                        isFullySurrounded = false;
+                }
+            }
+            
+            if (!chunk.isDecorated() && isFullySurrounded) {
+                worldDecorator.decorate(cx, cz, chunk, world);
+                chunk.markDecorated();
+            }
         }
     }
 }
