@@ -1,5 +1,7 @@
 package net.survival.client;
 
+import java.util.Map;
+
 import org.joml.Vector3d;
 import org.lwjgl.glfw.GLFW;
 
@@ -18,10 +20,12 @@ import net.survival.client.input.Mouse;
 import net.survival.entity.Entity;
 import net.survival.world.EntityPhysics;
 import net.survival.world.World;
+import net.survival.world.chunk.Chunk;
 import net.survival.world.chunk.ChunkPos;
 import net.survival.world.chunk.ChunkSystem;
 import net.survival.world.chunk.EntityRelocator;
 import net.survival.world.gen.InfiniteChunkGenerator;
+import net.survival.world.gen.decoration.WorldDecorator;
 import net.survival.world.chunk.CircularChunkLoader;
 import net.survival.world.chunk.DefaultChunkDatabase;
 
@@ -37,6 +41,7 @@ public class Client implements AutoCloseable
     
     private final DefaultChunkDatabase chunkDatabase;
     private final InfiniteChunkGenerator chunkGenerator;
+    private final WorldDecorator worldDecorator;
     private final ChunkSystem chunkSystem;
     
     private final Control control;
@@ -56,7 +61,8 @@ public class Client implements AutoCloseable
         
         chunkDatabase = new DefaultChunkDatabase();
         chunkGenerator = new InfiniteChunkGenerator(0L);
-        chunkSystem = new ChunkSystem(chunkDatabase, chunkGenerator);
+        worldDecorator = WorldDecorator.createDefault();
+        chunkSystem = new ChunkSystem(chunkDatabase, chunkGenerator, worldDecorator);
         
         control = new Control();
         control.getClientRectangle().setRight(0.1);
@@ -85,6 +91,7 @@ public class Client implements AutoCloseable
             newPlayer.y = player != null ? player.y + 3.0 : 72.0;
             newPlayer.z = player != null ? player.z : 0.0;
             newPlayer.collisionBoxRadiusY = 0.9;
+            newPlayer.visible = false;
             player = newPlayer;
             world.addEntity(newPlayer);
         }
@@ -128,7 +135,7 @@ public class Client implements AutoCloseable
                 player.velocityZ *= FRICTION;
             }
             
-            if (player.velocityY == 0.0 && Keyboard.isKeyPressed(Key.SPACE))
+            if (/*//player.velocityY == 0.0 &&//*/ Keyboard.isKeyPressed(Key.SPACE))
                 player.velocityY = 8.0;
         }
         
@@ -145,7 +152,47 @@ public class Client implements AutoCloseable
             fpsCamera.position.y = player.y + 1.0;
             fpsCamera.position.z = player.z;
         }
+
+        if (Keyboard.isKeyPressed(Key.F)) {
+            double px = fpsCamera.position.x;
+            double py = fpsCamera.position.y;
+            double pz = fpsCamera.position.z;
+            final double DELTA = 0.0078125;
+            for (double zz = 0.0; zz < 7.0; zz += DELTA) {
+                px += DELTA * Math.sin(fpsCamera.yaw) * Math.cos(fpsCamera.pitch);
+                py += DELTA * Math.sin(fpsCamera.pitch);
+                pz -= DELTA * Math.cos(fpsCamera.yaw) * Math.cos(fpsCamera.pitch);
+                int pxi = (int) Math.floor(px);
+                int pyi = (int) Math.floor(py);
+                int pzi = (int) Math.floor(pz);
+                if (world.getBlockID(pxi, pyi, pzi) != BlockType.EMPTY.id) {
+                    world.setBlockID(pxi, pyi, pzi, BlockType.EMPTY.id);
+                    break;
+                }
+            }
+        }
         
+        if (Keyboard.isKeyPressed(Key.T)) {
+            Entity entity = new Entity();
+            entity.x = fpsCamera.position.x;
+            entity.y = fpsCamera.position.y;
+            entity.z = fpsCamera.position.z;
+            entity.collisionBoxRadiusX = 1.2;
+            entity.collisionBoxRadiusY = 1.5;
+            entity.collisionBoxRadiusZ = 1.5;
+            world.addEntity(entity);
+        }
+        
+        for (Map.Entry<Long, Chunk> entry : world.iterateChunkMap()) {
+            long hashedPos = entry.getKey();
+            Chunk chunk = entry.getValue();
+            
+            if (chunk.isBlocksModified()) {
+                chunk.clearModificationFlags();
+                clientDisplay.redrawChunk(hashedPos);
+            }
+        }
+
         clientDisplay.getCamera().moveTo(
                 (float) fpsCamera.position.x, (float) fpsCamera.position.y, (float) fpsCamera.position.z);
         clientDisplay.getCamera().orient((float) fpsCamera.yaw, (float) fpsCamera.pitch);
