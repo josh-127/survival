@@ -1,12 +1,15 @@
 package net.survival.client.graphics.opengl;
 
 import org.joml.Matrix4f;
+import org.lwjgl.BufferUtils;
 
 import static org.lwjgl.opengl.GL11.*;
 
+import java.nio.FloatBuffer;
+
 public class GLMatrixStack
 {
-    private static final float[] matrixParam = new float[16];
+    private static final FloatBuffer matrixParam = BufferUtils.createFloatBuffer(16);
     
     public static void setProjectionMatrix(Matrix4f to) {
         if (to == null)
