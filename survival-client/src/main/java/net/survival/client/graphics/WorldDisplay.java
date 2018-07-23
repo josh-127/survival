@@ -111,6 +111,7 @@ class WorldDisplay implements GraphicsResource
         drawFaceDisplays(frontFaceDisplays, BlockFace.FRONT, false, false, viewMatrix);
         drawFaceDisplays(backFaceDisplays, BlockFace.BACK, false, false, viewMatrix);
         
+        /*//
         try (@SuppressWarnings("resource")
         GLOutputMergerState state = new GLOutputMergerState()
                 .withDepthFunction(GLDepthFunction.EQUAL).withDepthWriteMask(false))
@@ -131,6 +132,7 @@ class WorldDisplay implements GraphicsResource
                     org.lwjgl.opengl.GL11.GL_ZERO);
             org.lwjgl.opengl.GL11.glDisable(org.lwjgl.opengl.GL11.GL_BLEND);
         }
+        //*/
         
         GLMatrixStack.pop();
         
@@ -166,6 +168,7 @@ class WorldDisplay implements GraphicsResource
                 display.displayBlocks(blockTextures[blockFace.ordinal()].blockTextures);
             }
         }
+        /*//
         else {
             for (Map.Entry<Chunk, ChunkDisplay> entry : faceDisplays.entrySet()) {
                 ChunkDisplay display = entry.getValue();
@@ -181,6 +184,7 @@ class WorldDisplay implements GraphicsResource
                 display.overlayDisplay.displayBlocks(overlayTexture);
             }
         }
+        //*/
     }
     
     private HashMap<Chunk, ChunkDisplay> updateFaceDisplays(

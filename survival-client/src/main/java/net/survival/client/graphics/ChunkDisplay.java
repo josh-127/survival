@@ -282,7 +282,8 @@ class ChunkDisplay implements GraphicsResource
         this.adjacentChunk = adjacentChunk;
         this.blockFace = blockFace;
         
-        overlayDisplay = new ChunkOverlayDisplay(cx, cz, chunk, adjacentChunk, blockFace);
+        //overlayDisplay = new ChunkOverlayDisplay(cx, cz, chunk, adjacentChunk, blockFace);
+        overlayDisplay = null;
     }
     
     @Override
