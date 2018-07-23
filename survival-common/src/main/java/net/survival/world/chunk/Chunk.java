@@ -42,6 +42,15 @@ public class Chunk
         return lx >= 0 && ly >= 0 && lz >= 0 && lx < XLENGTH && ly < YLENGTH && lz < ZLENGTH;
     }
     
+    public int getTopBlockY(int lx, int lz) {
+        int topLevel = YLENGTH - 1;
+        
+        while (topLevel >= 0 && getBlockID(lx, topLevel, lz) == 0)
+            --topLevel;
+        
+        return topLevel;
+    }
+    
     public Iterable<Entity> iterateEntities() {
         modified |= ENTITIES_MODIFIED;
         return entities;
