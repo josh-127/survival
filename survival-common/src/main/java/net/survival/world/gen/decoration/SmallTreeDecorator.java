@@ -30,6 +30,8 @@ public class SmallTreeDecorator implements WorldDecorator
 
         if (chunk.getBlockID(originX, groundY, originZ) != BlockType.GRASS.id)
             return;
+        
+        chunk.setBlockID(originX, groundY, originZ, BlockType.DIRT.id);
 
         int globalX = ChunkPos.toGlobalX(cx, originX);
         int globalZ = ChunkPos.toGlobalZ(cz, originZ);
@@ -46,7 +48,7 @@ public class SmallTreeDecorator implements WorldDecorator
                     int gx = globalX + x;
                     int gy = groundY + y + 4;
                     int gz = globalZ + z;
-                    world.setBlockID(gx, gy, gz, BlockType.OAK_LEAVES.id);
+                    world.placeBlockIdIfEmpty(gx, gy, gz, BlockType.OAK_LEAVES.id);
                 }
             }
         }
