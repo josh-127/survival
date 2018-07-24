@@ -51,6 +51,13 @@ public class Chunk
 
         return topLevel;
     }
+    
+    public void replaceBlockIdIfEmpty(int lx, int ly, int lz, short replacement) {
+        int index = localPositionToIndex(lx, ly, lz);
+        
+        if (blockIDs[index] != 0)
+            blockIDs[index] = replacement;
+    }
 
     public Iterable<Entity> iterateEntities() {
         modified |= ENTITIES_MODIFIED;
