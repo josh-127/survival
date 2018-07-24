@@ -85,18 +85,18 @@ public class World
         return chunk.getTopBlockY(localX, localZ);
     }
 
-    public void replaceBlockIdIfEmpty(int x, int y, int z, short to) {
+    public void placeBlockIdIfEmpty(int x, int y, int z, short to) {
         int cx = ChunkPos.toChunkX(x);
         int cz = ChunkPos.toChunkZ(z);
 
         Chunk chunk = chunks.get(ChunkPos.hashPos(cx, cz));
         if (chunk == null)
-            throw new RuntimeException("Cannot replace a block in an unloaded chunk.");
+            throw new RuntimeException("Cannot place a block in an unloaded chunk.");
 
         int localX = ChunkPos.toLocalX(cx, x);
         int localZ = ChunkPos.toLocalZ(cz, z);
 
-        chunk.replaceBlockIdIfEmpty(localX, y, localZ, to);
+        chunk.placeBlockIdIfEmpty(localX, y, localZ, to);
     }
     
     public void addEntity(Entity entity) {
