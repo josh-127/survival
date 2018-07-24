@@ -60,57 +60,45 @@ public class World implements BlockStorage
 
     @Override
     public void setBlockID(int x, int y, int z, short to) {
-        int cx = ChunkPos.toChunkX(x);
-        int cz = ChunkPos.toChunkZ(z);
-
-        Chunk chunk = chunks.get(ChunkPos.hashPos(cx, cz));
-        if (chunk == null)
-            throw new RuntimeException("Cannot place/replace a block in an unloaded chunk.");
-
-        int localX = ChunkPos.toLocalX(cx, x);
-        int localZ = ChunkPos.toLocalZ(cz, z);
+        Chunk chunk = getChunkFromGlobalPos(x, z, "Cannot place/replace a block in an unloaded chunk.");
+        int localX = ChunkPos.toLocalX(ChunkPos.toChunkX(x), x);
+        int localZ = ChunkPos.toLocalZ(ChunkPos.toChunkZ(z), z);
 
         chunk.setBlockID(localX, y, localZ, to);
     }
 
     @Override
     public int getTopBlockY(int x, int z) {
-        int cx = ChunkPos.toChunkX(x);
-        int cz = ChunkPos.toChunkZ(z);
-
-        Chunk chunk = chunks.get(ChunkPos.hashPos(cx, cz));
-        if (chunk == null)
-            throw new RuntimeException("Cannot query a block in an unloaded chunk.");
-
-        int localX = ChunkPos.toLocalX(cx, x);
-        int localZ = ChunkPos.toLocalZ(cz, z);
+        Chunk chunk = getChunkFromGlobalPos(x, z, "Cannot query a block in an unloaded chunk.");
+        int localX = ChunkPos.toLocalX(ChunkPos.toChunkX(x), x);
+        int localZ = ChunkPos.toLocalZ(ChunkPos.toChunkZ(z), z);
 
         return chunk.getTopBlockY(localX, localZ);
     }
 
     @Override
     public void placeBlockIdIfEmpty(int x, int y, int z, short to) {
+        Chunk chunk = getChunkFromGlobalPos(x, z, "Cannot place a block in an unloaded chunk.");
+        int localX = ChunkPos.toLocalX(ChunkPos.toChunkX(x), x);
+        int localZ = ChunkPos.toLocalZ(ChunkPos.toChunkZ(z), z);
+
+        chunk.placeBlockIdIfEmpty(localX, y, localZ, to);
+    }
+
+    public void addEntity(Entity entity) {
+        Chunk chunk = getChunkFromGlobalPos((int) entity.x, (int) entity.z,
+                "Cannot place an entity in an unloaded chunk.");
+        chunk.addEntity(entity);
+    }
+
+    private Chunk getChunkFromGlobalPos(int x, int z, String exceptionMessage) {
         int cx = ChunkPos.toChunkX(x);
         int cz = ChunkPos.toChunkZ(z);
 
         Chunk chunk = chunks.get(ChunkPos.hashPos(cx, cz));
         if (chunk == null)
-            throw new RuntimeException("Cannot place a block in an unloaded chunk.");
-
-        int localX = ChunkPos.toLocalX(cx, x);
-        int localZ = ChunkPos.toLocalZ(cz, z);
-
-        chunk.placeBlockIdIfEmpty(localX, y, localZ, to);
-    }
-    
-    public void addEntity(Entity entity) {
-        int cx = ChunkPos.toChunkX((int) entity.x);
-        int cz = ChunkPos.toChunkZ((int) entity.z);
-
-        Chunk chunk = chunks.get(ChunkPos.hashPos(cx, cz));
-        if (chunk == null)
-            throw new RuntimeException("Cannot place an entity in an unloaded chunk.");
-
-        chunk.addEntity(entity);
+            throw new RuntimeException(exceptionMessage);
+        
+        return chunk;
     }
 }
