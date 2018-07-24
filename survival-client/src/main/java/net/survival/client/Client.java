@@ -182,8 +182,8 @@ public class Client implements AutoCloseable
             entity.y = fpsCamera.position.y;
             entity.z = fpsCamera.position.z;
             entity.collisionBoxRadiusX = 0.5;
-            entity.collisionBoxRadiusY = 1.0;
-            entity.collisionBoxRadiusZ = 1.0;
+            entity.collisionBoxRadiusY = 1.2;
+            entity.collisionBoxRadiusZ = 0.5;
             world.addEntity(entity);
         }
 

@@ -25,6 +25,7 @@ public class StaticModel
 {
     public static final StaticModel chicken = fromFile("../assets/models/entities/chicken.obj");
     public static final StaticModel cow = fromFile("../assets/models/entities/cow.obj");
+    public static final StaticModel human = fromFile("../assets/models/entities/human.obj");
     public static final StaticModel pig = fromFile("../assets/models/entities/pig.obj");
 
     public final Mesh[] meshes;
@@ -36,7 +37,7 @@ public class StaticModel
     }
 
     public static StaticModel fromEntity(Entity entity) {
-        return pig;
+        return human;
     }
 
     public static StaticModel fromFile(String filePath) {
