@@ -138,10 +138,15 @@ class WorldDisplay implements GraphicsResource
     {
         // Entities
         if (shouldDrawEntities) {
+            GLMatrixStack.push();
+            GLMatrixStack.load(viewMatrix);
+
             for (Map.Entry<Chunk, ChunkDisplay> entry : faceDisplays.entrySet()) {
                 ChunkDisplay display = entry.getValue();
                 display.displayEntities();
             }
+
+            GLMatrixStack.pop();
         }
 
         // Block Faces
