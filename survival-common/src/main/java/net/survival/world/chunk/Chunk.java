@@ -3,8 +3,9 @@ package net.survival.world.chunk;
 import java.util.ArrayList;
 
 import net.survival.entity.Entity;
+import net.survival.world.BlockStorage;
 
-public class Chunk
+public class Chunk implements BlockStorage
 {
     public static final int XLENGTH = 16;
     public static final int YLENGTH = 256;
@@ -26,10 +27,12 @@ public class Chunk
         entities = new ArrayList<>();
     }
 
+    @Override
     public short getBlockID(int lx, int ly, int lz) {
         return blockIDs[localPositionToIndex(lx, ly, lz)];
     }
 
+    @Override
     public void setBlockID(int lx, int ly, int lz, short to) {
         blockIDs[localPositionToIndex(lx, ly, lz)] = to;
         modified |= BLOCKS_MODIFIED;
@@ -41,22 +44,6 @@ public class Chunk
 
     public boolean isInBounds(int lx, int ly, int lz) {
         return lx >= 0 && ly >= 0 && lz >= 0 && lx < XLENGTH && ly < YLENGTH && lz < ZLENGTH;
-    }
-
-    public int getTopBlockY(int lx, int lz) {
-        int topLevel = YLENGTH - 1;
-
-        while (topLevel >= 0 && getBlockID(lx, topLevel, lz) == 0)
-            --topLevel;
-
-        return topLevel;
-    }
-    
-    public void placeBlockIdIfEmpty(int lx, int ly, int lz, short blockID) {
-        int index = localPositionToIndex(lx, ly, lz);
-        
-        if (blockIDs[index] != 0)
-            blockIDs[index] = blockID;
     }
 
     public Iterable<Entity> iterateEntities() {

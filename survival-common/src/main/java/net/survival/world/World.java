@@ -7,7 +7,7 @@ import net.survival.entity.Entity;
 import net.survival.world.chunk.Chunk;
 import net.survival.world.chunk.ChunkPos;
 
-public class World
+public class World implements BlockStorage
 {
     private final HashMap<Long, Chunk> chunks;
 
@@ -43,6 +43,7 @@ public class World
         chunks.remove(hashedPos);
     }
 
+    @Override
     public short getBlockID(int x, int y, int z) {
         int cx = ChunkPos.toChunkX(x);
         int cz = ChunkPos.toChunkZ(z);
@@ -57,6 +58,7 @@ public class World
         return chunk.getBlockID(localX, y, localZ);
     }
 
+    @Override
     public void setBlockID(int x, int y, int z, short to) {
         int cx = ChunkPos.toChunkX(x);
         int cz = ChunkPos.toChunkZ(z);
@@ -71,6 +73,7 @@ public class World
         chunk.setBlockID(localX, y, localZ, to);
     }
 
+    @Override
     public int getTopBlockY(int x, int z) {
         int cx = ChunkPos.toChunkX(x);
         int cz = ChunkPos.toChunkZ(z);
@@ -85,6 +88,7 @@ public class World
         return chunk.getTopBlockY(localX, localZ);
     }
 
+    @Override
     public void placeBlockIdIfEmpty(int x, int y, int z, short to) {
         int cx = ChunkPos.toChunkX(x);
         int cz = ChunkPos.toChunkZ(z);
