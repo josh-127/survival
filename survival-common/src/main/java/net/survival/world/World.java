@@ -71,6 +71,34 @@ public class World
         chunk.setBlockID(localX, y, localZ, to);
     }
 
+    public int getTopBlockY(int x, int z) {
+        int cx = ChunkPos.toChunkX(x);
+        int cz = ChunkPos.toChunkZ(z);
+
+        Chunk chunk = chunks.get(ChunkPos.hashPos(cx, cz));
+        if (chunk == null)
+            throw new RuntimeException("Cannot query a block in an unloaded chunk.");
+
+        int localX = ChunkPos.toLocalX(cx, x);
+        int localZ = ChunkPos.toLocalZ(cz, z);
+
+        return chunk.getTopBlockY(localX, localZ);
+    }
+
+    public void replaceBlockIdIfEmpty(int x, int y, int z, short to) {
+        int cx = ChunkPos.toChunkX(x);
+        int cz = ChunkPos.toChunkZ(z);
+
+        Chunk chunk = chunks.get(ChunkPos.hashPos(cx, cz));
+        if (chunk == null)
+            throw new RuntimeException("Cannot replace a block in an unloaded chunk.");
+
+        int localX = ChunkPos.toLocalX(cx, x);
+        int localZ = ChunkPos.toLocalZ(cz, z);
+
+        chunk.replaceBlockIdIfEmpty(localX, y, localZ, to);
+    }
+    
     public void addEntity(Entity entity) {
         int cx = ChunkPos.toChunkX((int) entity.x);
         int cz = ChunkPos.toChunkZ((int) entity.z);
