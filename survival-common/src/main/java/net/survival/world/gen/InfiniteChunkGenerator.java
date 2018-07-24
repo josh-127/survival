@@ -75,7 +75,7 @@ public class InfiniteChunkGenerator implements ChunkGenerator
                 int counter = 3;
 
                 for (int y = Chunk.YLENGTH - 1; y >= 0; --y) {
-                    if (chunk.getBlockID(x, y, z) != BlockType.TEMP_SOLID.id) {
+                    if (chunk.getBlock(x, y, z) != BlockType.TEMP_SOLID.id) {
                         state = 0;
                         counter = 3;
                         continue;
@@ -83,13 +83,13 @@ public class InfiniteChunkGenerator implements ChunkGenerator
 
                     switch (state) {
                     case 0:
-                        chunk.setBlockID(x, y, z, biome.getTopBlockID());
+                        chunk.setBlock(x, y, z, biome.getTopBlockID());
                         ++state;
                         break;
 
                     case 1:
                         if (counter > 0) {
-                            chunk.setBlockID(x, y, z, BlockType.DIRT.id);
+                            chunk.setBlock(x, y, z, BlockType.DIRT.id);
                             --counter;
 
                             if (counter == 0) {
@@ -101,7 +101,7 @@ public class InfiniteChunkGenerator implements ChunkGenerator
                         break;
 
                     case 2:
-                        chunk.setBlockID(x, y, z, BlockType.STONE.id);
+                        chunk.setBlock(x, y, z, BlockType.STONE.id);
                         break;
                     }
                 }
@@ -128,9 +128,9 @@ public class InfiniteChunkGenerator implements ChunkGenerator
                     double threshold = (y - minElevation) / elevationRange;
 
                     if (density >= threshold)
-                        chunk.setBlockID(x, y, z, BlockType.TEMP_SOLID.id);
+                        chunk.setBlock(x, y, z, BlockType.TEMP_SOLID.id);
                     else if (y <= OCEAN_LEVEL)
-                        chunk.setBlockID(x, y, z, BlockType.WATER.id);
+                        chunk.setBlock(x, y, z, BlockType.WATER.id);
                 }
             }
         }

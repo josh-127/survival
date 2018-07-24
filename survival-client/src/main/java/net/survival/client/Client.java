@@ -169,8 +169,8 @@ public class Client implements AutoCloseable
                 int pxi = (int) Math.floor(px);
                 int pyi = (int) Math.floor(py);
                 int pzi = (int) Math.floor(pz);
-                if (world.getBlockID(pxi, pyi, pzi) != BlockType.EMPTY.id) {
-                    world.setBlockID(pxi, pyi, pzi, BlockType.EMPTY.id);
+                if (world.getBlock(pxi, pyi, pzi) != BlockType.EMPTY.id) {
+                    world.setBlock(pxi, pyi, pzi, BlockType.EMPTY.id);
                     break;
                 }
             }

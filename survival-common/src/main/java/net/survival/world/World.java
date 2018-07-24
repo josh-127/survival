@@ -44,7 +44,7 @@ public class World implements BlockStorage
     }
 
     @Override
-    public short getBlockID(int x, int y, int z) {
+    public short getBlock(int x, int y, int z) {
         int cx = ChunkPos.toChunkX(x);
         int cz = ChunkPos.toChunkZ(z);
 
@@ -55,34 +55,34 @@ public class World implements BlockStorage
         int localX = ChunkPos.toLocalX(cx, x);
         int localZ = ChunkPos.toLocalZ(cz, z);
 
-        return chunk.getBlockID(localX, y, localZ);
+        return chunk.getBlock(localX, y, localZ);
     }
 
     @Override
-    public void setBlockID(int x, int y, int z, short to) {
+    public void setBlock(int x, int y, int z, short to) {
         Chunk chunk = getChunkFromGlobalPos(x, z, "Cannot place/replace a block in an unloaded chunk.");
         int localX = ChunkPos.toLocalX(ChunkPos.toChunkX(x), x);
         int localZ = ChunkPos.toLocalZ(ChunkPos.toChunkZ(z), z);
 
-        chunk.setBlockID(localX, y, localZ, to);
+        chunk.setBlock(localX, y, localZ, to);
     }
 
     @Override
-    public int getTopBlockY(int x, int z) {
+    public int getTopLevel(int x, int z) {
         Chunk chunk = getChunkFromGlobalPos(x, z, "Cannot query a block in an unloaded chunk.");
         int localX = ChunkPos.toLocalX(ChunkPos.toChunkX(x), x);
         int localZ = ChunkPos.toLocalZ(ChunkPos.toChunkZ(z), z);
 
-        return chunk.getTopBlockY(localX, localZ);
+        return chunk.getTopLevel(localX, localZ);
     }
 
     @Override
-    public void placeBlockIdIfEmpty(int x, int y, int z, short to) {
+    public void placeBlockIfEmpty(int x, int y, int z, short to) {
         Chunk chunk = getChunkFromGlobalPos(x, z, "Cannot place a block in an unloaded chunk.");
         int localX = ChunkPos.toLocalX(ChunkPos.toChunkX(x), x);
         int localZ = ChunkPos.toLocalZ(ChunkPos.toChunkZ(z), z);
 
-        chunk.placeBlockIdIfEmpty(localX, y, localZ, to);
+        chunk.placeBlockIfEmpty(localX, y, localZ, to);
     }
 
     public void addEntity(Entity entity) {

@@ -4,21 +4,21 @@ import net.survival.world.chunk.Chunk;
 
 public interface BlockStorage
 {
-    short getBlockID(int x, int y, int z);
+    short getBlock(int x, int y, int z);
 
-    void setBlockID(int x, int y, int z, short to);
+    void setBlock(int x, int y, int z, short to);
 
-    default int getTopBlockY(int x, int z) {
+    default int getTopLevel(int x, int z) {
         int topLevel = Chunk.YLENGTH - 1;
 
-        while (topLevel >= 0 && getBlockID(x, topLevel, z) == 0)
+        while (topLevel >= 0 && getBlock(x, topLevel, z) == 0)
             --topLevel;
 
         return topLevel;
     }
 
-    default void placeBlockIdIfEmpty(int x, int y, int z, short blockID) {
-        if (getBlockID(x, y, z) == 0)
-            setBlockID(x, y, z, blockID);
+    default void placeBlockIfEmpty(int x, int y, int z, short blockID) {
+        if (getBlock(x, y, z) == 0)
+            setBlock(x, y, z, blockID);
     }
 }

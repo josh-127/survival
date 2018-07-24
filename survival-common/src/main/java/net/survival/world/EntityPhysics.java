@@ -80,13 +80,13 @@ public class EntityPhysics
 
         for (int blockZ = startZ; blockZ <= endZ; ++blockZ) {
             for (int blockX = startX; blockX <= endX; ++blockX) {
-                short aboveFloorBlockID = world.getBlockID(blockX, floorY + 1, blockZ);
+                short aboveFloorBlockID = world.getBlock(blockX, floorY + 1, blockZ);
                 BlockType aboveFloorBlockType = BlockType.byID(aboveFloorBlockID);
 
                 if (aboveFloorBlockType.isSolid())
                     continue;
 
-                short floorBlockID = world.getBlockID(blockX, floorY, blockZ);
+                short floorBlockID = world.getBlock(blockX, floorY, blockZ);
                 BlockType floorBlockType = BlockType.byID(floorBlockID);
 
                 if (floorBlockType.isSolid() && getDominantAxis(entity, blockX, floorY, blockZ) == 1
@@ -115,13 +115,13 @@ public class EntityPhysics
 
         for (int blockZ = startZ; blockZ <= endZ; ++blockZ) {
             for (int blockX = startX; blockX <= endX; ++blockX) {
-                short belowCeilingBlockID = world.getBlockID(blockX, ceilingY - 1, blockZ);
+                short belowCeilingBlockID = world.getBlock(blockX, ceilingY - 1, blockZ);
                 BlockType belowCeilingBlockType = BlockType.byID(belowCeilingBlockID);
 
                 if (belowCeilingBlockType.isSolid())
                     continue;
 
-                short ceilingBlockID = world.getBlockID(blockX, ceilingY, blockZ);
+                short ceilingBlockID = world.getBlock(blockX, ceilingY, blockZ);
                 BlockType ceilingBlockType = BlockType.byID(ceilingBlockID);
 
                 if (ceilingBlockType.isSolid()
@@ -148,13 +148,13 @@ public class EntityPhysics
 
         for (int blockY = startY; blockY <= endY; ++blockY) {
             for (int blockZ = startZ; blockZ <= endZ; ++blockZ) {
-                short adjacentBlockID = world.getBlockID(wallX - 1, blockY, blockZ);
+                short adjacentBlockID = world.getBlock(wallX - 1, blockY, blockZ);
                 BlockType adjacentBlockType = BlockType.byID(adjacentBlockID);
 
                 if (adjacentBlockType.isSolid())
                     continue;
 
-                short wallBlockID = world.getBlockID(wallX, blockY, blockZ);
+                short wallBlockID = world.getBlock(wallX, blockY, blockZ);
                 BlockType wallBlockType = BlockType.byID(wallBlockID);
 
                 if (wallBlockType.isSolid() && getDominantAxis(entity, wallX, blockY, blockZ) == 0
@@ -180,13 +180,13 @@ public class EntityPhysics
 
         for (int blockY = startY; blockY <= endY; ++blockY) {
             for (int blockZ = startZ; blockZ <= endZ; ++blockZ) {
-                short adjacentBlockID = world.getBlockID(wallX + 1, blockY, blockZ);
+                short adjacentBlockID = world.getBlock(wallX + 1, blockY, blockZ);
                 BlockType adjacentBlockType = BlockType.byID(adjacentBlockID);
 
                 if (adjacentBlockType.isSolid())
                     continue;
 
-                short wallBlockID = world.getBlockID(wallX, blockY, blockZ);
+                short wallBlockID = world.getBlock(wallX, blockY, blockZ);
                 BlockType wallBlockType = BlockType.byID(wallBlockID);
 
                 if (wallBlockType.isSolid() && getDominantAxis(entity, wallX, blockY, blockZ) == 0
@@ -212,13 +212,13 @@ public class EntityPhysics
 
         for (int blockY = startY; blockY <= endY; ++blockY) {
             for (int blockX = startX; blockX <= endX; ++blockX) {
-                short adjacentBlockID = world.getBlockID(blockX, blockY, wallZ + 1);
+                short adjacentBlockID = world.getBlock(blockX, blockY, wallZ + 1);
                 BlockType adjacentBlockType = BlockType.byID(adjacentBlockID);
 
                 if (adjacentBlockType.isSolid())
                     continue;
 
-                short wallBlockID = world.getBlockID(blockX, blockY, wallZ);
+                short wallBlockID = world.getBlock(blockX, blockY, wallZ);
                 BlockType wallBlockType = BlockType.byID(wallBlockID);
 
                 if (wallBlockType.isSolid() && getDominantAxis(entity, blockX, blockY, wallZ) == 2
@@ -244,13 +244,13 @@ public class EntityPhysics
 
         for (int blockY = startY; blockY <= endY; ++blockY) {
             for (int blockX = startX; blockX <= endX; ++blockX) {
-                short adjacentBlockID = world.getBlockID(blockX, blockY, wallZ - 1);
+                short adjacentBlockID = world.getBlock(blockX, blockY, wallZ - 1);
                 BlockType adjacentBlockType = BlockType.byID(adjacentBlockID);
 
                 if (adjacentBlockType.isSolid())
                     continue;
 
-                short wallBlockID = world.getBlockID(blockX, blockY, wallZ);
+                short wallBlockID = world.getBlock(blockX, blockY, wallZ);
                 BlockType wallBlockType = BlockType.byID(wallBlockID);
 
                 if (wallBlockType.isSolid() && getDominantAxis(entity, blockX, blockY, wallZ) == 2
