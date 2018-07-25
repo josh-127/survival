@@ -77,21 +77,21 @@ public class World implements BlockStorage
     }
 
     @Override
-    public void placeBlockIfEmpty(int x, int y, int z, short to) {
+    public boolean placeBlockIfEmpty(int x, int y, int z, short to) {
         Chunk chunk = getChunkFromGlobalPos(x, z, "Cannot place a block in an unloaded chunk.");
         int localX = ChunkPos.toLocalX(ChunkPos.toChunkX(x), x);
         int localZ = ChunkPos.toLocalZ(ChunkPos.toChunkZ(z), z);
 
-        chunk.placeBlockIfEmpty(localX, y, localZ, to);
+        return chunk.placeBlockIfEmpty(localX, y, localZ, to);
     }
 
     @Override
-    public void replaceBlockIfExists(int x, int y, int z, short replacement) {
+    public boolean replaceBlockIfExists(int x, int y, int z, short replacement) {
         Chunk chunk = getChunkFromGlobalPos(x, z, "Cannot replace a block in an unloaded chunk.");
         int localX = ChunkPos.toLocalX(ChunkPos.toChunkX(x), x);
         int localZ = ChunkPos.toLocalZ(ChunkPos.toChunkZ(z), z);
 
-        chunk.replaceBlockIfExists(localX, y, localZ, replacement);
+        return chunk.replaceBlockIfExists(localX, y, localZ, replacement);
     }
 
     public void addEntity(Entity entity) {

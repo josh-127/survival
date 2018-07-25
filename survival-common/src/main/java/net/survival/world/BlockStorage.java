@@ -22,13 +22,21 @@ public interface BlockStorage
         return topLevel;
     }
 
-    default void placeBlockIfEmpty(int x, int y, int z, short blockID) {
-        if (getBlock(x, y, z) == 0)
+    default boolean placeBlockIfEmpty(int x, int y, int z, short blockID) {
+        if (getBlock(x, y, z) == 0) {
             setBlock(x, y, z, blockID);
+            return true;
+        }
+        
+        return false;
     }
 
-    default void replaceBlockIfExists(int x, int y, int z, short replacement) {
-        if (getBlock(x, y, z) != 0)
+    default boolean replaceBlockIfExists(int x, int y, int z, short replacement) {
+        if (getBlock(x, y, z) != 0) {
             setBlock(x, y, z, replacement);
+            return true;
+        }
+        
+        return false;
     }
 }
