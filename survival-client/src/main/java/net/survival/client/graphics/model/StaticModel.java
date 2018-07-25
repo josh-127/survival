@@ -38,7 +38,15 @@ public class StaticModel
     }
 
     public static StaticModel fromEntity(Entity entity) {
-        return goat;
+        switch (entity.model) {
+        case CHICKEN: return chicken;
+        case COW:     return cow;
+        case GOAT:    return goat;
+        case HUMAN:   return human;
+        case PIG:     return pig;
+        }
+
+        throw new RuntimeException();
     }
 
     public static StaticModel fromFile(String filePath) {

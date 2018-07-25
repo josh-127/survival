@@ -13,12 +13,14 @@ public class Entity
     public double collisionBoxRadiusY;
     public double collisionBoxRadiusZ;
 
+    public EntityModel model;
     public boolean visible;
 
     public Entity() {
         collisionBoxRadiusX = 0.4375;
         collisionBoxRadiusY = 0.4375;
         collisionBoxRadiusZ = 0.4375;
+        model = EntityModel.HUMAN;
         visible = true;
     }
 }
