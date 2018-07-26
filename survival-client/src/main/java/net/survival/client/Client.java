@@ -18,7 +18,9 @@ import net.survival.client.input.Key;
 import net.survival.client.input.Keyboard;
 import net.survival.client.input.Mouse;
 import net.survival.entity.Entity;
+import net.survival.entity.controller.EntityControllerType;
 import net.survival.world.EntityPhysics;
+import net.survival.world.EntitySystem;
 import net.survival.world.World;
 import net.survival.world.chunk.Chunk;
 import net.survival.world.chunk.ChunkPos;
@@ -39,13 +41,12 @@ public class Client implements AutoCloseable
     private final World world;
 
     private final CircularChunkLoader chunkLoader;
-    private final EntityPhysics entityPhysics;
-    private final EntityRelocator entityRelocator;
-
     private final DefaultChunkDatabase chunkDatabase;
     private final InfiniteChunkGenerator chunkGenerator;
     private final WorldDecorator worldDecorator;
     private final ChunkSystem chunkSystem;
+    
+    private final EntitySystem entitySystem;
 
     private final Control control;
 
@@ -58,14 +59,14 @@ public class Client implements AutoCloseable
 
     private Client() {
         world = new World();
+        
         chunkLoader = new CircularChunkLoader(8);
-        entityPhysics = new EntityPhysics();
-        entityRelocator = new EntityRelocator();
-
         chunkDatabase = new DefaultChunkDatabase();
         chunkGenerator = new InfiniteChunkGenerator(0L);
         worldDecorator = WorldDecorator.createDefault();
         chunkSystem = new ChunkSystem(chunkDatabase, chunkGenerator, worldDecorator);
+        
+        entitySystem = new EntitySystem();
 
         control = new Control();
         control.getClientRectangle().setRight(0.1);
@@ -148,8 +149,7 @@ public class Client implements AutoCloseable
         chunkLoader.setCenter(cx, cz);
 
         chunkSystem.update(world, chunkLoader);
-        entityPhysics.update(world, elapsedTime);
-        entityRelocator.relocateEntities(world);
+        entitySystem.update(world, elapsedTime);
 
         if (player != null) {
             fpsCamera.position.x = player.x;
