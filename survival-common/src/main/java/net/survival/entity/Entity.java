@@ -1,5 +1,7 @@
 package net.survival.entity;
 
+import net.survival.entity.controller.EntityControllerType;
+
 public class Entity
 {
     public double x;
@@ -12,7 +14,9 @@ public class Entity
     public double collisionBoxRadiusX;
     public double collisionBoxRadiusY;
     public double collisionBoxRadiusZ;
-
+    
+    public EntityControllerType controllerType;
+    
     public EntityModel model;
     public boolean visible;
 
@@ -20,6 +24,7 @@ public class Entity
         collisionBoxRadiusX = 0.4375;
         collisionBoxRadiusY = 0.4375;
         collisionBoxRadiusZ = 0.4375;
+        controllerType = EntityControllerType.DEFAULT;
         model = EntityModel.HUMAN;
         visible = true;
     }
