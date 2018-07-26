@@ -11,12 +11,16 @@ public class Entity
     public double velocityY;
     public double velocityZ;
 
+    public double yaw;
+    public double pitch;
+    public double roll;
+
     public double collisionBoxRadiusX;
     public double collisionBoxRadiusY;
     public double collisionBoxRadiusZ;
-    
+
     public EntityControllerType controllerType;
-    
+
     public EntityModel model;
     public boolean visible;
 

@@ -313,6 +313,9 @@ class ChunkDisplay implements GraphicsResource
 
             GLMatrixStack.push();
             GLMatrixStack.translate((float) entity.x, (float) entity.y, (float) entity.z);
+            GLMatrixStack.rotate((float) entity.yaw, 0.0f, 1.0f, 0.0f);
+            GLMatrixStack.rotate((float) entity.pitch, 1.0f, 0.0f, 0.0f);
+            GLMatrixStack.rotate((float) entity.roll, 0.0f, 0.0f, 1.0f);
 
             StaticModel model = StaticModel.fromEntity(entity);
             ModelRenderer.displayStaticModel(model);
