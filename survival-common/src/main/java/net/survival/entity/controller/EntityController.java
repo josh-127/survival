@@ -4,5 +4,5 @@ import net.survival.entity.Entity;
 
 public interface EntityController
 {
-    void tick(Entity entity);
+    void tick(Entity entity, double elapsedTime);
 }

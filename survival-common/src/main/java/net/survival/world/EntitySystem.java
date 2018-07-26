@@ -19,7 +19,7 @@ public class EntitySystem
         for (Chunk chunk : world.iterateChunks()) {
             for (Entity entity : chunk.iterateEntities()) {
                 EntityController controller = entity.controllerType.controller;
-                controller.tick(entity);
+                controller.tick(entity, elapsedTime);
             }
         }
         

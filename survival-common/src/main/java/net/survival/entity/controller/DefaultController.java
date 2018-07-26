@@ -5,5 +5,5 @@ import net.survival.entity.Entity;
 class DefaultController implements EntityController
 {
     @Override
-    public void tick(Entity entity) {}
+    public void tick(Entity entity, double elapsedTime) {}
 }
