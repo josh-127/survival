@@ -9,13 +9,7 @@ import net.survival.world.World;
 
 public class EntityRelocator
 {
-    private final World world;
-
-    public EntityRelocator(World world) {
-        this.world = world;
-    }
-
-    public void relocateEntities() {
+    public void relocateEntities(World world) {
         ArrayList<Entity> entitiesToRelocate = new ArrayList<>();
 
         for (Map.Entry<Long, Chunk> entry : world.iterateChunkMap()) {

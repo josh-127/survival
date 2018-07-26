@@ -59,8 +59,8 @@ public class Client implements AutoCloseable
     private Client() {
         world = new World();
         chunkLoader = new CircularChunkLoader(8);
-        entityPhysics = new EntityPhysics(world);
-        entityRelocator = new EntityRelocator(world);
+        entityPhysics = new EntityPhysics();
+        entityRelocator = new EntityRelocator();
 
         chunkDatabase = new DefaultChunkDatabase();
         chunkGenerator = new InfiniteChunkGenerator(0L);
@@ -148,8 +148,8 @@ public class Client implements AutoCloseable
         chunkLoader.setCenter(cx, cz);
 
         chunkSystem.update(world, chunkLoader);
-        entityPhysics.tick(elapsedTime);
-        entityRelocator.relocateEntities();
+        entityPhysics.update(world, elapsedTime);
+        entityRelocator.relocateEntities(world);
 
         if (player != null) {
             fpsCamera.position.x = player.x;

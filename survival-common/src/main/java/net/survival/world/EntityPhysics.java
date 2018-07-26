@@ -9,19 +9,13 @@ public class EntityPhysics
     private static final double GRAVITY = 9.81;
     private static final double TERMINAL_VELOCITY = 30.0;
 
-    private final World world;
-
-    public EntityPhysics(World world) {
-        this.world = world;
+    public void update(World world, double elapsedTime) {
+        applyGravity(world, elapsedTime);
+        applyVelocities(world, elapsedTime);
+        handleBlockCollisions(world);
     }
 
-    public void tick(double elapsedTime) {
-        applyGravity(elapsedTime);
-        applyVelocities(elapsedTime);
-        handleBlockCollisions();
-    }
-
-    private void applyGravity(double elapsedTime) {
+    private void applyGravity(World world, double elapsedTime) {
         for (Chunk chunk : world.iterateChunks()) {
             for (Entity entity : chunk.iterateEntities()) {
                 double newVX = entity.velocityX;
@@ -38,7 +32,7 @@ public class EntityPhysics
         }
     }
 
-    private void applyVelocities(double elapsedTime) {
+    private void applyVelocities(World world, double elapsedTime) {
         for (Chunk chunk : world.iterateChunks()) {
             for (Entity entity : chunk.iterateEntities()) {
                 entity.x += entity.velocityX * elapsedTime;
@@ -48,7 +42,7 @@ public class EntityPhysics
         }
     }
 
-    private void handleBlockCollisions() {
+    private void handleBlockCollisions(World world) {
         for (Chunk chunk : world.iterateChunks()) {
             for (Entity entity : chunk.iterateEntities()) {
                 if (!handleEntityFloorCollision(entity, world))
