@@ -231,10 +231,12 @@ class WorldDisplay implements GraphicsResource
 
             ChunkDisplay existingDisplay = faceDisplays.remove(chunk);
             Chunk adjacentChunk = world.getChunk(cx + dx, cz + dz);
+            long adjacentHashedPos = ChunkPos.hashPos(cx + dx, cz + dz);
 
             boolean needsUpdating = existingDisplay == null
                     || (existingDisplay.adjacentChunk == null && adjacentChunk != null)
-                    || chunksToRedraw.contains(hashedPos);
+                    || chunksToRedraw.contains(hashedPos)
+                    || chunksToRedraw.contains(adjacentHashedPos);
 
             if (needsUpdating) {
                 if (existingDisplay != null)
