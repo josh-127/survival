@@ -17,4 +17,20 @@ public class MathEx
     public static double lerp(double a, double b, double t) {
         return a + t * (b - a);
     }
+
+    public static double sqrMagnitude(double x, double y) {
+        return x * x + y * y;
+    }
+
+    public static double sqrMagnitude(double x, double y, double z) {
+        return x * x + y * y + z * z;
+    }
+
+    public static double magnitude(double x, double y) {
+        return Math.sqrt(sqrMagnitude(x, y));
+    }
+
+    public static double magnitude(double x, double y, double z) {
+        return Math.sqrt(sqrMagnitude(x, y, z));
+    }
 }
