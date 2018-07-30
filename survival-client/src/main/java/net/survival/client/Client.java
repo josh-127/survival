@@ -12,8 +12,8 @@ import net.survival.client.graphics.gui.GuiDisplay;
 import net.survival.client.graphics.opengl.GLDisplay;
 import net.survival.client.graphics.opengl.GLRenderContext;
 import net.survival.client.gui.Control;
-import net.survival.client.input.GlfwKeyboardProvider;
-import net.survival.client.input.GlfwMouseProvider;
+import net.survival.client.input.GlfwKeyboardAdapter;
+import net.survival.client.input.GlfwMouseAdapter;
 import net.survival.client.input.Key;
 import net.survival.client.input.Keyboard;
 import net.survival.client.input.Mouse;
@@ -214,10 +214,10 @@ public class Client implements AutoCloseable
     public static void main(String[] args) {
         GLDisplay display = new GLDisplay(GraphicsSettings.WINDOW_WIDTH,
                 GraphicsSettings.WINDOW_HEIGHT, WINDOW_TITLE);
-        GlfwKeyboardProvider keyboardProvider = new GlfwKeyboardProvider();
-        GlfwMouseProvider mouseProvider = new GlfwMouseProvider();
-        GLFW.glfwSetKeyCallback(display.getUnderlyingGlfwWindow(), keyboardProvider);
-        GLFW.glfwSetCursorPosCallback(display.getUnderlyingGlfwWindow(), mouseProvider);
+        GlfwKeyboardAdapter keyboardAdapter = new GlfwKeyboardAdapter();
+        GlfwMouseAdapter mouseAdapter = new GlfwMouseAdapter();
+        GLFW.glfwSetKeyCallback(display.getUnderlyingGlfwWindow(), keyboardAdapter);
+        GLFW.glfwSetCursorPosCallback(display.getUnderlyingGlfwWindow(), mouseAdapter);
         GLRenderContext.init();
 
         Client program = new Client();
@@ -240,9 +240,9 @@ public class Client implements AutoCloseable
 
             if (unprocessedTicks >= 1.0) {
                 while (unprocessedTicks >= 1.0) {
-                    mouseProvider.tick();
+                    mouseAdapter.tick();
                     program.tick(SECONDS_PER_TICK);
-                    keyboardProvider.nextInputFrame();
+                    keyboardAdapter.nextInputFrame();
                     unprocessedTicks -= 1.0;
                 }
 

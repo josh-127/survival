@@ -2,7 +2,7 @@ package net.survival.client.input;
 
 import org.lwjgl.glfw.GLFWCursorPosCallbackI;
 
-public class GlfwMouseProvider extends MouseProvider implements GLFWCursorPosCallbackI
+public class GlfwMouseAdapter extends MouseAdapter implements GLFWCursorPosCallbackI
 {
     private double mouseX;
     private double mouseY;
