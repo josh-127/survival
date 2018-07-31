@@ -1,10 +1,10 @@
 package net.survival.world;
 
 import net.survival.block.BlockType;
-import net.survival.entity.Entity;
+import net.survival.entity.Character;
 import net.survival.world.chunk.Chunk;
 
-public class EntityPhysics
+public class CharacterPhysics
 {
     private static final double GRAVITY = 9.81;
     private static final double TERMINAL_VELOCITY = 30.0;
@@ -17,43 +17,56 @@ public class EntityPhysics
 
     private void applyGravity(World world, double elapsedTime) {
         for (Chunk chunk : world.iterateChunks()) {
-            for (Entity entity : chunk.iterateEntities()) {
-                double newVX = entity.velocityX;
-                double newVY = entity.velocityY - GRAVITY * elapsedTime;
-                double newVZ = entity.velocityZ;
+            applyGravity(world, elapsedTime, chunk.iterateNPCs());
+            applyGravity(world, elapsedTime, chunk.iteratePlayers());
+        }
+    }
 
-                if (newVY < -TERMINAL_VELOCITY)
-                    newVY = -TERMINAL_VELOCITY;
+    private void applyGravity(World world, double elapsedTime,
+            Iterable<? extends Character> characters)
+    {
+        for (Character character : characters) {
+            character.velocityY -= GRAVITY * elapsedTime;
 
-                entity.velocityX = newVX;
-                entity.velocityY = newVY;
-                entity.velocityZ = newVZ;
-            }
+            if (character.velocityY < -TERMINAL_VELOCITY)
+                character.velocityY = -TERMINAL_VELOCITY;
         }
     }
 
     private void applyVelocities(World world, double elapsedTime) {
         for (Chunk chunk : world.iterateChunks()) {
-            for (Entity entity : chunk.iterateEntities()) {
-                entity.x += entity.velocityX * elapsedTime;
-                entity.y += entity.velocityY * elapsedTime;
-                entity.z += entity.velocityZ * elapsedTime;
-            }
+            applyVelocities(world, elapsedTime, chunk.iterateNPCs());
+            applyVelocities(world, elapsedTime, chunk.iteratePlayers());
+        }
+    }
+
+    private void applyVelocities(World world, double elapsedTime,
+            Iterable<? extends Character> characters)
+    {
+        for (Character character : characters) {
+            character.x += character.velocityX * elapsedTime;
+            character.y += character.velocityY * elapsedTime;
+            character.z += character.velocityZ * elapsedTime;
         }
     }
 
     private void handleBlockCollisions(World world) {
         for (Chunk chunk : world.iterateChunks()) {
-            for (Entity entity : chunk.iterateEntities()) {
-                if (!handleEntityFloorCollision(entity, world))
-                    handleEntityCeilingCollision(entity, world);
+            handleBlockCollisions(world, chunk.iterateNPCs());
+            handleBlockCollisions(world, chunk.iteratePlayers());
+        }
+    }
 
-                if (!handleEntityLeftWallCollision(entity, world))
-                    handleEntityRightWallCollision(entity, world);
+    private void handleBlockCollisions(World world, Iterable<? extends Character> characters) {
+        for (Character character : characters) {
+            if (!handleFloorCollision(character, world))
+                handleCeilingCollision(character, world);
 
-                if (!handleEntityBackWallCollision(entity, world))
-                    handleEntityFrontWallCollision(entity, world);
-            }
+            if (!handleLeftWallCollision(character, world))
+                handleRightWallCollision(character, world);
+
+            if (!handleBackWallCollision(character, world))
+                handleFrontWallCollision(character, world);
         }
     }
 
@@ -61,16 +74,16 @@ public class EntityPhysics
     // TODO: Remove code duplication.
     //
 
-    private boolean handleEntityFloorCollision(Entity entity, World world) {
-        if (entity.velocityY >= 0.0)
+    private boolean handleFloorCollision(Character character, World world) {
+        if (character.velocityY >= 0.0)
             return false;
 
-        int startX = (int) Math.floor(entity.x - entity.collisionBoxRadiusX);
-        int endX = (int) Math.floor(entity.x + entity.collisionBoxRadiusX);
-        int startZ = (int) Math.floor(entity.z - entity.collisionBoxRadiusZ);
-        int endZ = (int) Math.floor(entity.z + entity.collisionBoxRadiusZ);
+        int startX = (int) Math.floor(character.x - character.collisionBoxRadiusX);
+        int endX = (int) Math.floor(character.x + character.collisionBoxRadiusX);
+        int startZ = (int) Math.floor(character.z - character.collisionBoxRadiusZ);
+        int endZ = (int) Math.floor(character.z + character.collisionBoxRadiusZ);
 
-        int floorY = (int) Math.floor(entity.y - entity.collisionBoxRadiusY);
+        int floorY = (int) Math.floor(character.y - character.collisionBoxRadiusY);
 
         for (int blockZ = startZ; blockZ <= endZ; ++blockZ) {
             for (int blockX = startX; blockX <= endX; ++blockX) {
@@ -83,11 +96,12 @@ public class EntityPhysics
                 short floorBlockID = world.getBlock(blockX, floorY, blockZ);
                 BlockType floorBlockType = BlockType.byID(floorBlockID);
 
-                if (floorBlockType.isSolid() && getDominantAxis(entity, blockX, floorY, blockZ) == 1
-                        && entityIntersectsFloorPlane(entity, blockX, floorY, blockZ))
+                if (floorBlockType.isSolid()
+                        && getDominantAxis(character, blockX, floorY, blockZ) == 1
+                        && intersectsFloorPlane(character, blockX, floorY, blockZ))
                 {
-                    entity.y = (floorY + 1) + entity.collisionBoxRadiusY;
-                    entity.velocityY = 0.0;
+                    character.y = (floorY + 1) + character.collisionBoxRadiusY;
+                    character.velocityY = 0.0;
                     return true;
                 }
             }
@@ -96,16 +110,16 @@ public class EntityPhysics
         return false;
     }
 
-    private boolean handleEntityCeilingCollision(Entity entity, World world) {
-        if (entity.velocityY <= 0.0)
+    private boolean handleCeilingCollision(Character character, World world) {
+        if (character.velocityY <= 0.0)
             return false;
 
-        int startX = (int) Math.floor(entity.x - entity.collisionBoxRadiusX);
-        int endX = (int) Math.floor(entity.x + entity.collisionBoxRadiusX);
-        int startZ = (int) Math.floor(entity.z - entity.collisionBoxRadiusZ);
-        int endZ = (int) Math.floor(entity.z + entity.collisionBoxRadiusZ);
+        int startX = (int) Math.floor(character.x - character.collisionBoxRadiusX);
+        int endX = (int) Math.floor(character.x + character.collisionBoxRadiusX);
+        int startZ = (int) Math.floor(character.z - character.collisionBoxRadiusZ);
+        int endZ = (int) Math.floor(character.z + character.collisionBoxRadiusZ);
 
-        int ceilingY = (int) Math.floor(entity.y + entity.collisionBoxRadiusY);
+        int ceilingY = (int) Math.floor(character.y + character.collisionBoxRadiusY);
 
         for (int blockZ = startZ; blockZ <= endZ; ++blockZ) {
             for (int blockX = startX; blockX <= endX; ++blockX) {
@@ -119,11 +133,11 @@ public class EntityPhysics
                 BlockType ceilingBlockType = BlockType.byID(ceilingBlockID);
 
                 if (ceilingBlockType.isSolid()
-                        && getDominantAxis(entity, blockX, ceilingY, blockZ) == 1
-                        && entityIntersectsCeilingPlane(entity, blockX, ceilingY, blockZ))
+                        && getDominantAxis(character, blockX, ceilingY, blockZ) == 1
+                        && intersectsCeilingPlane(character, blockX, ceilingY, blockZ))
                 {
-                    entity.y = ceilingY - entity.collisionBoxRadiusY;
-                    entity.velocityY = 0.0;
+                    character.y = ceilingY - character.collisionBoxRadiusY;
+                    character.velocityY = 0.0;
                     return true;
                 }
             }
@@ -132,13 +146,13 @@ public class EntityPhysics
         return false;
     }
 
-    private boolean handleEntityLeftWallCollision(Entity entity, World world) {
-        int startY = (int) Math.floor(entity.y - entity.collisionBoxRadiusY);
-        int endY = (int) Math.floor(entity.y + entity.collisionBoxRadiusY);
-        int startZ = (int) Math.floor(entity.z - entity.collisionBoxRadiusZ);
-        int endZ = (int) Math.floor(entity.z + entity.collisionBoxRadiusZ);
+    private boolean handleLeftWallCollision(Character character, World world) {
+        int startY = (int) Math.floor(character.y - character.collisionBoxRadiusY);
+        int endY = (int) Math.floor(character.y + character.collisionBoxRadiusY);
+        int startZ = (int) Math.floor(character.z - character.collisionBoxRadiusZ);
+        int endZ = (int) Math.floor(character.z + character.collisionBoxRadiusZ);
 
-        int wallX = (int) Math.floor(entity.x + entity.collisionBoxRadiusX);
+        int wallX = (int) Math.floor(character.x + character.collisionBoxRadiusX);
 
         for (int blockY = startY; blockY <= endY; ++blockY) {
             for (int blockZ = startZ; blockZ <= endZ; ++blockZ) {
@@ -151,11 +165,12 @@ public class EntityPhysics
                 short wallBlockID = world.getBlock(wallX, blockY, blockZ);
                 BlockType wallBlockType = BlockType.byID(wallBlockID);
 
-                if (wallBlockType.isSolid() && getDominantAxis(entity, wallX, blockY, blockZ) == 0
-                        && entityIntersectsLeftPlane(entity, wallX, blockY, blockZ))
+                if (wallBlockType.isSolid()
+                        && getDominantAxis(character, wallX, blockY, blockZ) == 0
+                        && intersectsLeftPlane(character, wallX, blockY, blockZ))
                 {
-                    entity.x = wallX - entity.collisionBoxRadiusX;
-                    entity.velocityX = 0.0;
+                    character.x = wallX - character.collisionBoxRadiusX;
+                    character.velocityX = 0.0;
                     return true;
                 }
             }
@@ -164,13 +179,13 @@ public class EntityPhysics
         return false;
     }
 
-    private boolean handleEntityRightWallCollision(Entity entity, World world) {
-        int startY = (int) Math.floor(entity.y - entity.collisionBoxRadiusY);
-        int endY = (int) Math.floor(entity.y + entity.collisionBoxRadiusY);
-        int startZ = (int) Math.floor(entity.z - entity.collisionBoxRadiusZ);
-        int endZ = (int) Math.floor(entity.z + entity.collisionBoxRadiusZ);
+    private boolean handleRightWallCollision(Character character, World world) {
+        int startY = (int) Math.floor(character.y - character.collisionBoxRadiusY);
+        int endY = (int) Math.floor(character.y + character.collisionBoxRadiusY);
+        int startZ = (int) Math.floor(character.z - character.collisionBoxRadiusZ);
+        int endZ = (int) Math.floor(character.z + character.collisionBoxRadiusZ);
 
-        int wallX = (int) Math.floor(entity.x - entity.collisionBoxRadiusX);
+        int wallX = (int) Math.floor(character.x - character.collisionBoxRadiusX);
 
         for (int blockY = startY; blockY <= endY; ++blockY) {
             for (int blockZ = startZ; blockZ <= endZ; ++blockZ) {
@@ -183,11 +198,12 @@ public class EntityPhysics
                 short wallBlockID = world.getBlock(wallX, blockY, blockZ);
                 BlockType wallBlockType = BlockType.byID(wallBlockID);
 
-                if (wallBlockType.isSolid() && getDominantAxis(entity, wallX, blockY, blockZ) == 0
-                        && entityIntersectsRightPlane(entity, wallX, blockY, blockZ))
+                if (wallBlockType.isSolid()
+                        && getDominantAxis(character, wallX, blockY, blockZ) == 0
+                        && intersectsRightPlane(character, wallX, blockY, blockZ))
                 {
-                    entity.x = (wallX + 1) + entity.collisionBoxRadiusX;
-                    entity.velocityX = 0.0;
+                    character.x = (wallX + 1) + character.collisionBoxRadiusX;
+                    character.velocityX = 0.0;
                     return true;
                 }
             }
@@ -196,13 +212,13 @@ public class EntityPhysics
         return false;
     }
 
-    private boolean handleEntityFrontWallCollision(Entity entity, World world) {
-        int startX = (int) Math.floor(entity.x - entity.collisionBoxRadiusX);
-        int endX = (int) Math.floor(entity.x + entity.collisionBoxRadiusX);
-        int startY = (int) Math.floor(entity.y - entity.collisionBoxRadiusY);
-        int endY = (int) Math.floor(entity.y + entity.collisionBoxRadiusY);
+    private boolean handleFrontWallCollision(Character character, World world) {
+        int startX = (int) Math.floor(character.x - character.collisionBoxRadiusX);
+        int endX = (int) Math.floor(character.x + character.collisionBoxRadiusX);
+        int startY = (int) Math.floor(character.y - character.collisionBoxRadiusY);
+        int endY = (int) Math.floor(character.y + character.collisionBoxRadiusY);
 
-        int wallZ = (int) Math.floor(entity.z - entity.collisionBoxRadiusZ);
+        int wallZ = (int) Math.floor(character.z - character.collisionBoxRadiusZ);
 
         for (int blockY = startY; blockY <= endY; ++blockY) {
             for (int blockX = startX; blockX <= endX; ++blockX) {
@@ -215,11 +231,12 @@ public class EntityPhysics
                 short wallBlockID = world.getBlock(blockX, blockY, wallZ);
                 BlockType wallBlockType = BlockType.byID(wallBlockID);
 
-                if (wallBlockType.isSolid() && getDominantAxis(entity, blockX, blockY, wallZ) == 2
-                        && entityIntersectsFrontPlane(entity, blockX, blockY, wallZ))
+                if (wallBlockType.isSolid()
+                        && getDominantAxis(character, blockX, blockY, wallZ) == 2
+                        && intersectsFrontPlane(character, blockX, blockY, wallZ))
                 {
-                    entity.z = (wallZ + 1) + entity.collisionBoxRadiusZ;
-                    entity.velocityZ = 0.0;
+                    character.z = (wallZ + 1) + character.collisionBoxRadiusZ;
+                    character.velocityZ = 0.0;
                     return true;
                 }
             }
@@ -228,13 +245,13 @@ public class EntityPhysics
         return false;
     }
 
-    private boolean handleEntityBackWallCollision(Entity entity, World world) {
-        int startX = (int) Math.floor(entity.x - entity.collisionBoxRadiusX);
-        int endX = (int) Math.floor(entity.x + entity.collisionBoxRadiusX);
-        int startY = (int) Math.floor(entity.y - entity.collisionBoxRadiusY);
-        int endY = (int) Math.floor(entity.y + entity.collisionBoxRadiusY);
+    private boolean handleBackWallCollision(Character character, World world) {
+        int startX = (int) Math.floor(character.x - character.collisionBoxRadiusX);
+        int endX = (int) Math.floor(character.x + character.collisionBoxRadiusX);
+        int startY = (int) Math.floor(character.y - character.collisionBoxRadiusY);
+        int endY = (int) Math.floor(character.y + character.collisionBoxRadiusY);
 
-        int wallZ = (int) Math.floor(entity.z + entity.collisionBoxRadiusZ);
+        int wallZ = (int) Math.floor(character.z + character.collisionBoxRadiusZ);
 
         for (int blockY = startY; blockY <= endY; ++blockY) {
             for (int blockX = startX; blockX <= endX; ++blockX) {
@@ -247,11 +264,12 @@ public class EntityPhysics
                 short wallBlockID = world.getBlock(blockX, blockY, wallZ);
                 BlockType wallBlockType = BlockType.byID(wallBlockID);
 
-                if (wallBlockType.isSolid() && getDominantAxis(entity, blockX, blockY, wallZ) == 2
-                        && entityIntersectsBackPlane(entity, blockX, blockY, wallZ))
+                if (wallBlockType.isSolid()
+                        && getDominantAxis(character, blockX, blockY, wallZ) == 2
+                        && intersectsBackPlane(character, blockX, blockY, wallZ))
                 {
-                    entity.z = wallZ - entity.collisionBoxRadiusZ;
-                    entity.velocityZ = 0.0;
+                    character.z = wallZ - character.collisionBoxRadiusZ;
+                    character.velocityZ = 0.0;
                     return true;
                 }
             }
@@ -260,60 +278,60 @@ public class EntityPhysics
         return false;
     }
 
-    private boolean entityIntersectsFloorPlane(Entity entity, int blockX, int blockY, int blockZ) {
+    private boolean intersectsFloorPlane(Character character, int blockX, int blockY, int blockZ) {
         return boxIntersectsYPlane(getBlockCollisionBoxTop(blockY),
                 getBlockCollisionBoxLeft(blockX), getBlockCollisionBoxRight(blockX),
                 getBlockCollisionBoxFront(blockZ), getBlockCollisionBoxBack(blockZ),
-                getEntityCollisionBoxTop(entity), getEntityCollisionBoxBottom(entity),
-                getEntityCollisionBoxLeft(entity), getEntityCollisionBoxRight(entity),
-                getEntityCollisionBoxFront(entity), getEntityCollisionBoxBack(entity));
+                character.getCollisionBoxTop(), character.getCollisionBoxBottom(),
+                character.getCollisionBoxLeft(), character.getCollisionBoxRight(),
+                character.getCollisionBoxFront(), character.getCollisionBoxBack());
     }
 
-    private boolean entityIntersectsCeilingPlane(Entity entity, int blockX, int blockY,
+    private boolean intersectsCeilingPlane(Character character, int blockX, int blockY,
             int blockZ)
     {
         return boxIntersectsYPlane(getBlockCollisionBoxBottom(blockY),
                 getBlockCollisionBoxLeft(blockX), getBlockCollisionBoxRight(blockX),
                 getBlockCollisionBoxFront(blockZ), getBlockCollisionBoxBack(blockZ),
-                getEntityCollisionBoxTop(entity), getEntityCollisionBoxBottom(entity),
-                getEntityCollisionBoxLeft(entity), getEntityCollisionBoxRight(entity),
-                getEntityCollisionBoxFront(entity), getEntityCollisionBoxBack(entity));
+                character.getCollisionBoxTop(), character.getCollisionBoxBottom(),
+                character.getCollisionBoxLeft(), character.getCollisionBoxRight(),
+                character.getCollisionBoxFront(), character.getCollisionBoxBack());
     }
 
-    private boolean entityIntersectsLeftPlane(Entity entity, int blockX, int blockY, int blockZ) {
+    private boolean intersectsLeftPlane(Character character, int blockX, int blockY, int blockZ) {
         return boxIntersectsXPlane(getBlockCollisionBoxLeft(blockX),
                 getBlockCollisionBoxTop(blockY), getBlockCollisionBoxBottom(blockY),
                 getBlockCollisionBoxFront(blockZ), getBlockCollisionBoxBack(blockZ),
-                getEntityCollisionBoxTop(entity), getEntityCollisionBoxBottom(entity),
-                getEntityCollisionBoxLeft(entity), getEntityCollisionBoxRight(entity),
-                getEntityCollisionBoxFront(entity), getEntityCollisionBoxBack(entity));
+                character.getCollisionBoxTop(), character.getCollisionBoxBottom(),
+                character.getCollisionBoxLeft(), character.getCollisionBoxRight(),
+                character.getCollisionBoxFront(), character.getCollisionBoxBack());
     }
 
-    private boolean entityIntersectsRightPlane(Entity entity, int blockX, int blockY, int blockZ) {
+    private boolean intersectsRightPlane(Character character, int blockX, int blockY, int blockZ) {
         return boxIntersectsXPlane(getBlockCollisionBoxRight(blockX),
                 getBlockCollisionBoxTop(blockY), getBlockCollisionBoxBottom(blockY),
                 getBlockCollisionBoxFront(blockZ), getBlockCollisionBoxBack(blockZ),
-                getEntityCollisionBoxTop(entity), getEntityCollisionBoxBottom(entity),
-                getEntityCollisionBoxLeft(entity), getEntityCollisionBoxRight(entity),
-                getEntityCollisionBoxFront(entity), getEntityCollisionBoxBack(entity));
+                character.getCollisionBoxTop(), character.getCollisionBoxBottom(),
+                character.getCollisionBoxLeft(), character.getCollisionBoxRight(),
+                character.getCollisionBoxFront(), character.getCollisionBoxBack());
     }
 
-    private boolean entityIntersectsFrontPlane(Entity entity, int blockX, int blockY, int blockZ) {
+    private boolean intersectsFrontPlane(Character character, int blockX, int blockY, int blockZ) {
         return boxIntersectsZPlane(getBlockCollisionBoxFront(blockZ),
                 getBlockCollisionBoxTop(blockY), getBlockCollisionBoxBottom(blockY),
                 getBlockCollisionBoxLeft(blockX), getBlockCollisionBoxRight(blockX),
-                getEntityCollisionBoxTop(entity), getEntityCollisionBoxBottom(entity),
-                getEntityCollisionBoxLeft(entity), getEntityCollisionBoxRight(entity),
-                getEntityCollisionBoxFront(entity), getEntityCollisionBoxBack(entity));
+                character.getCollisionBoxTop(), character.getCollisionBoxBottom(),
+                character.getCollisionBoxLeft(), character.getCollisionBoxRight(),
+                character.getCollisionBoxFront(), character.getCollisionBoxBack());
     }
 
-    private boolean entityIntersectsBackPlane(Entity entity, int blockX, int blockY, int blockZ) {
+    private boolean intersectsBackPlane(Character character, int blockX, int blockY, int blockZ) {
         return boxIntersectsZPlane(getBlockCollisionBoxBack(blockZ),
                 getBlockCollisionBoxTop(blockY), getBlockCollisionBoxBottom(blockY),
                 getBlockCollisionBoxLeft(blockX), getBlockCollisionBoxRight(blockX),
-                getEntityCollisionBoxTop(entity), getEntityCollisionBoxBottom(entity),
-                getEntityCollisionBoxLeft(entity), getEntityCollisionBoxRight(entity),
-                getEntityCollisionBoxFront(entity), getEntityCollisionBoxBack(entity));
+                character.getCollisionBoxTop(), character.getCollisionBoxBottom(),
+                character.getCollisionBoxLeft(), character.getCollisionBoxRight(),
+                character.getCollisionBoxFront(), character.getCollisionBoxBack());
     }
 
     private boolean boxIntersectsYPlane(double planeY, double planeLeft, double planeRight,
@@ -376,30 +394,6 @@ public class EntityPhysics
         return true;
     }
 
-    private double getEntityCollisionBoxTop(Entity entity) {
-        return entity.y + entity.collisionBoxRadiusY;
-    }
-
-    private double getEntityCollisionBoxBottom(Entity entity) {
-        return entity.y - entity.collisionBoxRadiusY;
-    }
-
-    private double getEntityCollisionBoxLeft(Entity entity) {
-        return entity.x - entity.collisionBoxRadiusX;
-    }
-
-    private double getEntityCollisionBoxRight(Entity entity) {
-        return entity.x + entity.collisionBoxRadiusX;
-    }
-
-    private double getEntityCollisionBoxFront(Entity entity) {
-        return entity.z + entity.collisionBoxRadiusZ;
-    }
-
-    private double getEntityCollisionBoxBack(Entity entity) {
-        return entity.z - entity.collisionBoxRadiusZ;
-    }
-
     private double getBlockCollisionBoxTop(int blockY) {
         return blockY + 1.0;
     }
@@ -436,10 +430,10 @@ public class EntityPhysics
         return blockZ + 0.5;
     }
 
-    private int getDominantAxis(Entity entity, int blockX, int blockY, int blockZ) {
-        double distanceY = Math.abs(entity.y - getBlockCenterY(blockY));
-        double distanceX = Math.abs(entity.x - getBlockCenterX(blockX));
-        double distanceZ = Math.abs(entity.z - getBlockCenterZ(blockZ));
+    private int getDominantAxis(Character character, int blockX, int blockY, int blockZ) {
+        double distanceY = Math.abs(character.y - getBlockCenterY(blockY));
+        double distanceX = Math.abs(character.x - getBlockCenterX(blockX));
+        double distanceZ = Math.abs(character.z - getBlockCenterZ(blockZ));
         double maxDistance = Math.max(Math.max(distanceY, distanceX), distanceZ);
 
         if (maxDistance == distanceX)

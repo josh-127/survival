@@ -5,10 +5,16 @@ import java.util.Iterator;
 import java.util.Map;
 
 import net.survival.entity.Entity;
+import net.survival.entity.NPC;
+import net.survival.entity.Player;
 import net.survival.world.World;
 
 public class EntityRelocator
 {
+    //
+    // TODO: Remove code duplication.
+    //
+
     public void relocateEntities(World world) {
         ArrayList<Entity> entitiesToRelocate = new ArrayList<>();
 
@@ -18,20 +24,34 @@ public class EntityRelocator
 
             int cx = ChunkPos.chunkXFromHashedPos(hashedPos);
             int cz = ChunkPos.chunkZFromHashedPos(hashedPos);
-            Iterator<Entity> entities = chunk.iterateEntities().iterator();
 
-            while (entities.hasNext()) {
-                Entity entity = entities.next();
+            Iterator<NPC> npcs = chunk.iterateNPCs().iterator();
+            while (npcs.hasNext()) {
+                Entity entity = npcs.next();
 
                 if (!chunkContainsEntity(cx, cz, entity)) {
-                    entities.remove();
+                    npcs.remove();
+                    entitiesToRelocate.add(entity);
+                }
+            }
+
+            Iterator<Player> players = chunk.iteratePlayers().iterator();
+            while (players.hasNext()) {
+                Entity entity = players.next();
+
+                if (!chunkContainsEntity(cx, cz, entity)) {
+                    players.remove();
                     entitiesToRelocate.add(entity);
                 }
             }
         }
 
-        for (Entity entity : entitiesToRelocate)
-            world.addEntity(entity);
+        for (Entity entity : entitiesToRelocate) {
+            if (entity instanceof NPC)
+                world.addNPC((NPC) entity);
+            else if (entity instanceof Player)
+                world.addPlayer((Player) entity);
+        }
     }
 
     private boolean chunkContainsEntity(int cx, int cz, Entity entity) {

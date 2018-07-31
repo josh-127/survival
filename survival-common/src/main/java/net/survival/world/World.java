@@ -3,7 +3,8 @@ package net.survival.world;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.survival.entity.Entity;
+import net.survival.entity.NPC;
+import net.survival.entity.Player;
 import net.survival.world.chunk.Chunk;
 import net.survival.world.chunk.ChunkPos;
 
@@ -94,10 +95,16 @@ public class World implements BlockStorage
         return chunk.replaceBlockIfExists(localX, y, localZ, replacement);
     }
 
-    public void addEntity(Entity entity) {
-        Chunk chunk = getChunkFromGlobalPos((int) entity.x, (int) entity.z,
-                "Cannot place an entity in an unloaded chunk.");
-        chunk.addEntity(entity);
+    public void addNPC(NPC npc) {
+        Chunk chunk = getChunkFromGlobalPos((int) npc.x, (int) npc.z,
+                "Cannot place an NPC in an unloaded chunk.");
+        chunk.addNPC(npc);
+    }
+
+    public void addPlayer(Player player) {
+        Chunk chunk = getChunkFromGlobalPos((int) player.x, (int) player.z,
+                "Cannot place a player in an unloaded chunk.");
+        chunk.addPlayer(player);
     }
 
     private Chunk getChunkFromGlobalPos(int x, int z, String exceptionMessage) {

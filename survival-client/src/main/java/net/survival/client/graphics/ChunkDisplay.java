@@ -9,7 +9,7 @@ import net.survival.client.graphics.opengl.GLImmediateDrawCall;
 import net.survival.client.graphics.opengl.GLMatrixStack;
 import net.survival.client.graphics.opengl.GLRenderContext;
 import net.survival.client.graphics.opengl.GLTexture;
-import net.survival.entity.Entity;
+import net.survival.entity.Character;
 import net.survival.world.chunk.Chunk;
 
 class ChunkDisplay implements GraphicsResource
@@ -307,26 +307,31 @@ class ChunkDisplay implements GraphicsResource
      * Displays the chunk's containing entities.
      */
     public void displayEntities() {
-        for (Entity entity : chunk.iterateEntities()) {
-            if (!entity.visible)
+        displayCharacters(chunk.iterateNPCs());
+        displayCharacters(chunk.iteratePlayers());
+    }
+
+    private void displayCharacters(Iterable<? extends Character> characters) {
+        for (Character character : characters) {
+            if (!character.visible)
                 continue;
 
             GLMatrixStack.push();
-            GLMatrixStack.translate((float) entity.x, (float) entity.y, (float) entity.z);
-            GLMatrixStack.rotate((float) entity.yaw, 0.0f, 1.0f, 0.0f);
-            GLMatrixStack.rotate((float) entity.pitch, 1.0f, 0.0f, 0.0f);
-            GLMatrixStack.rotate((float) entity.roll, 0.0f, 0.0f, 1.0f);
+            GLMatrixStack.translate((float) character.x, (float) character.y, (float) character.z);
+            GLMatrixStack.rotate((float) character.yaw, 0.0f, 1.0f, 0.0f);
+            GLMatrixStack.rotate((float) character.pitch, 1.0f, 0.0f, 0.0f);
+            GLMatrixStack.rotate((float) character.roll, 0.0f, 0.0f, 1.0f);
 
-            StaticModel model = StaticModel.fromEntity(entity);
+            StaticModel model = StaticModel.fromCharacter(character);
             ModelRenderer.displayStaticModel(model);
 
             final float BOX_R = 1.0f;
             final float BOX_G = 0.0f;
             final float BOX_B = 1.0f;
 
-            float cbrX = (float) entity.collisionBoxRadiusX;
-            float cbrY = (float) entity.collisionBoxRadiusY;
-            float cbrZ = (float) entity.collisionBoxRadiusZ;
+            float cbrX = (float) character.collisionBoxRadiusX;
+            float cbrY = (float) character.collisionBoxRadiusY;
+            float cbrZ = (float) character.collisionBoxRadiusZ;
 
             GLImmediateDrawCall.beginLines(null)
                     .coloredVertex(-cbrX, cbrY, -cbrZ, BOX_R, BOX_G, BOX_B)

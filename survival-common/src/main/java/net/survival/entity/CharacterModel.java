@@ -1,6 +1,6 @@
 package net.survival.entity;
 
-public enum EntityModel
+public enum CharacterModel
 {
     CHICKEN,
     COW,

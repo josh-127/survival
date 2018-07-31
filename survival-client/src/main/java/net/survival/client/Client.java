@@ -17,9 +17,9 @@ import net.survival.client.input.GlfwMouseAdapter;
 import net.survival.client.input.Key;
 import net.survival.client.input.Keyboard;
 import net.survival.client.input.Mouse;
-import net.survival.entity.Entity;
-import net.survival.entity.controller.EntityControllerType;
-import net.survival.world.EntityPhysics;
+import net.survival.entity.NPC;
+import net.survival.entity.Player;
+import net.survival.world.CharacterPhysics;
 import net.survival.world.EntitySystem;
 import net.survival.world.World;
 import net.survival.world.chunk.Chunk;
@@ -55,7 +55,7 @@ public class Client implements AutoCloseable
 
     private final FpsCamera fpsCamera;
 
-    private Entity player;
+    private Player player;
 
     private Client() {
         world = new World();
@@ -91,14 +91,14 @@ public class Client implements AutoCloseable
         fpsCamera.rotate(-cursorDX / 64.0, -cursorDY / 64.0);
 
         if (Keyboard.isKeyPressed(Key.R)) {
-            Entity newPlayer = new Entity();
+            Player newPlayer = new Player();
             newPlayer.x = player != null ? player.x : 0.0;
             newPlayer.y = player != null ? player.y + 3.0 : 72.0;
             newPlayer.z = player != null ? player.z : 0.0;
             newPlayer.collisionBoxRadiusY = 0.9;
             newPlayer.visible = false;
             player = newPlayer;
-            world.addEntity(newPlayer);
+            world.addPlayer(newPlayer);
         }
 
         if (player != null) {
@@ -177,14 +177,14 @@ public class Client implements AutoCloseable
         }
 
         if (Keyboard.isKeyPressed(Key.T)) {
-            Entity entity = new Entity();
-            entity.x = fpsCamera.position.x;
-            entity.y = fpsCamera.position.y;
-            entity.z = fpsCamera.position.z;
-            entity.collisionBoxRadiusX = 0.5;
-            entity.collisionBoxRadiusY = 0.9;
-            entity.collisionBoxRadiusZ = 0.8;
-            world.addEntity(entity);
+            NPC npc = new NPC();
+            npc.x = fpsCamera.position.x;
+            npc.y = fpsCamera.position.y;
+            npc.z = fpsCamera.position.z;
+            npc.collisionBoxRadiusX = 0.5;
+            npc.collisionBoxRadiusY = 0.9;
+            npc.collisionBoxRadiusZ = 0.8;
+            world.addNPC(npc);
         }
 
         for (Map.Entry<Long, Chunk> entry : world.iterateChunkMap()) {

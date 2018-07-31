@@ -8,7 +8,7 @@ import org.lwjgl.assimp.AIScene;
 import org.lwjgl.assimp.AIString;
 import org.lwjgl.assimp.AIVector3D;
 
-import net.survival.entity.Entity;
+import net.survival.entity.Character;
 
 import static org.lwjgl.assimp.Assimp.*;
 
@@ -37,8 +37,8 @@ public class StaticModel
         this.absoluteFilePath = absoluteFilePath;
     }
 
-    public static StaticModel fromEntity(Entity entity) {
-        switch (entity.model) {
+    public static StaticModel fromCharacter(Character character) {
+        switch (character.model) {
         case CHICKEN: return chicken;
         case COW:     return cow;
         case GOAT:    return goat;
