@@ -14,11 +14,11 @@ public class Server
 
     private Server() {
         world = new World();
-        entityRelocator = new EntityRelocator(world);
+        entityRelocator = new EntityRelocator();
     }
 
     public void tick(double elapsedTime) {
-        entityRelocator.relocateEntities();
+        entityRelocator.relocateEntities(world);
     }
 
     public static void main(String[] args) {
