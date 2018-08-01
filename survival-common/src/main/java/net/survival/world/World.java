@@ -23,6 +23,14 @@ public class World implements BlockStorage
         return chunks.get(hashedPos);
     }
 
+    public boolean containsChunk(int cx, int cz) {
+        return chunks.containsKey(ChunkPos.hashPos(cx, cz));
+    }
+
+    public boolean containsChunk(long hashedPos) {
+        return chunks.containsKey(hashedPos);
+    }
+
     public Iterable<Long2ObjectMap.Entry<Chunk>> iterateChunkMap() {
         return chunks.long2ObjectEntrySet();
     }
