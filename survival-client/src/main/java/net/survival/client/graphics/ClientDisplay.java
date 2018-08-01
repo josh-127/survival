@@ -19,6 +19,10 @@ public class ClientDisplay implements GraphicsResource
     private int windowWidth;
     private int windowHeight;
 
+    private Matrix4f cameraViewMatrix;
+    private Matrix4f cameraProjectionMatrix;
+    private Matrix4f hudProjectionMatrix;
+
     public ClientDisplay(World world, int windowWidth, int windowHeight) {
         camera = new Camera();
 
@@ -28,6 +32,10 @@ public class ClientDisplay implements GraphicsResource
         fontRenderer = new FontRenderer();
         this.windowWidth = windowWidth;
         this.windowHeight = windowHeight;
+
+        cameraViewMatrix = new Matrix4f();
+        cameraProjectionMatrix = new Matrix4f();
+        hudProjectionMatrix = new Matrix4f();
     }
 
     @Override
@@ -37,12 +45,17 @@ public class ClientDisplay implements GraphicsResource
     }
 
     public void display(double frameRate) {
+        cameraViewMatrix.identity();
+        camera.getViewMatrix(cameraViewMatrix);
+        cameraProjectionMatrix.identity();
+        camera.getProjectionMatrix(cameraProjectionMatrix);
+
         // Clears color and depth buffers
         GLRenderContext.clearColorBuffer(0.0f, 0.0f, 0.0f, 0.0f);
         GLRenderContext.clearDepthBuffer(1.0f);
 
         // Skybox display
-        skyboxDisplay.draw(camera.getViewMatrix(), camera.getProjectionMatrix());
+        skyboxDisplay.draw(cameraViewMatrix, cameraProjectionMatrix);
 
         // World display
         try (@SuppressWarnings("resource")
@@ -53,9 +66,9 @@ public class ClientDisplay implements GraphicsResource
         }
 
         // Axis display
-        GLMatrixStack.setProjectionMatrix(camera.getProjectionMatrix());
+        GLMatrixStack.setProjectionMatrix(cameraProjectionMatrix);
         GLMatrixStack.push();
-        GLMatrixStack.load(camera.getViewMatrix());
+        GLMatrixStack.load(cameraViewMatrix);
 
         GLImmediateDrawCall.beginLines(null)
                 .coloredVertex(-256.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f)
@@ -69,8 +82,9 @@ public class ClientDisplay implements GraphicsResource
         GLMatrixStack.pop();
 
         // HUD display
-        GLMatrixStack.setProjectionMatrix(new Matrix4f().ortho2D(-getWindowAspectRatio(),
-                getWindowAspectRatio(), -1.0f, 1.0f));
+        hudProjectionMatrix.identity();
+        hudProjectionMatrix.ortho2D(-getWindowAspectRatio(), getWindowAspectRatio(), -1.0f, 1.0f);
+        GLMatrixStack.setProjectionMatrix(hudProjectionMatrix);
 
         GLMatrixStack.push();
         GLMatrixStack.loadIdentity();

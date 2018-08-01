@@ -41,15 +41,14 @@ class FpsCamera
             pitch = Math.PI / 2.03125;
     }
     
-    public Matrix4f viewMatrix()
+    public void getViewMatrix(Matrix4f destination)
     {
-        return new Matrix4f()
-                .lookAt(
-                        (float) position.x, (float) position.y, (float) position.z,
-                        (float) (position.x + (Math.sin(yaw) * Math.cos(pitch))),
-                        (float) (position.y + Math.sin(pitch)),
-                        (float) (position.z - (Math.cos(yaw) * Math.cos(pitch))),
-                        0.0f, 1.0f, 0.0f
-                        );
+        destination.lookAt(
+                (float) position.x, (float) position.y, (float) position.z,
+                (float) (position.x + (Math.sin(yaw) * Math.cos(pitch))),
+                (float) (position.y + Math.sin(pitch)),
+                (float) (position.z - (Math.cos(yaw) * Math.cos(pitch))),
+                0.0f, 1.0f, 0.0f
+                );
     }
 }

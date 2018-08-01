@@ -13,16 +13,21 @@ public class GuiDisplay
 {
     private final Control rootControl;
 
+    private Matrix4f viewMatrix;
+
     public GuiDisplay(Control rootControl) {
         this.rootControl = rootControl;
+
+        viewMatrix = new Matrix4f();
     }
 
     public void display() {
         float aspectRatio = (float) GraphicsSettings.WINDOW_WIDTH / GraphicsSettings.WINDOW_HEIGHT;
+        viewMatrix.ortho2D(0.0f, aspectRatio, 1.0f, 0.0f);
 
         GLMatrixStack.setProjectionMatrix(null);
         GLMatrixStack.push();
-        GLMatrixStack.load(new Matrix4f().ortho2D(0.0f, aspectRatio, 1.0f, 0.0f));
+        GLMatrixStack.load(viewMatrix);
 
         try (@SuppressWarnings("resource")
         GLOutputMergerState outputMergerState = new GLOutputMergerState().withDepthTest(false)) {

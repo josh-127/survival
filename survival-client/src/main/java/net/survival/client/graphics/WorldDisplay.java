@@ -40,6 +40,10 @@ class WorldDisplay implements GraphicsResource
     private final Camera camera;
     private final float maxViewRadius;
 
+    private Matrix4f cameraViewMatrix;
+    private Matrix4f cameraProjectionMatrix;
+    private Matrix4f modelViewMatrix;
+
     public WorldDisplay(World world, Camera camera, float maxViewRadius) {
         this.world = world;
 
@@ -65,6 +69,10 @@ class WorldDisplay implements GraphicsResource
 
         this.camera = camera;
         this.maxViewRadius = maxViewRadius;
+
+        cameraViewMatrix = new Matrix4f();
+        cameraProjectionMatrix = new Matrix4f();
+        modelViewMatrix = new Matrix4f();
     }
 
     @Override
@@ -94,18 +102,21 @@ class WorldDisplay implements GraphicsResource
         frontFaceDisplays = updateFaceDisplays(frontFaceDisplays, BlockFace.FRONT);
         backFaceDisplays = updateFaceDisplays(backFaceDisplays, BlockFace.BACK);
 
-        GLMatrixStack.setProjectionMatrix(camera.getProjectionMatrix());
+        cameraViewMatrix.identity();
+        camera.getViewMatrix(cameraViewMatrix);
+        cameraProjectionMatrix.identity();
+        camera.getProjectionMatrix(cameraProjectionMatrix);
+
+        GLMatrixStack.setProjectionMatrix(cameraProjectionMatrix);
         GLMatrixStack.push();
         GLMatrixStack.loadIdentity();
 
-        Matrix4f viewMatrix = camera.getViewMatrix();
-
-        drawFaceDisplays(topFaceDisplays, BlockFace.TOP, true, false, viewMatrix);
-        drawFaceDisplays(bottomFaceDisplays, BlockFace.BOTTOM, false, false, viewMatrix);
-        drawFaceDisplays(leftFaceDisplays, BlockFace.LEFT, false, false, viewMatrix);
-        drawFaceDisplays(rightFaceDisplays, BlockFace.RIGHT, false, false, viewMatrix);
-        drawFaceDisplays(frontFaceDisplays, BlockFace.FRONT, false, false, viewMatrix);
-        drawFaceDisplays(backFaceDisplays, BlockFace.BACK, false, false, viewMatrix);
+        drawFaceDisplays(topFaceDisplays, BlockFace.TOP, true, false, cameraViewMatrix);
+        drawFaceDisplays(bottomFaceDisplays, BlockFace.BOTTOM, false, false, cameraViewMatrix);
+        drawFaceDisplays(leftFaceDisplays, BlockFace.LEFT, false, false, cameraViewMatrix);
+        drawFaceDisplays(rightFaceDisplays, BlockFace.RIGHT, false, false, cameraViewMatrix);
+        drawFaceDisplays(frontFaceDisplays, BlockFace.FRONT, false, false, cameraViewMatrix);
+        drawFaceDisplays(backFaceDisplays, BlockFace.BACK, false, false, cameraViewMatrix);
 
         /*//
         try (@SuppressWarnings("resource")
@@ -152,8 +163,6 @@ class WorldDisplay implements GraphicsResource
         }
 
         // Block Faces
-        Matrix4f modelView = new Matrix4f();
-
         if (!drawOverlay) {
             for (Map.Entry<Chunk, ChunkDisplay> entry : faceDisplays.entrySet()) {
                 ChunkDisplay display = entry.getValue();
@@ -164,8 +173,8 @@ class WorldDisplay implements GraphicsResource
                 float globalX = ChunkPos.toGlobalX(display.chunkX, 0);
                 float globalZ = ChunkPos.toGlobalZ(display.chunkZ, 0);
 
-                modelView.set(viewMatrix).translate(globalX, 0.0f, globalZ);
-                GLMatrixStack.load(modelView);
+                modelViewMatrix.set(viewMatrix).translate(globalX, 0.0f, globalZ);
+                GLMatrixStack.load(modelViewMatrix);
                 display.displayBlocks(blockTextures[blockFace.ordinal()].blockTextures);
             }
         }

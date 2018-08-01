@@ -10,10 +10,11 @@ import java.nio.FloatBuffer;
 public class GLMatrixStack
 {
     private static final FloatBuffer matrixParam = BufferUtils.createFloatBuffer(16);
+    private static final Matrix4f identityMatrix = new Matrix4f();
 
     public static void setProjectionMatrix(Matrix4f to) {
         if (to == null)
-            to = new Matrix4f();
+            to = identityMatrix;
         to.get(matrixParam);
         glMatrixMode(GL_PROJECTION);
         glLoadMatrixf(matrixParam);

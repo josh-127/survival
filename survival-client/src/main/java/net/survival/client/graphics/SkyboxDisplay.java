@@ -19,10 +19,18 @@ class SkyboxDisplay
     public static final float MIDDLE_G = 0.5f * (TOP_G + BOTTOM_G);
     public static final float MIDDLE_B = 0.5f * (TOP_B + BOTTOM_B);
 
+    private Matrix3f tempMatrix;
+    private Matrix4f viewWithoutTranslation;
+
+    public SkyboxDisplay() {
+        tempMatrix = new Matrix3f();
+        viewWithoutTranslation = new Matrix4f();
+    }
+
     public void draw(Matrix4f view, Matrix4f projection) {
-        Matrix3f tempMatrix = new Matrix3f();
         view.get3x3(tempMatrix);
-        Matrix4f viewWithoutTranslation = new Matrix4f(tempMatrix);
+        viewWithoutTranslation.identity();
+        viewWithoutTranslation.set(tempMatrix);
 
         GLMatrixStack.setProjectionMatrix(projection);
         GLMatrixStack.load(viewWithoutTranslation);

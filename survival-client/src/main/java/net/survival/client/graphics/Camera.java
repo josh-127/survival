@@ -87,8 +87,8 @@ public class Camera
         this.farClipPlane = farClipPlane;
     }
 
-    public Matrix4f getViewMatrix() {
-        return new Matrix4f().lookAt(
+    public void getViewMatrix(Matrix4f destination) {
+        destination.lookAt(
                 x, y, z,
                 x + (float) (Math.sin(yaw) * Math.cos(pitch)),
                 y + (float) Math.sin(pitch),
@@ -96,8 +96,8 @@ public class Camera
                 0.0f, 1.0f, 0.0f);
     }
 
-    public Matrix4f getProjectionMatrix() {
-        return new Matrix4f().perspective(fov, getAspectRatio(), nearClipPlane, farClipPlane);
+    public void getProjectionMatrix(Matrix4f destination) {
+        destination.perspective(fov, getAspectRatio(), nearClipPlane, farClipPlane);
     }
 
     public float getDirectionX() {
