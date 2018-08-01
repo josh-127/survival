@@ -1,5 +1,8 @@
 package net.survival.world;
 
+import java.util.Iterator;
+
+import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import net.survival.block.BlockType;
 import net.survival.entity.Character;
 import net.survival.world.chunk.Chunk;
@@ -16,7 +19,12 @@ public class CharacterPhysics
     }
 
     private void applyGravity(World world, double elapsedTime) {
-        for (Chunk chunk : world.iterateChunks()) {
+        Iterator<Long2ObjectMap.Entry<Chunk>> chunkMapIt = world.getChunkMapFastIterator();
+
+        while (chunkMapIt.hasNext()) {
+            Long2ObjectMap.Entry<Chunk> entry = chunkMapIt.next();
+            Chunk chunk = entry.getValue();
+
             applyGravity(world, elapsedTime, chunk.iterateNPCs());
             applyGravity(world, elapsedTime, chunk.iteratePlayers());
         }
@@ -34,7 +42,12 @@ public class CharacterPhysics
     }
 
     private void applyVelocities(World world, double elapsedTime) {
-        for (Chunk chunk : world.iterateChunks()) {
+        Iterator<Long2ObjectMap.Entry<Chunk>> chunkMapIt = world.getChunkMapFastIterator();
+
+        while (chunkMapIt.hasNext()) {
+            Long2ObjectMap.Entry<Chunk> entry = chunkMapIt.next();
+            Chunk chunk = entry.getValue();
+
             applyVelocities(world, elapsedTime, chunk.iterateNPCs());
             applyVelocities(world, elapsedTime, chunk.iteratePlayers());
         }
@@ -51,7 +64,12 @@ public class CharacterPhysics
     }
 
     private void handleBlockCollisions(World world) {
-        for (Chunk chunk : world.iterateChunks()) {
+        Iterator<Long2ObjectMap.Entry<Chunk>> chunkMapIt = world.getChunkMapFastIterator();
+
+        while (chunkMapIt.hasNext()) {
+            Long2ObjectMap.Entry<Chunk> entry = chunkMapIt.next();
+            Chunk chunk = entry.getValue();
+
             handleBlockCollisions(world, chunk.iterateNPCs());
             handleBlockCollisions(world, chunk.iteratePlayers());
         }

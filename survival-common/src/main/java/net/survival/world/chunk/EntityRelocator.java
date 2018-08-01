@@ -18,7 +18,9 @@ public class EntityRelocator
     public void relocateEntities(World world) {
         ArrayList<Entity> entitiesToRelocate = new ArrayList<>();
 
-        for (Long2ObjectMap.Entry<Chunk> entry : world.iterateChunkMap()) {
+        Iterator<Long2ObjectMap.Entry<Chunk>> chunkMapIt = world.getChunkMapFastIterator();
+        while (chunkMapIt.hasNext()) {
+            Long2ObjectMap.Entry<Chunk> entry = chunkMapIt.next();
             long hashedPos = entry.getLongKey();
             Chunk chunk = entry.getValue();
 

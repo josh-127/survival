@@ -1,5 +1,7 @@
 package net.survival.client;
 
+import java.util.Iterator;
+
 import org.joml.Vector3d;
 import org.lwjgl.glfw.GLFW;
 
@@ -184,7 +186,9 @@ public class Client implements AutoCloseable
             world.addNPC(npc);
         }
 
-        for (Long2ObjectMap.Entry<Chunk> entry : world.iterateChunkMap()) {
+        Iterator<Long2ObjectMap.Entry<Chunk>> chunkMapIt = world.getChunkMapFastIterator();
+        while (chunkMapIt.hasNext()) {
+            Long2ObjectMap.Entry<Chunk> entry = chunkMapIt.next();
             long hashedPos = entry.getLongKey();
             Chunk chunk = entry.getValue();
 

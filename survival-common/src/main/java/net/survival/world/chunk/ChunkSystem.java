@@ -28,7 +28,7 @@ public class ChunkSystem
     public void update(World world, ChunkLoader chunkLoader) {
         LongSet chunksToLoad = chunkLoader.getChunkPositions();
 
-        Iterator<Long2ObjectMap.Entry<Chunk>> chunkMapIt = world.iterateChunkMap().iterator();
+        Iterator<Long2ObjectMap.Entry<Chunk>> chunkMapIt = world.getChunkMapFastIterator();
         while (chunkMapIt.hasNext()) {
             Long2ObjectMap.Entry<Chunk> entry = chunkMapIt.next();
             long hashedPos = entry.getLongKey();
@@ -60,7 +60,7 @@ public class ChunkSystem
             chunksToLoadIt.remove();
         }
 
-        chunkMapIt = world.iterateChunkMap().iterator();
+        chunkMapIt = world.getChunkMapFastIterator();
         while (chunkMapIt.hasNext()) {
             Long2ObjectMap.Entry<Chunk> entry = chunkMapIt.next();
             long hashedPos = entry.getLongKey();

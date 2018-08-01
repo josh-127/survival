@@ -1,6 +1,7 @@
 package net.survival.client.graphics;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import org.joml.Matrix4f;
@@ -95,12 +96,12 @@ class WorldDisplay implements GraphicsResource
     }
 
     public void display() {
-        topFaceDisplays = updateFaceDisplays(topFaceDisplays, BlockFace.TOP);
-        bottomFaceDisplays = updateFaceDisplays(bottomFaceDisplays, BlockFace.BOTTOM);
-        leftFaceDisplays = updateFaceDisplays(leftFaceDisplays, BlockFace.LEFT);
-        rightFaceDisplays = updateFaceDisplays(rightFaceDisplays, BlockFace.RIGHT);
-        frontFaceDisplays = updateFaceDisplays(frontFaceDisplays, BlockFace.FRONT);
-        backFaceDisplays = updateFaceDisplays(backFaceDisplays, BlockFace.BACK);
+        updateFaceDisplays(topFaceDisplays, BlockFace.TOP);
+        updateFaceDisplays(bottomFaceDisplays, BlockFace.BOTTOM);
+        updateFaceDisplays(leftFaceDisplays, BlockFace.LEFT);
+        updateFaceDisplays(rightFaceDisplays, BlockFace.RIGHT);
+        updateFaceDisplays(frontFaceDisplays, BlockFace.FRONT);
+        updateFaceDisplays(backFaceDisplays, BlockFace.BACK);
 
         cameraViewMatrix.identity();
         camera.getViewMatrix(cameraViewMatrix);
@@ -197,8 +198,7 @@ class WorldDisplay implements GraphicsResource
         //*/
     }
 
-    private HashMap<Chunk, ChunkDisplay> updateFaceDisplays(
-            HashMap<Chunk, ChunkDisplay> faceDisplays, BlockFace blockFace)
+    private void updateFaceDisplays(HashMap<Chunk, ChunkDisplay> faceDisplays, BlockFace blockFace)
     {
         int dx = 0;
         int dz = 0;
@@ -220,13 +220,13 @@ class WorldDisplay implements GraphicsResource
             break;
         }
 
-        HashMap<Chunk, ChunkDisplay> newFaceDisplays = new HashMap<>();
-
         float cameraX = camera.getX();
         float cameraZ = camera.getZ();
         float maxViewRadiusSquared = maxViewRadius * maxViewRadius;
 
-        for (Long2ObjectMap.Entry<Chunk> entry : world.iterateChunkMap()) {
+        Iterator<Long2ObjectMap.Entry<Chunk>> chunkMapIt = world.getChunkMapFastIterator();
+        while (chunkMapIt.hasNext()) {
+            Long2ObjectMap.Entry<Chunk> entry = chunkMapIt.next();
             long hashedPos = entry.getLongKey();
             Chunk chunk = entry.getValue();
 
@@ -240,7 +240,7 @@ class WorldDisplay implements GraphicsResource
             if (squareDistance >= maxViewRadiusSquared)
                 continue;
 
-            ChunkDisplay existingDisplay = faceDisplays.remove(chunk);
+            ChunkDisplay existingDisplay = faceDisplays.get(chunk);
             Chunk adjacentChunk = world.getChunk(cx + dx, cz + dz);
             long adjacentHashedPos = ChunkPos.hashPos(cx + dx, cz + dz);
 
@@ -254,18 +254,21 @@ class WorldDisplay implements GraphicsResource
                     existingDisplay.close();
 
                 BlockTextureAtlas atlas = blockTextures[blockFace.ordinal()];
-                newFaceDisplays.put(chunk,
+                faceDisplays.put(chunk,
                         new ChunkDisplay(cx, cz, chunk, adjacentChunk, blockFace, atlas));
-            }
-            else {
-                newFaceDisplays.put(chunk, existingDisplay);
             }
         }
 
-        for (ChunkDisplay chunkDisplay : faceDisplays.values())
-            chunkDisplay.close();
+        Iterator<Map.Entry<Chunk, ChunkDisplay>> faceDisplaysIt = faceDisplays.entrySet().iterator();
+        while (faceDisplaysIt.hasNext()) {
+            Map.Entry<Chunk, ChunkDisplay> entry = faceDisplaysIt.next();
+            ChunkDisplay chunkDisplay = entry.getValue();
 
-        return newFaceDisplays;
+            if (!world.containsChunk(chunkDisplay.chunkX, chunkDisplay.chunkZ)) {
+                chunkDisplay.close();
+                faceDisplaysIt.remove();
+            }
+        }
     }
 
     public void redrawChunk(long hashedPos) {
