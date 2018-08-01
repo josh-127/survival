@@ -16,18 +16,18 @@
 			<artifactId>survival-common</artifactId>
 			<version>0.1.0-SNAPSHOT</version>
 		</dependency>
-		<dependency><groupId>org.lwjgl</groupId><artifactId>lwjgl</artifactId><version>3.1.6</version></dependency>
-		<dependency><groupId>org.lwjgl</groupId><artifactId>lwjgl-assimp</artifactId><version>3.1.6</version></dependency>
-		<dependency><groupId>org.lwjgl</groupId><artifactId>lwjgl-glfw</artifactId><version>3.1.6</version></dependency>
-		<dependency><groupId>org.lwjgl</groupId><artifactId>lwjgl-openal</artifactId><version>3.1.6</version></dependency>
-		<dependency><groupId>org.lwjgl</groupId><artifactId>lwjgl-opengl</artifactId><version>3.1.6</version></dependency>
-		<dependency><groupId>org.lwjgl</groupId><artifactId>lwjgl-stb</artifactId><version>3.1.6</version></dependency>
-		<dependency><groupId>org.lwjgl</groupId><artifactId>lwjgl</artifactId><version>3.1.6</version><classifier>${lwjgl.natives}</classifier></dependency>
-		<dependency><groupId>org.lwjgl</groupId><artifactId>lwjgl-assimp</artifactId><version>3.1.6</version><classifier>${lwjgl.natives}</classifier></dependency>
-		<dependency><groupId>org.lwjgl</groupId><artifactId>lwjgl-glfw</artifactId><version>3.1.6</version><classifier>${lwjgl.natives}</classifier></dependency>
-		<dependency><groupId>org.lwjgl</groupId><artifactId>lwjgl-openal</artifactId><version>3.1.6</version><classifier>${lwjgl.natives}</classifier></dependency>
-		<dependency><groupId>org.lwjgl</groupId><artifactId>lwjgl-opengl</artifactId><version>3.1.6</version><classifier>${lwjgl.natives}</classifier></dependency>
-		<dependency><groupId>org.lwjgl</groupId><artifactId>lwjgl-stb</artifactId><version>3.1.6</version><classifier>${lwjgl.natives}</classifier></dependency>
+		<dependency><groupId>org.lwjgl</groupId><artifactId>lwjgl</artifactId><version>3.2.0</version></dependency>
+		<dependency><groupId>org.lwjgl</groupId><artifactId>lwjgl-assimp</artifactId><version>3.2.0</version></dependency>
+		<dependency><groupId>org.lwjgl</groupId><artifactId>lwjgl-glfw</artifactId><version>3.2.0</version></dependency>
+		<dependency><groupId>org.lwjgl</groupId><artifactId>lwjgl-openal</artifactId><version>3.2.0</version></dependency>
+		<dependency><groupId>org.lwjgl</groupId><artifactId>lwjgl-opengl</artifactId><version>3.2.0</version></dependency>
+		<dependency><groupId>org.lwjgl</groupId><artifactId>lwjgl-stb</artifactId><version>3.2.0</version></dependency>
+		<dependency><groupId>org.lwjgl</groupId><artifactId>lwjgl</artifactId><version>3.2.0</version><classifier>${lwjgl.natives}</classifier></dependency>
+		<dependency><groupId>org.lwjgl</groupId><artifactId>lwjgl-assimp</artifactId><version>3.2.0</version><classifier>${lwjgl.natives}</classifier></dependency>
+		<dependency><groupId>org.lwjgl</groupId><artifactId>lwjgl-glfw</artifactId><version>3.2.0</version><classifier>${lwjgl.natives}</classifier></dependency>
+		<dependency><groupId>org.lwjgl</groupId><artifactId>lwjgl-openal</artifactId><version>3.2.0</version><classifier>${lwjgl.natives}</classifier></dependency>
+		<dependency><groupId>org.lwjgl</groupId><artifactId>lwjgl-opengl</artifactId><version>3.2.0</version><classifier>${lwjgl.natives}</classifier></dependency>
+		<dependency><groupId>org.lwjgl</groupId><artifactId>lwjgl-stb</artifactId><version>3.2.0</version><classifier>${lwjgl.natives}</classifier></dependency>
 		<dependency><groupId>org.joml</groupId><artifactId>joml</artifactId><version>1.9.10</version></dependency>
 	</dependencies>
 	<properties>
