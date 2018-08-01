@@ -44,7 +44,7 @@ public class CircularChunkLoader implements ChunkLoader
 
     @Override
     public LongSet getChunkPositions() {
-        return new LongArraySet(chunkPositions);
+        return new LongOpenHashSet(chunkPositions);
     }
 
     private int squareDistance(int x, int z) {
