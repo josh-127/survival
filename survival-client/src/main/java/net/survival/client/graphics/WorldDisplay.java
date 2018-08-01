@@ -2,10 +2,12 @@ package net.survival.client.graphics;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.TreeSet;
 
 import org.joml.Matrix4f;
 
+import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
+import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
+import it.unimi.dsi.fastutil.longs.LongSet;
 import net.survival.block.BlockFace;
 import net.survival.client.graphics.opengl.GLFilterMode;
 import net.survival.client.graphics.opengl.GLMatrixStack;
@@ -33,7 +35,7 @@ class WorldDisplay implements GraphicsResource
     private final BlockTextureAtlas[] blockTextures;
     private final GLTexture overlayTexture;
 
-    private final TreeSet<Long> chunksToRedraw;
+    private final LongSet chunksToRedraw;
 
     private final Camera camera;
     private final float maxViewRadius;
@@ -59,7 +61,7 @@ class WorldDisplay implements GraphicsResource
                 .setWrapT(GLWrapMode.REPEAT).setMipmapEnabled(true).setData(overlayBitmap)
                 .endBind();
 
-        chunksToRedraw = new TreeSet<>();
+        chunksToRedraw = new LongOpenHashSet();
 
         this.camera = camera;
         this.maxViewRadius = maxViewRadius;
@@ -215,8 +217,8 @@ class WorldDisplay implements GraphicsResource
         float cameraZ = camera.getZ();
         float maxViewRadiusSquared = maxViewRadius * maxViewRadius;
 
-        for (Map.Entry<Long, Chunk> entry : world.iterateChunkMap()) {
-            long hashedPos = entry.getKey();
+        for (Long2ObjectMap.Entry<Chunk> entry : world.iterateChunkMap()) {
+            long hashedPos = entry.getLongKey();
             Chunk chunk = entry.getValue();
 
             int cx = ChunkPos.chunkXFromHashedPos(hashedPos);

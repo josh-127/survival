@@ -1,10 +1,9 @@
 package net.survival.client;
 
-import java.util.Map;
-
 import org.joml.Vector3d;
 import org.lwjgl.glfw.GLFW;
 
+import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import net.survival.block.BlockType;
 import net.survival.client.graphics.ClientDisplay;
 import net.survival.client.graphics.GraphicsSettings;
@@ -185,8 +184,8 @@ public class Client implements AutoCloseable
             world.addNPC(npc);
         }
 
-        for (Map.Entry<Long, Chunk> entry : world.iterateChunkMap()) {
-            long hashedPos = entry.getKey();
+        for (Long2ObjectMap.Entry<Chunk> entry : world.iterateChunkMap()) {
+            long hashedPos = entry.getLongKey();
             Chunk chunk = entry.getValue();
 
             if (chunk.isBlocksModified()) {

@@ -2,8 +2,8 @@ package net.survival.world.chunk;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Map;
 
+import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import net.survival.entity.Entity;
 import net.survival.entity.NPC;
 import net.survival.entity.Player;
@@ -18,8 +18,8 @@ public class EntityRelocator
     public void relocateEntities(World world) {
         ArrayList<Entity> entitiesToRelocate = new ArrayList<>();
 
-        for (Map.Entry<Long, Chunk> entry : world.iterateChunkMap()) {
-            long hashedPos = entry.getKey();
+        for (Long2ObjectMap.Entry<Chunk> entry : world.iterateChunkMap()) {
+            long hashedPos = entry.getLongKey();
             Chunk chunk = entry.getValue();
 
             int cx = ChunkPos.chunkXFromHashedPos(hashedPos);

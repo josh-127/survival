@@ -1,8 +1,8 @@
 package net.survival.world.chunk;
 
-import java.util.Set;
+import it.unimi.dsi.fastutil.longs.LongSet;
 
 public interface ChunkLoader
 {
-    Set<Long> getChunkPositions();
+    LongSet getChunkPositions();
 }

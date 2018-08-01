@@ -1,18 +1,19 @@
 package net.survival.world.chunk;
 
-import java.util.Set;
-import java.util.TreeSet;
+import it.unimi.dsi.fastutil.longs.LongArraySet;
+import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
+import it.unimi.dsi.fastutil.longs.LongSet;
 
 public class CircularChunkLoader implements ChunkLoader
 {
-    private final TreeSet<Long> chunkPositions;
+    private final LongSet chunkPositions;
     private final int radius;
 
     private int prevOffsetCX;
     private int prevOffsetCZ;
 
     public CircularChunkLoader(int radius) {
-        chunkPositions = new TreeSet<>();
+        chunkPositions = new LongOpenHashSet(radius * radius);
         this.radius = radius;
 
         forceSetCenter(0, 0);
@@ -42,8 +43,8 @@ public class CircularChunkLoader implements ChunkLoader
     }
 
     @Override
-    public Set<Long> getChunkPositions() {
-        return new TreeSet<>(chunkPositions);
+    public LongSet getChunkPositions() {
+        return new LongArraySet(chunkPositions);
     }
 
     private int squareDistance(int x, int z) {

@@ -1,8 +1,7 @@
 package net.survival.world;
 
-import java.util.HashMap;
-import java.util.Map;
-
+import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
+import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import net.survival.entity.NPC;
 import net.survival.entity.Player;
 import net.survival.world.chunk.Chunk;
@@ -10,10 +9,10 @@ import net.survival.world.chunk.ChunkPos;
 
 public class World implements BlockStorage
 {
-    private final HashMap<Long, Chunk> chunks;
+    private final Long2ObjectMap<Chunk> chunks;
 
     public World() {
-        chunks = new HashMap<>();
+        chunks = new Long2ObjectOpenHashMap<>(1024);
     }
 
     public Chunk getChunk(int cx, int cz) {
@@ -24,8 +23,8 @@ public class World implements BlockStorage
         return chunks.get(hashedPos);
     }
 
-    public Iterable<Map.Entry<Long, Chunk>> iterateChunkMap() {
-        return chunks.entrySet();
+    public Iterable<Long2ObjectMap.Entry<Chunk>> iterateChunkMap() {
+        return chunks.long2ObjectEntrySet();
     }
 
     public Iterable<Chunk> iterateChunks() {

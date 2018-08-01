@@ -1,9 +1,10 @@
 package net.survival.world.chunk;
 
 import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
 
+import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
+import it.unimi.dsi.fastutil.longs.LongIterator;
+import it.unimi.dsi.fastutil.longs.LongSet;
 import net.survival.world.World;
 import net.survival.world.gen.decoration.WorldDecorator;
 
@@ -25,21 +26,21 @@ public class ChunkSystem
     }
 
     public void update(World world, ChunkLoader chunkLoader) {
-        Set<Long> chunksToLoad = chunkLoader.getChunkPositions();
+        LongSet chunksToLoad = chunkLoader.getChunkPositions();
 
-        Iterator<Map.Entry<Long, Chunk>> chunkMapIt = world.iterateChunkMap().iterator();
+        Iterator<Long2ObjectMap.Entry<Chunk>> chunkMapIt = world.iterateChunkMap().iterator();
         while (chunkMapIt.hasNext()) {
-            Map.Entry<Long, Chunk> entry = chunkMapIt.next();
-            long hashedPos = entry.getKey();
+            Long2ObjectMap.Entry<Chunk> entry = chunkMapIt.next();
+            long hashedPos = entry.getLongKey();
             if (chunksToLoad.contains(hashedPos))
                 chunksToLoad.remove(hashedPos);
             else
                 chunkMapIt.remove();
         }
 
-        Iterator<Long> chunksToLoadIt = chunksToLoad.iterator();
+        LongIterator chunksToLoadIt = chunksToLoad.iterator();
         for (int i = 0; i < DATABASE_LOAD_RATE && chunksToLoadIt.hasNext(); ++i) {
-            long hashedPos = chunksToLoadIt.next();
+            long hashedPos = chunksToLoadIt.nextLong();
             int cx = ChunkPos.chunkXFromHashedPos(hashedPos);
             int cz = ChunkPos.chunkZFromHashedPos(hashedPos);
             Chunk loadedChunk = chunkDatabase.loadChunk(cx, cz);
@@ -51,7 +52,7 @@ public class ChunkSystem
 
         chunksToLoadIt = chunksToLoad.iterator();
         for (int i = 0; i < GENERATOR_LOAD_RATE && chunksToLoadIt.hasNext(); ++i) {
-            long hashedPos = chunksToLoadIt.next();
+            long hashedPos = chunksToLoadIt.nextLong();
             int cx = ChunkPos.chunkXFromHashedPos(hashedPos);
             int cz = ChunkPos.chunkZFromHashedPos(hashedPos);
             Chunk generatedChunk = chunkGenerator.generate(cx, cz);
@@ -61,8 +62,8 @@ public class ChunkSystem
 
         chunkMapIt = world.iterateChunkMap().iterator();
         while (chunkMapIt.hasNext()) {
-            Map.Entry<Long, Chunk> entry = chunkMapIt.next();
-            long hashedPos = entry.getKey();
+            Long2ObjectMap.Entry<Chunk> entry = chunkMapIt.next();
+            long hashedPos = entry.getLongKey();
             int cx = ChunkPos.chunkXFromHashedPos(hashedPos);
             int cz = ChunkPos.chunkZFromHashedPos(hashedPos);
             Chunk chunk = entry.getValue();

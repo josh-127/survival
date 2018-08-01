@@ -4,15 +4,18 @@ import static org.lwjgl.opengl.GL11.*;
 
 import java.util.Stack;
 
+import it.unimi.dsi.fastutil.longs.LongArrayList;
+import it.unimi.dsi.fastutil.longs.LongStack;
+
 class GLRasterizer
 {
     private static final Stack<GLCullMode> cullModeStack = new Stack<>();
     private static final Stack<GLFillMode> fillModeStack = new Stack<>();
     private static final Stack<GLFrontFace> frontFaceStack = new Stack<>();
-    private static final Stack<Long> scissorPositionStack = new Stack<>();
-    private static final Stack<Long> scissorSizeStack = new Stack<>();
-    private static final Stack<Long> viewportPositionStack = new Stack<>();
-    private static final Stack<Long> viewportSizeStack = new Stack<>();
+    private static final LongStack scissorPositionStack = new LongArrayList();
+    private static final LongStack scissorSizeStack = new LongArrayList();
+    private static final LongStack viewportPositionStack = new LongArrayList();
+    private static final LongStack viewportSizeStack = new LongArrayList();
 
     private GLRasterizer() {}
 
@@ -74,11 +77,11 @@ class GLRasterizer
     }
 
     public static void popScissor() {
-        scissorPositionStack.pop();
-        scissorSizeStack.pop();
+        scissorPositionStack.popLong();
+        scissorSizeStack.popLong();
 
-        long position = scissorPositionStack.peek();
-        long size = scissorPositionStack.peek();
+        long position = scissorPositionStack.topLong();
+        long size = scissorPositionStack.topLong();
         int x = firstValueFromIntPair(position);
         int y = secondValueFromIntPair(position);
         int width = firstValueFromIntPair(size);
@@ -97,11 +100,11 @@ class GLRasterizer
     }
 
     public static void popViewport() {
-        viewportPositionStack.pop();
-        viewportSizeStack.pop();
+        viewportPositionStack.popLong();
+        viewportSizeStack.popLong();
 
-        long position = viewportPositionStack.peek();
-        long size = viewportPositionStack.peek();
+        long position = viewportPositionStack.topLong();
+        long size = viewportPositionStack.topLong();
         int x = firstValueFromIntPair(position);
         int y = secondValueFromIntPair(position);
         int width = firstValueFromIntPair(size);
