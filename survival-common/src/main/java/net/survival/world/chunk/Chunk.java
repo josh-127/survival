@@ -9,7 +9,7 @@ import net.survival.world.BlockStorage;
 public class Chunk implements BlockStorage
 {
     public static final int XLENGTH = 16;
-    public static final int YLENGTH = 256;
+    public static final int YLENGTH = 128;
     public static final int ZLENGTH = 16;
     public static final int BASE_AREA = XLENGTH * ZLENGTH;
     public static final int VOLUME = BASE_AREA * YLENGTH;

@@ -48,12 +48,16 @@ public class SmallTreeDecorator implements WorldDecorator
                     int gx = globalX + x;
                     int gy = groundY + y + 4;
                     int gz = globalZ + z;
-                    world.placeBlockIfEmpty(gx, gy, gz, BlockType.OAK_LEAVES.id);
+
+                    if (gy < Chunk.YLENGTH)
+                        world.placeBlockIfEmpty(gx, gy, gz, BlockType.OAK_LEAVES.id);
                 }
             }
         }
 
-        for (int y = groundY + 1; y <= groundY + 8; ++y)
-            chunk.setBlock(originX, y, originZ, BlockType.OAK_LOG.id);
+        for (int y = groundY + 1; y <= groundY + 8; ++y) {
+            if (y < Chunk.YLENGTH)
+                chunk.setBlock(originX, y, originZ, BlockType.OAK_LOG.id);
+        }
     }
 }
