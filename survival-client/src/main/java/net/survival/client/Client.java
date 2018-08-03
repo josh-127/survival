@@ -87,7 +87,7 @@ public class Client implements AutoCloseable
     public void tick(double elapsedTime) {
         double cursorDX = Mouse.getDeltaX();
         double cursorDY = Mouse.getDeltaY();
-        fpsCamera.rotate(-cursorDX / 64.0, -cursorDY / 64.0);
+        fpsCamera.rotate(-cursorDX / 128.0, -cursorDY / 128.0);
 
         if (Keyboard.isKeyPressed(Key.R)) {
             Player newPlayer = new Player();
