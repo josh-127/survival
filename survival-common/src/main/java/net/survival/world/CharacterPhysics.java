@@ -9,7 +9,7 @@ import net.survival.world.chunk.Chunk;
 
 public class CharacterPhysics
 {
-    private static final double GRAVITY = 9.81;
+    private static final double GRAVITY = 32.0;
     private static final double TERMINAL_VELOCITY = 30.0;
 
     public void update(World world, double elapsedTime) {
