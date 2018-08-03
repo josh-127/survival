@@ -103,6 +103,9 @@ public class CharacterPhysics
 
         int floorY = (int) Math.floor(character.y - character.collisionBoxRadiusY);
 
+        if (floorY < 0 || floorY + 1 >= Chunk.YLENGTH)
+            return false;
+
         for (int blockZ = startZ; blockZ <= endZ; ++blockZ) {
             for (int blockX = startX; blockX <= endX; ++blockX) {
                 short aboveFloorBlockID = world.getBlock(blockX, floorY + 1, blockZ);
@@ -139,6 +142,9 @@ public class CharacterPhysics
 
         int ceilingY = (int) Math.floor(character.y + character.collisionBoxRadiusY);
 
+        if (ceilingY - 1 < 0 || ceilingY >= Chunk.YLENGTH)
+            return false;
+
         for (int blockZ = startZ; blockZ <= endZ; ++blockZ) {
             for (int blockX = startX; blockX <= endX; ++blockX) {
                 short belowCeilingBlockID = world.getBlock(blockX, ceilingY - 1, blockZ);
@@ -167,6 +173,10 @@ public class CharacterPhysics
     private boolean handleLeftWallCollision(Character character, World world) {
         int startY = (int) Math.floor(character.y - character.collisionBoxRadiusY);
         int endY = (int) Math.floor(character.y + character.collisionBoxRadiusY);
+
+        if (startY < 0 || endY >= Chunk.YLENGTH)
+            return false;
+
         int startZ = (int) Math.floor(character.z - character.collisionBoxRadiusZ);
         int endZ = (int) Math.floor(character.z + character.collisionBoxRadiusZ);
 
@@ -200,6 +210,10 @@ public class CharacterPhysics
     private boolean handleRightWallCollision(Character character, World world) {
         int startY = (int) Math.floor(character.y - character.collisionBoxRadiusY);
         int endY = (int) Math.floor(character.y + character.collisionBoxRadiusY);
+
+        if (startY < 0 || endY >= Chunk.YLENGTH)
+            return false;
+
         int startZ = (int) Math.floor(character.z - character.collisionBoxRadiusZ);
         int endZ = (int) Math.floor(character.z + character.collisionBoxRadiusZ);
 
@@ -231,10 +245,14 @@ public class CharacterPhysics
     }
 
     private boolean handleFrontWallCollision(Character character, World world) {
-        int startX = (int) Math.floor(character.x - character.collisionBoxRadiusX);
-        int endX = (int) Math.floor(character.x + character.collisionBoxRadiusX);
         int startY = (int) Math.floor(character.y - character.collisionBoxRadiusY);
         int endY = (int) Math.floor(character.y + character.collisionBoxRadiusY);
+
+        if (startY < 0 || endY >= Chunk.YLENGTH)
+            return false;
+
+        int startX = (int) Math.floor(character.x - character.collisionBoxRadiusX);
+        int endX = (int) Math.floor(character.x + character.collisionBoxRadiusX);
 
         int wallZ = (int) Math.floor(character.z - character.collisionBoxRadiusZ);
 
@@ -264,10 +282,14 @@ public class CharacterPhysics
     }
 
     private boolean handleBackWallCollision(Character character, World world) {
-        int startX = (int) Math.floor(character.x - character.collisionBoxRadiusX);
-        int endX = (int) Math.floor(character.x + character.collisionBoxRadiusX);
         int startY = (int) Math.floor(character.y - character.collisionBoxRadiusY);
         int endY = (int) Math.floor(character.y + character.collisionBoxRadiusY);
+
+        if (startY < 0 || endY >= Chunk.YLENGTH)
+            return false;
+
+        int startX = (int) Math.floor(character.x - character.collisionBoxRadiusX);
+        int endX = (int) Math.floor(character.x + character.collisionBoxRadiusX);
 
         int wallZ = (int) Math.floor(character.z + character.collisionBoxRadiusZ);
 
