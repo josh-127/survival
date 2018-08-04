@@ -1,7 +1,5 @@
 package net.survival.world;
 
-import net.survival.world.chunk.EntityRelocator;
-
 public class EntitySystem
 {
     private final CharacterPhysics characterPhysics;

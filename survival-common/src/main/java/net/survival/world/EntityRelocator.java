@@ -1,4 +1,4 @@
-package net.survival.world.chunk;
+package net.survival.world;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -7,7 +7,8 @@ import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import net.survival.entity.Entity;
 import net.survival.entity.NPC;
 import net.survival.entity.Player;
-import net.survival.world.World;
+import net.survival.world.chunk.Chunk;
+import net.survival.world.chunk.ChunkPos;
 
 public class EntityRelocator
 {

@@ -1,7 +1,7 @@
 package net.survival.server;
 
+import net.survival.world.EntityRelocator;
 import net.survival.world.World;
-import net.survival.world.chunk.EntityRelocator;
 
 public class Server
 {
