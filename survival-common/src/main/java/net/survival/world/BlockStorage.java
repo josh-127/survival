@@ -13,6 +13,14 @@ public interface BlockStorage
         return BlockType.byID(getBlock(x, y, z));
     }
 
+    default short sampleNearestBlock(double x, double y, double z) {
+        return getBlock((int) Math.floor(x), (int) Math.floor(y), (int) Math.floor(z));
+    }
+
+    default BlockType sampleNearestBlockType(double x, double y, double z) {
+        return getBlockType((int) Math.floor(x), (int) Math.floor(y), (int) Math.floor(z));
+    }
+
     default int getTopLevel(int x, int z) {
         int topLevel = Chunk.YLENGTH - 1;
 
@@ -27,7 +35,7 @@ public interface BlockStorage
             setBlock(x, y, z, blockID);
             return true;
         }
-        
+
         return false;
     }
 
@@ -36,7 +44,7 @@ public interface BlockStorage
             setBlock(x, y, z, replacement);
             return true;
         }
-        
+
         return false;
     }
 }
