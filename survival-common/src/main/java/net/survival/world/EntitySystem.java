@@ -8,18 +8,21 @@ import net.survival.world.chunk.Chunk;
 
 public class EntitySystem
 {
+    private final CharacterBehavior characterBehavior;
     private final NpcAI npcAI;
 
     private final CharacterPhysics characterPhysics;
     private final EntityRelocator entityRelocator;
 
     public EntitySystem() {
+        characterBehavior = new CharacterBehavior();
         npcAI = new NpcAI();
         characterPhysics = new CharacterPhysics();
         entityRelocator = new EntityRelocator();
     }
 
     public void update(World world, double elapsedTime) {
+        characterBehavior.tick(world, elapsedTime);
         npcAI.tick(world, elapsedTime);
         characterPhysics.update(world, elapsedTime);
         entityRelocator.relocateEntities(world);

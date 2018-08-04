@@ -127,20 +127,10 @@ public class Client implements AutoCloseable
                 joystickZ -= Math.cos(fpsCamera.yaw + Math.PI / 2.0);
             }
 
-            double magnitude = Math.sqrt(joystickX * joystickX + joystickZ * joystickZ);
-            if (magnitude != 0.0) {
-                joystickX *= speed / magnitude;
-                joystickZ *= speed / magnitude;
-                player.velocityX = joystickX;
-                player.velocityZ = joystickZ;
-            }
-            else if (player.velocityY == 0.0) {
-                player.velocityX *= FRICTION;
-                player.velocityZ *= FRICTION;
-            }
+            player.setMoveControlValues(joystickX, joystickZ);
 
-            if (/*//player.velocityY == 0.0 &&//*/ Keyboard.isKeyPressed(Key.SPACE))
-                player.velocityY = 8.0;
+            if (Keyboard.isKeyPressed(Key.SPACE))
+                player.setJumpControlValue();
         }
 
         int cx = ChunkPos.toChunkX((int) Math.floor(fpsCamera.position.x));
