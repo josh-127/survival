@@ -3,6 +3,13 @@ package net.survival.entity;
 public abstract class Character extends Entity
 {
     //
+    // Controls
+    //
+    private double moveDirectionXControl;
+    private double moveDirectionZControl;
+    private boolean jumpControl;
+
+    //
     // Physics
     //
     public double velocityX;
@@ -35,6 +42,27 @@ public abstract class Character extends Entity
         visible = true;
     }
 
+    public double getMoveDirectionXControlValue() {
+        return moveDirectionXControl;
+    }
+
+    public double getMoveDirectionZControlValue() {
+        return moveDirectionZControl;
+    }
+
+    public void setMoveControlValues(double dx, double dz) {
+        moveDirectionXControl = dx;
+        moveDirectionZControl = dz;
+    }
+
+    public boolean getJumpControlValue() {
+        return jumpControl;
+    }
+
+    public void setJumpControlValue() {
+        jumpControl = true;
+    }
+
     public double getCollisionBoxTop() {
         return y + collisionBoxRadiusY;
     }
@@ -57,5 +85,12 @@ public abstract class Character extends Entity
 
     public double getCollisionBoxBack() {
         return z - collisionBoxRadiusZ;
+    }
+
+    @Override
+    public void clearControlState() {
+        moveDirectionXControl = 0.0;
+        moveDirectionZControl = 0.0;
+        jumpControl = false;
     }
 }

@@ -1,5 +1,11 @@
 package net.survival.world;
 
+import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
+import it.unimi.dsi.fastutil.objects.ObjectIterator;
+import net.survival.entity.Npc;
+import net.survival.entity.Player;
+import net.survival.world.chunk.Chunk;
+
 public class EntitySystem
 {
     private final NpcAI npcAI;
@@ -17,5 +23,18 @@ public class EntitySystem
         npcAI.tick(world, elapsedTime);
         characterPhysics.update(world, elapsedTime);
         entityRelocator.relocateEntities(world);
+
+        ObjectIterator<Long2ObjectMap.Entry<Chunk>> chunkMapIt = world.getChunkMapFastIterator();
+
+        while (chunkMapIt.hasNext()) {
+            Long2ObjectMap.Entry<Chunk> entry = chunkMapIt.next();
+            Chunk chunk = entry.getValue();
+
+            for (Npc npc : chunk.iterateNpcs())
+                npc.clearControlState();
+
+            for (Player player : chunk.iteratePlayers())
+                player.clearControlState();
+        }
     }
 }
