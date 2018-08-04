@@ -61,7 +61,7 @@ public class Client implements AutoCloseable
         
         chunkLoader = new CircularChunkLoader(8);
         chunkDatabase = new DefaultChunkDatabase();
-        chunkGenerator = new InfiniteChunkGenerator(0L);
+        chunkGenerator = new InfiniteChunkGenerator(22L);
         worldDecorator = WorldDecorator.createDefault();
         chunkSystem = new ChunkSystem(chunkDatabase, chunkGenerator, worldDecorator);
         
@@ -76,7 +76,7 @@ public class Client implements AutoCloseable
                 GraphicsSettings.WINDOW_HEIGHT);
         guiDisplay = new GuiDisplay(control);
 
-        fpsCamera = new FpsCamera(new Vector3d(0.0, 72.0, 0.0), 0.0f, -1.0f);
+        fpsCamera = new FpsCamera(new Vector3d(60.0, 72.0, 20.0), 0.0f, -1.0f);
     }
 
     @Override
@@ -91,9 +91,9 @@ public class Client implements AutoCloseable
 
         if (Keyboard.isKeyPressed(Key.R)) {
             Player newPlayer = new Player();
-            newPlayer.x = player != null ? player.x : 0.0;
-            newPlayer.y = player != null ? player.y + 3.0 : 72.0;
-            newPlayer.z = player != null ? player.z : 0.0;
+            newPlayer.x = player != null ? player.x : fpsCamera.position.x;
+            newPlayer.y = player != null ? player.y + 3.0 : fpsCamera.position.y;
+            newPlayer.z = player != null ? player.z : fpsCamera.position.z;
             newPlayer.collisionBoxRadiusY = 0.9;
             newPlayer.visible = false;
             player = newPlayer;
