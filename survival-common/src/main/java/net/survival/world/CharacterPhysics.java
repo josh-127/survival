@@ -25,7 +25,7 @@ public class CharacterPhysics
             Long2ObjectMap.Entry<Chunk> entry = chunkMapIt.next();
             Chunk chunk = entry.getValue();
 
-            applyGravity(world, elapsedTime, chunk.iterateNPCs());
+            applyGravity(world, elapsedTime, chunk.iterateNpcs());
             applyGravity(world, elapsedTime, chunk.iteratePlayers());
         }
     }
@@ -48,7 +48,7 @@ public class CharacterPhysics
             Long2ObjectMap.Entry<Chunk> entry = chunkMapIt.next();
             Chunk chunk = entry.getValue();
 
-            applyVelocities(world, elapsedTime, chunk.iterateNPCs());
+            applyVelocities(world, elapsedTime, chunk.iterateNpcs());
             applyVelocities(world, elapsedTime, chunk.iteratePlayers());
         }
     }
@@ -70,7 +70,7 @@ public class CharacterPhysics
             Long2ObjectMap.Entry<Chunk> entry = chunkMapIt.next();
             Chunk chunk = entry.getValue();
 
-            handleBlockCollisions(world, chunk.iterateNPCs());
+            handleBlockCollisions(world, chunk.iterateNpcs());
             handleBlockCollisions(world, chunk.iteratePlayers());
         }
     }

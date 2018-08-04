@@ -307,7 +307,7 @@ class ChunkDisplay implements GraphicsResource
      * Displays the chunk's containing entities.
      */
     public void displayEntities() {
-        displayCharacters(chunk.iterateNPCs());
+        displayCharacters(chunk.iterateNpcs());
         displayCharacters(chunk.iteratePlayers());
     }
 

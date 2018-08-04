@@ -18,7 +18,7 @@ import net.survival.client.input.GlfwMouseAdapter;
 import net.survival.client.input.Key;
 import net.survival.client.input.Keyboard;
 import net.survival.client.input.Mouse;
-import net.survival.entity.NPC;
+import net.survival.entity.Npc;
 import net.survival.entity.Player;
 import net.survival.world.EntitySystem;
 import net.survival.world.World;
@@ -176,14 +176,14 @@ public class Client implements AutoCloseable
         }
 
         if (Keyboard.isKeyPressed(Key.T)) {
-            NPC npc = new NPC();
+            Npc npc = new Npc();
             npc.x = fpsCamera.position.x;
             npc.y = fpsCamera.position.y;
             npc.z = fpsCamera.position.z;
             npc.collisionBoxRadiusX = 0.5;
             npc.collisionBoxRadiusY = 0.9;
             npc.collisionBoxRadiusZ = 0.8;
-            world.addNPC(npc);
+            world.addNpc(npc);
         }
 
         Iterator<Long2ObjectMap.Entry<Chunk>> chunkMapIt = world.getChunkMapFastIterator();

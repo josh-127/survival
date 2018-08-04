@@ -2,7 +2,7 @@ package net.survival.world.chunk;
 
 import java.util.ArrayList;
 
-import net.survival.entity.NPC;
+import net.survival.entity.Npc;
 import net.survival.entity.Player;
 import net.survival.world.BlockStorage;
 
@@ -19,7 +19,7 @@ public class Chunk implements BlockStorage
     public static final int PLAYERS_MODIFIED = 4;
 
     public final short[] blockIDs;
-    private final ArrayList<NPC> npcs;
+    private final ArrayList<Npc> npcs;
     private final ArrayList<Player> players;
 
     private int modified;
@@ -50,7 +50,7 @@ public class Chunk implements BlockStorage
         return lx >= 0 && ly >= 0 && lz >= 0 && lx < XLENGTH && ly < YLENGTH && lz < ZLENGTH;
     }
     
-    public Iterable<NPC> iterateNPCs() {
+    public Iterable<Npc> iterateNpcs() {
         modified |= NPCS_MODIFIED;
         return npcs;
     }
@@ -60,7 +60,7 @@ public class Chunk implements BlockStorage
         return players;
     }
     
-    public void addNPC(NPC npc) {
+    public void addNpc(Npc npc) {
         npcs.add(npc);
         modified |= NPCS_MODIFIED;
     }

@@ -5,7 +5,7 @@ import java.util.Iterator;
 
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import net.survival.entity.Entity;
-import net.survival.entity.NPC;
+import net.survival.entity.Npc;
 import net.survival.entity.Player;
 import net.survival.world.chunk.Chunk;
 import net.survival.world.chunk.ChunkPos;
@@ -28,7 +28,7 @@ public class EntityRelocator
             int cx = ChunkPos.chunkXFromHashedPos(hashedPos);
             int cz = ChunkPos.chunkZFromHashedPos(hashedPos);
 
-            Iterator<NPC> npcs = chunk.iterateNPCs().iterator();
+            Iterator<Npc> npcs = chunk.iterateNpcs().iterator();
             while (npcs.hasNext()) {
                 Entity entity = npcs.next();
 
@@ -50,8 +50,8 @@ public class EntityRelocator
         }
 
         for (Entity entity : entitiesToRelocate) {
-            if (entity instanceof NPC)
-                world.addNPC((NPC) entity);
+            if (entity instanceof Npc)
+                world.addNpc((Npc) entity);
             else if (entity instanceof Player)
                 world.addPlayer((Player) entity);
         }
