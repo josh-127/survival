@@ -10,8 +10,9 @@ Keyboard and mouse controls are hard-coded for now.
 | Button     | Action            |
 |------------|-------------------|
 | W, A, S, D | Move horizontally |
-| Space      | Move up           |
-| Shift      | Move down         |
+| Space      | Jump              |
+| R          | Spawn player      |
+| T          | Spawn NPC         |
 
 Project Structure
 -----------------
