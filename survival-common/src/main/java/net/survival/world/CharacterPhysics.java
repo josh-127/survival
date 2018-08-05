@@ -25,20 +25,17 @@ public class CharacterPhysics
             Long2ObjectMap.Entry<Chunk> entry = chunkMapIt.next();
             Chunk chunk = entry.getValue();
 
-            applyGravity(world, elapsedTime, chunk.iterateNpcs());
-            applyGravity(world, elapsedTime, chunk.iteratePlayers());
+            for (Character character : chunk.iterateCharacters())
+                applyGravity(world, elapsedTime, character);
         }
     }
 
-    private void applyGravity(World world, double elapsedTime,
-            Iterable<? extends Character> characters)
+    private void applyGravity(World world, double elapsedTime, Character character)
     {
-        for (Character character : characters) {
-            character.velocityY -= GRAVITY * elapsedTime;
+        character.velocityY -= GRAVITY * elapsedTime;
 
-            if (character.velocityY < -TERMINAL_VELOCITY)
-                character.velocityY = -TERMINAL_VELOCITY;
-        }
+        if (character.velocityY < -TERMINAL_VELOCITY)
+            character.velocityY = -TERMINAL_VELOCITY;
     }
 
     private void applyVelocities(World world, double elapsedTime) {
@@ -48,19 +45,16 @@ public class CharacterPhysics
             Long2ObjectMap.Entry<Chunk> entry = chunkMapIt.next();
             Chunk chunk = entry.getValue();
 
-            applyVelocities(world, elapsedTime, chunk.iterateNpcs());
-            applyVelocities(world, elapsedTime, chunk.iteratePlayers());
+            for (Character character : chunk.iterateCharacters())
+                applyVelocities(world, elapsedTime, character);
         }
     }
 
-    private void applyVelocities(World world, double elapsedTime,
-            Iterable<? extends Character> characters)
+    private void applyVelocities(World world, double elapsedTime, Character character)
     {
-        for (Character character : characters) {
-            character.x += character.velocityX * elapsedTime;
-            character.y += character.velocityY * elapsedTime;
-            character.z += character.velocityZ * elapsedTime;
-        }
+        character.x += character.velocityX * elapsedTime;
+        character.y += character.velocityY * elapsedTime;
+        character.z += character.velocityZ * elapsedTime;
     }
 
     private void handleBlockCollisions(World world) {
@@ -70,22 +64,20 @@ public class CharacterPhysics
             Long2ObjectMap.Entry<Chunk> entry = chunkMapIt.next();
             Chunk chunk = entry.getValue();
 
-            handleBlockCollisions(world, chunk.iterateNpcs());
-            handleBlockCollisions(world, chunk.iteratePlayers());
+            for (Character character : chunk.iterateCharacters())
+                handleBlockCollisions(world, character);
         }
     }
 
-    private void handleBlockCollisions(World world, Iterable<? extends Character> characters) {
-        for (Character character : characters) {
-            if (!handleFloorCollision(character, world))
-                handleCeilingCollision(character, world);
+    private void handleBlockCollisions(World world, Character character) {
+        if (!handleFloorCollision(character, world))
+            handleCeilingCollision(character, world);
 
-            if (!handleLeftWallCollision(character, world))
-                handleRightWallCollision(character, world);
+        if (!handleLeftWallCollision(character, world))
+            handleRightWallCollision(character, world);
 
-            if (!handleBackWallCollision(character, world))
-                handleFrontWallCollision(character, world);
-        }
+        if (!handleBackWallCollision(character, world))
+            handleFrontWallCollision(character, world);
     }
 
     //

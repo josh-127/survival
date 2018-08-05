@@ -17,8 +17,10 @@ public class NpcAI
             Long2ObjectMap.Entry<Chunk> entry = chunkMapIt.next();
             Chunk chunk = entry.getValue();
 
-            for (Npc npc : chunk.iterateNpcs())
-                tick(world, elapsedTime, npc);
+            for (Character character : chunk.iterateCharacters()) {
+                if (character instanceof Npc)
+                    tick(world, elapsedTime, (Npc) character);
+            }
         }
     }
 
@@ -41,7 +43,12 @@ public class NpcAI
             Long2ObjectMap.Entry<Chunk> entry = chunkMapIt.next();
             Chunk chunk = entry.getValue();
 
-            for (Player player : chunk.iteratePlayers()) {
+            for (Character character : chunk.iterateCharacters()) {
+                if (!(character instanceof Player))
+                    continue;
+
+                Player player = (Player) character;
+
                 double sqrDistance = getSqrDistance(npc, player);
 
                 if (sqrDistance < nearestPlayerSqrDistance) {

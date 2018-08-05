@@ -3,8 +3,7 @@ package net.survival.world;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectIterator;
-import net.survival.entity.Npc;
-import net.survival.entity.Player;
+import net.survival.entity.Character;
 import net.survival.world.chunk.Chunk;
 import net.survival.world.chunk.ChunkPos;
 
@@ -111,16 +110,10 @@ public class World implements BlockStorage
         return chunk.replaceBlockIfExists(localX, y, localZ, replacement);
     }
 
-    public void addNpc(Npc npc) {
-        Chunk chunk = getChunkFromGlobalPos((int) npc.x, (int) npc.z,
-                "Cannot place an NPC in an unloaded chunk.");
-        chunk.addNpc(npc);
-    }
-
-    public void addPlayer(Player player) {
-        Chunk chunk = getChunkFromGlobalPos((int) player.x, (int) player.z,
-                "Cannot place a player in an unloaded chunk.");
-        chunk.addPlayer(player);
+    public void addCharacter(Character character) {
+        Chunk chunk = getChunkFromGlobalPos((int) character.x, (int) character.z,
+                "Cannot place a character in an unloaded chunk.");
+        chunk.addCharacter(character);
     }
 
     private Chunk getChunkFromGlobalPos(int x, int z, String exceptionMessage) {

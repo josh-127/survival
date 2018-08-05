@@ -3,8 +3,6 @@ package net.survival.world;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.objects.ObjectIterator;
 import net.survival.entity.Character;
-import net.survival.entity.Npc;
-import net.survival.entity.Player;
 import net.survival.util.MathEx;
 import net.survival.world.chunk.Chunk;
 
@@ -17,11 +15,8 @@ public class CharacterBehavior
             Long2ObjectMap.Entry<Chunk> entry = chunkMapIt.next();
             Chunk chunk = entry.getValue();
 
-            for (Npc npc : chunk.iterateNpcs())
-                tick(world, elapsedTime, npc);
-
-            for (Player player : chunk.iteratePlayers())
-                tick(world, elapsedTime, player);
+            for (Character character : chunk.iterateCharacters())
+                tick(world, elapsedTime, character);
         }
     }
 

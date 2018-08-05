@@ -97,7 +97,7 @@ public class Client implements AutoCloseable
             newPlayer.collisionBoxRadiusY = 0.9;
             newPlayer.visible = false;
             player = newPlayer;
-            world.addPlayer(newPlayer);
+            world.addCharacter(newPlayer);
         }
 
         if (player != null) {
@@ -173,7 +173,7 @@ public class Client implements AutoCloseable
             npc.collisionBoxRadiusX = 0.5;
             npc.collisionBoxRadiusY = 0.9;
             npc.collisionBoxRadiusZ = 0.8;
-            world.addNpc(npc);
+            world.addCharacter(npc);
         }
 
         Iterator<Long2ObjectMap.Entry<Chunk>> chunkMapIt = world.getChunkMapFastIterator();
