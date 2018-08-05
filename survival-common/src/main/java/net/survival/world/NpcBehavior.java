@@ -8,8 +8,9 @@ import net.survival.entity.Player;
 import net.survival.util.MathEx;
 import net.survival.world.chunk.Chunk;
 
-public class NpcAI
+public class NpcBehavior implements EntityBehavior
 {
+    @Override
     public void tick(World world, double elapsedTime) {
         ObjectIterator<Long2ObjectMap.Entry<Chunk>> chunkMapIt = world.getChunkMapFastIterator();
 

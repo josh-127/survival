@@ -6,9 +6,10 @@ import net.survival.entity.Character;
 import net.survival.util.MathEx;
 import net.survival.world.chunk.Chunk;
 
-public class CharacterBehavior
+public class CharacterBehavior implements EntityBehavior
 {
-    public void tick(World world, double elapsedTime) {
+    @Override
+    public void postTick(World world, double elapsedTime) {
         ObjectIterator<Long2ObjectMap.Entry<Chunk>> chunkMapIt = world.getChunkMapFastIterator();
 
         while (chunkMapIt.hasNext()) {
@@ -16,11 +17,11 @@ public class CharacterBehavior
             Chunk chunk = entry.getValue();
 
             for (Character character : chunk.iterateCharacters())
-                tick(world, elapsedTime, character);
+                postTick(world, elapsedTime, character);
         }
     }
 
-    private void tick(World world, double elapsedTime, Character character) {
+    private void postTick(World world, double elapsedTime, Character character) {
         final double SPEED = 5.0;
         final double FRICTION = 0.5;
         
