@@ -127,7 +127,7 @@ public class Client implements AutoCloseable
                 joystickZ -= Math.cos(fpsCamera.yaw + Math.PI / 2.0);
             }
 
-            player.setMoveControlValues(joystickX, joystickZ);
+            player.setMoveDirectionControlValues(joystickX, joystickZ);
 
             if (Keyboard.isKeyPressed(Key.SPACE))
                 player.setJumpControlValue();

@@ -50,7 +50,7 @@ public abstract class Character extends Entity
         return moveDirectionZControl;
     }
 
-    public void setMoveControlValues(double dx, double dz) {
+    public void setMoveDirectionControlValues(double dx, double dz) {
         moveDirectionXControl = dx;
         moveDirectionZControl = dz;
     }
