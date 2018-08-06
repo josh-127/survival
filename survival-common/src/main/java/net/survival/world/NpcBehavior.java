@@ -70,17 +70,10 @@ public class NpcBehavior implements EntityBehavior
                 dy /= distance;
                 dz /= distance;
 
-                npc.velocityX = MathEx.lerp(npc.velocityX, dx * 4.0, 0.25);
-                npc.velocityZ = MathEx.lerp(npc.velocityZ, dz * 4.0, 0.25);
-                npc.yaw = MathEx.lerp(npc.yaw, Math.atan2(-dz, dx) + Math.PI / 2.0, 0.25);
+                npc.setMoveDirectionControlValues(dx, dz);
 
-                if (npc.velocityY == 0.0 && nearestPlayer.y - npc.y >= 1.0) {
-                    npc.velocityY = 10.0;
-                }
-            }
-            else {
-                npc.velocityX *= 0.5;
-                npc.velocityZ *= 0.5;
+                if (nearestPlayer.y - npc.y >= 1.0)
+                    npc.setJumpControlValue();
             }
         }
     }
