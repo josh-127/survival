@@ -173,6 +173,7 @@ public class Client implements AutoCloseable
             npc.collisionBoxRadiusX = 0.5;
             npc.collisionBoxRadiusY = 0.9;
             npc.collisionBoxRadiusZ = 0.8;
+            npc.moveSpeed = 4.0;
             world.addCharacter(npc);
         }
 
