@@ -32,6 +32,7 @@ public class CharacterBehavior implements EntityBehavior
         if (magnitude != 0.0) {
             character.velocityX = dx / magnitude * SPEED;
             character.velocityZ = dz / magnitude * SPEED;
+            character.yaw = MathEx.lerp(character.yaw, Math.atan2(-dz, dx) + Math.PI / 2.0, 0.25);
         }
         else {
             character.velocityX *= FRICTION;
