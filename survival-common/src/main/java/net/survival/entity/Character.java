@@ -10,6 +10,12 @@ public abstract class Character extends Entity
     private boolean jumpControl;
 
     //
+    // Stats
+    //
+    public double moveSpeed;
+    public double jumpSpeed;
+
+    //
     // Physics
     //
     public double velocityX;
@@ -35,6 +41,8 @@ public abstract class Character extends Entity
     public boolean visible;
 
     public Character() {
+        moveSpeed = 5.0;
+        jumpSpeed = 10.0;
         collisionBoxRadiusX = 0.4375;
         collisionBoxRadiusY = 0.4375;
         collisionBoxRadiusZ = 0.4375;

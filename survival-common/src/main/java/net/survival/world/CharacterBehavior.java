@@ -22,7 +22,6 @@ public class CharacterBehavior implements EntityBehavior
     }
 
     private void postTick(World world, double elapsedTime, Character character) {
-        final double SPEED = 5.0;
         final double FRICTION = 0.5;
         
         double dx = character.getMoveDirectionXControlValue();
@@ -30,8 +29,8 @@ public class CharacterBehavior implements EntityBehavior
         double magnitude = MathEx.magnitude(dx, dz);
 
         if (magnitude != 0.0) {
-            character.velocityX = dx / magnitude * SPEED;
-            character.velocityZ = dz / magnitude * SPEED;
+            character.velocityX = character.moveSpeed * (dx / magnitude);
+            character.velocityZ = character.moveSpeed * (dz / magnitude);
             character.yaw = MathEx.lerp(character.yaw, Math.atan2(-dz, dx) + Math.PI / 2.0, 0.25);
         }
         else {
@@ -40,6 +39,6 @@ public class CharacterBehavior implements EntityBehavior
         }
 
         if (character.getJumpControlValue() && character.velocityY == 0.0)
-            character.velocityY = 10.0;
+            character.velocityY = character.jumpSpeed;
     }
 }
