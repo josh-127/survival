@@ -11,6 +11,7 @@ Keyboard and mouse controls are hard-coded for now.
 |------------|-------------------|
 | W, A, S, D | Move horizontally |
 | Space      | Jump              |
+| F          | Break Block       |
 | R          | Spawn player      |
 | T          | Spawn NPC         |
 
