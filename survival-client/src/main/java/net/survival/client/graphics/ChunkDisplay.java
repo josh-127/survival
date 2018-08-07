@@ -307,61 +307,69 @@ class ChunkDisplay implements GraphicsResource
      * Displays the chunk's containing entities.
      */
     public void displayEntities() {
-        displayCharacters(chunk.iterateCharacters());
-    }
-
-    private void displayCharacters(Iterable<? extends Character> characters) {
-        for (Character character : characters) {
+        for (Character character : chunk.iterateCharacters()) {
             if (!character.visible)
                 continue;
 
-            GLMatrixStack.push();
-            GLMatrixStack.translate((float) character.x, (float) character.y, (float) character.z);
-            GLMatrixStack.rotate((float) character.yaw, 0.0f, 1.0f, 0.0f);
-            GLMatrixStack.rotate((float) character.pitch, 1.0f, 0.0f, 0.0f);
-            GLMatrixStack.rotate((float) character.roll, 0.0f, 0.0f, 1.0f);
-
-            StaticModel model = StaticModel.fromCharacter(character);
-            ModelRenderer.displayStaticModel(model);
-
-            final float BOX_R = 1.0f;
-            final float BOX_G = 0.0f;
-            final float BOX_B = 1.0f;
-
-            float cbrX = (float) character.collisionBoxRadiusX;
-            float cbrY = (float) character.collisionBoxRadiusY;
-            float cbrZ = (float) character.collisionBoxRadiusZ;
-
-            GLImmediateDrawCall.beginLines(null)
-                    .coloredVertex(-cbrX, cbrY, -cbrZ, BOX_R, BOX_G, BOX_B)
-                    .coloredVertex(cbrX, cbrY, -cbrZ, BOX_R, BOX_G, BOX_B)
-                    .coloredVertex(-cbrX, cbrY, cbrZ, BOX_R, BOX_G, BOX_B)
-                    .coloredVertex(cbrX, cbrY, cbrZ, BOX_R, BOX_G, BOX_B)
-                    .coloredVertex(-cbrX, cbrY, -cbrZ, BOX_R, BOX_G, BOX_B)
-                    .coloredVertex(-cbrX, cbrY, cbrZ, BOX_R, BOX_G, BOX_B)
-                    .coloredVertex(cbrX, cbrY, -cbrZ, BOX_R, BOX_G, BOX_B)
-                    .coloredVertex(cbrX, cbrY, cbrZ, BOX_R, BOX_G, BOX_B)
-
-                    .coloredVertex(-cbrX, -cbrY, -cbrZ, BOX_R, BOX_G, BOX_B)
-                    .coloredVertex(cbrX, -cbrY, -cbrZ, BOX_R, BOX_G, BOX_B)
-                    .coloredVertex(-cbrX, -cbrY, cbrZ, BOX_R, BOX_G, BOX_B)
-                    .coloredVertex(cbrX, -cbrY, cbrZ, BOX_R, BOX_G, BOX_B)
-                    .coloredVertex(-cbrX, -cbrY, -cbrZ, BOX_R, BOX_G, BOX_B)
-                    .coloredVertex(-cbrX, -cbrY, cbrZ, BOX_R, BOX_G, BOX_B)
-                    .coloredVertex(cbrX, -cbrY, -cbrZ, BOX_R, BOX_G, BOX_B)
-                    .coloredVertex(cbrX, -cbrY, cbrZ, BOX_R, BOX_G, BOX_B)
-
-                    .coloredVertex(-cbrX, -cbrY, -cbrZ, BOX_R, BOX_G, BOX_B)
-                    .coloredVertex(-cbrX, cbrY, -cbrZ, BOX_R, BOX_G, BOX_B)
-                    .coloredVertex(cbrX, -cbrY, -cbrZ, BOX_R, BOX_G, BOX_B)
-                    .coloredVertex(cbrX, cbrY, -cbrZ, BOX_R, BOX_G, BOX_B)
-                    .coloredVertex(-cbrX, -cbrY, cbrZ, BOX_R, BOX_G, BOX_B)
-                    .coloredVertex(-cbrX, cbrY, cbrZ, BOX_R, BOX_G, BOX_B)
-                    .coloredVertex(cbrX, -cbrY, cbrZ, BOX_R, BOX_G, BOX_B)
-                    .coloredVertex(cbrX, cbrY, cbrZ, BOX_R, BOX_G, BOX_B).end();
-
-            GLMatrixStack.pop();
+            displayCharacter(character);
+            displayCharacterHitBox(character);
         }
+    }
+
+    private void displayCharacter(Character character) {
+        GLMatrixStack.push();
+        GLMatrixStack.translate((float) character.x, (float) character.y, (float) character.z);
+        GLMatrixStack.rotate((float) character.yaw, 0.0f, 1.0f, 0.0f);
+        GLMatrixStack.rotate((float) character.pitch, 1.0f, 0.0f, 0.0f);
+        GLMatrixStack.rotate((float) character.roll, 0.0f, 0.0f, 1.0f);
+
+        StaticModel model = StaticModel.fromCharacter(character);
+        ModelRenderer.displayStaticModel(model);
+
+        GLMatrixStack.pop();
+    }
+
+    private void displayCharacterHitBox(Character character) {
+        GLMatrixStack.push();
+        GLMatrixStack.translate((float) character.x, (float) character.y, (float) character.z);
+
+        final float BOX_R = 1.0f;
+        final float BOX_G = 0.0f;
+        final float BOX_B = 1.0f;
+
+        float cbrX = (float) character.collisionBoxRadiusX;
+        float cbrY = (float) character.collisionBoxRadiusY;
+        float cbrZ = (float) character.collisionBoxRadiusZ;
+
+        GLImmediateDrawCall.beginLines(null)
+                .coloredVertex(-cbrX, cbrY, -cbrZ, BOX_R, BOX_G, BOX_B)
+                .coloredVertex(cbrX, cbrY, -cbrZ, BOX_R, BOX_G, BOX_B)
+                .coloredVertex(-cbrX, cbrY, cbrZ, BOX_R, BOX_G, BOX_B)
+                .coloredVertex(cbrX, cbrY, cbrZ, BOX_R, BOX_G, BOX_B)
+                .coloredVertex(-cbrX, cbrY, -cbrZ, BOX_R, BOX_G, BOX_B)
+                .coloredVertex(-cbrX, cbrY, cbrZ, BOX_R, BOX_G, BOX_B)
+                .coloredVertex(cbrX, cbrY, -cbrZ, BOX_R, BOX_G, BOX_B)
+                .coloredVertex(cbrX, cbrY, cbrZ, BOX_R, BOX_G, BOX_B)
+
+                .coloredVertex(-cbrX, -cbrY, -cbrZ, BOX_R, BOX_G, BOX_B)
+                .coloredVertex(cbrX, -cbrY, -cbrZ, BOX_R, BOX_G, BOX_B)
+                .coloredVertex(-cbrX, -cbrY, cbrZ, BOX_R, BOX_G, BOX_B)
+                .coloredVertex(cbrX, -cbrY, cbrZ, BOX_R, BOX_G, BOX_B)
+                .coloredVertex(-cbrX, -cbrY, -cbrZ, BOX_R, BOX_G, BOX_B)
+                .coloredVertex(-cbrX, -cbrY, cbrZ, BOX_R, BOX_G, BOX_B)
+                .coloredVertex(cbrX, -cbrY, -cbrZ, BOX_R, BOX_G, BOX_B)
+                .coloredVertex(cbrX, -cbrY, cbrZ, BOX_R, BOX_G, BOX_B)
+
+                .coloredVertex(-cbrX, -cbrY, -cbrZ, BOX_R, BOX_G, BOX_B)
+                .coloredVertex(-cbrX, cbrY, -cbrZ, BOX_R, BOX_G, BOX_B)
+                .coloredVertex(cbrX, -cbrY, -cbrZ, BOX_R, BOX_G, BOX_B)
+                .coloredVertex(cbrX, cbrY, -cbrZ, BOX_R, BOX_G, BOX_B)
+                .coloredVertex(-cbrX, -cbrY, cbrZ, BOX_R, BOX_G, BOX_B)
+                .coloredVertex(-cbrX, cbrY, cbrZ, BOX_R, BOX_G, BOX_B)
+                .coloredVertex(cbrX, -cbrY, cbrZ, BOX_R, BOX_G, BOX_B)
+                .coloredVertex(cbrX, cbrY, cbrZ, BOX_R, BOX_G, BOX_B).end();
+
+        GLMatrixStack.pop();
     }
 
     public boolean isEmpty() {
