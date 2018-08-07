@@ -101,14 +101,8 @@ public class Client implements AutoCloseable
         }
 
         if (player != null) {
-            final double FRICTION = 0.5;
-
-            double speed = 5.0;
             double joystickX = 0.0;
             double joystickZ = 0.0;
-
-            if (Keyboard.isKeyDown(Key.LEFT_CONTROL))
-                speed = 10.0;
 
             if (Keyboard.isKeyDown(Key.W)) {
                 joystickX += Math.sin(fpsCamera.yaw);

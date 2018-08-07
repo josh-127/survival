@@ -5,7 +5,6 @@ import it.unimi.dsi.fastutil.objects.ObjectIterator;
 import net.survival.entity.Character;
 import net.survival.entity.Npc;
 import net.survival.entity.Player;
-import net.survival.util.MathEx;
 import net.survival.world.chunk.Chunk;
 
 public class NpcBehavior implements EntityBehavior
