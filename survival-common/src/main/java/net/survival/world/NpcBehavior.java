@@ -4,6 +4,7 @@ import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.objects.ObjectIterator;
 import net.survival.entity.Character;
 import net.survival.entity.Npc;
+import net.survival.entity.NpcMovementStyle;
 import net.survival.entity.Player;
 import net.survival.world.chunk.Chunk;
 
@@ -25,16 +26,6 @@ public class NpcBehavior implements EntityBehavior
     }
 
     private void tick(World world, double elapsedTime, Npc npc) {
-        // TODO: Optimize search algorithm.
-
-        //
-        // TODO: Also need to cache player searching, so if an NPC is already
-        // targeting a player, then there's no need to iterate through
-        // chunks.
-        //
-        // HashMap<Npc, Player> targets;
-        //
-
         ObjectIterator<Long2ObjectMap.Entry<Chunk>> chunkMapIt = world.getChunkMapFastIterator();
         Player nearestPlayer = null;
         double nearestPlayerSqrDistance = Double.MAX_VALUE;
@@ -69,10 +60,16 @@ public class NpcBehavior implements EntityBehavior
                 dy /= distance;
                 dz /= distance;
 
-                npc.setMoveDirectionControlValues(dx, dz);
+                if (npc.movementStyle == NpcMovementStyle.DEFAULT) {
+                    npc.setMoveDirectionControlValues(dx, dz);
 
-                if (nearestPlayer.y - npc.y >= 1.0)
+                    if (nearestPlayer.y - npc.y >= 1.0)
+                        npc.setJumpControlValue();
+                }
+                else if (npc.movementStyle == NpcMovementStyle.SLIME) {
+                    npc.setMoveDirectionControlValues(dx, dz);
                     npc.setJumpControlValue();
+                }
             }
         }
     }
