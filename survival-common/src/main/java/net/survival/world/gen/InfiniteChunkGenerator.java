@@ -69,12 +69,17 @@ public class InfiniteChunkGenerator implements ChunkGenerator
 
     private void replaceBlocks(int cx, int cz, Chunk chunk) {
         for (int z = 0; z < Chunk.ZLENGTH; ++z) {
+            for (int x = 0; x < Chunk.XLENGTH; ++x)
+                chunk.setBlock(x, 0, z, BlockType.BEDROCK.id);
+        }
+
+        for (int z = 0; z < Chunk.ZLENGTH; ++z) {
             for (int x = 0; x < Chunk.XLENGTH; ++x) {
                 BiomeType biome = BiomeType.byID(biomeLayer.sampleNearest(x, z));
                 int state = 0;
                 int counter = 3;
 
-                for (int y = Chunk.YLENGTH - 1; y >= 0; --y) {
+                for (int y = Chunk.YLENGTH - 1; y >= 1; --y) {
                     if (chunk.getBlock(x, y, z) != BlockType.TEMP_SOLID.id) {
                         state = 0;
                         counter = 3;
