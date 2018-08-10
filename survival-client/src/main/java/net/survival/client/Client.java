@@ -18,7 +18,9 @@ import net.survival.client.input.GlfwMouseAdapter;
 import net.survival.client.input.Key;
 import net.survival.client.input.Keyboard;
 import net.survival.client.input.Mouse;
+import net.survival.entity.CharacterModel;
 import net.survival.entity.Npc;
+import net.survival.entity.NpcMovementStyle;
 import net.survival.entity.Player;
 import net.survival.world.EntitySystem;
 import net.survival.world.World;
@@ -168,6 +170,33 @@ public class Client implements AutoCloseable
             npc.collisionBoxRadiusY = 0.9;
             npc.collisionBoxRadiusZ = 0.8;
             npc.moveSpeed = 4.0;
+            world.addCharacter(npc);
+        }
+
+        if (Keyboard.isKeyPressed(Key.Y)) {
+            Npc npc = new Npc();
+            npc.x = fpsCamera.position.x;
+            npc.y = fpsCamera.position.y;
+            npc.z = fpsCamera.position.z;
+            npc.collisionBoxRadiusX = 0.5;
+            npc.collisionBoxRadiusY = 0.9;
+            npc.collisionBoxRadiusZ = 0.8;
+            npc.moveSpeed = 4.0;
+            npc.model = CharacterModel.GOAT;
+            world.addCharacter(npc);
+        }
+
+        if (Keyboard.isKeyPressed(Key.U)) {
+            Npc npc = new Npc();
+            npc.x = fpsCamera.position.x;
+            npc.y = fpsCamera.position.y;
+            npc.z = fpsCamera.position.z;
+            npc.collisionBoxRadiusX = 0.375;
+            npc.collisionBoxRadiusY = 0.375;
+            npc.collisionBoxRadiusZ = 0.375;
+            npc.moveSpeed = 4.0;
+            npc.model = CharacterModel.SLIME;
+            npc.movementStyle = NpcMovementStyle.SLIME;
             world.addCharacter(npc);
         }
 
