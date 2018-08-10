@@ -5,7 +5,7 @@ import org.joml.Matrix4f;
 
 import net.survival.client.graphics.opengl.GLImmediateDrawCall;
 import net.survival.client.graphics.opengl.GLMatrixStack;
-import net.survival.client.graphics.opengl.GLOutputMergerState;
+import net.survival.client.graphics.opengl.GLState;
 
 class SkyboxDisplay
 {
@@ -36,7 +36,7 @@ class SkyboxDisplay
         GLMatrixStack.load(viewWithoutTranslation);
 
         try (@SuppressWarnings("resource")
-        GLOutputMergerState outputMergerState = new GLOutputMergerState()
+        GLState glState = new GLState()
                 .withDepthWriteMask(false))
         {
             GLImmediateDrawCall.beginTriangles(null)

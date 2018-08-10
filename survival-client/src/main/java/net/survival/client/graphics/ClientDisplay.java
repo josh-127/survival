@@ -2,10 +2,10 @@ package net.survival.client.graphics;
 
 import org.joml.Matrix4f;
 
-import net.survival.client.graphics.opengl.GLFogState;
 import net.survival.client.graphics.opengl.GLImmediateDrawCall;
 import net.survival.client.graphics.opengl.GLMatrixStack;
 import net.survival.client.graphics.opengl.GLRenderContext;
+import net.survival.client.graphics.opengl.GLState;
 import net.survival.world.World;
 
 public class ClientDisplay implements GraphicsResource
@@ -59,7 +59,7 @@ public class ClientDisplay implements GraphicsResource
 
         // World display
         try (@SuppressWarnings("resource")
-        GLFogState fogState = new GLFogState().useExpFog(0.00390625f, SkyboxDisplay.MIDDLE_R,
+        GLState glState = new GLState().useExpFog(0.00390625f, SkyboxDisplay.MIDDLE_R,
                 SkyboxDisplay.MIDDLE_G, SkyboxDisplay.MIDDLE_B, 1.0f))
         {
             worldDisplay.display();

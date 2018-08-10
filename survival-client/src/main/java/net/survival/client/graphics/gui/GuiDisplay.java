@@ -5,7 +5,7 @@ import org.joml.Matrix4f;
 import net.survival.client.graphics.GraphicsSettings;
 import net.survival.client.graphics.opengl.GLImmediateDrawCall;
 import net.survival.client.graphics.opengl.GLMatrixStack;
-import net.survival.client.graphics.opengl.GLOutputMergerState;
+import net.survival.client.graphics.opengl.GLState;
 import net.survival.client.gui.Control;
 import net.survival.util.Rectangle;
 
@@ -30,7 +30,7 @@ public class GuiDisplay
         GLMatrixStack.load(viewMatrix);
 
         try (@SuppressWarnings("resource")
-        GLOutputMergerState outputMergerState = new GLOutputMergerState().withDepthTest(false)) {
+        GLState glState = new GLState().withDepthTest(false)) {
             displayInternal(rootControl);
         }
 

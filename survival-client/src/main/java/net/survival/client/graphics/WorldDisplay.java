@@ -121,7 +121,7 @@ class WorldDisplay implements GraphicsResource
 
         /*//
         try (@SuppressWarnings("resource")
-        GLOutputMergerState state = new GLOutputMergerState()
+        GLState glState = new GLState()
                 .withDepthFunction(GLDepthFunction.EQUAL).withDepthWriteMask(false))
         {
             // TODO: Make OpenGL wrapper class.
