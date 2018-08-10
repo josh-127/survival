@@ -230,7 +230,7 @@ public class Client implements AutoCloseable
         GLDisplay display = new GLDisplay(GraphicsSettings.WINDOW_WIDTH,
                 GraphicsSettings.WINDOW_HEIGHT, WINDOW_TITLE);
         GlfwKeyboardAdapter keyboardAdapter = new GlfwKeyboardAdapter();
-        GlfwMouseAdapter mouseAdapter = new GlfwMouseAdapter();
+        GlfwMouseAdapter mouseAdapter = new GlfwMouseAdapter(display.getUnderlyingGlfwWindow());
         GLFW.glfwSetKeyCallback(display.getUnderlyingGlfwWindow(), keyboardAdapter);
         GLFW.glfwSetCursorPosCallback(display.getUnderlyingGlfwWindow(), mouseAdapter);
         GLRenderContext.init();

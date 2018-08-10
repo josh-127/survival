@@ -6,6 +6,10 @@ public final class Mouse
     static double y;
     static double prevX;
     static double prevY;
+    static boolean lmbDown;
+    static boolean rmbDown;
+    static boolean prevLmbDown;
+    static boolean prevRmbDown;
 
     private Mouse() {}
 
@@ -23,5 +27,37 @@ public final class Mouse
 
     public static double getDeltaY() {
         return y - prevY;
+    }
+
+    public static boolean isLmbDown() {
+        return lmbDown;
+    }
+
+    public static boolean isLmbUp() {
+        return !lmbDown;
+    }
+
+    public static boolean isLmbPressed() {
+        return lmbDown && !prevLmbDown;
+    }
+
+    public static boolean isLmbReleased() {
+        return !lmbDown && prevLmbDown;
+    }
+
+    public static boolean isRmbDown() {
+        return rmbDown;
+    }
+
+    public static boolean isRmbUp() {
+        return !rmbDown;
+    }
+
+    public static boolean isRmbPressed() {
+        return rmbDown && !prevRmbDown;
+    }
+
+    public static boolean isRmbReleased() {
+        return !rmbDown && prevRmbDown;
     }
 }

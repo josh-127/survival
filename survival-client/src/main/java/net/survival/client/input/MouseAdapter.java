@@ -8,4 +8,14 @@ public abstract class MouseAdapter
         Mouse.x = x;
         Mouse.y = y;
     }
+
+    protected void setLmbDown(boolean down) {
+        Mouse.prevLmbDown = Mouse.lmbDown;
+        Mouse.lmbDown = down;
+    }
+
+    protected void setRmbDown(boolean down) {
+        Mouse.prevRmbDown = Mouse.rmbDown;
+        Mouse.rmbDown = down;
+    }
 }
