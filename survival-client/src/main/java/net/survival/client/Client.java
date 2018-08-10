@@ -142,7 +142,7 @@ public class Client implements AutoCloseable
             fpsCamera.position.z = player.z;
         }
 
-        if (Keyboard.isKeyPressed(Key.F)) {
+        if (Mouse.isLmbPressed()) {
             double px = fpsCamera.position.x;
             double py = fpsCamera.position.y;
             double pz = fpsCamera.position.z;
