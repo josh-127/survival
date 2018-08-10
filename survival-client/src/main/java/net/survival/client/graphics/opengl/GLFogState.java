@@ -10,14 +10,14 @@ public class GLFogState implements GraphicsResource
 
     @Override
     public void close() {
-        GLFog.popFog();
+        GLStateStack.popFog();
     }
 
     public GLFogState useNoFog() {
         if (fogSet)
             throw new IllegalStateException("Fog state is already set.");
 
-        GLFog.pushNoFog();
+        GLStateStack.pushNoFog();
         fogSet = true;
         return this;
     }
@@ -26,7 +26,7 @@ public class GLFogState implements GraphicsResource
         if (fogSet)
             throw new IllegalStateException("Fog state is already set.");
 
-        GLFog.pushLinearFog(start, end, r, g, b, a);
+        GLStateStack.pushLinearFog(start, end, r, g, b, a);
         fogSet = true;
         return this;
     }
@@ -35,7 +35,7 @@ public class GLFogState implements GraphicsResource
         if (fogSet)
             throw new IllegalStateException("Fog state is already set.");
 
-        GLFog.pushExpFog(density, r, g, b, a);
+        GLStateStack.pushExpFog(density, r, g, b, a);
         fogSet = true;
         return this;
     }
@@ -44,7 +44,7 @@ public class GLFogState implements GraphicsResource
         if (fogSet)
             throw new IllegalStateException("Fog state is already set.");
 
-        GLFog.pushExp2Fog(density, r, g, b, a);
+        GLStateStack.pushExp2Fog(density, r, g, b, a);
         fogSet = true;
         return this;
     }

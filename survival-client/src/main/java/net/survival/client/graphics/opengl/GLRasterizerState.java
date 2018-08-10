@@ -15,22 +15,22 @@ public class GLRasterizerState implements GraphicsResource
     @Override
     public void close() {
         if (cullModeSet)
-            GLRasterizer.popCullMode();
+            GLStateStack.popCullMode();
         if (fillModeSet)
-            GLRasterizer.popFillMode();
+            GLStateStack.popFillMode();
         if (frontFaceSet)
-            GLRasterizer.popFrontFace();
+            GLStateStack.popFrontFace();
         if (scissorSet)
-            GLRasterizer.popScissor();
+            GLStateStack.popScissor();
         if (viewportSet)
-            GLRasterizer.popViewport();
+            GLStateStack.popViewport();
     }
 
     public GLRasterizerState withCullMode(GLCullMode cullMode) {
         if (cullModeSet)
             throw new IllegalStateException("Cull mode is already set.");
 
-        GLRasterizer.pushCullMode(cullMode);
+        GLStateStack.pushCullMode(cullMode);
         cullModeSet = true;
         return this;
     }
@@ -39,7 +39,7 @@ public class GLRasterizerState implements GraphicsResource
         if (fillModeSet)
             throw new IllegalStateException("Fill mode is already set.");
 
-        GLRasterizer.pushFillMode(fillMode);
+        GLStateStack.pushFillMode(fillMode);
         fillModeSet = true;
         return this;
     }
@@ -48,7 +48,7 @@ public class GLRasterizerState implements GraphicsResource
         if (frontFaceSet)
             throw new IllegalStateException("Front face is already set.");
 
-        GLRasterizer.pushFrontFace(frontFace);
+        GLStateStack.pushFrontFace(frontFace);
         frontFaceSet = true;
         return this;
     }
@@ -57,7 +57,7 @@ public class GLRasterizerState implements GraphicsResource
         if (scissorSet)
             throw new IllegalStateException("Scissor is already set.");
 
-        GLRasterizer.pushScissor(x, y, width, height);
+        GLStateStack.pushScissor(x, y, width, height);
         scissorSet = true;
         return this;
     }
@@ -66,7 +66,7 @@ public class GLRasterizerState implements GraphicsResource
         if (viewportSet)
             throw new IllegalStateException("Viewport is already set.");
 
-        GLRasterizer.pushViewport(x, y, width, height);
+        GLStateStack.pushViewport(x, y, width, height);
         viewportSet = true;
         return this;
     }

@@ -13,18 +13,18 @@ public class GLOutputMergerState implements GraphicsResource
     @Override
     public void close() {
         if (depthTestSet)
-            GLOutputMerger.popDepthTest();
+            GLStateStack.popDepthTest();
         if (depthFunctionSet)
-            GLOutputMerger.popDepthFunction();
+            GLStateStack.popDepthFunction();
         if (depthWriteMaskSet)
-            GLOutputMerger.popDepthWriteMask();
+            GLStateStack.popDepthWriteMask();
     }
 
     public GLOutputMergerState withDepthTest(boolean enabled) {
         if (depthTestSet)
             throw new IllegalStateException("Depth test already set");
 
-        GLOutputMerger.pushDepthTest(enabled);
+        GLStateStack.pushDepthTest(enabled);
         depthTestSet = true;
         return this;
     }
@@ -33,7 +33,7 @@ public class GLOutputMergerState implements GraphicsResource
         if (depthFunctionSet)
             throw new IllegalStateException("Depth function already set");
 
-        GLOutputMerger.pushDepthFunction(depthFunction);
+        GLStateStack.pushDepthFunction(depthFunction);
         depthFunctionSet = true;
         return this;
     }
@@ -42,7 +42,7 @@ public class GLOutputMergerState implements GraphicsResource
         if (depthWriteMaskSet)
             throw new IllegalStateException("Depth write mask already set");
 
-        GLOutputMerger.pushDepthWriteMask(enabled);
+        GLStateStack.pushDepthWriteMask(enabled);
         depthWriteMaskSet = true;
         return this;
     }

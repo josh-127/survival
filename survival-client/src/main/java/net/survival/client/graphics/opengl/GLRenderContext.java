@@ -7,15 +7,15 @@ public class GLRenderContext
     private GLRenderContext() {}
 
     public static void init() {
-        GLRasterizer.pushCullMode(GLCullMode.BACK);
-        GLRasterizer.pushFillMode(GLFillMode.FILL);
-        GLRasterizer.pushFrontFace(GLFrontFace.CCW);
+        GLStateStack.pushCullMode(GLCullMode.BACK);
+        GLStateStack.pushFillMode(GLFillMode.FILL);
+        GLStateStack.pushFrontFace(GLFrontFace.CCW);
 
-        GLFog.pushNoFog();
+        GLStateStack.pushNoFog();
 
-        GLOutputMerger.pushDepthTest(true);
-        GLOutputMerger.pushDepthFunction(GLDepthFunction.LEQUAL);
-        GLOutputMerger.pushDepthWriteMask(true);
+        GLStateStack.pushDepthTest(true);
+        GLStateStack.pushDepthFunction(GLDepthFunction.LEQUAL);
+        GLStateStack.pushDepthWriteMask(true);
 
         glEnable(GL_TEXTURE_2D);
     }
