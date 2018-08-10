@@ -6,5 +6,6 @@ public enum CharacterModel
     COW,
     GOAT,
     HUMAN,
-    PIG;
+    PIG,
+    SLIME;
 }

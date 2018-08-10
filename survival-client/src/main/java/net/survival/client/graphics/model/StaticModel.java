@@ -28,6 +28,7 @@ public class StaticModel
     public static final StaticModel goat = fromFile("../assets/models/entities/goat.obj");
     public static final StaticModel human = fromFile("../assets/models/entities/human.obj");
     public static final StaticModel pig = fromFile("../assets/models/entities/pig.obj");
+    public static final StaticModel slime = fromFile("../assets/models/entities/slime.obj");
 
     public final Mesh[] meshes;
     public final String absoluteFilePath;
@@ -44,6 +45,7 @@ public class StaticModel
         case GOAT:    return goat;
         case HUMAN:   return human;
         case PIG:     return pig;
+        case SLIME:   return slime;
         }
 
         throw new RuntimeException();
