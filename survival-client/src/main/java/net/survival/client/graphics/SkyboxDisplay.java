@@ -35,9 +35,7 @@ class SkyboxDisplay
         GLMatrixStack.setProjectionMatrix(projection);
         GLMatrixStack.load(viewWithoutTranslation);
 
-        try (@SuppressWarnings("resource")
-        GLState glState = new GLState()
-                .withDepthWriteMask(false))
+        GLState.pushDepthWriteMask(false);
         {
             GLImmediateDrawCall.beginTriangles(null)
                     // Top
@@ -84,5 +82,6 @@ class SkyboxDisplay
                     .coloredVertex(1.0f, -1.0f, -1.0f, BOTTOM_R, BOTTOM_G, BOTTOM_B)
                     .end();
         }
+        GLState.popDepthWriteMask();
     }
 }

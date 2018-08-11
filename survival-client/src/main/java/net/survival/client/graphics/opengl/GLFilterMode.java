@@ -21,6 +21,6 @@ public enum GLFilterMode
         case LINEAR_MIPMAP_LINEAR:   return GL_LINEAR_MIPMAP_LINEAR;
         }
 
-        throw new RuntimeException();
+        throw new IllegalStateException();
     }
 }

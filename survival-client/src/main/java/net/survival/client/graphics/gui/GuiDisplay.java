@@ -29,10 +29,11 @@ public class GuiDisplay
         GLMatrixStack.push();
         GLMatrixStack.load(viewMatrix);
 
-        try (@SuppressWarnings("resource")
-        GLState glState = new GLState().withDepthTest(false)) {
+        GLState.pushDepthTestEnabled(false);
+        {
             displayInternal(rootControl);
         }
+        GLState.popDepthTestEnabled();
 
         GLMatrixStack.pop();
     }

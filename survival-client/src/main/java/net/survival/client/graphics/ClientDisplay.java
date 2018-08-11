@@ -58,12 +58,14 @@ public class ClientDisplay implements GraphicsResource
         skyboxDisplay.draw(cameraViewMatrix, cameraProjectionMatrix);
 
         // World display
-        try (@SuppressWarnings("resource")
-        GLState glState = new GLState().useExpFog(0.00390625f, SkyboxDisplay.MIDDLE_R,
-                SkyboxDisplay.MIDDLE_G, SkyboxDisplay.MIDDLE_B, 1.0f))
+        GLState.pushFogEnabled(true);
+        GLState.pushExpFog(0.00390625f, SkyboxDisplay.MIDDLE_R,
+                SkyboxDisplay.MIDDLE_G, SkyboxDisplay.MIDDLE_B, 1.0f);
         {
             worldDisplay.display();
         }
+        GLState.popFogParams();
+        GLState.popFogEnabled();
 
         // Axis display
         GLMatrixStack.setProjectionMatrix(cameraProjectionMatrix);

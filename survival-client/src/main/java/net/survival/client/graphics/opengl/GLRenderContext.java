@@ -7,15 +7,23 @@ public class GLRenderContext
     private GLRenderContext() {}
 
     public static void init() {
-        GLStateStack.pushCullMode(GLCullMode.BACK);
-        GLStateStack.pushFillMode(GLFillMode.FILL);
-        GLStateStack.pushFrontFace(GLFrontFace.CCW);
-
-        GLStateStack.pushNoFog();
-
-        GLStateStack.pushDepthTest(true);
-        GLStateStack.pushDepthFunction(GLDepthFunction.LEQUAL);
-        GLStateStack.pushDepthWriteMask(true);
+        GLState.pushAlphaTestEnabled(false);
+        GLState.pushBlendEnabled(false);
+        GLState.pushCullFaceEnabled(true);
+        GLState.pushDepthTestEnabled(true);
+        GLState.pushFogEnabled(false);
+        GLState.pushScissorTestEnabled(false);
+        GLState.pushAlphaFunction(GLComparisonFunc.ALWAYS, 0.0f);
+        GLState.pushBlendFunction(GLBlendFactor.ONE, GLBlendFactor.ZERO);
+        GLState.pushCullMode(GLCullMode.BACK);
+        GLState.pushDepthFunction(GLComparisonFunc.LESS);
+        GLState.pushDepthWriteMask(true);
+        GLState.pushLinearFog(0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f);
+        GLState.pushFrontFace(GLFrontFace.CCW);
+        GLState.pushLineWidth(1.0f);
+        GLState.pushPointSize(1.0f);
+        GLState.pushFillMode(GLFillMode.FILL);
+        GLState.pushShadeModel(GLShadeModel.SMOOTH);
 
         glEnable(GL_TEXTURE_2D);
     }

@@ -2,17 +2,17 @@ package net.survival.client.graphics.opengl;
 
 import static org.lwjgl.opengl.GL11.*;
 
-public enum GLWrapMode
+public enum GLShadeModel
 {
-    REPEAT,
-    CLAMP;
+    FLAT,
+    SMOOTH;
 
-    int toGLConstant() {
+    public int toGLConstant() {
         switch (this) {
-        case REPEAT: return GL_REPEAT;
-        case CLAMP:  return GL_CLAMP;
+        case FLAT: return GL_FLAT;
+        case SMOOTH: return GL_SMOOTH;
         }
-        
+
         throw new IllegalStateException();
     }
 }

@@ -2,7 +2,7 @@ package net.survival.client.graphics.opengl;
 
 import static org.lwjgl.opengl.GL11.*;
 
-public enum GLDepthFunction {
+public enum GLComparisonFunc {
     NEVER, ALWAYS, EQUAL, NOT_EQUAL, LESS, GREATER, LEQUAL, GEQUAL;
     
     int toGLConstant() {
@@ -17,6 +17,6 @@ public enum GLDepthFunction {
         case GEQUAL:    return GL_GEQUAL;
         }
 
-        throw new RuntimeException();
+        throw new IllegalStateException();
     }
 }

@@ -12,6 +12,6 @@ public enum GLFillMode {
         case FILL:  return GL_FILL;
         }
 
-        throw new RuntimeException();
+        throw new IllegalStateException();
     }
 }

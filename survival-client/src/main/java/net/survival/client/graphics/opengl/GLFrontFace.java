@@ -11,6 +11,6 @@ public enum GLFrontFace {
         case CCW: return GL_CCW;
         }
 
-        throw new RuntimeException();
+        throw new IllegalStateException();
     }
 }
