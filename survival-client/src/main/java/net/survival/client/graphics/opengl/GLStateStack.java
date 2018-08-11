@@ -9,6 +9,97 @@ import it.unimi.dsi.fastutil.longs.LongStack;
 
 class GLStateStack
 {
+    // ================================================================
+    // GL_DEPTH_TEST
+    // ================================================================
+    private static final Stack<Boolean> depthTestEnabledStack = new Stack<>();
+
+    public static void pushDepthTest(boolean enabled) {
+        setDepthTest(enabled);
+        depthTestEnabledStack.push(enabled);
+    }
+
+    public static void popDepthTest() {
+        depthTestEnabledStack.pop();
+        setDepthTest(depthTestEnabledStack.peek());
+    }
+
+    private static void setDepthTest(boolean enabled) {
+        if (enabled)
+            glEnable(GL_DEPTH_TEST);
+        else
+            glDisable(GL_DEPTH_TEST);
+    }
+
+    // ================================================================
+    // glCullFace
+    // ================================================================
+    private static final Stack<GLCullMode> cullModeStack = new Stack<>();
+
+    public static void pushCullMode(GLCullMode cullMode) {
+        setCullMode(cullMode);
+        cullModeStack.push(cullMode);
+    }
+
+    public static void popCullMode() {
+        cullModeStack.pop();
+        setCullMode(cullModeStack.peek());
+    }
+
+    private static void setCullMode(GLCullMode to) {
+        if (to == GLCullMode.NONE) {
+            glDisable(GL_CULL_FACE);
+        }
+        else {
+            glEnable(GL_CULL_FACE);
+            if (to == GLCullMode.FRONT)
+                glCullFace(GL_FRONT);
+            else if (to == GLCullMode.BACK)
+                glCullFace(GL_BACK);
+        }
+    }
+
+    // ================================================================
+    // glDepthFunc
+    // ================================================================
+    private static final Stack<GLDepthFunction> depthFunctionStack = new Stack<>();
+
+    public static void pushDepthFunction(GLDepthFunction depthFunction) {
+        setDepthFunction(depthFunction);
+        depthFunctionStack.push(depthFunction);
+    }
+
+    public static void popDepthFunction() {
+        depthFunctionStack.pop();
+        setDepthFunction(depthFunctionStack.peek());
+    }
+
+    private static void setDepthFunction(GLDepthFunction to) {
+        glDepthFunc(to.toGLConstant());
+    }
+
+    // ================================================================
+    // glDepthMask
+    // ================================================================
+    private static final Stack<Boolean> depthWriteMaskStack = new Stack<>();
+
+    public static void pushDepthWriteMask(boolean enabled) {
+        setDepthWriteMask(enabled);
+        depthWriteMaskStack.push(enabled);
+    }
+
+    public static void popDepthWriteMask() {
+        depthWriteMaskStack.pop();
+        setDepthWriteMask(depthWriteMaskStack.peek());
+    }
+
+    private static void setDepthWriteMask(boolean to) {
+        glDepthMask(to);
+    }
+
+    // ================================================================
+    // glFog
+    // ================================================================
     private static final Stack<GLFogMode> fogModeStack = new Stack<>();
     private static final Stack<Float> densityArgStack = new Stack<>();
     private static final Stack<Float> startArgStack = new Stack<>();
@@ -17,18 +108,7 @@ class GLStateStack
     private static final Stack<Float> greenArgStack = new Stack<>();
     private static final Stack<Float> blueArgStack = new Stack<>();
     private static final Stack<Float> alphaArgStack = new Stack<>();
-
-    private static final Stack<Boolean> depthTestEnabledStack = new Stack<>();
-    private static final Stack<GLDepthFunction> depthFunctionStack = new Stack<>();
-    private static final Stack<Boolean> depthWriteMaskStack = new Stack<>();
-
-    private static final Stack<GLCullMode> cullModeStack = new Stack<>();
-    private static final Stack<GLFillMode> fillModeStack = new Stack<>();
-    private static final Stack<GLFrontFace> frontFaceStack = new Stack<>();
-    private static final LongStack scissorPositionStack = new LongArrayList();
-    private static final LongStack scissorSizeStack = new LongArrayList();
-    private static final LongStack viewportPositionStack = new LongArrayList();
-    private static final LongStack viewportSizeStack = new LongArrayList();
+    private static float[] glFogfv_color = new float[4];
 
     public static void pushNoFog() {
         setFog(GLFogMode.NONE, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f);
@@ -99,8 +179,6 @@ class GLStateStack
         setFog(mode, density, start, end, r, g, b, a);
     }
 
-    private static float[] glFogfv_color = new float[4];
-
     private static void setFog(GLFogMode mode, float density, float start, float end, float r,
             float g, float b, float a)
     {
@@ -124,73 +202,29 @@ class GLStateStack
         glFogfv(GL_FOG_COLOR, glFogfv_color);
     }
 
-    public static void pushDepthTest(boolean enabled) {
-        setDepthTest(enabled);
-        depthTestEnabledStack.push(enabled);
+    // ================================================================
+    // glFrontFace
+    // ================================================================
+    private static final Stack<GLFrontFace> frontFaceStack = new Stack<>();
+
+    public static void pushFrontFace(GLFrontFace frontFace) {
+        setFrontFace(frontFace);
+        frontFaceStack.push(frontFace);
     }
 
-    public static void popDepthTest() {
-        depthTestEnabledStack.pop();
-        setDepthTest(depthTestEnabledStack.peek());
+    public static void popFrontFace() {
+        frontFaceStack.pop();
+        setFrontFace(frontFaceStack.peek());
     }
 
-    private static void setDepthTest(boolean enabled) {
-        if (enabled)
-            glEnable(GL_DEPTH_TEST);
-        else
-            glDisable(GL_DEPTH_TEST);
+    private static void setFrontFace(GLFrontFace to) {
+        glFrontFace(to.toGLConstant());
     }
 
-    public static void pushDepthFunction(GLDepthFunction depthFunction) {
-        setDepthFunction(depthFunction);
-        depthFunctionStack.push(depthFunction);
-    }
-
-    public static void popDepthFunction() {
-        depthFunctionStack.pop();
-        setDepthFunction(depthFunctionStack.peek());
-    }
-
-    private static void setDepthFunction(GLDepthFunction to) {
-        glDepthFunc(to.toGLConstant());
-    }
-
-    public static void pushDepthWriteMask(boolean enabled) {
-        setDepthWriteMask(enabled);
-        depthWriteMaskStack.push(enabled);
-    }
-
-    public static void popDepthWriteMask() {
-        depthWriteMaskStack.pop();
-        setDepthWriteMask(depthWriteMaskStack.peek());
-    }
-
-    private static void setDepthWriteMask(boolean to) {
-        glDepthMask(to);
-    }
-
-    public static void pushCullMode(GLCullMode cullMode) {
-        setCullMode(cullMode);
-        cullModeStack.push(cullMode);
-    }
-
-    public static void popCullMode() {
-        cullModeStack.pop();
-        setCullMode(cullModeStack.peek());
-    }
-
-    private static void setCullMode(GLCullMode to) {
-        if (to == GLCullMode.NONE) {
-            glDisable(GL_CULL_FACE);
-        }
-        else {
-            glEnable(GL_CULL_FACE);
-            if (to == GLCullMode.FRONT)
-                glCullFace(GL_FRONT);
-            else if (to == GLCullMode.BACK)
-                glCullFace(GL_BACK);
-        }
-    }
+    // ================================================================
+    // glPolygonMode
+    // ================================================================
+    private static final Stack<GLFillMode> fillModeStack = new Stack<>();
 
     public static void pushFillMode(GLFillMode fillMode) {
         setFillMode(fillMode);
@@ -206,19 +240,11 @@ class GLStateStack
         glPolygonMode(GL_FRONT_AND_BACK, to.toGLConstant());
     }
 
-    public static void pushFrontFace(GLFrontFace frontFace) {
-        setFrontFace(frontFace);
-        frontFaceStack.push(frontFace);
-    }
-
-    public static void popFrontFace() {
-        frontFaceStack.pop();
-        setFrontFace(frontFaceStack.peek());
-    }
-
-    private static void setFrontFace(GLFrontFace to) {
-        glFrontFace(to.toGLConstant());
-    }
+    // ================================================================
+    // glScissor
+    // ================================================================
+    private static final LongStack scissorPositionStack = new LongArrayList();
+    private static final LongStack scissorSizeStack = new LongArrayList();
 
     public static void pushScissor(int x, int y, int width, int height) {
         setScissor(x, y, width, height);
@@ -242,6 +268,12 @@ class GLStateStack
     private static void setScissor(int x, int y, int width, int height) {
         glScissor(x, y, width, height);
     }
+
+    // ================================================================
+    // glViewport
+    // ================================================================
+    private static final LongStack viewportPositionStack = new LongArrayList();
+    private static final LongStack viewportSizeStack = new LongArrayList();
 
     public static void pushViewport(int x, int y, int width, int height) {
         setViewport(x, y, width, height);

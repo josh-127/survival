@@ -4,40 +4,72 @@ import net.survival.client.graphics.GraphicsResource;
 
 public final class GLState implements GraphicsResource
 {
-    private boolean fogSet;
-
     private boolean depthTestSet;
+    private boolean cullModeSet;
     private boolean depthFunctionSet;
     private boolean depthWriteMaskSet;
-
-    private boolean cullModeSet;
-    private boolean fillModeSet;
+    private boolean fogSet;
     private boolean frontFaceSet;
+    private boolean fillModeSet;
     private boolean scissorSet;
     private boolean viewportSet;
 
     @Override
     public void close() throws RuntimeException {
-        if (fogSet)
-            GLStateStack.popFog();
-
         if (depthTestSet)
             GLStateStack.popDepthTest();
+        if (cullModeSet)
+            GLStateStack.popCullMode();
         if (depthFunctionSet)
             GLStateStack.popDepthFunction();
         if (depthWriteMaskSet)
             GLStateStack.popDepthWriteMask();
-
-        if (cullModeSet)
-            GLStateStack.popCullMode();
-        if (fillModeSet)
-            GLStateStack.popFillMode();
+        if (fogSet)
+            GLStateStack.popFog();
         if (frontFaceSet)
             GLStateStack.popFrontFace();
+        if (fillModeSet)
+            GLStateStack.popFillMode();
         if (scissorSet)
             GLStateStack.popScissor();
         if (viewportSet)
             GLStateStack.popViewport();
+    }
+
+    public GLState withDepthTest(boolean enabled) {
+        if (depthTestSet)
+            throw new IllegalStateException("Depth test already set");
+
+        GLStateStack.pushDepthTest(enabled);
+        depthTestSet = true;
+        return this;
+    }
+
+    public GLState withCullMode(GLCullMode cullMode) {
+        if (cullModeSet)
+            throw new IllegalStateException("Cull mode is already set.");
+
+        GLStateStack.pushCullMode(cullMode);
+        cullModeSet = true;
+        return this;
+    }
+
+    public GLState withDepthFunction(GLDepthFunction depthFunction) {
+        if (depthFunctionSet)
+            throw new IllegalStateException("Depth function already set");
+
+        GLStateStack.pushDepthFunction(depthFunction);
+        depthFunctionSet = true;
+        return this;
+    }
+
+    public GLState withDepthWriteMask(boolean enabled) {
+        if (depthWriteMaskSet)
+            throw new IllegalStateException("Depth write mask already set");
+
+        GLStateStack.pushDepthWriteMask(enabled);
+        depthWriteMaskSet = true;
+        return this;
     }
 
     public GLState useNoFog() {
@@ -76,39 +108,12 @@ public final class GLState implements GraphicsResource
         return this;
     }
 
-    public GLState withDepthTest(boolean enabled) {
-        if (depthTestSet)
-            throw new IllegalStateException("Depth test already set");
+    public GLState withFrontFace(GLFrontFace frontFace) {
+        if (frontFaceSet)
+            throw new IllegalStateException("Front face is already set.");
 
-        GLStateStack.pushDepthTest(enabled);
-        depthTestSet = true;
-        return this;
-    }
-
-    public GLState withDepthFunction(GLDepthFunction depthFunction) {
-        if (depthFunctionSet)
-            throw new IllegalStateException("Depth function already set");
-
-        GLStateStack.pushDepthFunction(depthFunction);
-        depthFunctionSet = true;
-        return this;
-    }
-
-    public GLState withDepthWriteMask(boolean enabled) {
-        if (depthWriteMaskSet)
-            throw new IllegalStateException("Depth write mask already set");
-
-        GLStateStack.pushDepthWriteMask(enabled);
-        depthWriteMaskSet = true;
-        return this;
-    }
-
-    public GLState withCullMode(GLCullMode cullMode) {
-        if (cullModeSet)
-            throw new IllegalStateException("Cull mode is already set.");
-
-        GLStateStack.pushCullMode(cullMode);
-        cullModeSet = true;
+        GLStateStack.pushFrontFace(frontFace);
+        frontFaceSet = true;
         return this;
     }
 
@@ -118,15 +123,6 @@ public final class GLState implements GraphicsResource
 
         GLStateStack.pushFillMode(fillMode);
         fillModeSet = true;
-        return this;
-    }
-
-    public GLState withFrontFace(GLFrontFace frontFace) {
-        if (frontFaceSet)
-            throw new IllegalStateException("Front face is already set.");
-
-        GLStateStack.pushFrontFace(frontFace);
-        frontFaceSet = true;
         return this;
     }
 
