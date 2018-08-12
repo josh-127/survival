@@ -142,7 +142,7 @@ public class Client implements AutoCloseable
             fpsCamera.position.z = player.z;
         }
 
-        if (Mouse.isLmbPressed()) {
+        if (Mouse.isLmbPressed() || Mouse.isRmbPressed()) {
             double px = fpsCamera.position.x;
             double py = fpsCamera.position.y;
             double pz = fpsCamera.position.z;
@@ -155,7 +155,10 @@ public class Client implements AutoCloseable
                 int pyi = (int) Math.floor(py);
                 int pzi = (int) Math.floor(pz);
                 if (world.getBlock(pxi, pyi, pzi) != BlockType.EMPTY.id) {
-                    world.setBlock(pxi, pyi, pzi, BlockType.EMPTY.id);
+                    if (Mouse.isLmbPressed())
+                        world.setBlock(pxi, pyi, pzi, BlockType.EMPTY.id);
+                    else if (Mouse.isRmbPressed())
+                        world.setBlock(pxi, pyi, pzi, BlockType.OAK_FENCE.id);
                     break;
                 }
             }
