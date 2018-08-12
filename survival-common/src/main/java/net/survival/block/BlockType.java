@@ -95,6 +95,10 @@ public enum BlockType
         bt.name = "Lapis Block";
         bt.setTextureOnAllFaces("ProgrammerArt-v3.0/textures/blocks/lapis_block.png");
     }),
+    OAK_FENCE(bt -> {
+        bt.name = "Oak Fence";
+        bt.setTextureOnAllFaces("ProgrammerArt-v3.0/textures/blocks/planks_oak.png");
+    }),
 
     //
     // Special
