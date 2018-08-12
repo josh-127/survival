@@ -111,4 +111,15 @@ public class Camera
     public float getDirectionZ() {
         return (float) -(Math.cos(yaw) * Math.cos(pitch));
     }
+
+    public int getDominantAxis() {
+        float lenX = Math.abs(getDirectionX());
+        float lenY = Math.abs(getDirectionY());
+        float lenZ = Math.abs(getDirectionZ());
+        float maxValue = Math.max(Math.max(lenX, lenY), lenZ);
+
+        if (maxValue == lenX) return 0;
+        if (maxValue == lenY) return 1;
+        return 2;
+    }
 }

@@ -108,16 +108,44 @@ class WorldDisplay implements GraphicsResource
         cameraProjectionMatrix.identity();
         camera.getProjectionMatrix(cameraProjectionMatrix);
 
+        int dominantAxis = camera.getDominantAxis();
+        BlockFace culledFace = null;
+
+        if (dominantAxis == 0) {
+            if (camera.getDirectionX() < 0.0f)
+                culledFace = BlockFace.LEFT;
+            else
+                culledFace = BlockFace.RIGHT;
+        }
+        else if (dominantAxis == 1) {
+            if (camera.getDirectionY() < 0.0f)
+                culledFace = BlockFace.BOTTOM;
+            else
+                culledFace = BlockFace.TOP;
+        }
+        else {
+            if (camera.getDirectionZ() < 0.0f)
+                culledFace = BlockFace.BACK;
+            else
+                culledFace = BlockFace.FRONT;
+        }
+
         GLMatrixStack.setProjectionMatrix(cameraProjectionMatrix);
         GLMatrixStack.push();
         GLMatrixStack.loadIdentity();
 
-        drawFaceDisplays(topFaceDisplays, BlockFace.TOP, true, false, cameraViewMatrix);
-        drawFaceDisplays(bottomFaceDisplays, BlockFace.BOTTOM, false, false, cameraViewMatrix);
+        if (culledFace != BlockFace.TOP)
+            drawFaceDisplays(topFaceDisplays, BlockFace.TOP, true, false, cameraViewMatrix);
+        if (culledFace != BlockFace.BOTTOM)
+            drawFaceDisplays(bottomFaceDisplays, BlockFace.BOTTOM, false, false, cameraViewMatrix);
+        if (culledFace != BlockFace.LEFT)
         drawFaceDisplays(leftFaceDisplays, BlockFace.LEFT, false, false, cameraViewMatrix);
-        drawFaceDisplays(rightFaceDisplays, BlockFace.RIGHT, false, false, cameraViewMatrix);
-        drawFaceDisplays(frontFaceDisplays, BlockFace.FRONT, false, false, cameraViewMatrix);
-        drawFaceDisplays(backFaceDisplays, BlockFace.BACK, false, false, cameraViewMatrix);
+        if (culledFace != BlockFace.RIGHT)
+            drawFaceDisplays(rightFaceDisplays, BlockFace.RIGHT, false, false, cameraViewMatrix);
+        if (culledFace != BlockFace.FRONT)
+            drawFaceDisplays(frontFaceDisplays, BlockFace.FRONT, false, false, cameraViewMatrix);
+        if (culledFace != BlockFace.BACK)
+            drawFaceDisplays(backFaceDisplays, BlockFace.BACK, false, false, cameraViewMatrix);
 
         /*//
         try (@SuppressWarnings("resource")
