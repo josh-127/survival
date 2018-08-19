@@ -7,8 +7,7 @@ public enum BlockType
     EMPTY(bt -> {
         bt.name = "<EMPTY>";
         bt.solid = false;
-        bt.visible = false;
-        bt.transparent = true;
+        bt.model = BlockModel.INVISIBLE;
     }),
 
     STONE(bt -> {
@@ -36,7 +35,7 @@ public enum BlockType
     OAK_SAPLING(bt -> {
         bt.name = "Oak Sapling";
         bt.setTextureOnAllFaces("ProgrammerArt-v3.0/textures/blocks/sapling_oak.png");
-        bt.transparent = true;
+        bt.model = BlockModel.SAPLING;
     }),
     BEDROCK(bt -> {
         bt.name = "Bedrock";
@@ -45,7 +44,6 @@ public enum BlockType
     WATER(bt -> {
         bt.name = "Water";
         bt.setTextureOnAllFaces("textures/blocks/water.png");
-        bt.transparent = true;
     }),
     SAND(bt -> {
         bt.name = "Sand";
@@ -76,7 +74,6 @@ public enum BlockType
     OAK_LEAVES(bt -> {
         bt.name = "Oak Leaves";
         bt.setTextureOnAllFaces("ProgrammerArt-v3.0/textures/blocks/leaves_oak.png");
-        bt.transparent = true;
     }),
     SPONGE(bt -> {
         bt.name = "Sponge";
@@ -85,7 +82,6 @@ public enum BlockType
     GLASS(bt -> {
         bt.name = "Glass";
         bt.setTextureOnAllFaces("ProgrammerArt-v3.0/textures/blocks/glass.png");
-        bt.transparent = true;
     }),
     LAPIS_ORE(bt -> {
         bt.name = "Lapis Ore";
@@ -98,6 +94,7 @@ public enum BlockType
     OAK_FENCE(bt -> {
         bt.name = "Oak Fence";
         bt.setTextureOnAllFaces("ProgrammerArt-v3.0/textures/blocks/planks_oak.png");
+        bt.model = BlockModel.FENCE;
     }),
 
     //
@@ -105,14 +102,10 @@ public enum BlockType
     //
     TEMP_SOLID(bt -> {
         bt.name = "<TEMP_SOLID>";
-        bt.visible = false;
-        bt.transparent = true;
     }),
     UNDEFINED(bt -> {
         bt.name = "<UNDEFINED>";
         bt.solid = false;
-        bt.visible = false;
-        bt.transparent = true;
     });
 
     private static final BlockType[] cachedValues = values();
@@ -122,16 +115,14 @@ public enum BlockType
     private String name;
     private final String[] textures;
     private boolean solid;
-    private boolean visible;
-    private boolean transparent;
+    private BlockModel model;
 
     private BlockType(Builder builder) {
         id = (short) ordinal();
         name = "<UNDEFINED>";
         textures = new String[BlockFace.values().length];
         solid = true;
-        visible = true;
-        transparent = false;
+        model = BlockModel.DEFAULT;
 
         builder.build(this);
     }
@@ -188,12 +179,8 @@ public enum BlockType
         return solid;
     }
 
-    public boolean isVisible() {
-        return visible;
-    }
-
-    public boolean isTransparent() {
-        return transparent;
+    public BlockModel getModel() {
+        return model;
     }
 
     private interface Builder

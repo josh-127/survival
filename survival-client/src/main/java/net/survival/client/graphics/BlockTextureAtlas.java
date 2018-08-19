@@ -8,7 +8,7 @@ import net.survival.client.graphics.opengl.GLWrapMode;
 
 // TODO: Remove hard-coding
 // TODO: Make non-blocking
-class BlockTextureAtlas implements GraphicsResource
+public class BlockTextureAtlas implements GraphicsResource
 {
     public final GLTexture blockTextures;
     public final BlockFace blockFace;

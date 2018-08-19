@@ -10,6 +10,7 @@ import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
 import it.unimi.dsi.fastutil.longs.LongSet;
 import net.survival.block.BlockFace;
+import net.survival.client.graphics.blockrenderer.BlockRenderer;
 import net.survival.client.graphics.opengl.GLFilterMode;
 import net.survival.client.graphics.opengl.GLMatrixStack;
 import net.survival.client.graphics.opengl.GLTexture;
@@ -27,13 +28,13 @@ class WorldDisplay implements GraphicsResource
     //
 
     private final World world;
+    private HashMap<Chunk, ChunkDisplay> nonCubicDisplays;
     private HashMap<Chunk, ChunkDisplay> topFaceDisplays;
     private HashMap<Chunk, ChunkDisplay> bottomFaceDisplays;
     private HashMap<Chunk, ChunkDisplay> leftFaceDisplays;
     private HashMap<Chunk, ChunkDisplay> rightFaceDisplays;
     private HashMap<Chunk, ChunkDisplay> frontFaceDisplays;
     private HashMap<Chunk, ChunkDisplay> backFaceDisplays;
-    private final BlockTextureAtlas[] blockTextures;
     private final GLTexture overlayTexture;
 
     private final LongSet chunksToRedraw;
@@ -48,16 +49,13 @@ class WorldDisplay implements GraphicsResource
     public WorldDisplay(World world, Camera camera, float maxViewRadius) {
         this.world = world;
 
+        nonCubicDisplays = new HashMap<>();
         topFaceDisplays = new HashMap<>();
         bottomFaceDisplays = new HashMap<>();
         leftFaceDisplays = new HashMap<>();
         rightFaceDisplays = new HashMap<>();
         frontFaceDisplays = new HashMap<>();
         backFaceDisplays = new HashMap<>();
-
-        blockTextures = new BlockTextureAtlas[BlockFace.values().length];
-        for (int i = 0; i < blockTextures.length; ++i)
-            blockTextures[i] = new BlockTextureAtlas(BlockFace.values()[i]);
 
         Bitmap overlayBitmap = Bitmap.fromFile("../assets/textures/overlays/low_contrast.png");
         overlayTexture = new GLTexture();
@@ -74,10 +72,14 @@ class WorldDisplay implements GraphicsResource
         cameraViewMatrix = new Matrix4f();
         cameraProjectionMatrix = new Matrix4f();
         modelViewMatrix = new Matrix4f();
+
+        BlockRenderer.initTextures();
     }
 
     @Override
     public void close() {
+        for (ChunkDisplay display : nonCubicDisplays.values())
+            display.close();
         for (ChunkDisplay display : topFaceDisplays.values())
             display.close();
         for (ChunkDisplay display : bottomFaceDisplays.values())
@@ -90,12 +92,10 @@ class WorldDisplay implements GraphicsResource
             display.close();
         for (ChunkDisplay display : backFaceDisplays.values())
             display.close();
-
-        for (int i = 0; i < blockTextures.length; ++i)
-            blockTextures[i].close();
     }
 
     public void display() {
+        updateNonCubicDisplays(nonCubicDisplays);
         updateFaceDisplays(topFaceDisplays, BlockFace.TOP);
         updateFaceDisplays(bottomFaceDisplays, BlockFace.BOTTOM);
         updateFaceDisplays(leftFaceDisplays, BlockFace.LEFT);
@@ -134,63 +134,57 @@ class WorldDisplay implements GraphicsResource
         GLMatrixStack.push();
         GLMatrixStack.loadIdentity();
 
-        if (culledFace != BlockFace.TOP)
-            drawFaceDisplays(topFaceDisplays, BlockFace.TOP, true, false, cameraViewMatrix);
-        if (culledFace != BlockFace.BOTTOM)
-            drawFaceDisplays(bottomFaceDisplays, BlockFace.BOTTOM, false, false, cameraViewMatrix);
-        if (culledFace != BlockFace.LEFT)
-        drawFaceDisplays(leftFaceDisplays, BlockFace.LEFT, false, false, cameraViewMatrix);
-        if (culledFace != BlockFace.RIGHT)
-            drawFaceDisplays(rightFaceDisplays, BlockFace.RIGHT, false, false, cameraViewMatrix);
-        if (culledFace != BlockFace.FRONT)
-            drawFaceDisplays(frontFaceDisplays, BlockFace.FRONT, false, false, cameraViewMatrix);
-        if (culledFace != BlockFace.BACK)
-            drawFaceDisplays(backFaceDisplays, BlockFace.BACK, false, false, cameraViewMatrix);
+        drawNonCubicDisplays(nonCubicDisplays, cameraViewMatrix);
 
-        /*//
-        try (@SuppressWarnings("resource")
-        GLState glState = new GLState()
-                .withDepthFunction(GLDepthFunction.EQUAL).withDepthWriteMask(false))
-        {
-            // TODO: Make OpenGL wrapper class.
-            org.lwjgl.opengl.GL11.glEnable(org.lwjgl.opengl.GL11.GL_BLEND);
-            org.lwjgl.opengl.GL11.glBlendFunc(org.lwjgl.opengl.GL11.GL_ZERO,
-                    org.lwjgl.opengl.GL11.GL_SRC_COLOR);
-        
-            drawFaceDisplays(topFaceDisplays, BlockFace.TOP, false, true, viewMatrix);
-            drawFaceDisplays(bottomFaceDisplays, BlockFace.BOTTOM, false, true, viewMatrix);
-            drawFaceDisplays(leftFaceDisplays, BlockFace.LEFT, false, true, viewMatrix);
-            drawFaceDisplays(rightFaceDisplays, BlockFace.RIGHT, false, true, viewMatrix);
-            drawFaceDisplays(frontFaceDisplays, BlockFace.FRONT, false, true, viewMatrix);
-            drawFaceDisplays(backFaceDisplays, BlockFace.BACK, false, true, viewMatrix);
-        
-            org.lwjgl.opengl.GL11.glBlendFunc(org.lwjgl.opengl.GL11.GL_ONE,
-                    org.lwjgl.opengl.GL11.GL_ZERO);
-            org.lwjgl.opengl.GL11.glDisable(org.lwjgl.opengl.GL11.GL_BLEND);
-        }
-        //*/
+        if (culledFace != BlockFace.TOP)
+            drawFaceDisplays(topFaceDisplays, BlockFace.TOP, false, cameraViewMatrix);
+        if (culledFace != BlockFace.BOTTOM)
+            drawFaceDisplays(bottomFaceDisplays, BlockFace.BOTTOM, false, cameraViewMatrix);
+        if (culledFace != BlockFace.LEFT)
+        drawFaceDisplays(leftFaceDisplays, BlockFace.LEFT, false, cameraViewMatrix);
+        if (culledFace != BlockFace.RIGHT)
+            drawFaceDisplays(rightFaceDisplays, BlockFace.RIGHT, false, cameraViewMatrix);
+        if (culledFace != BlockFace.FRONT)
+            drawFaceDisplays(frontFaceDisplays, BlockFace.FRONT, false, cameraViewMatrix);
+        if (culledFace != BlockFace.BACK)
+            drawFaceDisplays(backFaceDisplays, BlockFace.BACK, false, cameraViewMatrix);
 
         GLMatrixStack.pop();
 
         chunksToRedraw.clear();
     }
 
-    private void drawFaceDisplays(HashMap<Chunk, ChunkDisplay> faceDisplays, BlockFace blockFace,
-            boolean shouldDrawEntities, boolean drawOverlay, Matrix4f viewMatrix)
-    {
+    private void drawNonCubicDisplays(HashMap<Chunk, ChunkDisplay> displays, Matrix4f viewMatrix) {
         // Entities
-        if (shouldDrawEntities) {
-            GLMatrixStack.push();
-            GLMatrixStack.load(viewMatrix);
+        GLMatrixStack.push();
+        GLMatrixStack.load(viewMatrix);
 
-            for (Map.Entry<Chunk, ChunkDisplay> entry : faceDisplays.entrySet()) {
-                ChunkDisplay display = entry.getValue();
-                display.displayEntities();
-            }
-
-            GLMatrixStack.pop();
+        for (Map.Entry<Chunk, ChunkDisplay> entry : displays.entrySet()) {
+            ChunkDisplay display = entry.getValue();
+            display.displayEntities();
         }
 
+        GLMatrixStack.pop();
+
+        // Blocks
+        for (Map.Entry<Chunk, ChunkDisplay> entry : displays.entrySet()) {
+            ChunkDisplay display = entry.getValue();
+
+            if (display.isEmpty())
+                continue;
+
+            float globalX = ChunkPos.toGlobalX(display.chunkX, 0);
+            float globalZ = ChunkPos.toGlobalZ(display.chunkZ, 0);
+
+            modelViewMatrix.set(viewMatrix).translate(globalX, 0.0f, globalZ);
+            GLMatrixStack.load(modelViewMatrix);
+            display.displayBlocks();
+        }
+    }
+
+    private void drawFaceDisplays(HashMap<Chunk, ChunkDisplay> faceDisplays, BlockFace blockFace,
+            boolean drawOverlay, Matrix4f viewMatrix)
+    {
         // Block Faces
         if (!drawOverlay) {
             for (Map.Entry<Chunk, ChunkDisplay> entry : faceDisplays.entrySet()) {
@@ -204,26 +198,54 @@ class WorldDisplay implements GraphicsResource
 
                 modelViewMatrix.set(viewMatrix).translate(globalX, 0.0f, globalZ);
                 GLMatrixStack.load(modelViewMatrix);
-                display.displayBlocks(blockTextures[blockFace.ordinal()].blockTextures);
+                display.displayBlocks();
             }
         }
-        /*//
-        else {
-            for (Map.Entry<Chunk, ChunkDisplay> entry : faceDisplays.entrySet()) {
-                ChunkDisplay display = entry.getValue();
-                
-                if (display.isEmpty())
-                    continue;
-                
-                float globalX = ChunkPos.toGlobalX(display.chunkX, 0);
-                float globalZ = ChunkPos.toGlobalZ(display.chunkZ, 0);
-                
-                modelView.set(viewMatrix).translate(globalX, 0.0f, globalZ);
-                GLMatrixStack.load(modelView);
-                display.overlayDisplay.displayBlocks(overlayTexture);
+    }
+
+    private void updateNonCubicDisplays(HashMap<Chunk, ChunkDisplay> nonCubicDisplays) {
+        float cameraX = camera.getX();
+        float cameraZ = camera.getZ();
+        float maxViewRadiusSquared = maxViewRadius * maxViewRadius;
+
+        Iterator<Long2ObjectMap.Entry<Chunk>> chunkMapIt = world.getChunkMapFastIterator();
+        while (chunkMapIt.hasNext()) {
+            Long2ObjectMap.Entry<Chunk> entry = chunkMapIt.next();
+            long hashedPos = entry.getLongKey();
+            Chunk chunk = entry.getValue();
+
+            int cx = ChunkPos.chunkXFromHashedPos(hashedPos);
+            int cz = ChunkPos.chunkZFromHashedPos(hashedPos);
+
+            float relativeX = ChunkPos.toGlobalX(cx, Chunk.XLENGTH / 2) - cameraX;
+            float relativeZ = ChunkPos.toGlobalZ(cz, Chunk.ZLENGTH / 2) - cameraZ;
+            float squareDistance = (relativeX * relativeX) + (relativeZ * relativeZ);
+
+            if (squareDistance >= maxViewRadiusSquared)
+                continue;
+
+            ChunkDisplay existingDisplay = nonCubicDisplays.get(chunk);
+            boolean needsUpdating = existingDisplay == null || chunksToRedraw.contains(hashedPos);
+
+            if (needsUpdating) {
+                if (existingDisplay != null)
+                    existingDisplay.close();
+
+                nonCubicDisplays.put(chunk,
+                        new ChunkDisplay(cx, cz, chunk, null, null));
             }
         }
-        //*/
+
+        Iterator<Map.Entry<Chunk, ChunkDisplay>> faceDisplaysIt = nonCubicDisplays.entrySet().iterator();
+        while (faceDisplaysIt.hasNext()) {
+            Map.Entry<Chunk, ChunkDisplay> entry = faceDisplaysIt.next();
+            ChunkDisplay chunkDisplay = entry.getValue();
+
+            if (!world.containsChunk(chunkDisplay.chunkX, chunkDisplay.chunkZ)) {
+                chunkDisplay.close();
+                faceDisplaysIt.remove();
+            }
+        }
     }
 
     private void updateFaceDisplays(HashMap<Chunk, ChunkDisplay> faceDisplays, BlockFace blockFace)
@@ -231,21 +253,14 @@ class WorldDisplay implements GraphicsResource
         int dx = 0;
         int dz = 0;
 
-        switch (blockFace) {
-        case FRONT:
-            dz = 1;
-            break;
-        case BACK:
-            dz = -1;
-            break;
-        case LEFT:
-            dx = -1;
-            break;
-        case RIGHT:
-            dx = 1;
-            break;
-        default:
-            break;
+        if (blockFace != null) {
+            switch (blockFace) {
+            case FRONT: dz = 1;  break;
+            case BACK:  dz = -1; break;
+            case LEFT:  dx = -1; break;
+            case RIGHT: dx = 1;  break;
+            default:             break;
+            }
         }
 
         float cameraX = camera.getX();
@@ -281,9 +296,8 @@ class WorldDisplay implements GraphicsResource
                 if (existingDisplay != null)
                     existingDisplay.close();
 
-                BlockTextureAtlas atlas = blockTextures[blockFace.ordinal()];
                 faceDisplays.put(chunk,
-                        new ChunkDisplay(cx, cz, chunk, adjacentChunk, blockFace, atlas));
+                        new ChunkDisplay(cx, cz, chunk, adjacentChunk, blockFace));
             }
         }
 
