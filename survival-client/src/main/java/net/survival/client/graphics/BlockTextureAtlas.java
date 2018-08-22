@@ -16,7 +16,7 @@ public class BlockTextureAtlas implements GraphicsResource
     private final float[] texCoords;
 
     public BlockTextureAtlas(BlockFace blockFace) {
-        Bitmap atlas = new Bitmap(256, 128);
+        Bitmap atlas = new Bitmap(256, 256);
         for (BlockType blockType : BlockType.iterateAll()) {
             if (blockType.getTexture(blockFace) == null)
                 continue;
@@ -43,7 +43,7 @@ public class BlockTextureAtlas implements GraphicsResource
         this.blockFace = blockFace;
 
         texCoords = new float[17 * 17 * 4];
-        for (int i = 0; i < 128; ++i) {
+        for (int i = 0; i < 256; ++i) {
             int indexU1 = i * 4;
             int indexV1 = indexU1 + 1;
             int indexU2 = indexU1 + 2;
@@ -53,9 +53,9 @@ public class BlockTextureAtlas implements GraphicsResource
             int tileV = 15 - (i / 16);
 
             texCoords[indexU1] = tileU / 16.0f;
-            texCoords[indexV1] = (tileV / 8.0f) + (1.0f / 8.0f);
+            texCoords[indexV1] = (tileV / 16.0f) + (1.0f / 16.0f);
             texCoords[indexU2] = (tileU / 16.0f) + (1.0f / 16.0f);
-            texCoords[indexV2] = tileV / 8.0f;
+            texCoords[indexV2] = tileV / 16.0f;
         }
     }
 
