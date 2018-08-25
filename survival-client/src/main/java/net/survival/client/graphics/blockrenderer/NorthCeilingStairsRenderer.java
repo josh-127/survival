@@ -3,9 +3,9 @@ package net.survival.client.graphics.blockrenderer;
 import net.survival.block.BlockType;
 import net.survival.client.graphics.opengl.GLDisplayList;
 
-class DefaultBlockRenderer extends BlockRenderer
+class NorthCeilingStairsRenderer extends BlockRenderer
 {
-    public DefaultBlockRenderer() {
+    public NorthCeilingStairsRenderer() {
         super(false);
     }
 
@@ -32,19 +32,26 @@ class DefaultBlockRenderer extends BlockRenderer
     public void pushBottomFaces(int x, int y, int z, short blockID, short adjacentBlockID,
             GLDisplayList.Builder builder)
     {
-        if (BlockType.byID(adjacentBlockID).getModel().isBlockingTop())
-            return;
-
         float u1 = bottomFaceTextures.getTexCoordU1(blockID);
         float u2 = bottomFaceTextures.getTexCoordU2(blockID);
         float v1 = bottomFaceTextures.getTexCoordV1(blockID);
         float v2 = bottomFaceTextures.getTexCoordV2(blockID);
-        builder.setTexCoord(u1, v1); builder.pushVertex(x,        y, z       );
-        builder.setTexCoord(u2, v1); builder.pushVertex(x + 1.0f, y, z       );
-        builder.setTexCoord(u2, v2); builder.pushVertex(x + 1.0f, y, z + 1.0f);
-        builder.setTexCoord(u2, v2); builder.pushVertex(x + 1.0f, y, z + 1.0f);
-        builder.setTexCoord(u1, v2); builder.pushVertex(x,        y, z + 1.0f);
-        builder.setTexCoord(u1, v1); builder.pushVertex(x,        y, z       );
+
+        if (!BlockType.byID(adjacentBlockID).getModel().isBlockingTop()) {
+            builder.setTexCoord(u1, v1); builder.pushVertex(x,        y, z       );
+            builder.setTexCoord(u2, v1); builder.pushVertex(x + 1.0f, y, z       );
+            builder.setTexCoord(u2, v2); builder.pushVertex(x + 1.0f, y, z + 0.5f);
+            builder.setTexCoord(u2, v2); builder.pushVertex(x + 1.0f, y, z + 0.5f);
+            builder.setTexCoord(u1, v2); builder.pushVertex(x,        y, z + 0.5f);
+            builder.setTexCoord(u1, v1); builder.pushVertex(x,        y, z       );
+        }
+
+        builder.setTexCoord(u1, v1); builder.pushVertex(x,        y + 0.5f, z + 0.5f);
+        builder.setTexCoord(u2, v1); builder.pushVertex(x + 1.0f, y + 0.5f, z + 0.5f);
+        builder.setTexCoord(u2, v2); builder.pushVertex(x + 1.0f, y + 0.5f, z + 1.0f);
+        builder.setTexCoord(u2, v2); builder.pushVertex(x + 1.0f, y + 0.5f, z + 1.0f);
+        builder.setTexCoord(u1, v2); builder.pushVertex(x,        y + 0.5f, z + 1.0f);
+        builder.setTexCoord(u1, v1); builder.pushVertex(x,        y + 0.5f, z + 0.5f);
     }
 
     @Override
@@ -59,11 +66,18 @@ class DefaultBlockRenderer extends BlockRenderer
         float v1 = leftFaceTextures.getTexCoordV1(blockID);
         float v2 = leftFaceTextures.getTexCoordV2(blockID);
         builder.setTexCoord(u1, v1); builder.pushVertex(x, y,        z       );
-        builder.setTexCoord(u2, v1); builder.pushVertex(x, y,        z + 1.0f);
-        builder.setTexCoord(u2, v2); builder.pushVertex(x, y + 1.0f, z + 1.0f);
-        builder.setTexCoord(u2, v2); builder.pushVertex(x, y + 1.0f, z + 1.0f);
+        builder.setTexCoord(u2, v1); builder.pushVertex(x, y,        z + 0.5f);
+        builder.setTexCoord(u2, v2); builder.pushVertex(x, y + 1.0f, z + 0.5f);
+        builder.setTexCoord(u2, v2); builder.pushVertex(x, y + 1.0f, z + 0.5f);
         builder.setTexCoord(u1, v2); builder.pushVertex(x, y + 1.0f, z       );
         builder.setTexCoord(u1, v1); builder.pushVertex(x, y,        z       );
+
+        builder.setTexCoord(u1, v1); builder.pushVertex(x, y + 0.5f, z + 0.5f);
+        builder.setTexCoord(u2, v1); builder.pushVertex(x, y + 0.5f, z + 1.0f);
+        builder.setTexCoord(u2, v2); builder.pushVertex(x, y + 1.0f, z + 1.0f);
+        builder.setTexCoord(u2, v2); builder.pushVertex(x, y + 1.0f, z + 1.0f);
+        builder.setTexCoord(u1, v2); builder.pushVertex(x, y + 1.0f, z + 0.5f);
+        builder.setTexCoord(u1, v1); builder.pushVertex(x, y + 0.5f, z + 0.5f);
     }
 
     @Override
@@ -77,31 +91,45 @@ class DefaultBlockRenderer extends BlockRenderer
         float u2 = rightFaceTextures.getTexCoordU2(blockID);
         float v1 = rightFaceTextures.getTexCoordV1(blockID);
         float v2 = rightFaceTextures.getTexCoordV2(blockID);
-        builder.setTexCoord(u1, v1); builder.pushVertex(x + 1.0f, y,        z + 1.0f);
+        builder.setTexCoord(u1, v1); builder.pushVertex(x + 1.0f, y,        z + 0.5f);
         builder.setTexCoord(u2, v1); builder.pushVertex(x + 1.0f, y,        z       );
         builder.setTexCoord(u2, v2); builder.pushVertex(x + 1.0f, y + 1.0f, z       );
         builder.setTexCoord(u2, v2); builder.pushVertex(x + 1.0f, y + 1.0f, z       );
+        builder.setTexCoord(u1, v2); builder.pushVertex(x + 1.0f, y + 1.0f, z + 0.5f);
+        builder.setTexCoord(u1, v1); builder.pushVertex(x + 1.0f, y,        z + 0.5f);
+
+        builder.setTexCoord(u1, v1); builder.pushVertex(x + 1.0f, y + 0.5f, z + 1.0f);
+        builder.setTexCoord(u2, v1); builder.pushVertex(x + 1.0f, y + 0.5f, z + 0.5f);
+        builder.setTexCoord(u2, v2); builder.pushVertex(x + 1.0f, y + 1.0f, z + 0.5f);
+        builder.setTexCoord(u2, v2); builder.pushVertex(x + 1.0f, y + 1.0f, z + 0.5f);
         builder.setTexCoord(u1, v2); builder.pushVertex(x + 1.0f, y + 1.0f, z + 1.0f);
-        builder.setTexCoord(u1, v1); builder.pushVertex(x + 1.0f, y,        z + 1.0f);
+        builder.setTexCoord(u1, v1); builder.pushVertex(x + 1.0f, y + 0.5f, z + 1.0f);
     }
 
     @Override
     public void pushFrontFaces(int x, int y, int z, short blockID, short adjacentBlockID,
             GLDisplayList.Builder builder)
     {
-        if (BlockType.byID(adjacentBlockID).getModel().isBlockingBack())
-            return;
-
         float u1 = frontFaceTextures.getTexCoordU1(blockID);
         float u2 = frontFaceTextures.getTexCoordU2(blockID);
         float v1 = frontFaceTextures.getTexCoordV1(blockID);
         float v2 = frontFaceTextures.getTexCoordV2(blockID);
-        builder.setTexCoord(u1, v1); builder.pushVertex(x,        y,        z + 1.0f);
-        builder.setTexCoord(u2, v1); builder.pushVertex(x + 1.0f, y,        z + 1.0f);
-        builder.setTexCoord(u2, v2); builder.pushVertex(x + 1.0f, y + 1.0f, z + 1.0f);
-        builder.setTexCoord(u2, v2); builder.pushVertex(x + 1.0f, y + 1.0f, z + 1.0f);
-        builder.setTexCoord(u1, v2); builder.pushVertex(x,        y + 1.0f, z + 1.0f);
-        builder.setTexCoord(u1, v1); builder.pushVertex(x,        y,        z + 1.0f);
+
+        if (!BlockType.byID(adjacentBlockID).getModel().isBlockingBack()) {
+            builder.setTexCoord(u1, v1); builder.pushVertex(x,        y + 0.5f, z + 1.0f);
+            builder.setTexCoord(u2, v1); builder.pushVertex(x + 1.0f, y + 0.5f, z + 1.0f);
+            builder.setTexCoord(u2, v2); builder.pushVertex(x + 1.0f, y + 1.0f, z + 1.0f);
+            builder.setTexCoord(u2, v2); builder.pushVertex(x + 1.0f, y + 1.0f, z + 1.0f);
+            builder.setTexCoord(u1, v2); builder.pushVertex(x,        y + 1.0f, z + 1.0f);
+            builder.setTexCoord(u1, v1); builder.pushVertex(x,        y + 0.5f, z + 1.0f);
+        }
+
+        builder.setTexCoord(u1, v1); builder.pushVertex(x,        y,        z + 0.5f);
+        builder.setTexCoord(u2, v1); builder.pushVertex(x + 1.0f, y,        z + 0.5f);
+        builder.setTexCoord(u2, v2); builder.pushVertex(x + 1.0f, y + 0.5f, z + 0.5f);
+        builder.setTexCoord(u2, v2); builder.pushVertex(x + 1.0f, y + 0.5f, z + 0.5f);
+        builder.setTexCoord(u1, v2); builder.pushVertex(x,        y + 0.5f, z + 0.5f);
+        builder.setTexCoord(u1, v1); builder.pushVertex(x,        y,        z + 0.5f);
     }
 
     @Override

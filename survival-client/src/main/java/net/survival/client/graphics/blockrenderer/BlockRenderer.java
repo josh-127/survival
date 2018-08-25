@@ -27,6 +27,19 @@ public abstract class BlockRenderer
         blockRenderers[BlockModel.INVISIBLE.id] = new InvisibleBlockRenderer();
         blockRenderers[BlockModel.FENCE.id] = new FenceRenderer();
         blockRenderers[BlockModel.SAPLING.id] = new SaplingRenderer();
+        blockRenderers[BlockModel.BOTTOM_SLAB.id] = new BottomSlabRenderer();
+        blockRenderers[BlockModel.TOP_SLAB.id] = new TopSlabRenderer();
+        blockRenderers[BlockModel.NORTH_STAIRS.id] = new NorthStairsRenderer();
+        blockRenderers[BlockModel.SOUTH_STAIRS.id] = new SouthStairsRenderer();
+        blockRenderers[BlockModel.EAST_STAIRS.id] = new EastStairsRenderer();
+        blockRenderers[BlockModel.WEST_STAIRS.id] = new WestStairsRenderer();
+        blockRenderers[BlockModel.NORTH_CEILING_STAIRS.id] = new NorthCeilingStairsRenderer();
+        blockRenderers[BlockModel.SOUTH_CEILING_STAIRS.id] = new SouthCeilingStairsRenderer();
+        blockRenderers[BlockModel.EAST_CEILING_STAIRS.id] = new EastCeilingStairsRenderer();
+        blockRenderers[BlockModel.WEST_CEILING_STAIRS.id] = new WestCeilingStairsRenderer();
+        blockRenderers[BlockModel.FARMLAND.id] = new FarmlandRenderer();
+        blockRenderers[BlockModel.PRESSURE_PLATE_OFF.id] = new PressurePlateRenderer(0.0625f);
+        blockRenderers[BlockModel.PRESSURE_PLATE_ON.id] = new PressurePlateRenderer(0.03125f);
     }
 
     public static final void initTextures() {
