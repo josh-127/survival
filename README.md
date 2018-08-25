@@ -30,7 +30,7 @@ Building
 | Java JDK     | 1.8.0_171 or later |
 | Apache Maven | 3.5.3 or later     |
 
-### For Windows (recommended)
+### For Windows (method 1)
 Install Chocolatey.
 https://chocolatey.org/docs/installation#installing-chocolatey
 
@@ -45,7 +45,8 @@ or
 or
 `choco install netbeans`
 
-### For Windows
+### For Windows (method 2)
+**Use this method if you're building past commits with different values from the requirements list (dependency and version)**
 Install everything from the requirements list and an IDE.
 
 ### For Ubuntu
