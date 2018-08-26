@@ -1,7 +1,7 @@
 Survival
 ========
 
-A infinite exploration game.
+An infinite exploration game.
 
 Default Controls
 ----------------
