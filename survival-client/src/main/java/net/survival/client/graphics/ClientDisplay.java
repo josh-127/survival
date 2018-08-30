@@ -13,6 +13,7 @@ public class ClientDisplay implements GraphicsResource
     private final Camera camera;
 
     private final WorldDisplay worldDisplay;
+    private final CloudDisplay cloudDisplay;
     private final SkyboxDisplay skyboxDisplay;
     private final FontRenderer fontRenderer;
 
@@ -27,6 +28,7 @@ public class ClientDisplay implements GraphicsResource
         camera = new Camera();
 
         worldDisplay = new WorldDisplay(world, camera, 512.0f);
+        cloudDisplay = new CloudDisplay();
         skyboxDisplay = new SkyboxDisplay();
 
         fontRenderer = new FontRenderer();
@@ -44,6 +46,10 @@ public class ClientDisplay implements GraphicsResource
         fontRenderer.close();
     }
 
+    public void tick(double elapsedTime) {
+        cloudDisplay.tick(elapsedTime);
+    }
+
     public void display(double frameRate) {
         cameraViewMatrix.identity();
         camera.getViewMatrix(cameraViewMatrix);
@@ -57,12 +63,13 @@ public class ClientDisplay implements GraphicsResource
         // Skybox display
         skyboxDisplay.draw(cameraViewMatrix, cameraProjectionMatrix);
 
-        // World display
+        // World and cloud display
         GLState.pushFogEnabled(true);
         GLState.pushExpFog(0.00390625f, SkyboxDisplay.MIDDLE_R,
                 SkyboxDisplay.MIDDLE_G, SkyboxDisplay.MIDDLE_B, 1.0f);
         {
             worldDisplay.display();
+            cloudDisplay.display(cameraViewMatrix, cameraProjectionMatrix, camera.getX(), camera.getZ());
         }
         GLState.popFogParams();
         GLState.popFogEnabled();

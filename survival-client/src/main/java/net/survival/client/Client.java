@@ -222,6 +222,8 @@ public class Client implements AutoCloseable
         clientDisplay.getCamera().resize(GraphicsSettings.WINDOW_WIDTH,
                 GraphicsSettings.WINDOW_HEIGHT);
         clientDisplay.getCamera().setClipPlanes(0.0625f, 768.0f);
+
+        clientDisplay.tick(elapsedTime);
     }
 
     private void render(double frameRate) {

@@ -11,6 +11,11 @@ public class GLImmediateDrawCall
         return this;
     }
 
+    public GLImmediateDrawCall color(float r, float g, float b, float a) {
+        glColor4f(r, g, b, a);
+        return this;
+    }
+
     public GLImmediateDrawCall texCoord(float u, float v) {
         glTexCoord2f(u, v);
         return this;
