@@ -138,7 +138,7 @@ public class Client implements AutoCloseable
 
         if (player != null) {
             fpsCamera.position.x = player.x;
-            fpsCamera.position.y = player.y + 1.0;
+            fpsCamera.position.y = player.y + 0.8;
             fpsCamera.position.z = player.z;
         }
 
