@@ -102,31 +102,45 @@ public class Client implements AutoCloseable
             world.addCharacter(newPlayer);
         }
 
+        double joystickX = 0.0;
+        double joystickZ = 0.0;
+        double joystickY = 0.0;
+
+        if (Keyboard.isKeyDown(Key.W)) {
+            joystickX += Math.sin(fpsCamera.yaw);
+            joystickZ -= Math.cos(fpsCamera.yaw);
+        }
+        if (Keyboard.isKeyDown(Key.S)) {
+            joystickX += Math.sin(fpsCamera.yaw + Math.PI);
+            joystickZ -= Math.cos(fpsCamera.yaw + Math.PI);
+        }
+        if (Keyboard.isKeyDown(Key.A)) {
+            joystickX += Math.sin(fpsCamera.yaw - Math.PI / 2.0);
+            joystickZ -= Math.cos(fpsCamera.yaw - Math.PI / 2.0);
+        }
+        if (Keyboard.isKeyDown(Key.D)) {
+            joystickX += Math.sin(fpsCamera.yaw + Math.PI / 2.0);
+            joystickZ -= Math.cos(fpsCamera.yaw + Math.PI / 2.0);
+        }
+
+        if (Keyboard.isKeyDown(Key.SPACE)) {
+            joystickY = 1.0;
+        }
+        if (Keyboard.isKeyDown(Key.LEFT_SHIFT)) {
+            joystickY = -1.0;
+        }
+
         if (player != null) {
-            double joystickX = 0.0;
-            double joystickZ = 0.0;
-
-            if (Keyboard.isKeyDown(Key.W)) {
-                joystickX += Math.sin(fpsCamera.yaw);
-                joystickZ -= Math.cos(fpsCamera.yaw);
-            }
-            if (Keyboard.isKeyDown(Key.S)) {
-                joystickX += Math.sin(fpsCamera.yaw + Math.PI);
-                joystickZ -= Math.cos(fpsCamera.yaw + Math.PI);
-            }
-            if (Keyboard.isKeyDown(Key.A)) {
-                joystickX += Math.sin(fpsCamera.yaw - Math.PI / 2.0);
-                joystickZ -= Math.cos(fpsCamera.yaw - Math.PI / 2.0);
-            }
-            if (Keyboard.isKeyDown(Key.D)) {
-                joystickX += Math.sin(fpsCamera.yaw + Math.PI / 2.0);
-                joystickZ -= Math.cos(fpsCamera.yaw + Math.PI / 2.0);
-            }
-
             player.setMoveDirectionControlValues(joystickX, joystickZ);
 
             if (Keyboard.isKeyPressed(Key.SPACE))
                 player.setJumpControlValue();
+        }
+        else {
+            final double CAMERA_SPEED = 80.0;
+            fpsCamera.position.x += joystickX * CAMERA_SPEED * elapsedTime;
+            fpsCamera.position.z += joystickZ * CAMERA_SPEED * elapsedTime;
+            fpsCamera.position.y += joystickY * 20.0 * elapsedTime;
         }
 
         int cx = ChunkPos.toChunkX((int) Math.floor(fpsCamera.position.x));
