@@ -19,7 +19,7 @@ public class SmallTreeDecorator implements WorldDecorator
     public void decorate(int cx, int cz, Chunk chunk, World world) {
         random.setSeed(ChunkPos.hashPos(cx, cz));
 
-        for (int i = 0; i < 12; ++i)
+        for (int i = 0; i < 2; ++i)
             generateTree(cx, cz, chunk, world);
     }
 
