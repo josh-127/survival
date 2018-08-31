@@ -61,7 +61,7 @@ public class Client implements AutoCloseable
     private Client() {
         world = new World();
         
-        chunkLoader = new CircularChunkLoader(8);
+        chunkLoader = new CircularChunkLoader(10);
         chunkDatabase = new DefaultChunkDatabase();
         chunkGenerator = new InfiniteChunkGenerator(22L);
         worldDecorator = WorldDecorator.createDefault();
