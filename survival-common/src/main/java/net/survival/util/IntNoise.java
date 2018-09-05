@@ -5,7 +5,7 @@ public class IntNoise
     private IntNoise() {}
 
     public static int white(int x, long seed) {
-        // Based off off MurmurHash
+        // Based off of MurmurHash
         long hash = seed;
 
         long k = rol15((int) x * 0xCC9E2D51L) * 0x1B873593L;
@@ -22,7 +22,7 @@ public class IntNoise
     }
 
     public static int white2D(int x, int y, long seed) {
-        // Based off off MurmurHash
+        // Based off of MurmurHash
         long hash = seed;
 
         long k = rol15((int) x * 0xCC9E2D51L) * 0x1B873593L;
@@ -42,7 +42,7 @@ public class IntNoise
     }
 
     public static int white3D(int x, int y, int z, long seed) {
-        // Based off off MurmurHash
+        // Based off of MurmurHash
         long hash = seed;
 
         long k = rol15((int) x * 0xCC9E2D51L) * 0x1B873593L;
