@@ -23,8 +23,8 @@ Building
 ### Requirements
 | Dependency   | Version            |
 |--------------|--------------------|
-| Java JDK     | 1.8.0_171 or later |
-| Apache Maven | 3.5.3 or later     |
+| Java JDK     | 1.8.0_181 or later |
+| Apache Maven | 3.5.4 or later     |
 
 ### For Windows 7|10 (method 1)
 Install Chocolatey.
