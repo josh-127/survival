@@ -3,6 +3,8 @@ Survival
 
 An infinite exploration game.
 
+![Screenshot](/screenshot.png?raw=true)
+
 Default Controls
 ----------------
 Keyboard and mouse controls are hard-coded for now.
