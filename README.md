@@ -7,14 +7,15 @@ Default Controls
 ----------------
 Keyboard and mouse controls are hard-coded for now.
 
-| Button            | Action            |
+| Action/Button     | Action            |
 |-------------------|-------------------|
 | W, A, S, D        | Move horizontally |
 | Space             | Jump              |
 | R                 | Spawn player      |
 | T                 | Spawn human       |
-| U                 | Spawn goat        |
 | Y                 | Spawn slime       |
+| U                 | Spawn goat        |
+| Mouse movement    | Look around       |
 | Left mouse button | Break block       |
 
 Building
