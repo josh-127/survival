@@ -129,22 +129,22 @@ public class ImprovedNoiseGenerator3D
 
     private static double dotProductOfGradientAndDistance(int hash, double x, double y, double z) {
         switch (hash & 15) {
-        case 0:  return +x +y   ; // < 1, 1, 0>
-        case 1:  return -x +y   ; // <-1, 1, 0>
-        case 2:  return +x -y   ; // < 1, -1, 0>
-        case 3:  return -x -y   ; // <-1, -1, 0>
-        case 4:  return +x    +z; // < 1, 0, 1>
-        case 5:  return -x    +z; // <-1, 0, 1>
-        case 6:  return +x    -z; // < 1, 0, -1>
-        case 7:  return -x    -z; // <-1, 0, -1>
-        case 8:  return    +y +z; // < 0, 1, 1>
-        case 9:  return    -y +z; // < 0, -1, 1>
-        case 10: return    +y -z; // < 0, 1, -1>
-        case 11: return    -y -z; // < 0, -1, -1>
-        case 12: return +x +y   ; // < 1, 1, 0>
-        case 13: return    -y +z; // < 0, -1, 1>
-        case 14: return -x +y   ; // <-1, 1, 0>
-        case 15: return    -y -z; // < 0, -1, -1>
+        case 0:  return +x +y   ;
+        case 1:  return -x +y   ;
+        case 2:  return +x -y   ;
+        case 3:  return -x -y   ;
+        case 4:  return +x    +z;
+        case 5:  return -x    +z;
+        case 6:  return +x    -z;
+        case 7:  return -x    -z;
+        case 8:  return    +y +z;
+        case 9:  return    -y +z;
+        case 10: return    +y -z;
+        case 11: return    -y -z;
+        case 12: return +x +y   ;
+        case 13: return    -y +z;
+        case 14: return -x +y   ;
+        case 15: return    -y -z;
         default: return 0.0;
         }
     }
