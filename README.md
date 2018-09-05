@@ -56,3 +56,4 @@ Will support later.
 
 ### Other distributions
 Unsupported.
+If you want support for another distribution, open up an issue in the issue tracker.
