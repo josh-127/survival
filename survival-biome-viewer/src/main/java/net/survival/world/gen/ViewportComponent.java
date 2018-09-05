@@ -1,4 +1,4 @@
-package net.survival.world.gen.v1;
+package net.survival.world.gen;
 
 import java.awt.Color;
 import java.awt.Graphics;
