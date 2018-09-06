@@ -6,12 +6,12 @@ import net.survival.util.DoubleMap3D;
 import net.survival.util.ImprovedNoiseGenerator3D;
 import net.survival.world.biome.BiomeType;
 import net.survival.world.chunk.Chunk;
-import net.survival.world.chunk.ChunkGenerator;
+import net.survival.world.chunk.ChunkProvider;
 import net.survival.world.chunk.ChunkPos;
 import net.survival.world.gen.layer.GenLayer;
 import net.survival.world.gen.layer.GenLayerFactory;
 
-public class InfiniteChunkGenerator implements ChunkGenerator
+public class InfiniteChunkGenerator implements ChunkProvider
 {
     private static final int NBLOCK_YLENGTH = Chunk.YLENGTH / 32;
     private static final int NBLOCK_ZLENGTH = Chunk.ZLENGTH / 4;
@@ -51,7 +51,7 @@ public class InfiniteChunkGenerator implements ChunkGenerator
     }
 
     @Override
-    public Chunk generate(int cx, int cz) {
+    public Chunk provideChunk(int cx, int cz) {
         int offsetX = cx * (NMAP_XLENGTH - 1);
         int offsetZ = cz * (NMAP_ZLENGTH - 1);
         int globalX = ChunkPos.toGlobalX(cx, 0);

@@ -1,11 +1,11 @@
 package net.survival.world.chunk;
 
-public class DefaultChunkDatabase implements ChunkDatabase
+public class DefaultChunkDatabase implements AsyncChunkProvider
 {
     public DefaultChunkDatabase() {}
 
     @Override
-    public Chunk loadChunk(int cx, int cz) {
+    public Chunk provideChunkAsync(int cx, int cz) {
         return null;
     }
 }

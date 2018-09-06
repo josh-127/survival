@@ -13,11 +13,11 @@ public class ChunkSystem
     private static final int DATABASE_LOAD_RATE = 2;
     private static final int GENERATOR_LOAD_RATE = 2;
 
-    private final ChunkDatabase chunkDatabase;
-    private final ChunkGenerator chunkGenerator;
+    private final AsyncChunkProvider chunkDatabase;
+    private final ChunkProvider chunkGenerator;
     private final WorldDecorator worldDecorator;
 
-    public ChunkSystem(ChunkDatabase chunkDatabase, ChunkGenerator chunkGenerator,
+    public ChunkSystem(AsyncChunkProvider chunkDatabase, ChunkProvider chunkGenerator,
             WorldDecorator worldDecorator)
     {
         this.chunkDatabase = chunkDatabase;
@@ -43,7 +43,7 @@ public class ChunkSystem
             long hashedPos = chunksToLoadIt.nextLong();
             int cx = ChunkPos.chunkXFromHashedPos(hashedPos);
             int cz = ChunkPos.chunkZFromHashedPos(hashedPos);
-            Chunk loadedChunk = chunkDatabase.loadChunk(cx, cz);
+            Chunk loadedChunk = chunkDatabase.provideChunkAsync(cx, cz);
             if (loadedChunk != null) {
                 world.addChunk(cx, cz, loadedChunk);
                 chunksToLoadIt.remove();
@@ -55,7 +55,7 @@ public class ChunkSystem
             long hashedPos = chunksToLoadIt.nextLong();
             int cx = ChunkPos.chunkXFromHashedPos(hashedPos);
             int cz = ChunkPos.chunkZFromHashedPos(hashedPos);
-            Chunk generatedChunk = chunkGenerator.generate(cx, cz);
+            Chunk generatedChunk = chunkGenerator.provideChunk(cx, cz);
             world.addChunk(cx, cz, generatedChunk);
             chunksToLoadIt.remove();
         }
