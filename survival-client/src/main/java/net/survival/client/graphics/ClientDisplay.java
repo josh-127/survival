@@ -101,26 +101,6 @@ public class ClientDisplay implements GraphicsResource
         GLMatrixStack.scale(0.05f, 0.05f, 0.05f);
         fontRenderer.drawText(String.valueOf(frameRate), 0.0f, 0.0f, 0.0f);
         GLMatrixStack.pop();
-
-        /*
-        GLMatrixStack.push();
-        GLMatrixStack.translate(-getWindowAspectRatio() * 0.9375f, 0.75f, 0.0f);
-        GLMatrixStack.scale(0.05f, 0.05f, 0.05f);
-        fontRenderer.drawText(String.format("X: %d", (int) userController.camera.position.x), 0.0f, 0.0f, 0.0f);
-        GLMatrixStack.pop();
-        
-        GLMatrixStack.push();
-        GLMatrixStack.translate(-getWindowAspectRatio() * 0.9375f, 0.6875f, 0.0f);
-        GLMatrixStack.scale(0.05f, 0.05f, 0.05f);
-        fontRenderer.drawText(String.format("Y: %d", (int) userController.camera.position.y), 0.0f, 0.0f, 0.0f);
-        GLMatrixStack.pop();
-        
-        GLMatrixStack.push();
-        GLMatrixStack.translate(-getWindowAspectRatio() * 0.9375f, 0.625f, 0.0f);
-        GLMatrixStack.scale(0.05f, 0.05f, 0.05f);
-        fontRenderer.drawText(String.format("Z: %d", (int) userController.camera.position.z), 0.0f, 0.0f, 0.0f);
-        GLMatrixStack.pop();
-        */
     }
 
     public void redrawChunk(long hashedPos) {
