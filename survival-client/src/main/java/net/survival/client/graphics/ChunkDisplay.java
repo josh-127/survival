@@ -319,9 +319,9 @@ class ChunkDisplay implements GraphicsResource
         final float BOX_G = 0.0f;
         final float BOX_B = 1.0f;
 
-        float cbrX = (float) character.collisionBoxRadiusX;
-        float cbrY = (float) character.collisionBoxRadiusY;
-        float cbrZ = (float) character.collisionBoxRadiusZ;
+        float cbrX = (float) character.hitBox.radiusX;
+        float cbrY = (float) character.hitBox.radiusY;
+        float cbrZ = (float) character.hitBox.radiusZ;
 
         GLImmediateDrawCall.beginLines(null)
                 .coloredVertex(-cbrX, cbrY, -cbrZ, BOX_R, BOX_G, BOX_B)

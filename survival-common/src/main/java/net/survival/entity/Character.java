@@ -1,7 +1,11 @@
 package net.survival.entity;
 
+import net.survival.util.HitBox;
+
 public abstract class Character extends Entity
 {
+    public static final HitBox DEFAULT_HITBOX = new HitBox(0.4375, 0.4375, 0.4375);
+
     //
     // Controls
     //
@@ -22,9 +26,7 @@ public abstract class Character extends Entity
     public double velocityY;
     public double velocityZ;
 
-    public double collisionBoxRadiusX;
-    public double collisionBoxRadiusY;
-    public double collisionBoxRadiusZ;
+    public HitBox hitBox;
 
     //
     // Rendering
@@ -43,9 +45,7 @@ public abstract class Character extends Entity
     public Character() {
         moveSpeed = 5.0;
         jumpSpeed = 10.0;
-        collisionBoxRadiusX = 0.4375;
-        collisionBoxRadiusY = 0.4375;
-        collisionBoxRadiusZ = 0.4375;
+        hitBox = DEFAULT_HITBOX;
         model = CharacterModel.HUMAN;
         visible = true;
     }
@@ -69,30 +69,6 @@ public abstract class Character extends Entity
 
     public void setJumpControlValue() {
         jumpControl = true;
-    }
-
-    public double getCollisionBoxTop() {
-        return y + collisionBoxRadiusY;
-    }
-
-    public double getCollisionBoxBottom() {
-        return y - collisionBoxRadiusY;
-    }
-
-    public double getCollisionBoxLeft() {
-        return x - collisionBoxRadiusX;
-    }
-
-    public double getCollisionBoxRight() {
-        return x + collisionBoxRadiusX;
-    }
-
-    public double getCollisionBoxFront() {
-        return z + collisionBoxRadiusZ;
-    }
-
-    public double getCollisionBoxBack() {
-        return z - collisionBoxRadiusZ;
     }
 
     @Override

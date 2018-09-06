@@ -22,6 +22,7 @@ import net.survival.entity.CharacterModel;
 import net.survival.entity.Npc;
 import net.survival.entity.NpcMovementStyle;
 import net.survival.entity.Player;
+import net.survival.util.HitBox;
 import net.survival.world.EntitySystem;
 import net.survival.world.World;
 import net.survival.world.chunk.Chunk;
@@ -96,7 +97,7 @@ public class Client implements AutoCloseable
             newPlayer.x = player != null ? player.x : fpsCamera.position.x;
             newPlayer.y = player != null ? player.y + 3.0 : fpsCamera.position.y;
             newPlayer.z = player != null ? player.z : fpsCamera.position.z;
-            newPlayer.collisionBoxRadiusY = 0.9;
+            newPlayer.hitBox = new HitBox(0.4375, 0.9, 0.4375);
             newPlayer.visible = false;
             player = newPlayer;
             world.addCharacter(newPlayer);
@@ -183,9 +184,7 @@ public class Client implements AutoCloseable
             npc.x = fpsCamera.position.x;
             npc.y = fpsCamera.position.y;
             npc.z = fpsCamera.position.z;
-            npc.collisionBoxRadiusX = 0.5;
-            npc.collisionBoxRadiusY = 0.9;
-            npc.collisionBoxRadiusZ = 0.8;
+            npc.hitBox = new HitBox(0.5, 0.9, 0.8);
             npc.moveSpeed = 4.0;
             world.addCharacter(npc);
         }
@@ -195,9 +194,7 @@ public class Client implements AutoCloseable
             npc.x = fpsCamera.position.x;
             npc.y = fpsCamera.position.y;
             npc.z = fpsCamera.position.z;
-            npc.collisionBoxRadiusX = 0.5;
-            npc.collisionBoxRadiusY = 0.9;
-            npc.collisionBoxRadiusZ = 0.8;
+            npc.hitBox = new HitBox(0.5, 0.9, 0.8);
             npc.moveSpeed = 4.0;
             npc.model = CharacterModel.GOAT;
             world.addCharacter(npc);
@@ -208,9 +205,7 @@ public class Client implements AutoCloseable
             npc.x = fpsCamera.position.x;
             npc.y = fpsCamera.position.y;
             npc.z = fpsCamera.position.z;
-            npc.collisionBoxRadiusX = 0.375;
-            npc.collisionBoxRadiusY = 0.375;
-            npc.collisionBoxRadiusZ = 0.375;
+            npc.hitBox = new HitBox(0.5, 0.9, 0.8);
             npc.moveSpeed = 4.0;
             npc.model = CharacterModel.SLIME;
             npc.movementStyle = NpcMovementStyle.SLIME;

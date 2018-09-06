@@ -5,6 +5,7 @@ import java.util.Iterator;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import net.survival.block.BlockType;
 import net.survival.entity.Character;
+import net.survival.util.HitBox;
 import net.survival.world.chunk.Chunk;
 
 public class CharacterPhysics
@@ -88,12 +89,14 @@ public class CharacterPhysics
         if (character.velocityY >= 0.0)
             return false;
 
-        int startX = (int) Math.floor(character.x - character.collisionBoxRadiusX);
-        int endX = (int) Math.floor(character.x + character.collisionBoxRadiusX);
-        int startZ = (int) Math.floor(character.z - character.collisionBoxRadiusZ);
-        int endZ = (int) Math.floor(character.z + character.collisionBoxRadiusZ);
+        HitBox characterHitBox = character.hitBox;
 
-        int floorY = (int) Math.floor(character.y - character.collisionBoxRadiusY);
+        int startX = (int) Math.floor(character.x - characterHitBox.radiusX);
+        int endX = (int) Math.floor(character.x + characterHitBox.radiusX);
+        int startZ = (int) Math.floor(character.z - characterHitBox.radiusZ);
+        int endZ = (int) Math.floor(character.z + characterHitBox.radiusZ);
+
+        int floorY = (int) Math.floor(character.y - characterHitBox.radiusY);
 
         if (floorY < 0 || floorY + 1 >= Chunk.YLENGTH)
             return false;
@@ -113,7 +116,7 @@ public class CharacterPhysics
                         && getDominantAxis(character, blockX, floorY, blockZ) == 1
                         && intersectsFloorPlane(character, blockX, floorY, blockZ))
                 {
-                    character.y = (floorY + 1) + character.collisionBoxRadiusY;
+                    character.y = (floorY + 1) + characterHitBox.radiusY;
                     character.velocityY = 0.0;
                     return true;
                 }
@@ -127,12 +130,14 @@ public class CharacterPhysics
         if (character.velocityY <= 0.0)
             return false;
 
-        int startX = (int) Math.floor(character.x - character.collisionBoxRadiusX);
-        int endX = (int) Math.floor(character.x + character.collisionBoxRadiusX);
-        int startZ = (int) Math.floor(character.z - character.collisionBoxRadiusZ);
-        int endZ = (int) Math.floor(character.z + character.collisionBoxRadiusZ);
+        HitBox characterHitBox = character.hitBox;
 
-        int ceilingY = (int) Math.floor(character.y + character.collisionBoxRadiusY);
+        int startX = (int) Math.floor(character.x - characterHitBox.radiusX);
+        int endX = (int) Math.floor(character.x + characterHitBox.radiusX);
+        int startZ = (int) Math.floor(character.z - characterHitBox.radiusZ);
+        int endZ = (int) Math.floor(character.z + characterHitBox.radiusZ);
+
+        int ceilingY = (int) Math.floor(character.y + characterHitBox.radiusY);
 
         if (ceilingY - 1 < 0 || ceilingY >= Chunk.YLENGTH)
             return false;
@@ -152,7 +157,7 @@ public class CharacterPhysics
                         && getDominantAxis(character, blockX, ceilingY, blockZ) == 1
                         && intersectsCeilingPlane(character, blockX, ceilingY, blockZ))
                 {
-                    character.y = ceilingY - character.collisionBoxRadiusY;
+                    character.y = ceilingY - characterHitBox.radiusY;
                     character.velocityY = 0.0;
                     return true;
                 }
@@ -163,16 +168,18 @@ public class CharacterPhysics
     }
 
     private boolean handleLeftWallCollision(Character character, World world) {
-        int startY = (int) Math.floor(character.y - character.collisionBoxRadiusY);
-        int endY = (int) Math.floor(character.y + character.collisionBoxRadiusY);
+        HitBox characterHitBox = character.hitBox;
+
+        int startY = (int) Math.floor(character.y - characterHitBox.radiusY);
+        int endY = (int) Math.floor(character.y + characterHitBox.radiusY);
 
         if (startY < 0 || endY >= Chunk.YLENGTH)
             return false;
 
-        int startZ = (int) Math.floor(character.z - character.collisionBoxRadiusZ);
-        int endZ = (int) Math.floor(character.z + character.collisionBoxRadiusZ);
+        int startZ = (int) Math.floor(character.z - characterHitBox.radiusZ);
+        int endZ = (int) Math.floor(character.z + characterHitBox.radiusZ);
 
-        int wallX = (int) Math.floor(character.x + character.collisionBoxRadiusX);
+        int wallX = (int) Math.floor(character.x + characterHitBox.radiusX);
 
         for (int blockY = startY; blockY <= endY; ++blockY) {
             for (int blockZ = startZ; blockZ <= endZ; ++blockZ) {
@@ -189,7 +196,7 @@ public class CharacterPhysics
                         && getDominantAxis(character, wallX, blockY, blockZ) == 0
                         && intersectsLeftPlane(character, wallX, blockY, blockZ))
                 {
-                    character.x = wallX - character.collisionBoxRadiusX;
+                    character.x = wallX - characterHitBox.radiusX;
                     character.velocityX = 0.0;
                     return true;
                 }
@@ -200,16 +207,18 @@ public class CharacterPhysics
     }
 
     private boolean handleRightWallCollision(Character character, World world) {
-        int startY = (int) Math.floor(character.y - character.collisionBoxRadiusY);
-        int endY = (int) Math.floor(character.y + character.collisionBoxRadiusY);
+        HitBox characterHitBox = character.hitBox;
+
+        int startY = (int) Math.floor(character.y - characterHitBox.radiusY);
+        int endY = (int) Math.floor(character.y + characterHitBox.radiusY);
 
         if (startY < 0 || endY >= Chunk.YLENGTH)
             return false;
 
-        int startZ = (int) Math.floor(character.z - character.collisionBoxRadiusZ);
-        int endZ = (int) Math.floor(character.z + character.collisionBoxRadiusZ);
+        int startZ = (int) Math.floor(character.z - characterHitBox.radiusZ);
+        int endZ = (int) Math.floor(character.z + characterHitBox.radiusZ);
 
-        int wallX = (int) Math.floor(character.x - character.collisionBoxRadiusX);
+        int wallX = (int) Math.floor(character.x - characterHitBox.radiusX);
 
         for (int blockY = startY; blockY <= endY; ++blockY) {
             for (int blockZ = startZ; blockZ <= endZ; ++blockZ) {
@@ -226,7 +235,7 @@ public class CharacterPhysics
                         && getDominantAxis(character, wallX, blockY, blockZ) == 0
                         && intersectsRightPlane(character, wallX, blockY, blockZ))
                 {
-                    character.x = (wallX + 1) + character.collisionBoxRadiusX;
+                    character.x = (wallX + 1) + characterHitBox.radiusX;
                     character.velocityX = 0.0;
                     return true;
                 }
@@ -237,16 +246,18 @@ public class CharacterPhysics
     }
 
     private boolean handleFrontWallCollision(Character character, World world) {
-        int startY = (int) Math.floor(character.y - character.collisionBoxRadiusY);
-        int endY = (int) Math.floor(character.y + character.collisionBoxRadiusY);
+        HitBox characterHitBox = character.hitBox;
+
+        int startY = (int) Math.floor(character.y - characterHitBox.radiusY);
+        int endY = (int) Math.floor(character.y + characterHitBox.radiusY);
 
         if (startY < 0 || endY >= Chunk.YLENGTH)
             return false;
 
-        int startX = (int) Math.floor(character.x - character.collisionBoxRadiusX);
-        int endX = (int) Math.floor(character.x + character.collisionBoxRadiusX);
+        int startX = (int) Math.floor(character.x - characterHitBox.radiusX);
+        int endX = (int) Math.floor(character.x + characterHitBox.radiusX);
 
-        int wallZ = (int) Math.floor(character.z - character.collisionBoxRadiusZ);
+        int wallZ = (int) Math.floor(character.z - characterHitBox.radiusZ);
 
         for (int blockY = startY; blockY <= endY; ++blockY) {
             for (int blockX = startX; blockX <= endX; ++blockX) {
@@ -263,7 +274,7 @@ public class CharacterPhysics
                         && getDominantAxis(character, blockX, blockY, wallZ) == 2
                         && intersectsFrontPlane(character, blockX, blockY, wallZ))
                 {
-                    character.z = (wallZ + 1) + character.collisionBoxRadiusZ;
+                    character.z = (wallZ + 1) + characterHitBox.radiusZ;
                     character.velocityZ = 0.0;
                     return true;
                 }
@@ -274,16 +285,18 @@ public class CharacterPhysics
     }
 
     private boolean handleBackWallCollision(Character character, World world) {
-        int startY = (int) Math.floor(character.y - character.collisionBoxRadiusY);
-        int endY = (int) Math.floor(character.y + character.collisionBoxRadiusY);
+        HitBox characterHitBox = character.hitBox;
+
+        int startY = (int) Math.floor(character.y - characterHitBox.radiusY);
+        int endY = (int) Math.floor(character.y + characterHitBox.radiusY);
 
         if (startY < 0 || endY >= Chunk.YLENGTH)
             return false;
 
-        int startX = (int) Math.floor(character.x - character.collisionBoxRadiusX);
-        int endX = (int) Math.floor(character.x + character.collisionBoxRadiusX);
+        int startX = (int) Math.floor(character.x - characterHitBox.radiusX);
+        int endX = (int) Math.floor(character.x + characterHitBox.radiusX);
 
-        int wallZ = (int) Math.floor(character.z + character.collisionBoxRadiusZ);
+        int wallZ = (int) Math.floor(character.z + characterHitBox.radiusZ);
 
         for (int blockY = startY; blockY <= endY; ++blockY) {
             for (int blockX = startX; blockX <= endX; ++blockX) {
@@ -300,7 +313,7 @@ public class CharacterPhysics
                         && getDominantAxis(character, blockX, blockY, wallZ) == 2
                         && intersectsBackPlane(character, blockX, blockY, wallZ))
                 {
-                    character.z = wallZ - character.collisionBoxRadiusZ;
+                    character.z = wallZ - characterHitBox.radiusZ;
                     character.velocityZ = 0.0;
                     return true;
                 }
@@ -311,59 +324,71 @@ public class CharacterPhysics
     }
 
     private boolean intersectsFloorPlane(Character character, int blockX, int blockY, int blockZ) {
+        HitBox hitBox = character.hitBox;
+
         return boxIntersectsYPlane(getBlockCollisionBoxTop(blockY),
                 getBlockCollisionBoxLeft(blockX), getBlockCollisionBoxRight(blockX),
                 getBlockCollisionBoxFront(blockZ), getBlockCollisionBoxBack(blockZ),
-                character.getCollisionBoxTop(), character.getCollisionBoxBottom(),
-                character.getCollisionBoxLeft(), character.getCollisionBoxRight(),
-                character.getCollisionBoxFront(), character.getCollisionBoxBack());
+                hitBox.getTop(character.y), hitBox.getBottom(character.y),
+                hitBox.getLeft(character.x), hitBox.getRight(character.x),
+                hitBox.getFront(character.z), hitBox.getBack(character.z));
     }
 
     private boolean intersectsCeilingPlane(Character character, int blockX, int blockY,
             int blockZ)
     {
+        HitBox hitBox = character.hitBox;
+
         return boxIntersectsYPlane(getBlockCollisionBoxBottom(blockY),
                 getBlockCollisionBoxLeft(blockX), getBlockCollisionBoxRight(blockX),
                 getBlockCollisionBoxFront(blockZ), getBlockCollisionBoxBack(blockZ),
-                character.getCollisionBoxTop(), character.getCollisionBoxBottom(),
-                character.getCollisionBoxLeft(), character.getCollisionBoxRight(),
-                character.getCollisionBoxFront(), character.getCollisionBoxBack());
+                hitBox.getTop(character.y), hitBox.getBottom(character.y),
+                hitBox.getLeft(character.x), hitBox.getRight(character.x),
+                hitBox.getFront(character.z), hitBox.getBack(character.z));
     }
 
     private boolean intersectsLeftPlane(Character character, int blockX, int blockY, int blockZ) {
+        HitBox hitBox = character.hitBox;
+
         return boxIntersectsXPlane(getBlockCollisionBoxLeft(blockX),
                 getBlockCollisionBoxTop(blockY), getBlockCollisionBoxBottom(blockY),
                 getBlockCollisionBoxFront(blockZ), getBlockCollisionBoxBack(blockZ),
-                character.getCollisionBoxTop(), character.getCollisionBoxBottom(),
-                character.getCollisionBoxLeft(), character.getCollisionBoxRight(),
-                character.getCollisionBoxFront(), character.getCollisionBoxBack());
+                hitBox.getTop(character.y), hitBox.getBottom(character.y),
+                hitBox.getLeft(character.x), hitBox.getRight(character.x),
+                hitBox.getFront(character.z), hitBox.getBack(character.z));
     }
 
     private boolean intersectsRightPlane(Character character, int blockX, int blockY, int blockZ) {
+        HitBox hitBox = character.hitBox;
+
         return boxIntersectsXPlane(getBlockCollisionBoxRight(blockX),
                 getBlockCollisionBoxTop(blockY), getBlockCollisionBoxBottom(blockY),
                 getBlockCollisionBoxFront(blockZ), getBlockCollisionBoxBack(blockZ),
-                character.getCollisionBoxTop(), character.getCollisionBoxBottom(),
-                character.getCollisionBoxLeft(), character.getCollisionBoxRight(),
-                character.getCollisionBoxFront(), character.getCollisionBoxBack());
+                hitBox.getTop(character.y), hitBox.getBottom(character.y),
+                hitBox.getLeft(character.x), hitBox.getRight(character.x),
+                hitBox.getFront(character.z), hitBox.getBack(character.z));
     }
 
     private boolean intersectsFrontPlane(Character character, int blockX, int blockY, int blockZ) {
+        HitBox hitBox = character.hitBox;
+
         return boxIntersectsZPlane(getBlockCollisionBoxFront(blockZ),
                 getBlockCollisionBoxTop(blockY), getBlockCollisionBoxBottom(blockY),
                 getBlockCollisionBoxLeft(blockX), getBlockCollisionBoxRight(blockX),
-                character.getCollisionBoxTop(), character.getCollisionBoxBottom(),
-                character.getCollisionBoxLeft(), character.getCollisionBoxRight(),
-                character.getCollisionBoxFront(), character.getCollisionBoxBack());
+                hitBox.getTop(character.y), hitBox.getBottom(character.y),
+                hitBox.getLeft(character.x), hitBox.getRight(character.x),
+                hitBox.getFront(character.z), hitBox.getBack(character.z));
     }
 
     private boolean intersectsBackPlane(Character character, int blockX, int blockY, int blockZ) {
+        HitBox hitBox = character.hitBox;
+
         return boxIntersectsZPlane(getBlockCollisionBoxBack(blockZ),
                 getBlockCollisionBoxTop(blockY), getBlockCollisionBoxBottom(blockY),
                 getBlockCollisionBoxLeft(blockX), getBlockCollisionBoxRight(blockX),
-                character.getCollisionBoxTop(), character.getCollisionBoxBottom(),
-                character.getCollisionBoxLeft(), character.getCollisionBoxRight(),
-                character.getCollisionBoxFront(), character.getCollisionBoxBack());
+                hitBox.getTop(character.y), hitBox.getBottom(character.y),
+                hitBox.getLeft(character.x), hitBox.getRight(character.x),
+                hitBox.getFront(character.z), hitBox.getBack(character.z));
     }
 
     private boolean boxIntersectsYPlane(double planeY, double planeLeft, double planeRight,
