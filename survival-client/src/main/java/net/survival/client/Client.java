@@ -295,5 +295,8 @@ public class Client implements AutoCloseable
 
         program.close();
         display.close();
+
+        while (TaskScheduler.pollTasks())
+            TaskScheduler.dispatchTasks();
     }
 }
