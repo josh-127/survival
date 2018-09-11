@@ -51,6 +51,10 @@ public class World implements BlockStorage
         chunks.put(ChunkPos.hashPos(cx, cz), chunk);
     }
 
+    public void addChunk(long hashedPos, Chunk chunk) {
+        chunks.put(hashedPos, chunk);
+    }
+
     public void removeChunk(int cx, int cz) {
         chunks.remove(ChunkPos.hashPos(cx, cz));
     }
