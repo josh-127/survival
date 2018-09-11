@@ -1,6 +1,7 @@
 package net.survival.world.chunk;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import net.survival.entity.Character;
 import net.survival.world.BlockStorage;
@@ -25,6 +26,17 @@ public class Chunk implements BlockStorage
     public Chunk() {
         blockIDs = new short[VOLUME];
         characters = new ArrayList<>();
+    }
+
+    private Chunk(short[] blockIDs, ArrayList<Character> characters) {
+        this.blockIDs = blockIDs;
+        this.characters = characters;
+    }
+
+    public Chunk makeCopy() {
+        short[] copyOfBlockIDs = Arrays.copyOf(blockIDs, VOLUME);
+        ArrayList<Character> copyOfCharacters = new ArrayList<>(characters);
+        return new Chunk(copyOfBlockIDs, copyOfCharacters);
     }
 
     @Override
