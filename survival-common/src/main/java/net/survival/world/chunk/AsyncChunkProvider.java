@@ -1,6 +1,8 @@
 package net.survival.world.chunk;
 
+import net.survival.concurrent.CoroutineTask;
+
 public interface AsyncChunkProvider
 {
-    Chunk provideChunkAsync(int cx, int cz);
+    CoroutineTask<Chunk> provideChunkAsync(int cx, int cz);
 }

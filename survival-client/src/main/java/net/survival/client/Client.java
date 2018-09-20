@@ -67,7 +67,7 @@ public class Client implements AutoCloseable
         chunkDatabase = new DefaultChunkDatabase();
         chunkGenerator = new InfiniteChunkGenerator(22L);
         worldDecorator = WorldDecorator.createDefault();
-        chunkSystem = new ChunkSystem(chunkDatabase, chunkGenerator, worldDecorator);
+        chunkSystem = new ChunkSystem(world, chunkLoader, chunkDatabase, chunkGenerator, worldDecorator);
         
         entitySystem = new EntitySystem();
 
@@ -149,7 +149,7 @@ public class Client implements AutoCloseable
         int cz = ChunkPos.toChunkZ((int) Math.floor(fpsCamera.position.z));
         chunkLoader.setCenter(cx, cz);
 
-        chunkSystem.update(world, chunkLoader);
+        chunkSystem.update();
         entitySystem.update(world, elapsedTime);
 
         if (player != null) {
