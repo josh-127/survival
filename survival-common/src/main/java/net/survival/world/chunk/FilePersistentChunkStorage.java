@@ -26,7 +26,7 @@ public class FilePersistentChunkStorage implements PersistentChunkStorage
         String baseName = String.format("%0X", hashedPos);
         String filePath = Paths.get(rootPath, baseName).toString();
 
-        ChunkSavingCoroutine coroutine = ChunkSavingCoroutine.moveChunkAndCreate(chunk, new File(filePath));
+        SaveChunkCoroutine coroutine = SaveChunkCoroutine.moveChunkAndCreate(chunk, new File(filePath));
         coroutine.start();
 
         return coroutine;

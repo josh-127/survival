@@ -9,7 +9,7 @@ import java.nio.channels.FileChannel;
 
 import net.survival.concurrent.VoidCoroutine;
 
-class ChunkSavingCoroutine implements VoidCoroutine
+class SaveChunkCoroutine implements VoidCoroutine
 {
     private static final int SERIALIZING = 0;
     private static final int WRITING_TO_CHANNEL = 1;
@@ -22,25 +22,25 @@ class ChunkSavingCoroutine implements VoidCoroutine
     private int state;
     private int counter;
 
-    private ChunkSavingCoroutine(Chunk chunk, FileChannel fileChannel, ByteBuffer serializedChunkData) {
+    private SaveChunkCoroutine(Chunk chunk, FileChannel fileChannel, ByteBuffer serializedChunkData) {
         this.chunk = chunk;
         this.fileChannel = fileChannel;
         this.serializedChunkData = serializedChunkData;
     }
 
-    public static ChunkSavingCoroutine create(Chunk chunk, File outputFile) {
+    public static SaveChunkCoroutine create(Chunk chunk, File outputFile) {
         return moveChunkAndCreate(chunk.makeCopy(), outputFile);
     }
 
     //
     // WARNING: You may not use the chunk after calling this method.
     //
-    public static ChunkSavingCoroutine moveChunkAndCreate(Chunk chunk, File outputFile) {
+    public static SaveChunkCoroutine moveChunkAndCreate(Chunk chunk, File outputFile) {
         try {
             @SuppressWarnings("resource")
             FileChannel fileChannel = new FileOutputStream(outputFile).getChannel();
             ByteBuffer serializedChunkData = ByteBuffer.allocate(Chunk.VOLUME * 2);
-            return new ChunkSavingCoroutine(chunk, fileChannel, serializedChunkData);
+            return new SaveChunkCoroutine(chunk, fileChannel, serializedChunkData);
         }
         catch (FileNotFoundException e) {
             throw new RuntimeException(e);
