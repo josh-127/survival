@@ -7,9 +7,9 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 
-import net.survival.concurrent.VoidCoroutineTask;
+import net.survival.concurrent.VoidCoroutine;
 
-class ChunkSavingTask implements VoidCoroutineTask
+class ChunkSavingCoroutine implements VoidCoroutine
 {
     private static final int SERIALIZING = 0;
     private static final int WRITING_TO_CHANNEL = 1;
@@ -22,25 +22,25 @@ class ChunkSavingTask implements VoidCoroutineTask
     private int state;
     private int counter;
 
-    private ChunkSavingTask(Chunk chunk, FileChannel fileChannel, ByteBuffer serializedChunkData) {
+    private ChunkSavingCoroutine(Chunk chunk, FileChannel fileChannel, ByteBuffer serializedChunkData) {
         this.chunk = chunk;
         this.fileChannel = fileChannel;
         this.serializedChunkData = serializedChunkData;
     }
 
-    public static ChunkSavingTask create(Chunk chunk, File outputFile) {
+    public static ChunkSavingCoroutine create(Chunk chunk, File outputFile) {
         return moveChunkAndCreate(chunk.makeCopy(), outputFile);
     }
 
     //
     // WARNING: You may not use the chunk after calling this method.
     //
-    public static ChunkSavingTask moveChunkAndCreate(Chunk chunk, File outputFile) {
+    public static ChunkSavingCoroutine moveChunkAndCreate(Chunk chunk, File outputFile) {
         try {
             @SuppressWarnings("resource")
             FileChannel fileChannel = new FileOutputStream(outputFile).getChannel();
             ByteBuffer serializedChunkData = ByteBuffer.allocate(Chunk.VOLUME * 2);
-            return new ChunkSavingTask(chunk, fileChannel, serializedChunkData);
+            return new ChunkSavingCoroutine(chunk, fileChannel, serializedChunkData);
         }
         catch (FileNotFoundException e) {
             throw new RuntimeException(e);

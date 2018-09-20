@@ -8,7 +8,7 @@ import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.longs.LongIterator;
 import it.unimi.dsi.fastutil.longs.LongSet;
-import net.survival.concurrent.CoroutineTask;
+import net.survival.concurrent.Coroutine;
 import net.survival.world.World;
 import net.survival.world.gen.decoration.WorldDecorator;
 
@@ -26,7 +26,7 @@ public class ChunkSystem
     private final WorldDecorator worldDecorator;
 
     private final Long2ObjectOpenHashMap<Chunk> chunkCache;
-    private final Long2ObjectOpenHashMap<CoroutineTask<Chunk>> loadingChunks;
+    private final Long2ObjectOpenHashMap<Coroutine<Chunk>> loadingChunks;
 
     public ChunkSystem(World world, ChunkLoader chunkLoader, PersistentChunkStorage chunkStorage,
             ChunkProvider chunkGenerator, WorldDecorator worldDecorator)

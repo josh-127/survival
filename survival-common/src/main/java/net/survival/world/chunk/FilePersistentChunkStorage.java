@@ -3,8 +3,8 @@ package net.survival.world.chunk;
 import java.io.File;
 import java.nio.file.Paths;
 
-import net.survival.concurrent.CoroutineTask;
-import net.survival.concurrent.VoidCoroutineTask;
+import net.survival.concurrent.Coroutine;
+import net.survival.concurrent.VoidCoroutine;
 
 public class FilePersistentChunkStorage implements PersistentChunkStorage
 {
@@ -17,18 +17,18 @@ public class FilePersistentChunkStorage implements PersistentChunkStorage
     }
 
     @Override
-    public CoroutineTask<Chunk> provideChunkAsync(long hashedPos) {
+    public Coroutine<Chunk> provideChunkAsync(long hashedPos) {
         throw new RuntimeException("Not implemented yet.");
     }
 
     @Override
-    public VoidCoroutineTask moveAndSaveChunkAsync(long hashedPos, Chunk chunk) {
+    public VoidCoroutine moveAndSaveChunkAsync(long hashedPos, Chunk chunk) {
         String baseName = String.format("%0X", hashedPos);
         String filePath = Paths.get(rootPath, baseName).toString();
 
-        ChunkSavingTask task = ChunkSavingTask.moveChunkAndCreate(chunk, new File(filePath));
-        task.start();
+        ChunkSavingCoroutine coroutine = ChunkSavingCoroutine.moveChunkAndCreate(chunk, new File(filePath));
+        coroutine.start();
 
-        return task;
+        return coroutine;
     }
 }

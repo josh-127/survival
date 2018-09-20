@@ -1,12 +1,12 @@
 package net.survival.world.chunk;
 
-import net.survival.concurrent.CoroutineTask;
+import net.survival.concurrent.Coroutine;
 
 public interface AsyncChunkProvider
 {
-    CoroutineTask<Chunk> provideChunkAsync(long hashedPos);
+    Coroutine<Chunk> provideChunkAsync(long hashedPos);
 
-    default CoroutineTask<Chunk> provideChunkAsync(int cx, int cz) {
+    default Coroutine<Chunk> provideChunkAsync(int cx, int cz) {
         return provideChunkAsync(ChunkPos.hashPos(cx, cz));
     }
 }
