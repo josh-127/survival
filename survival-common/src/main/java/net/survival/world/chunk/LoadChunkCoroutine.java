@@ -80,8 +80,11 @@ class LoadChunkCoroutine implements Coroutine<Chunk>
                 }
 
                 case DESERIALIZING: {
-                    int index = 0;
+                    byte flags = serializedChunkData.get();
+                    if ((flags & 1) != 0)
+                        chunk.markDecorated();
 
+                    int index = 0;
                     while (serializedChunkData.hasRemaining()) {
                         short rleStrip = serializedChunkData.getShort();
                         int length = (rleStrip & 0xF000) >>> 12;

@@ -11,6 +11,8 @@ import net.survival.concurrent.VoidCoroutine;
 
 class SaveChunkCoroutine implements VoidCoroutine
 {
+    private static final int CHUNK_HEADER_SIZE = 1;
+
     private static final int SERIALIZING = 0;
     private static final int WRITING_TO_CHANNEL = 1;
     private static final int FINISHED = 2;
@@ -39,7 +41,7 @@ class SaveChunkCoroutine implements VoidCoroutine
         try {
             @SuppressWarnings("resource")
             FileChannel fileChannel = new FileOutputStream(outputFile).getChannel();
-            ByteBuffer serializedChunkData = ByteBuffer.allocate(Chunk.VOLUME * 2);
+            ByteBuffer serializedChunkData = ByteBuffer.allocate(Chunk.VOLUME * 2 + CHUNK_HEADER_SIZE);
             return new SaveChunkCoroutine(chunk, fileChannel, serializedChunkData);
         }
         catch (FileNotFoundException e) {
@@ -57,6 +59,9 @@ class SaveChunkCoroutine implements VoidCoroutine
         try {
             switch (state) {
                 case SERIALIZING: {
+                    byte flags = (byte) (chunk.isDecorated() ? 1 : 0);
+                    serializedChunkData.put(flags);
+
                     while (counter < Chunk.VOLUME) {
                         int start = counter;
                         int startBlockID = chunk.blockIDs[start];
