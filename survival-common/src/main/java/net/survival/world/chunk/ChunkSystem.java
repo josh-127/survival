@@ -6,6 +6,7 @@ import java.util.Iterator;
 
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.longs.LongArrayFIFOQueue;
 import it.unimi.dsi.fastutil.longs.LongIterator;
 import it.unimi.dsi.fastutil.longs.LongSet;
 import net.survival.concurrent.Coroutine;
@@ -14,7 +15,6 @@ import net.survival.world.gen.decoration.WorldDecorator;
 
 public class ChunkSystem
 {
-    private static final int DATABASE_LOAD_RATE = 2;
     private static final int GENERATOR_LOAD_RATE = 2;
     private static final int MAX_UNLOADED_CHUNK_CACHE = 64;
 
@@ -38,20 +38,36 @@ public class ChunkSystem
         this.chunkGenerator = chunkGenerator;
         this.worldDecorator = worldDecorator;
 
-        chunkCache = new Long2ObjectOpenHashMap<>(MAX_UNLOADED_CHUNK_CACHE * 4);
-        loadingChunks = new Long2ObjectOpenHashMap<>(1024);
+        chunkCache = new Long2ObjectOpenHashMap<>(MAX_UNLOADED_CHUNK_CACHE);
+        loadingChunks = new Long2ObjectOpenHashMap<>();
     }
 
     public void update() {
-        LongSet chunksToLoad = chunkLoader.getChunkPositions();
+        LongSet requestedChunks = chunkLoader.getChunkPositions();
 
-        cacheUnlistedChunks(chunksToLoad, chunkCache);
-        loadCachedChunks(chunksToLoad.iterator());
+        cacheUnlistedChunks(requestedChunks, chunkCache);
+        loadCachedChunks(requestedChunks.iterator());
 
         if (chunkCache.size() > MAX_UNLOADED_CHUNK_CACHE)
-            unloadCachedChunks();
+            saveCachedChunks();
 
-        generateChunks(chunksToLoad.iterator());
+        loadSavedChunks(requestedChunks);
+        generateChunks(requestedChunks.iterator());
+    }
+
+    public void saveAllChunks() {
+        saveCachedChunks();
+
+        Iterator<Long2ObjectMap.Entry<Chunk>> chunkMapIt = world.getChunkMapFastIterator();
+        while (chunkMapIt.hasNext()) {
+            Long2ObjectMap.Entry<Chunk> entry = chunkMapIt.next();
+            long hashedPos = entry.getLongKey();
+            Chunk chunk = entry.getValue();
+
+            chunkCache.put(hashedPos, chunk);
+        }
+
+        saveCachedChunks();
     }
 
     private void cacheUnlistedChunks(LongSet chunkPosSet, Long2ObjectMap<Chunk> unloadedChunks) {
@@ -71,25 +87,23 @@ public class ChunkSystem
         }
     }
 
-    private void loadCachedChunks(LongIterator chunksToLoadIt) {
-        while (chunksToLoadIt.hasNext()) {
-            long hashedPos = chunksToLoadIt.nextLong();
+    private void loadCachedChunks(LongIterator requestedChunksIt) {
+        while (requestedChunksIt.hasNext()) {
+            long hashedPos = requestedChunksIt.nextLong();
             Chunk chunk = chunkCache.remove(hashedPos);
 
             if (chunk != null) {
                 int cx = ChunkPos.chunkXFromHashedPos(hashedPos);
                 int cz = ChunkPos.chunkZFromHashedPos(hashedPos);
                 world.addChunk(cx, cz, chunk);
-                chunksToLoadIt.remove();
+                requestedChunksIt.remove();
             }
         }
     }
 
-    private void unloadCachedChunks() {
-        Iterator<Long2ObjectMap.Entry<Chunk>> iterator = chunkCache.long2ObjectEntrySet().fastIterator();
-
-        while (iterator.hasNext()) {
-            Long2ObjectMap.Entry<Chunk> entry = iterator.next();
+    private void saveChunks(Iterator<Long2ObjectMap.Entry<Chunk>> chunksToSaveIt) {
+        while (chunksToSaveIt.hasNext()) {
+            Long2ObjectMap.Entry<Chunk> entry = chunksToSaveIt.next();
             long hashedPos = entry.getLongKey();
             Chunk chunk = entry.getValue();
 
@@ -97,18 +111,52 @@ public class ChunkSystem
             int cz = ChunkPos.chunkZFromHashedPos(hashedPos);
             chunkStorage.saveChunkAsync(cx, cz, chunk);
         }
+    }
 
+    public void saveCachedChunks() {
+        saveChunks(chunkCache.long2ObjectEntrySet().fastIterator());
         chunkCache.clear();
     }
 
-    private void generateChunks(LongIterator chunksToLoadIt) {
-        for (int i = 0; i < GENERATOR_LOAD_RATE && chunksToLoadIt.hasNext(); ++i) {
+    private void loadSavedChunks(LongSet chunksToLoad) {
+        LongIterator chunksToLoadIt = chunksToLoad.iterator();
+
+        while (chunksToLoadIt.hasNext()) {
             long hashedPos = chunksToLoadIt.nextLong();
+            if (loadingChunks.containsKey(hashedPos))
+                continue;
+
+            Coroutine<Chunk> coroutine = chunkStorage.provideChunkAsync(hashedPos);
+
+            if (coroutine != null) {
+                loadingChunks.put(hashedPos, coroutine);
+                chunksToLoadIt.remove();
+            }
+        }
+
+        Iterator<Long2ObjectMap.Entry<Coroutine<Chunk>>> loadingChunksIt =
+                loadingChunks.long2ObjectEntrySet().fastIterator();
+        while (loadingChunksIt.hasNext()) {
+            Long2ObjectMap.Entry<Coroutine<Chunk>> entry = loadingChunksIt.next();
+            long hashedPos = entry.getLongKey();
+            Coroutine<Chunk> coroutine = entry.getValue();
+            Chunk chunk = coroutine.pollResult();
+
+            if (chunk != null) {
+                world.addChunk(hashedPos, chunk);
+                loadingChunksIt.remove();
+            }
+        }
+    }
+
+    private void generateChunks(LongIterator requestedChunksIt) {
+        for (int i = 0; i < GENERATOR_LOAD_RATE && requestedChunksIt.hasNext(); ++i) {
+            long hashedPos = requestedChunksIt.nextLong();
             int cx = ChunkPos.chunkXFromHashedPos(hashedPos);
             int cz = ChunkPos.chunkZFromHashedPos(hashedPos);
             Chunk generatedChunk = chunkGenerator.provideChunk(cx, cz);
             world.addChunk(cx, cz, generatedChunk);
-            chunksToLoadIt.remove();
+            requestedChunksIt.remove();
         }
 
         Iterator<Long2ObjectMap.Entry<Chunk>> chunkMapIt = world.getChunkMapFastIterator();

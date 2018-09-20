@@ -18,17 +18,27 @@ public class FilePersistentChunkStorage implements PersistentChunkStorage
 
     @Override
     public Coroutine<Chunk> provideChunkAsync(long hashedPos) {
-        throw new RuntimeException("Not implemented yet.");
+        String filePath = getChunkFilePath(hashedPos);
+        File file = new File(filePath);
+        if (!file.exists())
+            return null;
+
+        return LoadChunkCoroutine.create(file).start();
     }
 
     @Override
     public VoidCoroutine moveAndSaveChunkAsync(long hashedPos, Chunk chunk) {
-        String baseName = String.format("%0X", hashedPos);
-        String filePath = Paths.get(rootPath, baseName).toString();
+        String filePath = getChunkFilePath(hashedPos);
 
         SaveChunkCoroutine coroutine = SaveChunkCoroutine.moveChunkAndCreate(chunk, new File(filePath));
         coroutine.start();
 
         return coroutine;
+    }
+
+    private String getChunkFilePath(long hashedPos) {
+        String baseName = String.format("%016X", hashedPos);
+        String filePath = Paths.get(rootPath, baseName).toString();
+        return filePath;
     }
 }

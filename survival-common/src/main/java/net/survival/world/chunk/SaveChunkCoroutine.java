@@ -69,15 +69,10 @@ class SaveChunkCoroutine implements VoidCoroutine
                         }
 
                         short rleStrip = (short) (startBlockID & 0x0FFF);
-                        rleStrip |= (short) ((counter - start) << 12);
+                        rleStrip |= (short) (((counter - start - 1) & 0xF) << 12);
 
                         serializedChunkData.putShort(rleStrip);
                     }
-
-                    /*
-                    for (int i = 0; i < Chunk.VOLUME; ++i)
-                        serializedChunkData.putShort(chunk.blockIDs[i]);
-                    */
 
                     serializedChunkData.flip();
                     nextState();
@@ -86,7 +81,6 @@ class SaveChunkCoroutine implements VoidCoroutine
 
                 case WRITING_TO_CHANNEL: {
                     if (serializedChunkData.hasRemaining()) {
-                        // Writing 65536 bytes every time is slow.
                         fileChannel.write(serializedChunkData);
                     }
                     else {

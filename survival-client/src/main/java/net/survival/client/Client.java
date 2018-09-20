@@ -85,6 +85,8 @@ public class Client implements AutoCloseable
 
     @Override
     public void close() throws RuntimeException {
+        chunkSystem.saveAllChunks();
+
         clientDisplay.close();
     }
 
