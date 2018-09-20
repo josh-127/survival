@@ -32,7 +32,7 @@ import net.survival.world.chunk.ChunkSystem;
 import net.survival.world.gen.InfiniteChunkGenerator;
 import net.survival.world.gen.decoration.WorldDecorator;
 import net.survival.world.chunk.CircularChunkLoader;
-import net.survival.world.chunk.DefaultChunkDatabase;
+import net.survival.world.chunk.FilePersistentChunkStorage;
 
 public class Client implements AutoCloseable
 {
@@ -44,7 +44,7 @@ public class Client implements AutoCloseable
     private final World world;
 
     private final CircularChunkLoader chunkLoader;
-    private final DefaultChunkDatabase chunkDatabase;
+    private final FilePersistentChunkStorage chunkStorage;
     private final InfiniteChunkGenerator chunkGenerator;
     private final WorldDecorator worldDecorator;
     private final ChunkSystem chunkSystem;
@@ -64,10 +64,10 @@ public class Client implements AutoCloseable
         world = new World();
         
         chunkLoader = new CircularChunkLoader(10);
-        chunkDatabase = new DefaultChunkDatabase();
+        chunkStorage = new FilePersistentChunkStorage(System.getProperty("user.dir") + "/../.world");
         chunkGenerator = new InfiniteChunkGenerator(22L);
         worldDecorator = WorldDecorator.createDefault();
-        chunkSystem = new ChunkSystem(world, chunkLoader, chunkDatabase, chunkGenerator, worldDecorator);
+        chunkSystem = new ChunkSystem(world, chunkLoader, chunkStorage, chunkGenerator, worldDecorator);
         
         entitySystem = new EntitySystem();
 

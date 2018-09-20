@@ -21,20 +21,20 @@ public class ChunkSystem
     private final World world;
     private final ChunkLoader chunkLoader;
 
-    private final AsyncChunkProvider chunkDatabase;
+    private final PersistentChunkStorage chunkStorage;
     private final ChunkProvider chunkGenerator;
     private final WorldDecorator worldDecorator;
 
     private final Long2ObjectOpenHashMap<Chunk> chunkCache;
     private final Long2ObjectOpenHashMap<CoroutineTask<Chunk>> loadingChunks;
 
-    public ChunkSystem(World world, ChunkLoader chunkLoader, AsyncChunkProvider chunkDatabase,
+    public ChunkSystem(World world, ChunkLoader chunkLoader, PersistentChunkStorage chunkStorage,
             ChunkProvider chunkGenerator, WorldDecorator worldDecorator)
     {
         this.world = world;
         this.chunkLoader = chunkLoader;
 
-        this.chunkDatabase = chunkDatabase;
+        this.chunkStorage = chunkStorage;
         this.chunkGenerator = chunkGenerator;
         this.worldDecorator = worldDecorator;
 
@@ -93,9 +93,9 @@ public class ChunkSystem
             long hashedPos = entry.getLongKey();
             Chunk chunk = entry.getValue();
 
-            // TODO: Remove hard-coding on file path.
-            String filePath = String.format(System.getProperty("user.dir") + "/../.world/%016X", hashedPos);
-            ChunkSavingTask.moveChunkAndCreate(chunk, new File(filePath)).start();
+            int cx = ChunkPos.chunkXFromHashedPos(hashedPos);
+            int cz = ChunkPos.chunkZFromHashedPos(hashedPos);
+            chunkStorage.saveChunkAsync(cx, cz, chunk);
         }
 
         chunkCache.clear();
