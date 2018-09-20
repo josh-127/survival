@@ -289,7 +289,7 @@ public class Client implements AutoCloseable
                 frameCounter = 0;
             }
 
-            while (CoroutineScheduler.poll())
+            if (CoroutineScheduler.poll())
                 CoroutineScheduler.dispatch();
 
             GLDisplay.pollEvents();
