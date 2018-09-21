@@ -51,7 +51,9 @@ public class InfiniteChunkGenerator implements ChunkProvider
     }
 
     @Override
-    public Chunk provideChunk(int cx, int cz) {
+    public Chunk provideChunk(long hashedPos) {
+        int cx = ChunkPos.chunkXFromHashedPos(hashedPos);
+        int cz = ChunkPos.chunkZFromHashedPos(hashedPos);
         int offsetX = cx * (NMAP_XLENGTH - 1);
         int offsetZ = cz * (NMAP_ZLENGTH - 1);
         int globalX = ChunkPos.toGlobalX(cx, 0);

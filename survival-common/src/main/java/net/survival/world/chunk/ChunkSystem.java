@@ -152,10 +152,8 @@ public class ChunkSystem
     private void generateChunks(LongIterator requestedChunksIt) {
         for (int i = 0; i < GENERATOR_LOAD_RATE && requestedChunksIt.hasNext(); ++i) {
             long hashedPos = requestedChunksIt.nextLong();
-            int cx = ChunkPos.chunkXFromHashedPos(hashedPos);
-            int cz = ChunkPos.chunkZFromHashedPos(hashedPos);
-            Chunk generatedChunk = chunkGenerator.provideChunk(cx, cz);
-            world.addChunk(cx, cz, generatedChunk);
+            Chunk generatedChunk = chunkGenerator.provideChunk(hashedPos);
+            world.addChunk(hashedPos, generatedChunk);
             requestedChunksIt.remove();
         }
 
