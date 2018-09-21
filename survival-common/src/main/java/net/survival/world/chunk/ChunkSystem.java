@@ -123,8 +123,10 @@ public class ChunkSystem
 
         while (chunksToLoadIt.hasNext()) {
             long hashedPos = chunksToLoadIt.nextLong();
-            if (loadingChunks.containsKey(hashedPos))
+            if (loadingChunks.containsKey(hashedPos)) {
+                chunksToLoadIt.remove();
                 continue;
+            }
 
             Coroutine<Chunk> coroutine = chunkStorage.provideChunkAsync(hashedPos);
 
