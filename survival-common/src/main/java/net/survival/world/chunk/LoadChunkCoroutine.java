@@ -58,11 +58,13 @@ class LoadChunkCoroutine implements Coroutine<Chunk>
                 }
 
                 case OPENING_FILE: {
-                    chunk = new Chunk();
-                    fileChannel = new FileInputStream(inputFile).getChannel();
-                    serializedChunkData = ByteBuffer.allocate((int) inputFile.length());
+                    if (inputFile.length() != 0) {
+                        chunk = new Chunk();
+                        fileChannel = new FileInputStream(inputFile).getChannel();
+                        serializedChunkData = ByteBuffer.allocate((int) inputFile.length());
+                        nextState();
+                    }
 
-                    nextState();
                     return false;
                 }
 
