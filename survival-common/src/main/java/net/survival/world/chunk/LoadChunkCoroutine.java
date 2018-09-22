@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.HashSet;
-import java.util.Queue;
 
 import net.survival.concurrent.Coroutine;
 
