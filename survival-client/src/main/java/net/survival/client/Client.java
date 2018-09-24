@@ -141,7 +141,7 @@ public class Client implements AutoCloseable
                 player.setJumpControlValue();
         }
         else {
-            final double CAMERA_SPEED = 80.0;
+            final double CAMERA_SPEED = 40.0;
             fpsCamera.position.x += joystickX * CAMERA_SPEED * elapsedTime;
             fpsCamera.position.z += joystickZ * CAMERA_SPEED * elapsedTime;
             fpsCamera.position.y += joystickY * 20.0 * elapsedTime;
