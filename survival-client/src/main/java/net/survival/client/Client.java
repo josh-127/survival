@@ -56,7 +56,7 @@ public class Client implements AutoCloseable
     private final ClientDisplay clientDisplay;
     private final GuiDisplay guiDisplay;
 
-    private final FpsCamera fpsCamera;
+    private final FpvCamera fpvCamera;
 
     private Player player;
 
@@ -80,7 +80,7 @@ public class Client implements AutoCloseable
                 GraphicsSettings.WINDOW_HEIGHT);
         guiDisplay = new GuiDisplay(control);
 
-        fpsCamera = new FpsCamera(new Vector3d(60.0, 72.0, 20.0), 0.0f, -1.0f);
+        fpvCamera = new FpvCamera(new Vector3d(60.0, 72.0, 20.0), 0.0f, -1.0f);
     }
 
     @Override
@@ -93,13 +93,13 @@ public class Client implements AutoCloseable
     public void tick(double elapsedTime) {
         double cursorDX = Mouse.getDeltaX();
         double cursorDY = Mouse.getDeltaY();
-        fpsCamera.rotate(-cursorDX / 128.0, -cursorDY / 128.0);
+        fpvCamera.rotate(-cursorDX / 128.0, -cursorDY / 128.0);
 
         if (Keyboard.isKeyPressed(Key.R)) {
             Player newPlayer = new Player();
-            newPlayer.x = player != null ? player.x : fpsCamera.position.x;
-            newPlayer.y = player != null ? player.y + 3.0 : fpsCamera.position.y;
-            newPlayer.z = player != null ? player.z : fpsCamera.position.z;
+            newPlayer.x = player != null ? player.x : fpvCamera.position.x;
+            newPlayer.y = player != null ? player.y + 3.0 : fpvCamera.position.y;
+            newPlayer.z = player != null ? player.z : fpvCamera.position.z;
             newPlayer.hitBox = new HitBox(0.4375, 0.9, 0.4375);
             newPlayer.visible = false;
             player = newPlayer;
@@ -111,20 +111,20 @@ public class Client implements AutoCloseable
         double joystickY = 0.0;
 
         if (Keyboard.isKeyDown(Key.W)) {
-            joystickX += Math.sin(fpsCamera.yaw);
-            joystickZ -= Math.cos(fpsCamera.yaw);
+            joystickX += Math.sin(fpvCamera.yaw);
+            joystickZ -= Math.cos(fpvCamera.yaw);
         }
         if (Keyboard.isKeyDown(Key.S)) {
-            joystickX += Math.sin(fpsCamera.yaw + Math.PI);
-            joystickZ -= Math.cos(fpsCamera.yaw + Math.PI);
+            joystickX += Math.sin(fpvCamera.yaw + Math.PI);
+            joystickZ -= Math.cos(fpvCamera.yaw + Math.PI);
         }
         if (Keyboard.isKeyDown(Key.A)) {
-            joystickX += Math.sin(fpsCamera.yaw - Math.PI / 2.0);
-            joystickZ -= Math.cos(fpsCamera.yaw - Math.PI / 2.0);
+            joystickX += Math.sin(fpvCamera.yaw - Math.PI / 2.0);
+            joystickZ -= Math.cos(fpvCamera.yaw - Math.PI / 2.0);
         }
         if (Keyboard.isKeyDown(Key.D)) {
-            joystickX += Math.sin(fpsCamera.yaw + Math.PI / 2.0);
-            joystickZ -= Math.cos(fpsCamera.yaw + Math.PI / 2.0);
+            joystickX += Math.sin(fpvCamera.yaw + Math.PI / 2.0);
+            joystickZ -= Math.cos(fpvCamera.yaw + Math.PI / 2.0);
         }
 
         if (Keyboard.isKeyDown(Key.SPACE)) {
@@ -142,33 +142,33 @@ public class Client implements AutoCloseable
         }
         else {
             final double CAMERA_SPEED = 40.0;
-            fpsCamera.position.x += joystickX * CAMERA_SPEED * elapsedTime;
-            fpsCamera.position.z += joystickZ * CAMERA_SPEED * elapsedTime;
-            fpsCamera.position.y += joystickY * 20.0 * elapsedTime;
+            fpvCamera.position.x += joystickX * CAMERA_SPEED * elapsedTime;
+            fpvCamera.position.z += joystickZ * CAMERA_SPEED * elapsedTime;
+            fpvCamera.position.y += joystickY * 20.0 * elapsedTime;
         }
 
-        int cx = ChunkPos.toChunkX((int) Math.floor(fpsCamera.position.x));
-        int cz = ChunkPos.toChunkZ((int) Math.floor(fpsCamera.position.z));
+        int cx = ChunkPos.toChunkX((int) Math.floor(fpvCamera.position.x));
+        int cz = ChunkPos.toChunkZ((int) Math.floor(fpvCamera.position.z));
         chunkLoader.setCenter(cx, cz);
 
         chunkSystem.update();
         entitySystem.update(world, elapsedTime);
 
         if (player != null) {
-            fpsCamera.position.x = player.x;
-            fpsCamera.position.y = player.y + 0.8;
-            fpsCamera.position.z = player.z;
+            fpvCamera.position.x = player.x;
+            fpvCamera.position.y = player.y + 0.8;
+            fpvCamera.position.z = player.z;
         }
 
         if (Mouse.isLmbPressed() || Mouse.isRmbPressed()) {
-            double px = fpsCamera.position.x;
-            double py = fpsCamera.position.y;
-            double pz = fpsCamera.position.z;
+            double px = fpvCamera.position.x;
+            double py = fpvCamera.position.y;
+            double pz = fpvCamera.position.z;
             final double DELTA = 0.0078125;
             for (double zz = 0.0; zz < 7.0; zz += DELTA) {
-                px += DELTA * Math.sin(fpsCamera.yaw) * Math.cos(fpsCamera.pitch);
-                py += DELTA * Math.sin(fpsCamera.pitch);
-                pz -= DELTA * Math.cos(fpsCamera.yaw) * Math.cos(fpsCamera.pitch);
+                px += DELTA * Math.sin(fpvCamera.yaw) * Math.cos(fpvCamera.pitch);
+                py += DELTA * Math.sin(fpvCamera.pitch);
+                pz -= DELTA * Math.cos(fpvCamera.yaw) * Math.cos(fpvCamera.pitch);
                 int pxi = (int) Math.floor(px);
                 int pyi = (int) Math.floor(py);
                 int pzi = (int) Math.floor(pz);
@@ -184,9 +184,9 @@ public class Client implements AutoCloseable
 
         if (Keyboard.isKeyPressed(Key.T)) {
             Npc npc = new Npc();
-            npc.x = fpsCamera.position.x;
-            npc.y = fpsCamera.position.y;
-            npc.z = fpsCamera.position.z;
+            npc.x = fpvCamera.position.x;
+            npc.y = fpvCamera.position.y;
+            npc.z = fpvCamera.position.z;
             npc.hitBox = new HitBox(0.5, 0.9, 0.8);
             npc.moveSpeed = 4.0;
             world.addCharacter(npc);
@@ -194,9 +194,9 @@ public class Client implements AutoCloseable
 
         if (Keyboard.isKeyPressed(Key.Y)) {
             Npc npc = new Npc();
-            npc.x = fpsCamera.position.x;
-            npc.y = fpsCamera.position.y;
-            npc.z = fpsCamera.position.z;
+            npc.x = fpvCamera.position.x;
+            npc.y = fpvCamera.position.y;
+            npc.z = fpvCamera.position.z;
             npc.hitBox = new HitBox(0.5, 0.9, 0.8);
             npc.moveSpeed = 4.0;
             npc.model = CharacterModel.GOAT;
@@ -205,9 +205,9 @@ public class Client implements AutoCloseable
 
         if (Keyboard.isKeyPressed(Key.U)) {
             Npc npc = new Npc();
-            npc.x = fpsCamera.position.x;
-            npc.y = fpsCamera.position.y;
-            npc.z = fpsCamera.position.z;
+            npc.x = fpvCamera.position.x;
+            npc.y = fpvCamera.position.y;
+            npc.z = fpvCamera.position.z;
             npc.hitBox = new HitBox(0.5, 0.9, 0.8);
             npc.moveSpeed = 4.0;
             npc.model = CharacterModel.SLIME;
@@ -227,9 +227,9 @@ public class Client implements AutoCloseable
             }
         }
 
-        clientDisplay.getCamera().moveTo((float) fpsCamera.position.x, (float) fpsCamera.position.y,
-                (float) fpsCamera.position.z);
-        clientDisplay.getCamera().orient((float) fpsCamera.yaw, (float) fpsCamera.pitch);
+        clientDisplay.getCamera().moveTo((float) fpvCamera.position.x, (float) fpvCamera.position.y,
+                (float) fpvCamera.position.z);
+        clientDisplay.getCamera().orient((float) fpvCamera.yaw, (float) fpvCamera.pitch);
         clientDisplay.getCamera().setFov((float) Math.toRadians(60.0));
         clientDisplay.getCamera().resize(GraphicsSettings.WINDOW_WIDTH,
                 GraphicsSettings.WINDOW_HEIGHT);

@@ -8,10 +8,10 @@ import net.survival.client.input.Mouse;
 
 class UserController
 {
-    public FpsCamera camera;
+    public FpvCamera camera;
 
     public UserController() {
-        camera = new FpsCamera(new Vector3d(0.0, 72.0f, 0.0), 0.0, -1.0);
+        camera = new FpvCamera(new Vector3d(0.0, 72.0f, 0.0), 0.0, -1.0);
     }
 
     public void tick(double elapsedTime) {

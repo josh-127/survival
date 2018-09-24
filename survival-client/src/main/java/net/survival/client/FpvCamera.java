@@ -3,13 +3,13 @@ package net.survival.client;
 import org.joml.Matrix4f;
 import org.joml.Vector3d;
 
-class FpsCamera
+class FpvCamera
 {
     public Vector3d position;
     public double yaw;
     public double pitch;
     
-    public FpsCamera(Vector3d position, double yaw, double pitch) {
+    public FpvCamera(Vector3d position, double yaw, double pitch) {
         this.position = position;
         this.yaw = yaw;
         this.pitch = pitch;
