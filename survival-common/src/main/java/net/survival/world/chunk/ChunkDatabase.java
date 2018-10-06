@@ -145,7 +145,6 @@ public class ChunkDatabase implements PersistentChunkStorage, AutoCloseable
 
         long dataAddress = AllocationUnitEncoding.decodeAddress(dataEAU);
         fileOperationMultiplexer.write(compressedData, dataAddress);
-        System.out.println((double) dataLength / 2.0);
     }
 
     private ByteBuffer serializeChunkDirectory() {
