@@ -7,6 +7,8 @@ import it.unimi.dsi.fastutil.longs.LongListIterator;
 
 class VirtualMemoryAllocator
 {
+    private static final long MAX_LENGTH = 65536;
+
     // TODO: Insertion is slow. Look for a different data structure.
     //       Also, the data structure has to be hand-written for
     //       backwards compatibility.
@@ -35,8 +37,8 @@ class VirtualMemoryAllocator
     public long allocateMemoryAndReturnEAU(long length) {
         if (length <= 0L)
             throw new IllegalArgumentException("Precondition is not met: length > 0L.");
-        if (length >= AllocationUnitEncoding.UPPER_BOUND)
-            throw new IllegalArgumentException("Precondition is not met: length < UPPER_BOUND.");
+        if (length >= Math.min(MAX_LENGTH, AllocationUnitEncoding.UPPER_BOUND))
+            throw new IllegalArgumentException("Precondition is not met: length < min(MAX_LENGTH, UPPER_BOUND).");
 
         length = AllocationUnitEncoding.padLength(length);
 
