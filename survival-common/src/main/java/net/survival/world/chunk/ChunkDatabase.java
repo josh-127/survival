@@ -1,7 +1,6 @@
 package net.survival.world.chunk;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
@@ -12,6 +11,7 @@ import it.unimi.dsi.fastutil.longs.Long2LongOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectIterator;
 import net.survival.concurrent.DeferredResult;
 import net.survival.concurrent.Promise;
+import net.survival.io.FileOperationMultiplexer;
 
 public class ChunkDatabase implements PersistentChunkStorage, AutoCloseable
 {
@@ -37,7 +37,7 @@ public class ChunkDatabase implements PersistentChunkStorage, AutoCloseable
 
             FileChannel fileChannel = new RandomAccessFile(file, "rw").getChannel();
             fileOperationMultiplexer = new FileOperationMultiplexer(fileChannel);
-            
+
             if (fileExists) {
                 ByteBuffer buffer = ByteBuffer.allocate(FOOTER_LENGTH);
                 fileChannel.position(file.length() - FOOTER_LENGTH);

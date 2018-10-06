@@ -48,7 +48,7 @@ class VirtualMemoryAllocator
 
             if (!allocatedI && length <= lengthI) {
                 long newAllocationUnit = AllocationUnitEncoding.encode(addressI, length, true);
-                        
+
                 addressI += length;
                 lengthI -= length;
 

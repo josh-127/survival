@@ -1,4 +1,4 @@
-package net.survival.world.chunk;
+package net.survival.io;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -11,7 +11,7 @@ import net.survival.concurrent.Promise;
 
 // "Multiplexer" is not a misnomer. Instead of each call to fileChannel being multiplexed,
 // each transaction is multiplexed.
-class FileOperationMultiplexer implements AutoCloseable
+public class FileOperationMultiplexer implements AutoCloseable
 {
     private final FileChannel fileChannel;
 
@@ -47,7 +47,7 @@ class FileOperationMultiplexer implements AutoCloseable
                 currentTransaction = pendingTransactions.remove();
                 fileChannel.position(currentTransaction.position);
             }
-    
+
             if (currentTransaction != null) {
                 if (currentTransaction.buffer.hasRemaining()) {
                     if (currentTransaction.type == Transaction.TYPE_READ)
