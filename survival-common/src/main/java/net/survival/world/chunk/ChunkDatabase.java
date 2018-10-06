@@ -78,8 +78,6 @@ public class ChunkDatabase implements PersistentChunkStorage, AutoCloseable
 
     @Override
     public void close() throws RuntimeException {
-        // File isn't truncated, which is why it crashes when closing the application
-        // for the second time.
         fileOperationMultiplexer.close();
 
         try {
