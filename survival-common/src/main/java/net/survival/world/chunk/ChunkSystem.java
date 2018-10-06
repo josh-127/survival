@@ -6,7 +6,7 @@ import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.longs.LongIterator;
 import it.unimi.dsi.fastutil.longs.LongSet;
-import net.survival.concurrent.Coroutine;
+import net.survival.concurrent.DeferredResult;
 import net.survival.world.World;
 import net.survival.world.gen.decoration.WorldDecorator;
 
@@ -23,7 +23,7 @@ public class ChunkSystem
     private final WorldDecorator worldDecorator;
 
     private final Long2ObjectOpenHashMap<Chunk> chunkCache;
-    private final Long2ObjectOpenHashMap<Coroutine<Chunk>> loadingChunks;
+    private final Long2ObjectOpenHashMap<DeferredResult<Chunk>> loadingChunks;
 
     public ChunkSystem(World world, ChunkLoader chunkLoader, PersistentChunkStorage chunkStorage,
             ChunkProvider chunkGenerator, WorldDecorator worldDecorator)
@@ -125,20 +125,20 @@ public class ChunkSystem
                 continue;
             }
 
-            Coroutine<Chunk> coroutine = chunkStorage.provideChunkAsync(hashedPos);
+            DeferredResult<Chunk> deferredResult = chunkStorage.provideChunkAsync(hashedPos);
 
-            if (coroutine != null) {
-                loadingChunks.put(hashedPos, coroutine);
+            if (deferredResult != null) {
+                loadingChunks.put(hashedPos, deferredResult);
                 chunksToLoadIt.remove();
             }
         }
 
-        Iterator<Long2ObjectMap.Entry<Coroutine<Chunk>>> loadingChunksIt =
+        Iterator<Long2ObjectMap.Entry<DeferredResult<Chunk>>> loadingChunksIt =
                 loadingChunks.long2ObjectEntrySet().fastIterator();
         while (loadingChunksIt.hasNext()) {
-            Long2ObjectMap.Entry<Coroutine<Chunk>> entry = loadingChunksIt.next();
+            Long2ObjectMap.Entry<DeferredResult<Chunk>> entry = loadingChunksIt.next();
             long hashedPos = entry.getLongKey();
-            Coroutine<Chunk> coroutine = entry.getValue();
+            DeferredResult<Chunk> coroutine = entry.getValue();
             Chunk chunk = coroutine.pollResult();
 
             if (chunk != null) {

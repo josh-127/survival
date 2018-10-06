@@ -1,5 +1,6 @@
 package net.survival.client;
 
+import java.io.File;
 import java.util.Iterator;
 
 import org.joml.Vector3d;
@@ -27,12 +28,12 @@ import net.survival.util.HitBox;
 import net.survival.world.EntitySystem;
 import net.survival.world.World;
 import net.survival.world.chunk.Chunk;
+import net.survival.world.chunk.ChunkDatabase;
 import net.survival.world.chunk.ChunkPos;
 import net.survival.world.chunk.ChunkSystem;
 import net.survival.world.gen.InfiniteChunkGenerator;
 import net.survival.world.gen.decoration.WorldDecorator;
 import net.survival.world.chunk.CircularChunkLoader;
-import net.survival.world.chunk.FilePersistentChunkStorage;
 
 public class Client implements AutoCloseable
 {
@@ -44,7 +45,7 @@ public class Client implements AutoCloseable
     private final World world;
 
     private final CircularChunkLoader chunkLoader;
-    private final FilePersistentChunkStorage chunkStorage;
+    private final ChunkDatabase chunkDatabase;
     private final InfiniteChunkGenerator chunkGenerator;
     private final WorldDecorator worldDecorator;
     private final ChunkSystem chunkSystem;
@@ -64,10 +65,10 @@ public class Client implements AutoCloseable
         world = new World();
         
         chunkLoader = new CircularChunkLoader(10);
-        chunkStorage = new FilePersistentChunkStorage(System.getProperty("user.dir") + "/../.world");
+        chunkDatabase = new ChunkDatabase(new File(System.getProperty("user.dir") + "/../.world/chunks"));
         chunkGenerator = new InfiniteChunkGenerator(22L);
         worldDecorator = WorldDecorator.createDefault();
-        chunkSystem = new ChunkSystem(world, chunkLoader, chunkStorage, chunkGenerator, worldDecorator);
+        chunkSystem = new ChunkSystem(world, chunkLoader, chunkDatabase, chunkGenerator, worldDecorator);
         
         entitySystem = new EntitySystem();
 
@@ -86,6 +87,7 @@ public class Client implements AutoCloseable
     @Override
     public void close() throws RuntimeException {
         chunkSystem.saveAllChunks();
+        chunkDatabase.close();
 
         clientDisplay.close();
     }
@@ -152,6 +154,7 @@ public class Client implements AutoCloseable
         chunkLoader.setCenter(cx, cz);
 
         chunkSystem.update();
+        chunkDatabase.update();
         entitySystem.update(world, elapsedTime);
 
         if (player != null) {
