@@ -4,11 +4,13 @@ import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
+import java.nio.channels.AsynchronousFileChannel;
 import java.nio.channels.FileChannel;
+import java.nio.file.FileSystems;
+import java.nio.file.StandardOpenOption;
+import java.util.LinkedList;
+import java.util.Queue;
 
-import it.unimi.dsi.fastutil.longs.Long2LongMap;
-import it.unimi.dsi.fastutil.longs.Long2LongOpenHashMap;
-import it.unimi.dsi.fastutil.objects.ObjectIterator;
 import net.survival.concurrent.DeferredResult;
 import net.survival.concurrent.Promise;
 import net.survival.io.FileOperationMultiplexer;
@@ -18,58 +20,56 @@ public class ChunkDatabase implements PersistentChunkStorage, AutoCloseable
     // TODO: Make factory method:
     //       public static DeferredResult<ChunkDatabase> loadDatabase(File file) { ... }
 
-    private static int FOOTER_LENGTH = 16;
+    private static int FOOTER_LENGTH = 2 * VirtualAllocationUnit.STRUCTURE_SIZE;
 
     private final File file;
-    private final FileOperationMultiplexer fileOperationMultiplexer;
-    private final VirtualMemoryAllocator virtualMemoryAllocator;
+    private final FileOperationMultiplexer fileIO;
+    private final VirtualMemoryAllocator allocator;
+    private final ChunkDirectory directory;
 
-    // The ordering of on-disk chunkDirectory entries depends on Long2LongMap's implementation.
-    // However, any change in the implementation will still be backwards compatible with
-    // ChunkDatabase's file format.
-    private final Long2LongOpenHashMap chunkDirectory;
+    private final Queue<DeferredChunk> deferredChunks;
 
     @SuppressWarnings("resource")
     public ChunkDatabase(File file) {
+        this.file = file;
+        allocator = new VirtualMemoryAllocator();
+        directory = new ChunkDirectory();
+        deferredChunks = new LinkedList<>();
+
         try {
-            this.file = file;
             boolean fileExists = file.exists();
 
-            FileChannel fileChannel = new RandomAccessFile(file, "rw").getChannel();
-            fileOperationMultiplexer = new FileOperationMultiplexer(fileChannel);
-
             if (fileExists) {
+                FileChannel fileChannel = new RandomAccessFile(file, "rw").getChannel();
+
                 ByteBuffer buffer = ByteBuffer.allocate(FOOTER_LENGTH);
                 fileChannel.position(file.length() - FOOTER_LENGTH);
                 while (buffer.hasRemaining())
                     fileChannel.read(buffer);
                 buffer.flip();
 
-                long allocatorEAU = buffer.getLong();
-                long chunkDirectoryEAU = buffer.getLong();
-                long allocatorPosition = AllocationUnitEncoding.decodeAddress(allocatorEAU);
-                int allocatorDataLength = (int) AllocationUnitEncoding.decodeLength(allocatorEAU);
-                long chunkDirectoryPosition = AllocationUnitEncoding.decodeAddress(chunkDirectoryEAU);
-                int chunkDirectoryDataLength = (int) AllocationUnitEncoding.decodeLength(chunkDirectoryEAU);
+                VirtualAllocationUnit allocatorVau = new VirtualAllocationUnit();
+                VirtualAllocationUnit directoryVau = new VirtualAllocationUnit();
+                allocatorVau.readFrom(buffer);
+                directoryVau.readFrom(buffer);
 
-                ByteBuffer deserializedAllocator = ByteBuffer.allocate(allocatorDataLength);
-                fileChannel.position(allocatorPosition);
-                while (deserializedAllocator.hasRemaining())
-                    fileChannel.read(deserializedAllocator);
-                deserializedAllocator.flip();
-                virtualMemoryAllocator = VirtualMemoryAllocator.deserialize(deserializedAllocator);
+                int metadataSectionSize = (int) (allocatorVau.length + directoryVau.length);
+                ByteBuffer metadataBuffer = ByteBuffer.allocateDirect(metadataSectionSize);
 
-                ByteBuffer deserializedChunkDirectory = ByteBuffer.allocate(chunkDirectoryDataLength);
-                fileChannel.position(chunkDirectoryPosition);
-                while (deserializedChunkDirectory.hasRemaining())
-                    fileChannel.read(deserializedChunkDirectory);
-                deserializedChunkDirectory.flip();
-                chunkDirectory = deserializeChunkDirectory(deserializedChunkDirectory);
+                fileChannel.position(allocatorVau.address);
+                while (metadataBuffer.hasRemaining())
+                    fileChannel.read(metadataBuffer);
+                metadataBuffer.flip();
+
+                allocator.readFrom(metadataBuffer);
+                directory.readFrom(metadataBuffer);
             }
-            else {
-                virtualMemoryAllocator = new VirtualMemoryAllocator();
-                chunkDirectory = new Long2LongOpenHashMap();
-            }
+
+            AsynchronousFileChannel channel = AsynchronousFileChannel.open(
+                    FileSystems.getDefault().getPath(file.getAbsolutePath()),
+                    StandardOpenOption.READ,StandardOpenOption.WRITE,
+                    StandardOpenOption.CREATE);
+            fileIO = new FileOperationMultiplexer(channel);
         }
         catch (IOException e) {
             throw new RuntimeException(e);
@@ -78,112 +78,100 @@ public class ChunkDatabase implements PersistentChunkStorage, AutoCloseable
 
     @Override
     public void close() throws RuntimeException {
-        fileOperationMultiplexer.close();
-
         try {
-            @SuppressWarnings("resource")
-            FileChannel metadataSection = new RandomAccessFile(file, "rw").getChannel();
-
-            long sectionStartPosition = virtualMemoryAllocator.size();
-            metadataSection.position(sectionStartPosition);
-
-            ByteBuffer allocatorData = virtualMemoryAllocator.serialize();
-            int allocatorDataLength = (int) AllocationUnitEncoding.padLength(allocatorData.limit());
-            long allocatorPosition = metadataSection.position();
-            while (allocatorData.hasRemaining())
-                metadataSection.write(allocatorData);
-
-            ByteBuffer chunkDirectoryData = serializeChunkDirectory();
-            int chunkDirectoryDataLength = (int) AllocationUnitEncoding.padLength(chunkDirectoryData.limit());
-            long chunkDirectoryPosition = metadataSection.position();
-            while (chunkDirectoryData.hasRemaining())
-                metadataSection.write(chunkDirectoryData);
-
-            ByteBuffer footer = ByteBuffer.allocate(FOOTER_LENGTH);
-            footer.putLong(AllocationUnitEncoding.encode(allocatorPosition, allocatorDataLength, true));
-            footer.putLong(AllocationUnitEncoding.encode(chunkDirectoryPosition, chunkDirectoryDataLength, true));
-            footer.flip();
-            while (footer.hasRemaining())
-                metadataSection.write(footer);
-
-            metadataSection.close();
+            finish();
         }
         catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
+    private void finish() throws IOException {
+        fileIO.close();
+
+        @SuppressWarnings("resource")
+        FileChannel channel = new RandomAccessFile(file, "rw").getChannel();
+
+        channel.position(allocator.size());
+
+        ByteBuffer metadataBuffer = ByteBuffer.allocateDirect(
+                allocator.getSerializedSize() +
+                directory.getSerializedSize() +
+                FOOTER_LENGTH);
+
+        VirtualAllocationUnit allocatorVau = new VirtualAllocationUnit(
+                channel.position(),
+                allocator.getSerializedSize(),
+                true);
+
+        allocator.writeTo(metadataBuffer);
+
+        VirtualAllocationUnit directoryVau = new VirtualAllocationUnit(
+                channel.position(),
+                directory.getSerializedSize(),
+                true);
+
+        directory.writeTo(metadataBuffer);
+
+        allocatorVau.writeTo(metadataBuffer);
+        directoryVau.writeTo(metadataBuffer);
+
+        metadataBuffer.flip();
+        while (metadataBuffer.hasRemaining())
+            channel.write(metadataBuffer);
+
+        channel.close();
+    }
+
     public void update() {
-        fileOperationMultiplexer.update();
+        fileIO.update();
+
+        if (!deferredChunks.isEmpty()) {
+            DeferredChunk deferredChunk = deferredChunks.peek();
+            ByteBuffer compressedData = deferredChunk.deferredCompressedData.pollResult();
+
+            if (compressedData != null) {
+                Chunk chunk = ChunkCodec.decompressChunk(compressedData);
+                deferredChunk.setResult(chunk);
+                deferredChunks.remove();
+            }
+        }
     }
 
     @Override
     public DeferredResult<Chunk> provideChunkAsync(long hashedPos) {
-        long address = chunkDirectory.getOrDefault(hashedPos, -1L);
-        if (address == -1L)
+        VirtualAllocationUnit existingVau = directory.get(hashedPos);
+        if (existingVau == null)
             return null;
 
-        LoadingChunk loadingChunk = new LoadingChunk();
-        //loadingChunk.deserializedData = fileOperationMultiplexer.read(address, length)
-        return null;
+        DeferredResult<ByteBuffer> buffer = fileIO.read(existingVau.address, (int) existingVau.length);
+        DeferredChunk deferredChunk = new DeferredChunk(buffer);
+
+        deferredChunks.add(deferredChunk);
+        return deferredChunk;
     }
 
     @Override
     public void moveAndSaveChunkAsync(long hashedPos, Chunk chunk) {
-        long existingEAU = chunkDirectory.getOrDefault(hashedPos, AllocationUnitEncoding.INVALID_EAU);
-        if (existingEAU != AllocationUnitEncoding.INVALID_EAU) {
-            long existingAddress = AllocationUnitEncoding.decodeAddress(existingEAU);
-            virtualMemoryAllocator.freeMemory(existingAddress);
-        }
+        VirtualAllocationUnit existingVau = directory.get(hashedPos);
+        if (existingVau != null)
+            allocator.freeMemory(existingVau.address);
 
         ByteBuffer compressedData = ChunkCodec.compressChunk(chunk);
-        long dataLength = compressedData.limit();
-        long dataEAU = virtualMemoryAllocator.allocateMemoryAndReturnEAU(dataLength);
-        chunkDirectory.put(hashedPos, dataEAU);
+        VirtualAllocationUnit chunkVau = allocator.allocateMemoryAndReturnVau(compressedData.limit());
+        if (chunkVau == null)
+            throw new RuntimeException("Cannot allocate anymore chunks.");
 
-        long dataAddress = AllocationUnitEncoding.decodeAddress(dataEAU);
-        fileOperationMultiplexer.write(compressedData, dataAddress);
+        directory.put(hashedPos, chunkVau);
+        fileIO.borrowAndWrite(compressedData, chunkVau.address);
     }
 
-    private ByteBuffer serializeChunkDirectory() {
-        int bufferLength = (int) AllocationUnitEncoding.padLength(4 + chunkDirectory.size() * 16);
-        ByteBuffer buffer = ByteBuffer.allocate(bufferLength);
-
-        buffer.putInt(chunkDirectory.size());
-
-        ObjectIterator<Long2LongMap.Entry> iterator =
-                chunkDirectory.long2LongEntrySet().fastIterator();
-
-        while (iterator.hasNext()) {
-            Long2LongMap.Entry entry = iterator.next();
-            long hashedPos = entry.getLongKey();
-            long dataEAU = entry.getLongValue();
-            buffer.putLong(hashedPos);
-            buffer.putLong(dataEAU);
-        }
-
-        while (buffer.position() < buffer.capacity())
-            buffer.put((byte) 0);
-
-        buffer.flip();
-        return buffer;
-    }
-
-    public Long2LongOpenHashMap deserializeChunkDirectory(ByteBuffer source) {
-        int size = source.getInt();
-        Long2LongOpenHashMap destination = new Long2LongOpenHashMap(size);
-
-        for (int i = 0; i < size; ++i) {
-            long hashedPos = source.getLong();
-            long dataEAU = source.getLong();
-            destination.put(hashedPos, dataEAU);
-        }
-
-        return destination;
-    }
-
-    private static class LoadingChunk extends Promise<Chunk>
+    private static class DeferredChunk extends Promise<Chunk>
     {
-        public DeferredResult<ByteBuffer> deserializedData;
+        DeferredResult<ByteBuffer> deferredCompressedData;
+
+        public DeferredChunk(DeferredResult<ByteBuffer> deferredCompressedData) {
+            this.deferredCompressedData = deferredCompressedData;
+        }
     }
 }

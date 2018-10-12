@@ -1,111 +1,80 @@
 package net.survival.world.chunk;
 
 import java.nio.ByteBuffer;
-
-import it.unimi.dsi.fastutil.longs.LongArrayList;
-import it.unimi.dsi.fastutil.longs.LongListIterator;
+import java.util.ArrayList;
 
 class VirtualMemoryAllocator
 {
-    private static final long MAX_LENGTH = 65536;
-
     // TODO: Insertion is slow. Look for a different data structure.
     //       Also, the data structure has to be hand-written for
     //       backwards compatibility.
-    private final LongArrayList implicitFreeList;
+    private final ArrayList<VirtualAllocationUnit> implicitFreeList;
 
     public VirtualMemoryAllocator() {
-        implicitFreeList = new LongArrayList();
-        implicitFreeList.add(AllocationUnitEncoding.encode(
-                AllocationUnitEncoding.LOWER_BOUND,
-                AllocationUnitEncoding.UPPER_BOUND - AllocationUnitEncoding.LOWER_BOUND,
-                false));
-    }
-
-    private VirtualMemoryAllocator(LongArrayList allocationUnits) {
-        this.implicitFreeList = allocationUnits;
+        implicitFreeList = new ArrayList<>();
+        implicitFreeList.add(new VirtualAllocationUnit(0L, Integer.MAX_VALUE, false));
     }
 
     public long allocateMemory(long length) {
-        long encodedAllocationUnit = allocateMemoryAndReturnEAU(length);
-        if (encodedAllocationUnit == AllocationUnitEncoding.INVALID_EAU)
-            return -1L;
-
-        return AllocationUnitEncoding.decodeAddress(encodedAllocationUnit);
+        return allocateMemoryAndReturnVau(length).address;
     }
 
-    public long allocateMemoryAndReturnEAU(long length) {
+    public VirtualAllocationUnit allocateMemoryAndReturnVau(long length) {
         if (length <= 0L)
             throw new IllegalArgumentException("Precondition is not met: length > 0L.");
-        if (length >= Math.min(MAX_LENGTH, AllocationUnitEncoding.UPPER_BOUND))
-            throw new IllegalArgumentException("Precondition is not met: length < min(MAX_LENGTH, UPPER_BOUND).");
-
-        length = AllocationUnitEncoding.padLength(length);
+        if (length >= VirtualAllocationUnit.MAX_LENGTH)
+            throw new IllegalArgumentException("Precondition is not met: length < MAX_LENGTH.");
 
         for (int i = 0; i < implicitFreeList.size(); ++i) {
-            long encodedAllocationUnit = implicitFreeList.getLong(i);
-            boolean allocatedI = AllocationUnitEncoding.decodeAllocatedFlag(encodedAllocationUnit);
-            long addressI = AllocationUnitEncoding.decodeAddress(encodedAllocationUnit);
-            long lengthI = AllocationUnitEncoding.decodeLength(encodedAllocationUnit);
+            VirtualAllocationUnit vau = implicitFreeList.get(i);
 
-            if (!allocatedI && length <= lengthI) {
-                long newAllocationUnit = AllocationUnitEncoding.encode(addressI, length, true);
+            if (!vau.allocated) {
+                if (length < vau.length) {
+                    VirtualAllocationUnit newVau = new VirtualAllocationUnit(vau.address, length, true);
 
-                addressI += length;
-                lengthI -= length;
+                    vau.address += length;
+                    vau.length -= length;
 
-                implicitFreeList.set(i, AllocationUnitEncoding.encode(addressI, lengthI, allocatedI));
-                implicitFreeList.add(i, newAllocationUnit);
-                return newAllocationUnit;
+                    implicitFreeList.add(i, newVau);
+                    return newVau;
+                }
+                else if (length == vau.length) {
+                    vau.allocated = true;
+                    return vau;
+                }
             }
         }
 
-        return AllocationUnitEncoding.INVALID_EAU;
+        return null;
     }
 
     public void freeMemory(long address) {
         for (int i = 0; i < implicitFreeList.size(); ++i) {
-            long encodedAllocationUnit = implicitFreeList.getLong(i);
-            boolean allocatedI = AllocationUnitEncoding.decodeAllocatedFlag(encodedAllocationUnit);
-            long addressI = AllocationUnitEncoding.decodeAddress(encodedAllocationUnit);
-            long lengthI = AllocationUnitEncoding.decodeLength(encodedAllocationUnit);
+            VirtualAllocationUnit vau = implicitFreeList.get(i);
 
-            if (allocatedI && addressI == address) {
-                allocatedI = false;
+            if (vau.allocated && vau.address == address) {
+                vau.allocated = false;
 
                 int nextIndex = i + 1;
                 int previousIndex = i - 1;
-                boolean shouldRemoveNext = false;
-                boolean shouldRemovePrevious = false;
 
                 if (nextIndex < implicitFreeList.size()) {
-                    long nextEAU = implicitFreeList.getLong(nextIndex);
-                    boolean allocatedI_next = AllocationUnitEncoding.decodeAllocatedFlag(nextEAU);
-                    long lengthI_next = AllocationUnitEncoding.decodeLength(nextEAU);
+                    VirtualAllocationUnit nextVau = implicitFreeList.get(nextIndex);
 
-                    if (!allocatedI_next) {
-                        lengthI += lengthI_next;
-                        shouldRemoveNext = true;
+                    if (!nextVau.allocated) {
+                        vau.length += nextVau.length;
+                        implicitFreeList.remove(nextIndex);
                     }
                 }
 
                 if (previousIndex >= 0) {
-                    long previousEAU = implicitFreeList.getLong(previousIndex);
-                    boolean allocatedI_previous = AllocationUnitEncoding.decodeAllocatedFlag(previousEAU);
-                    long addressI_previous = AllocationUnitEncoding.decodeAddress(previousEAU);
+                    VirtualAllocationUnit previousVau = implicitFreeList.get(previousIndex);
 
-                    if (!allocatedI_previous) {
-                        addressI -= addressI_previous;
-                        shouldRemovePrevious = true;
+                    if (!previousVau.allocated) {
+                        vau.address -= previousVau.length;
+                        implicitFreeList.remove(previousIndex);
                     }
                 }
-
-                implicitFreeList.set(i, AllocationUnitEncoding.encode(addressI, lengthI, false));
-
-                if (shouldRemoveNext)
-                    implicitFreeList.removeLong(nextIndex);
-                if (shouldRemovePrevious)
-                    implicitFreeList.removeLong(previousIndex);
 
                 return;
             }
@@ -114,45 +83,32 @@ class VirtualMemoryAllocator
         throw new IllegalArgumentException("Cannot free non-existing block.");
     }
 
-    public ByteBuffer serialize() {
-        int serializedDataLength = (int) AllocationUnitEncoding.padLength(
-                4 + implicitFreeList.size() * 8);
-        ByteBuffer serializedData = ByteBuffer.allocate(serializedDataLength);
-
-        serializedData.putInt(implicitFreeList.size());
-
-        for (int i = 0; i < implicitFreeList.size(); ++i)
-            serializedData.putLong(implicitFreeList.getLong(i));
-
-        while (serializedData.position() < serializedData.capacity())
-            serializedData.put((byte) 0);
-
-        serializedData.flip();
-        return serializedData;
+    public int getSerializedSize() {
+        return 4 + implicitFreeList.size() * 17;
     }
 
-    public static VirtualMemoryAllocator deserialize(ByteBuffer deserializedData) {
-        int size = deserializedData.getInt();
-        LongArrayList allocationUnits = new LongArrayList(size);
+    public void writeTo(ByteBuffer buffer) {
+        buffer.putInt(implicitFreeList.size());
 
-        for (int i = 0; i < size; ++i)
-            allocationUnits.add(deserializedData.getLong());
+        for (int i = 0; i < implicitFreeList.size(); ++i) {
+            VirtualAllocationUnit vau = implicitFreeList.get(i);
+            vau.writeTo(buffer);
+        }
+    }
 
-        return new VirtualMemoryAllocator(allocationUnits);
+    public void readFrom(ByteBuffer buffer) {
+        implicitFreeList.clear();
+
+        int vauCount = buffer.getInt();
+        for (int i = 0; i < vauCount; ++i) {
+            VirtualAllocationUnit vau = new VirtualAllocationUnit();
+            vau.readFrom(buffer);
+            implicitFreeList.add(vau);
+        }
     }
 
     public int countAllocatedBlocks() {
-        int count = 0;
-
-        LongListIterator iterator = implicitFreeList.iterator();
-        while (iterator.hasNext()) {
-            long encodedAllocationUnit = iterator.nextLong();
-            boolean allocated = AllocationUnitEncoding.decodeAllocatedFlag(encodedAllocationUnit);
-            if (allocated)
-                ++count;
-        }
-
-        return count;
+        return (int) implicitFreeList.stream().filter(arg0 -> arg0.allocated).count();
     }
 
     public int countFreeBlocks() {
@@ -161,14 +117,11 @@ class VirtualMemoryAllocator
 
     public long size() {
         int index = implicitFreeList.size() - 1;
+        VirtualAllocationUnit lastVau = implicitFreeList.get(index);
 
-        long lastAllocatedUnit = AllocationUnitEncoding.INVALID_EAU;
+        while (index >= 0 && !lastVau.allocated)
+            lastVau = implicitFreeList.get(index--);
 
-        while (index >= 0 && !AllocationUnitEncoding.decodeAllocatedFlag(lastAllocatedUnit))
-            lastAllocatedUnit = implicitFreeList.getLong(index--);
-
-        long address = AllocationUnitEncoding.decodeAddress(lastAllocatedUnit);
-        long length = AllocationUnitEncoding.decodeLength(lastAllocatedUnit);
-        return address + length;
+        return lastVau.address + lastVau.length;
     }
 }

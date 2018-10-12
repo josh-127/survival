@@ -7,8 +7,7 @@ class ChunkCodec
     private static final int CHUNK_HEADER_SIZE = 1;
 
     public static ByteBuffer compressChunk(Chunk chunk) {
-        int compressedDataLength = (int) AllocationUnitEncoding.padLength(
-                Chunk.VOLUME * 2 + CHUNK_HEADER_SIZE);
+        int compressedDataLength = Chunk.VOLUME * 2 + CHUNK_HEADER_SIZE;
         ByteBuffer compressedData = ByteBuffer.allocate(compressedDataLength);
 
         byte flags = (byte) (chunk.isDecorated() ? 1 : 0);
@@ -32,9 +31,6 @@ class ChunkCodec
 
             compressedData.putShort(rleStrip);
         }
-
-        while (compressedData.position() < compressedData.capacity())
-            compressedData.put((byte) 0);
 
         compressedData.flip();
         return compressedData;

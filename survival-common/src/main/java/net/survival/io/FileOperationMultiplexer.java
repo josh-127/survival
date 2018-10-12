@@ -2,9 +2,10 @@ package net.survival.io;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.nio.channels.FileChannel;
+import java.nio.channels.AsynchronousFileChannel;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.concurrent.Future;
 
 import net.survival.concurrent.DeferredResult;
 import net.survival.concurrent.Promise;
@@ -13,13 +14,15 @@ import net.survival.concurrent.Promise;
 // each transaction is multiplexed.
 public class FileOperationMultiplexer implements AutoCloseable
 {
-    private final FileChannel fileChannel;
+    private final AsynchronousFileChannel fileChannel;
 
     // TODO: Consider a priority queue sorted by seek position.
     private final Queue<Transaction> pendingTransactions;
     private Transaction currentTransaction;
 
-    public FileOperationMultiplexer(FileChannel fileChannel) {
+    private Future<Integer> bytesReadOrWritten;
+
+    public FileOperationMultiplexer(AsynchronousFileChannel fileChannel) {
         this.fileChannel = fileChannel;
         pendingTransactions = new LinkedList<>();
     }
@@ -42,33 +45,36 @@ public class FileOperationMultiplexer implements AutoCloseable
     }
 
     public void update() {
-        try {
-            if (currentTransaction == null && !pendingTransactions.isEmpty()) {
-                currentTransaction = pendingTransactions.remove();
-                fileChannel.position(currentTransaction.position);
-            }
-
-            if (currentTransaction != null) {
-                if (currentTransaction.buffer.hasRemaining()) {
-                    if (currentTransaction.type == Transaction.TYPE_READ)
-                        fileChannel.read(currentTransaction.buffer);
-                    else if (currentTransaction.type == Transaction.TYPE_WRITE)
-                        fileChannel.write(currentTransaction.buffer);
-                }
-                else {
-                    currentTransaction.finish();
-                    currentTransaction = null;
-                }
-            }
+        if (currentTransaction == null && !pendingTransactions.isEmpty()) {
+            currentTransaction = pendingTransactions.remove();
         }
-        catch (IOException e) {
-            throw new RuntimeException(e);
+
+        if (currentTransaction != null) {
+            if (currentTransaction.buffer.hasRemaining()) {
+                if (bytesReadOrWritten == null || bytesReadOrWritten.isDone()) {
+                    if (currentTransaction.type == Transaction.TYPE_READ) {
+                        bytesReadOrWritten = fileChannel.read(
+                                currentTransaction.buffer, currentTransaction.position);
+                    }
+                    else if (currentTransaction.type == Transaction.TYPE_WRITE) {
+                        bytesReadOrWritten = fileChannel.write(
+                                currentTransaction.buffer, currentTransaction.position);
+                    }
+                }
+            }
+            else {
+                currentTransaction.finish();
+                currentTransaction = null;
+            }
         }
     }
 
     public DeferredResult<ByteBuffer> read(long position, int length) {
         ByteBuffer buffer = ByteBuffer.allocate(length);
-        return new Transaction(buffer, position, Transaction.TYPE_READ);
+        Transaction transaction = new Transaction(buffer, position, Transaction.TYPE_READ);
+        pendingTransactions.add(transaction);
+
+        return transaction;
     }
 
     public DeferredResult<ByteBuffer> borrowAndWrite(ByteBuffer buffer, long position) {
