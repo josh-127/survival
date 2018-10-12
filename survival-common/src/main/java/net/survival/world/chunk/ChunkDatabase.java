@@ -8,8 +8,8 @@ import java.nio.channels.AsynchronousFileChannel;
 import java.nio.channels.FileChannel;
 import java.nio.file.FileSystems;
 import java.nio.file.StandardOpenOption;
+import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.Queue;
 
 import net.survival.concurrent.DeferredResult;
 import net.survival.concurrent.Promise;
@@ -27,7 +27,7 @@ public class ChunkDatabase implements PersistentChunkStorage, AutoCloseable
     private final VirtualMemoryAllocator allocator;
     private final ChunkDirectory directory;
 
-    private final Queue<DeferredChunk> deferredChunks;
+    private final LinkedList<DeferredChunk> deferredChunks;
 
     @SuppressWarnings("resource")
     public ChunkDatabase(File file) {
@@ -126,14 +126,15 @@ public class ChunkDatabase implements PersistentChunkStorage, AutoCloseable
     public void update() {
         fileIO.update();
 
-        if (!deferredChunks.isEmpty()) {
-            DeferredChunk deferredChunk = deferredChunks.peek();
+        Iterator<DeferredChunk> iterator = deferredChunks.iterator();
+        while (iterator.hasNext()) {
+            DeferredChunk deferredChunk = iterator.next();
             ByteBuffer compressedData = deferredChunk.deferredCompressedData.pollResult();
 
             if (compressedData != null) {
                 Chunk chunk = ChunkCodec.decompressChunk(compressedData);
                 deferredChunk.setResult(chunk);
-                deferredChunks.remove();
+                iterator.remove();
             }
         }
     }
