@@ -29,7 +29,7 @@ Building
 | Java JDK     | 1.8.0_181 or later |
 | Apache Maven | 3.5.4 or later     |
 
-### For Windows 7, 8, 8.1, and 10 (method 1)
+### For Windows 7, 8, 8.1, or 10 (method 1)
 Install Chocolatey.
 https://chocolatey.org/docs/installation#installing-chocolatey
 
@@ -46,7 +46,7 @@ choco install intellijidea-(community|ultimate)
 choco install netbeans
 ```
 
-### For Windows 7, 8, 8.1, and 10 (method 2)
+### For Windows 7, 8, 8.1, or 10 (method 2)
 **Use this method if you're building past releases with different values from the requirements list (dependency and version). Any breaking change in the JRE (even minor releases such as 1.7 to 1.8) may change game behavior, and as a result, is a different version from the release you downloaded.**
 Manually install everything from the requirements list and an IDE.
 
