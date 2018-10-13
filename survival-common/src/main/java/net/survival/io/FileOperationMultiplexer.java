@@ -14,6 +14,8 @@ import net.survival.concurrent.Promise;
 // each transaction is multiplexed.
 public class FileOperationMultiplexer implements AutoCloseable
 {
+    private static final int MAX_UPDATE_RATE = 16;
+
     private final AsynchronousFileChannel fileChannel;
 
     // TODO: Consider a priority queue sorted by seek position.
@@ -45,6 +47,11 @@ public class FileOperationMultiplexer implements AutoCloseable
     }
 
     public void update() {
+        for (int i = 0; i < MAX_UPDATE_RATE; ++i)
+            updateOnce();
+    }
+
+    private void updateOnce() {
         if (currentTransaction == null && !pendingTransactions.isEmpty()) {
             currentTransaction = pendingTransactions.remove();
         }
