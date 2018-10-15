@@ -61,7 +61,7 @@ public class Camera
         return width;
     }
 
-    public float setHeight() {
+    public float getHeight() {
         return height;
     }
 
