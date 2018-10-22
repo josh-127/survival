@@ -19,7 +19,7 @@ import net.survival.client.input.GlfwMouseAdapter;
 import net.survival.client.input.Key;
 import net.survival.client.input.Keyboard;
 import net.survival.client.input.Mouse;
-import net.survival.concurrent.CoroutineScheduler;
+import net.survival.concurrent.FiberScheduler;
 import net.survival.entity.CharacterModel;
 import net.survival.entity.Npc;
 import net.survival.entity.NpcMovementStyle;
@@ -292,8 +292,8 @@ public class Client implements AutoCloseable
                 frameCounter = 0;
             }
 
-            if (CoroutineScheduler.poll())
-                CoroutineScheduler.dispatch();
+            if (FiberScheduler.poll())
+                FiberScheduler.dispatch();
 
             GLDisplay.pollEvents();
         }
@@ -301,7 +301,7 @@ public class Client implements AutoCloseable
         program.close();
         display.close();
 
-        while (CoroutineScheduler.poll())
-            CoroutineScheduler.dispatch();
+        while (FiberScheduler.poll())
+            FiberScheduler.dispatch();
     }
 }

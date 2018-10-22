@@ -1,6 +1,6 @@
 package net.survival.concurrent;
 
-public interface VoidCoroutine extends Coroutine<Object>
+public interface VoidFiber extends Fiber<Object>
 {
     static final Object FINISHED_TOKEN = new Object();
 }
