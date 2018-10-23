@@ -1,12 +1,10 @@
 package net.survival.concurrent;
 
-public interface Fiber<T>
+public interface Fiber
 {
-    T pollResult();
-
     boolean next();
 
-    default Fiber<T> start() {
+    default Fiber start() {
         FiberScheduler.pushFiber(this);
         return this;
     }

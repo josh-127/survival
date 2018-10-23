@@ -6,7 +6,7 @@ import java.util.Queue;
 
 public final class FiberScheduler
 {
-    private static final Queue<Fiber<?>> fibers = new LinkedList<>();
+    private static final Queue<Fiber> fibers = new LinkedList<>();
 
     private FiberScheduler() {}
 
@@ -15,17 +15,17 @@ public final class FiberScheduler
     }
 
     public static void dispatch() {
-        Iterator<Fiber<?>> iterator = fibers.iterator();
+        Iterator<Fiber> iterator = fibers.iterator();
 
         while (iterator.hasNext()) {
-            Fiber<?> coroutine = iterator.next();
+            Fiber fiber = iterator.next();
 
-            if (coroutine.next())
+            if (fiber.next())
                 iterator.remove();
         }
     }
 
-    static <T> void pushFiber(Fiber<T> fiber) {
+    static <T> void pushFiber(Fiber fiber) {
         fibers.add(fiber);
     }
 }
