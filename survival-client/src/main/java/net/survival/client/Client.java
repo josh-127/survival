@@ -66,6 +66,7 @@ public class Client implements AutoCloseable
         
         chunkLoader = new CircularChunkLoader(10);
         chunkDatabase = new ChunkDatabase(new File(System.getProperty("user.dir") + "/../.world/chunks"));
+        chunkDatabase.start();
         chunkGenerator = new InfiniteChunkGenerator(22L);
         worldDecorator = WorldDecorator.createDefault();
         chunkSystem = new ChunkSystem(world, chunkLoader, chunkDatabase, chunkGenerator, worldDecorator);
@@ -87,8 +88,7 @@ public class Client implements AutoCloseable
     @Override
     public void close() throws RuntimeException {
         chunkSystem.saveAllChunks();
-        chunkDatabase.close();
-
+        chunkDatabase.finish();
         clientDisplay.close();
     }
 
@@ -154,7 +154,6 @@ public class Client implements AutoCloseable
         chunkLoader.setCenter(cx, cz);
 
         chunkSystem.update();
-        chunkDatabase.update();
         entitySystem.update(world, elapsedTime);
 
         if (player != null) {

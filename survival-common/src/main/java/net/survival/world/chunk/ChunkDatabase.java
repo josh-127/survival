@@ -12,10 +12,11 @@ import java.util.Iterator;
 import java.util.LinkedList;
 
 import net.survival.concurrent.DeferredResult;
+import net.survival.concurrent.Fiber;
 import net.survival.concurrent.Promise;
 import net.survival.io.FileOperationMultiplexer;
 
-public class ChunkDatabase implements PersistentChunkStorage, AutoCloseable
+public class ChunkDatabase implements PersistentChunkStorage, Fiber
 {
     // TODO: Make factory method:
     //       public static DeferredResult<ChunkDatabase> loadDatabase(File file) { ... }
@@ -28,6 +29,8 @@ public class ChunkDatabase implements PersistentChunkStorage, AutoCloseable
     private final ChunkDirectory directory;
 
     private final LinkedList<DeferredChunk> deferredChunks;
+
+    private boolean finished;
 
     @SuppressWarnings("resource")
     public ChunkDatabase(File file) {
@@ -76,17 +79,7 @@ public class ChunkDatabase implements PersistentChunkStorage, AutoCloseable
         }
     }
 
-    @Override
-    public void close() throws RuntimeException {
-        try {
-            finish();
-        }
-        catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private void finish() throws IOException {
+    private void writeMetadata() throws IOException {
         fileIO.close();
 
         @SuppressWarnings("resource")
@@ -123,7 +116,22 @@ public class ChunkDatabase implements PersistentChunkStorage, AutoCloseable
         channel.close();
     }
 
-    public void update() {
+    public void finish() {
+        finished = true;
+    }
+
+    @Override
+    public boolean next() {
+        if (finished) {
+            try {
+                writeMetadata();
+            }
+            catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            return true;
+        }
+
         fileIO.update();
 
         Iterator<DeferredChunk> iterator = deferredChunks.iterator();
@@ -137,6 +145,8 @@ public class ChunkDatabase implements PersistentChunkStorage, AutoCloseable
                 iterator.remove();
             }
         }
+
+        return false;
     }
 
     @Override
