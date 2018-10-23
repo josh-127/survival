@@ -1,12 +1,16 @@
 package net.survival.util;
 
-public class HitBox
+public enum HitBox
 {
+    DEFAULT(1.0, 1.0, 1.0),
+    PLAYER(0.4375, 0.9, 0.4375),
+    NPC(0.5, 0.9, 0.8);
+
     public final double radiusX;
     public final double radiusY;
     public final double radiusZ;
 
-    public HitBox(double radiusX, double radiusY, double radiusZ) {
+    private HitBox(double radiusX, double radiusY, double radiusZ) {
         this.radiusX = radiusX;
         this.radiusY = radiusY;
         this.radiusZ = radiusZ;

@@ -4,8 +4,6 @@ import net.survival.util.HitBox;
 
 public abstract class Character extends Entity
 {
-    public static final HitBox DEFAULT_HITBOX = new HitBox(0.4375, 0.4375, 0.4375);
-
     //
     // Controls
     //
@@ -45,7 +43,7 @@ public abstract class Character extends Entity
     public Character() {
         moveSpeed = 5.0;
         jumpSpeed = 10.0;
-        hitBox = DEFAULT_HITBOX;
+        hitBox = HitBox.DEFAULT;
         model = CharacterModel.HUMAN;
         visible = true;
     }

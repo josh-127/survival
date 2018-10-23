@@ -102,7 +102,7 @@ public class Client implements AutoCloseable
             newPlayer.x = player != null ? player.x : fpvCamera.position.x;
             newPlayer.y = player != null ? player.y + 3.0 : fpvCamera.position.y;
             newPlayer.z = player != null ? player.z : fpvCamera.position.z;
-            newPlayer.hitBox = new HitBox(0.4375, 0.9, 0.4375);
+            newPlayer.hitBox = HitBox.PLAYER;
             newPlayer.visible = false;
             player = newPlayer;
             world.addCharacter(newPlayer);
@@ -189,7 +189,7 @@ public class Client implements AutoCloseable
             npc.x = fpvCamera.position.x;
             npc.y = fpvCamera.position.y;
             npc.z = fpvCamera.position.z;
-            npc.hitBox = new HitBox(0.5, 0.9, 0.8);
+            npc.hitBox = HitBox.NPC;
             npc.moveSpeed = 4.0;
             world.addCharacter(npc);
         }
@@ -199,7 +199,7 @@ public class Client implements AutoCloseable
             npc.x = fpvCamera.position.x;
             npc.y = fpvCamera.position.y;
             npc.z = fpvCamera.position.z;
-            npc.hitBox = new HitBox(0.5, 0.9, 0.8);
+            npc.hitBox = HitBox.NPC;
             npc.moveSpeed = 4.0;
             npc.model = CharacterModel.GOAT;
             world.addCharacter(npc);
@@ -210,7 +210,7 @@ public class Client implements AutoCloseable
             npc.x = fpvCamera.position.x;
             npc.y = fpvCamera.position.y;
             npc.z = fpvCamera.position.z;
-            npc.hitBox = new HitBox(0.5, 0.9, 0.8);
+            npc.hitBox = HitBox.NPC;
             npc.moveSpeed = 4.0;
             npc.model = CharacterModel.SLIME;
             npc.movementStyle = NpcMovementStyle.SLIME;
