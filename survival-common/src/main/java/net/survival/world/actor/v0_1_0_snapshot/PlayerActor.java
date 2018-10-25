@@ -1,6 +1,6 @@
-package net.survival.actor.v0_1_0_snapshot;
+package net.survival.world.actor.v0_1_0_snapshot;
 
-import net.survival.actor.Actor;
+import net.survival.world.actor.Actor;
 
 public class PlayerActor extends Actor
 {

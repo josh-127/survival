@@ -10,7 +10,6 @@ import org.joml.Matrix4f;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
 import it.unimi.dsi.fastutil.longs.LongSet;
-import net.survival.actor.Actor;
 import net.survival.block.BlockFace;
 import net.survival.client.graphics.blockrenderer.BlockRenderer;
 import net.survival.client.graphics.model.ModelRenderer;
@@ -21,6 +20,7 @@ import net.survival.client.graphics.opengl.GLMatrixStack;
 import net.survival.client.graphics.opengl.GLTexture;
 import net.survival.client.graphics.opengl.GLWrapMode;
 import net.survival.world.World;
+import net.survival.world.actor.Actor;
 import net.survival.world.chunk.Chunk;
 import net.survival.world.chunk.ChunkPos;
 

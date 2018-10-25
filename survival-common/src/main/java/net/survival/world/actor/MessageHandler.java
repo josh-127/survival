@@ -1,4 +1,4 @@
-package net.survival.actor;
+package net.survival.world.actor;
 
 public interface MessageHandler<M>
 {

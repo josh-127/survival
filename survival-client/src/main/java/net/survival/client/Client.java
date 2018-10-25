@@ -7,8 +7,6 @@ import org.joml.Vector3d;
 import org.lwjgl.glfw.GLFW;
 
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
-import net.survival.actor.ActorSystem;
-import net.survival.actor.v0_1_0_snapshot.NpcActor;
 import net.survival.block.BlockType;
 import net.survival.client.graphics.ClientDisplay;
 import net.survival.client.graphics.GraphicsSettings;
@@ -29,6 +27,8 @@ import net.survival.entity.Player;
 import net.survival.util.HitBox;
 import net.survival.world.EntitySystem;
 import net.survival.world.World;
+import net.survival.world.actor.ActorSystem;
+import net.survival.world.actor.v0_1_0_snapshot.NpcActor;
 import net.survival.world.chunk.Chunk;
 import net.survival.world.chunk.ChunkDatabase;
 import net.survival.world.chunk.ChunkPos;

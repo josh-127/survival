@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectIterator;
-import net.survival.actor.Actor;
 import net.survival.entity.Character;
+import net.survival.world.actor.Actor;
 import net.survival.world.chunk.Chunk;
 import net.survival.world.chunk.ChunkPos;
 

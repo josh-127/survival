@@ -1,4 +1,4 @@
-package net.survival.actor;
+package net.survival.world.actor;
 
 import net.survival.world.World;
 
