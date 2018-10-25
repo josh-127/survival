@@ -1,5 +1,6 @@
 package net.survival.client.graphics;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -9,9 +10,13 @@ import org.joml.Matrix4f;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
 import it.unimi.dsi.fastutil.longs.LongSet;
+import net.survival.actor.Actor;
 import net.survival.block.BlockFace;
 import net.survival.client.graphics.blockrenderer.BlockRenderer;
+import net.survival.client.graphics.model.ModelRenderer;
+import net.survival.client.graphics.model.StaticModel;
 import net.survival.client.graphics.opengl.GLFilterMode;
+import net.survival.client.graphics.opengl.GLImmediateDrawCall;
 import net.survival.client.graphics.opengl.GLMatrixStack;
 import net.survival.client.graphics.opengl.GLTexture;
 import net.survival.client.graphics.opengl.GLWrapMode;
@@ -149,6 +154,8 @@ class WorldDisplay implements GraphicsResource
         if (culledFace != BlockFace.BACK)
             drawFaceDisplays(backFaceDisplays, BlockFace.BACK, false, cameraViewMatrix);
 
+        drawActors(cameraViewMatrix);
+
         GLMatrixStack.pop();
 
         chunksToRedraw.clear();
@@ -201,6 +208,80 @@ class WorldDisplay implements GraphicsResource
                 display.displayBlocks();
             }
         }
+    }
+
+    private void drawActors(Matrix4f viewMatrix) {
+        GLMatrixStack.push();
+        GLMatrixStack.load(viewMatrix);
+
+        ArrayList<Actor> actors = world.getActors();
+
+        for (Actor actor : actors)
+            drawActor(actor);
+
+        for (Actor actor : actors)
+            drawActorHitBox(actor);
+
+        GLMatrixStack.pop();
+    }
+
+    private void drawActor(Actor actor) {
+        GLMatrixStack.push();
+        GLMatrixStack.translate((float) actor.getX(), (float) actor.getY(), (float) actor.getZ());
+        GLMatrixStack.rotate((float) actor.getYaw(), 0.0f, 1.0f, 0.0f);
+        GLMatrixStack.rotate((float) actor.getPitch(), 1.0f, 0.0f, 0.0f);
+        GLMatrixStack.rotate((float) actor.getRoll(), 0.0f, 0.0f, 1.0f);
+
+        StaticModel model = StaticModel.fromActor(actor);
+        ModelRenderer.displayStaticModel(model);
+
+        GLMatrixStack.pop();
+    }
+
+    private void drawActorHitBox(Actor actor) {
+        GLMatrixStack.push();
+        GLMatrixStack.translate(
+                (float) actor.getX(),
+                (float) actor.getY(),
+                (float) actor.getZ());
+
+        final float BOX_R = 1.0f;
+        final float BOX_G = 0.0f;
+        final float BOX_B = 1.0f;
+
+        float cbrX = (float) actor.getHitBox().radiusX;
+        float cbrY = (float) actor.getHitBox().radiusY;
+        float cbrZ = (float) actor.getHitBox().radiusZ;
+
+        GLImmediateDrawCall.beginLines(null)
+                .coloredVertex(-cbrX, cbrY, -cbrZ, BOX_R, BOX_G, BOX_B)
+                .coloredVertex(cbrX, cbrY, -cbrZ, BOX_R, BOX_G, BOX_B)
+                .coloredVertex(-cbrX, cbrY, cbrZ, BOX_R, BOX_G, BOX_B)
+                .coloredVertex(cbrX, cbrY, cbrZ, BOX_R, BOX_G, BOX_B)
+                .coloredVertex(-cbrX, cbrY, -cbrZ, BOX_R, BOX_G, BOX_B)
+                .coloredVertex(-cbrX, cbrY, cbrZ, BOX_R, BOX_G, BOX_B)
+                .coloredVertex(cbrX, cbrY, -cbrZ, BOX_R, BOX_G, BOX_B)
+                .coloredVertex(cbrX, cbrY, cbrZ, BOX_R, BOX_G, BOX_B)
+
+                .coloredVertex(-cbrX, -cbrY, -cbrZ, BOX_R, BOX_G, BOX_B)
+                .coloredVertex(cbrX, -cbrY, -cbrZ, BOX_R, BOX_G, BOX_B)
+                .coloredVertex(-cbrX, -cbrY, cbrZ, BOX_R, BOX_G, BOX_B)
+                .coloredVertex(cbrX, -cbrY, cbrZ, BOX_R, BOX_G, BOX_B)
+                .coloredVertex(-cbrX, -cbrY, -cbrZ, BOX_R, BOX_G, BOX_B)
+                .coloredVertex(-cbrX, -cbrY, cbrZ, BOX_R, BOX_G, BOX_B)
+                .coloredVertex(cbrX, -cbrY, -cbrZ, BOX_R, BOX_G, BOX_B)
+                .coloredVertex(cbrX, -cbrY, cbrZ, BOX_R, BOX_G, BOX_B)
+
+                .coloredVertex(-cbrX, -cbrY, -cbrZ, BOX_R, BOX_G, BOX_B)
+                .coloredVertex(-cbrX, cbrY, -cbrZ, BOX_R, BOX_G, BOX_B)
+                .coloredVertex(cbrX, -cbrY, -cbrZ, BOX_R, BOX_G, BOX_B)
+                .coloredVertex(cbrX, cbrY, -cbrZ, BOX_R, BOX_G, BOX_B)
+                .coloredVertex(-cbrX, -cbrY, cbrZ, BOX_R, BOX_G, BOX_B)
+                .coloredVertex(-cbrX, cbrY, cbrZ, BOX_R, BOX_G, BOX_B)
+                .coloredVertex(cbrX, -cbrY, cbrZ, BOX_R, BOX_G, BOX_B)
+                .coloredVertex(cbrX, cbrY, cbrZ, BOX_R, BOX_G, BOX_B).end();
+
+        GLMatrixStack.pop();
     }
 
     private void updateNonCubicDisplays(HashMap<Chunk, ChunkDisplay> nonCubicDisplays) {

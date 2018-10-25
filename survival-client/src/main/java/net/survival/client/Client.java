@@ -7,6 +7,8 @@ import org.joml.Vector3d;
 import org.lwjgl.glfw.GLFW;
 
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
+import net.survival.actor.ActorSystem;
+import net.survival.actor.v0_1_0_snapshot.NpcActor;
 import net.survival.block.BlockType;
 import net.survival.client.graphics.ClientDisplay;
 import net.survival.client.graphics.GraphicsSettings;
@@ -49,7 +51,7 @@ public class Client implements AutoCloseable
     private final InfiniteChunkGenerator chunkGenerator;
     private final WorldDecorator worldDecorator;
     private final ChunkSystem chunkSystem;
-    
+
     private final EntitySystem entitySystem;
 
     private final Control control;
@@ -70,7 +72,7 @@ public class Client implements AutoCloseable
         chunkGenerator = new InfiniteChunkGenerator(22L);
         worldDecorator = WorldDecorator.createDefault();
         chunkSystem = new ChunkSystem(world, chunkLoader, chunkDatabase, chunkGenerator, worldDecorator);
-        
+
         entitySystem = new EntitySystem();
 
         control = new Control();
@@ -154,6 +156,8 @@ public class Client implements AutoCloseable
         chunkLoader.setCenter(cx, cz);
 
         chunkSystem.update();
+
+        ActorSystem.update(world, elapsedTime);
         entitySystem.update(world, elapsedTime);
 
         if (player != null) {
@@ -185,13 +189,11 @@ public class Client implements AutoCloseable
         }
 
         if (Keyboard.isKeyPressed(Key.T)) {
-            Npc npc = new Npc();
-            npc.x = fpvCamera.position.x;
-            npc.y = fpvCamera.position.y;
-            npc.z = fpvCamera.position.z;
-            npc.hitBox = HitBox.NPC;
-            npc.moveSpeed = 4.0;
-            world.addCharacter(npc);
+            NpcActor npcActor = new NpcActor(
+                    fpvCamera.position.x,
+                    fpvCamera.position.y,
+                    fpvCamera.position.z);
+            world.addActor(npcActor);
         }
 
         if (Keyboard.isKeyPressed(Key.Y)) {

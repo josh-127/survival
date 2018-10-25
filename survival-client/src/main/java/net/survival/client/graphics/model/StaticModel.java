@@ -8,6 +8,7 @@ import org.lwjgl.assimp.AIScene;
 import org.lwjgl.assimp.AIString;
 import org.lwjgl.assimp.AIVector3D;
 
+import net.survival.actor.Actor;
 import net.survival.entity.Character;
 
 import static org.lwjgl.assimp.Assimp.*;
@@ -40,6 +41,19 @@ public class StaticModel
 
     public static StaticModel fromCharacter(Character character) {
         switch (character.model) {
+        case CHICKEN: return chicken;
+        case COW:     return cow;
+        case GOAT:    return goat;
+        case HUMAN:   return human;
+        case PIG:     return pig;
+        case SLIME:   return slime;
+        }
+
+        throw new RuntimeException();
+    }
+
+    public static StaticModel fromActor(Actor actor) {
+        switch (actor.getModel()) {
         case CHICKEN: return chicken;
         case COW:     return cow;
         case GOAT:    return goat;

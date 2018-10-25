@@ -1,8 +1,11 @@
 package net.survival.world;
 
+import java.util.ArrayList;
+
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectIterator;
+import net.survival.actor.Actor;
 import net.survival.entity.Character;
 import net.survival.world.chunk.Chunk;
 import net.survival.world.chunk.ChunkPos;
@@ -10,9 +13,11 @@ import net.survival.world.chunk.ChunkPos;
 public class World implements BlockStorage
 {
     private final Long2ObjectOpenHashMap<Chunk> chunks;
+    private final ArrayList<Actor> actors;
 
     public World() {
         chunks = new Long2ObjectOpenHashMap<>(1024);
+        actors = new ArrayList<>(1024);
     }
 
     public Chunk getChunk(int cx, int cz) {
@@ -118,6 +123,14 @@ public class World implements BlockStorage
         Chunk chunk = getChunkFromGlobalPos((int) character.x, (int) character.z,
                 "Cannot place a character in an unloaded chunk.");
         chunk.addCharacter(character);
+    }
+
+    public ArrayList<Actor> getActors() {
+        return actors;
+    }
+
+    public void addActor(Actor actor) {
+        actors.add(actor);
     }
 
     private Chunk getChunkFromGlobalPos(int x, int z, String exceptionMessage) {
