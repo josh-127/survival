@@ -58,7 +58,7 @@ Manually install everything from the requirements list and an IDE.
 ### For macOS
 Will support later.
 
-### For Ubuntu 16.04.4 LTS, 18.04.1 LTS
+### For CentOS 7
 Will support later.
 
 ### Other distributions
