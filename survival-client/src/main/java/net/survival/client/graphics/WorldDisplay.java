@@ -312,8 +312,7 @@ class WorldDisplay implements GraphicsResource
                 if (existingDisplay != null)
                     existingDisplay.close();
 
-                nonCubicDisplays.put(chunk,
-                        new ChunkDisplay(cx, cz, chunk, null, null));
+                nonCubicDisplays.put(chunk, ChunkDisplay.create(cx, cz, chunk, null, null));
             }
         }
 
@@ -377,8 +376,7 @@ class WorldDisplay implements GraphicsResource
                 if (existingDisplay != null)
                     existingDisplay.close();
 
-                faceDisplays.put(chunk,
-                        new ChunkDisplay(cx, cz, chunk, adjacentChunk, blockFace));
+                faceDisplays.put(chunk, ChunkDisplay.create(cx, cz, chunk, adjacentChunk, blockFace));
             }
         }
 
