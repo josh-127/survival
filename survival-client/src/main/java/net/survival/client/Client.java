@@ -10,7 +10,6 @@ import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import net.survival.block.BlockType;
 import net.survival.client.graphics.ClientDisplay;
 import net.survival.client.graphics.GraphicsSettings;
-import net.survival.client.graphics.gui.GuiDisplay;
 import net.survival.client.graphics.opengl.GLDisplay;
 import net.survival.client.graphics.opengl.GLRenderContext;
 import net.survival.client.gui.Control;
@@ -57,7 +56,6 @@ public class Client implements AutoCloseable
     private final Control control;
 
     private final ClientDisplay clientDisplay;
-    private final GuiDisplay guiDisplay;
 
     private final FpvCamera fpvCamera;
 
@@ -82,7 +80,6 @@ public class Client implements AutoCloseable
 
         clientDisplay = new ClientDisplay(world, GraphicsSettings.WINDOW_WIDTH,
                 GraphicsSettings.WINDOW_HEIGHT);
-        guiDisplay = new GuiDisplay(control);
 
         fpvCamera = new FpvCamera(new Vector3d(60.0, 72.0, 20.0), 0.0f, -1.0f);
     }
@@ -244,7 +241,6 @@ public class Client implements AutoCloseable
 
     private void render(double frameRate) {
         clientDisplay.display(frameRate);
-        guiDisplay.display();
     }
 
     public static void main(String[] args) {
