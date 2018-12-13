@@ -12,7 +12,6 @@ import net.survival.client.graphics.CompositeDisplay;
 import net.survival.client.graphics.GraphicsSettings;
 import net.survival.client.graphics.opengl.GLDisplay;
 import net.survival.client.graphics.opengl.GLRenderContext;
-import net.survival.client.gui.Control;
 import net.survival.client.input.GlfwKeyboardAdapter;
 import net.survival.client.input.GlfwMouseAdapter;
 import net.survival.client.input.Key;
@@ -53,10 +52,7 @@ public class Client implements AutoCloseable
 
     private final EntitySystem entitySystem;
 
-    private final Control control;
-
     private final CompositeDisplay compositeDisplay;
-
     private final FpvCamera fpvCamera;
 
     private Player player;
@@ -72,11 +68,6 @@ public class Client implements AutoCloseable
         chunkSystem = new ChunkSystem(world, chunkLoader, chunkDatabase, chunkGenerator, worldDecorator);
 
         entitySystem = new EntitySystem();
-
-        control = new Control();
-        control.getClientRectangle().setRight(0.1);
-        control.getClientRectangle().setBottom(0.025);
-        control.setText("");
 
         compositeDisplay = new CompositeDisplay(world, GraphicsSettings.WINDOW_WIDTH,
                 GraphicsSettings.WINDOW_HEIGHT);
