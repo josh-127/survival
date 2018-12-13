@@ -24,7 +24,9 @@ public class BlockTextureAtlas implements GraphicsResource
             int dstIndex = blockType.id;
             int dstX = (dstIndex % 16) * 16;
             int dstY = (dstIndex / 16) * 16;
-            Bitmap blockBitmap = Bitmap.fromFile("../assets/" + blockType.getTexture(blockFace));
+            Bitmap blockBitmap = Bitmap.fromFile(
+                    GraphicsSettings.BLOCKS_PATH +
+                    blockType.getTexture(blockFace));
             Bitmap.blit(blockBitmap, 0, 0, 16, 16, atlas, dstX, dstY);
         }
 

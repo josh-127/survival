@@ -11,7 +11,7 @@ class FontTextureAtlas implements GraphicsResource
     public final GLTexture characters;
 
     public FontTextureAtlas() {
-        Bitmap bitmap = Bitmap.fromFile("../assets/textures/fonts/ascii.png");
+        Bitmap bitmap = Bitmap.fromFile(GraphicsSettings.FONT_PATH);
         characters = new GLTexture();
 
         characters.beginBind()
