@@ -8,42 +8,53 @@ import net.survival.client.graphics.opengl.GLRenderContext;
 import net.survival.client.graphics.opengl.GLState;
 import net.survival.world.World;
 
-public class ClientDisplay implements GraphicsResource
+public class CompositeDisplay implements RenderContext, GraphicsResource
 {
-    private final Camera camera;
+    private final Camera camera = new Camera();
 
     private final WorldDisplay worldDisplay;
-    private final CloudDisplay cloudDisplay;
-    private final SkyboxDisplay skyboxDisplay;
-    private final FontRenderer fontRenderer;
+    private final SkyboxDisplay skyboxDisplay = new SkyboxDisplay();
+    private final CloudDisplay cloudDisplay = new CloudDisplay();
+    private final FontRenderer fontRenderer = new FontRenderer();
 
-    private int windowWidth;
-    private int windowHeight;
+    private int viewportWidth;
+    private int viewportHeight;
 
-    private Matrix4f cameraViewMatrix;
-    private Matrix4f cameraProjectionMatrix;
-    private Matrix4f hudProjectionMatrix;
+    private Matrix4f cameraViewMatrix = new Matrix4f();
+    private Matrix4f cameraProjectionMatrix = new Matrix4f();
+    private Matrix4f hudProjectionMatrix = new Matrix4f();
 
-    public ClientDisplay(World world, int windowWidth, int windowHeight) {
-        camera = new Camera();
-
+    public CompositeDisplay(World world, int viewportWidth, int viewportHeight) {
         worldDisplay = new WorldDisplay(world, camera, 512.0f);
-        cloudDisplay = new CloudDisplay();
-        skyboxDisplay = new SkyboxDisplay();
-
-        fontRenderer = new FontRenderer();
-        this.windowWidth = windowWidth;
-        this.windowHeight = windowHeight;
-
-        cameraViewMatrix = new Matrix4f();
-        cameraProjectionMatrix = new Matrix4f();
-        hudProjectionMatrix = new Matrix4f();
+        this.viewportWidth = viewportWidth;
+        this.viewportHeight = viewportHeight;
     }
 
     @Override
     public void close() {
         worldDisplay.close();
         fontRenderer.close();
+    }
+
+    @Override
+    public void redrawChunk(long hashedPos) {
+        worldDisplay.redrawChunk(hashedPos);
+    }
+
+    public Camera getCamera() {
+        return camera;
+    }
+
+    public int getViewportWidth() {
+        return viewportWidth;
+    }
+
+    public int getViewportHeight() {
+        return viewportHeight;
+    }
+
+    public float getViewportAspectRatio() {
+        return (float) viewportWidth / viewportHeight;
     }
 
     public void tick(double elapsedTime) {
@@ -56,14 +67,14 @@ public class ClientDisplay implements GraphicsResource
         cameraProjectionMatrix.identity();
         camera.getProjectionMatrix(cameraProjectionMatrix);
 
-        // Clears color and depth buffers
+        // Clears color and depth buffers.
         GLRenderContext.clearColorBuffer(0.0f, 0.0f, 0.0f, 0.0f);
         GLRenderContext.clearDepthBuffer(1.0f);
 
-        // Skybox display
+        // Display skybox.
         skyboxDisplay.draw(cameraViewMatrix, cameraProjectionMatrix);
 
-        // World and cloud display
+        // Display world and clouds.
         GLState.pushFogEnabled(true);
         GLState.pushExpFog(0.00390625f, SkyboxDisplay.MIDDLE_R,
                 SkyboxDisplay.MIDDLE_G, SkyboxDisplay.MIDDLE_B, 1.0f);
@@ -74,7 +85,7 @@ public class ClientDisplay implements GraphicsResource
         GLState.popFogParams();
         GLState.popFogEnabled();
 
-        // Axis display
+        // Display axis.
         GLMatrixStack.setProjectionMatrix(cameraProjectionMatrix);
         GLMatrixStack.push();
         GLMatrixStack.load(cameraViewMatrix);
@@ -90,36 +101,16 @@ public class ClientDisplay implements GraphicsResource
 
         GLMatrixStack.pop();
 
-        // HUD display
+        // Display HUD.
         hudProjectionMatrix.identity();
-        hudProjectionMatrix.ortho2D(-getWindowAspectRatio(), getWindowAspectRatio(), -1.0f, 1.0f);
+        hudProjectionMatrix.ortho2D(-getViewportAspectRatio(), getViewportAspectRatio(), -1.0f, 1.0f);
         GLMatrixStack.setProjectionMatrix(hudProjectionMatrix);
 
         GLMatrixStack.push();
         GLMatrixStack.loadIdentity();
-        GLMatrixStack.translate(-getWindowAspectRatio() * 0.9375f, 0.875f, 0.0f);
+        GLMatrixStack.translate(-getViewportAspectRatio() * 0.9375f, 0.875f, 0.0f);
         GLMatrixStack.scale(0.05f, 0.05f, 0.05f);
         fontRenderer.drawText(String.valueOf(frameRate), 0.0f, 0.0f, 0.0f);
         GLMatrixStack.pop();
-    }
-
-    public void redrawChunk(long hashedPos) {
-        worldDisplay.redrawChunk(hashedPos);
-    }
-
-    public Camera getCamera() {
-        return camera;
-    }
-
-    public int getWindowWidth() {
-        return windowWidth;
-    }
-
-    public int getWindowHeight() {
-        return windowHeight;
-    }
-
-    public float getWindowAspectRatio() {
-        return (float) windowWidth / windowHeight;
     }
 }

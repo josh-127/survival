@@ -8,7 +8,7 @@ import org.lwjgl.glfw.GLFW;
 
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import net.survival.block.BlockType;
-import net.survival.client.graphics.ClientDisplay;
+import net.survival.client.graphics.CompositeDisplay;
 import net.survival.client.graphics.GraphicsSettings;
 import net.survival.client.graphics.opengl.GLDisplay;
 import net.survival.client.graphics.opengl.GLRenderContext;
@@ -55,7 +55,7 @@ public class Client implements AutoCloseable
 
     private final Control control;
 
-    private final ClientDisplay clientDisplay;
+    private final CompositeDisplay compositeDisplay;
 
     private final FpvCamera fpvCamera;
 
@@ -78,7 +78,7 @@ public class Client implements AutoCloseable
         control.getClientRectangle().setBottom(0.025);
         control.setText("");
 
-        clientDisplay = new ClientDisplay(world, GraphicsSettings.WINDOW_WIDTH,
+        compositeDisplay = new CompositeDisplay(world, GraphicsSettings.WINDOW_WIDTH,
                 GraphicsSettings.WINDOW_HEIGHT);
 
         fpvCamera = new FpvCamera(new Vector3d(60.0, 72.0, 20.0), 0.0f, -1.0f);
@@ -88,7 +88,7 @@ public class Client implements AutoCloseable
     public void close() throws RuntimeException {
         chunkSystem.saveAllChunks();
         chunkDatabase.finish();
-        clientDisplay.close();
+        compositeDisplay.close();
     }
 
     public void tick(double elapsedTime) {
@@ -224,23 +224,23 @@ public class Client implements AutoCloseable
 
             if (chunk.isBlocksModified()) {
                 chunk.clearModificationFlags();
-                clientDisplay.redrawChunk(hashedPos);
+                compositeDisplay.redrawChunk(hashedPos);
             }
         }
 
-        clientDisplay.getCamera().moveTo((float) fpvCamera.position.x, (float) fpvCamera.position.y,
+        compositeDisplay.getCamera().moveTo((float) fpvCamera.position.x, (float) fpvCamera.position.y,
                 (float) fpvCamera.position.z);
-        clientDisplay.getCamera().orient((float) fpvCamera.yaw, (float) fpvCamera.pitch);
-        clientDisplay.getCamera().setFov((float) Math.toRadians(60.0));
-        clientDisplay.getCamera().resize(GraphicsSettings.WINDOW_WIDTH,
+        compositeDisplay.getCamera().orient((float) fpvCamera.yaw, (float) fpvCamera.pitch);
+        compositeDisplay.getCamera().setFov((float) Math.toRadians(60.0));
+        compositeDisplay.getCamera().resize(GraphicsSettings.WINDOW_WIDTH,
                 GraphicsSettings.WINDOW_HEIGHT);
-        clientDisplay.getCamera().setClipPlanes(0.0625f, 768.0f);
+        compositeDisplay.getCamera().setClipPlanes(0.0625f, 768.0f);
 
-        clientDisplay.tick(elapsedTime);
+        compositeDisplay.tick(elapsedTime);
     }
 
     private void render(double frameRate) {
-        clientDisplay.display(frameRate);
+        compositeDisplay.display(frameRate);
     }
 
     public static void main(String[] args) {
