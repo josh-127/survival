@@ -20,6 +20,13 @@ public abstract class BlockRenderer
     private static final BlockRenderer[] blockRenderers = new BlockRenderer[BlockModel.getCachedValues().length];
     private static final BlockRenderer defaultBlockRenderer = new DefaultBlockRenderer();
 
+    protected static final boolean[] blockToBlockingTopTable = new boolean[BlockType.getCachedValues().length];
+    protected static final boolean[] blockToBlockingBottomTable = new boolean[BlockType.getCachedValues().length];
+    protected static final boolean[] blockToBlockingLeftTable = new boolean[BlockType.getCachedValues().length];
+    protected static final boolean[] blockToBlockingRightTable = new boolean[BlockType.getCachedValues().length];
+    protected static final boolean[] blockToBlockingFrontTable = new boolean[BlockType.getCachedValues().length];
+    protected static final boolean[] blockToBlockingBackTable = new boolean[BlockType.getCachedValues().length];
+
     static {
         for (int i = 0; i < blockRenderers.length; ++i)
             blockRenderers[i] = defaultBlockRenderer;
@@ -40,6 +47,48 @@ public abstract class BlockRenderer
         blockRenderers[BlockModel.FARMLAND.id] = new FarmlandRenderer();
         blockRenderers[BlockModel.PRESSURE_PLATE_OFF.id] = new PressurePlateRenderer(0.0625f);
         blockRenderers[BlockModel.PRESSURE_PLATE_ON.id] = new PressurePlateRenderer(0.03125f);
+
+        for (int i = 0; i < blockToBlockingTopTable.length; ++i) {
+            BlockType block = BlockType.byID((short) i);
+
+            if (block != null)
+                blockToBlockingTopTable[i] = block.getModel().isBlockingTop();
+        }
+
+        for (int i = 0; i < blockToBlockingBottomTable.length; ++i) {
+            BlockType block = BlockType.byID((short) i);
+
+            if (block != null)
+                blockToBlockingBottomTable[i] = block.getModel().isBlockingBottom();
+        }
+
+        for (int i = 0; i < blockToBlockingLeftTable.length; ++i) {
+            BlockType block = BlockType.byID((short) i);
+
+            if (block != null)
+                blockToBlockingLeftTable[i] = block.getModel().isBlockingLeft();
+        }
+
+        for (int i = 0; i < blockToBlockingRightTable.length; ++i) {
+            BlockType block = BlockType.byID((short) i);
+
+            if (block != null)
+                blockToBlockingRightTable[i] = block.getModel().isBlockingRight();
+        }
+
+        for (int i = 0; i < blockToBlockingFrontTable.length; ++i) {
+            BlockType block = BlockType.byID((short) i);
+
+            if (block != null)
+                blockToBlockingFrontTable[i] = block.getModel().isBlockingFront();
+        }
+
+        for (int i = 0; i < blockToBlockingBackTable.length; ++i) {
+            BlockType block = BlockType.byID((short) i);
+
+            if (block != null)
+                blockToBlockingBackTable[i] = block.getModel().isBlockingBack();
+        }
     }
 
     public static final void initTextures() {

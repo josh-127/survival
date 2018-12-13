@@ -1,6 +1,5 @@
 package net.survival.client.graphics.blockrenderer;
 
-import net.survival.block.BlockType;
 import net.survival.client.graphics.opengl.GLDisplayList;
 
 class DefaultBlockRenderer extends BlockRenderer
@@ -13,7 +12,7 @@ class DefaultBlockRenderer extends BlockRenderer
     public void pushTopFaces(int x, int y, int z, short blockID, short adjacentBlockID,
             GLDisplayList.Builder builder)
     {
-        if (BlockType.byID(adjacentBlockID).getModel().isBlockingBottom())
+        if (blockToBlockingBottomTable[adjacentBlockID])
             return;
 
         float u1 = topFaceTextures.getTexCoordU1(blockID);
@@ -32,7 +31,7 @@ class DefaultBlockRenderer extends BlockRenderer
     public void pushBottomFaces(int x, int y, int z, short blockID, short adjacentBlockID,
             GLDisplayList.Builder builder)
     {
-        if (BlockType.byID(adjacentBlockID).getModel().isBlockingTop())
+        if (blockToBlockingTopTable[adjacentBlockID])
             return;
 
         float u1 = bottomFaceTextures.getTexCoordU1(blockID);
@@ -51,7 +50,7 @@ class DefaultBlockRenderer extends BlockRenderer
     public void pushLeftFaces(int x, int y, int z, short blockID, short adjacentBlockID,
             GLDisplayList.Builder builder)
     {
-        if (BlockType.byID(adjacentBlockID).getModel().isBlockingRight())
+        if (blockToBlockingRightTable[adjacentBlockID])
             return;
 
         float u1 = leftFaceTextures.getTexCoordU1(blockID);
@@ -70,7 +69,7 @@ class DefaultBlockRenderer extends BlockRenderer
     public void pushRightFaces(int x, int y, int z, short blockID, short adjacentBlockID,
             GLDisplayList.Builder builder)
     {
-        if (BlockType.byID(adjacentBlockID).getModel().isBlockingLeft())
+        if (blockToBlockingLeftTable[adjacentBlockID])
             return;
 
         float u1 = rightFaceTextures.getTexCoordU1(blockID);
@@ -89,7 +88,7 @@ class DefaultBlockRenderer extends BlockRenderer
     public void pushFrontFaces(int x, int y, int z, short blockID, short adjacentBlockID,
             GLDisplayList.Builder builder)
     {
-        if (BlockType.byID(adjacentBlockID).getModel().isBlockingBack())
+        if (blockToBlockingBackTable[adjacentBlockID])
             return;
 
         float u1 = frontFaceTextures.getTexCoordU1(blockID);
@@ -108,7 +107,7 @@ class DefaultBlockRenderer extends BlockRenderer
     public void pushBackFaces(int x, int y, int z, short blockID,
             short adjacentBlockID, GLDisplayList.Builder builder)
     {
-        if (BlockType.byID(adjacentBlockID).getModel().isBlockingFront())
+        if (blockToBlockingFrontTable[adjacentBlockID])
             return;
 
         float u1 = backFaceTextures.getTexCoordU1(blockID);
