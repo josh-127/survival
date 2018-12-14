@@ -39,6 +39,9 @@ public interface RenderContext
     }
 
     void redrawChunk(long hashedPos);
+    default void redrawChunk(int cx, int cz) {
+        redrawChunk(ChunkPos.hashPos(cx, cz));
+    }
 
     float getSkyboxBottomR();
     float getSkyboxBottomG();
@@ -47,8 +50,4 @@ public interface RenderContext
     float getSkyboxTopG();
     float getSkyboxTopB();
     void setSkyboxColor(float br, float bg, float bb, float tr, float tg, float tb);
-
-    default void redrawChunk(int cx, int cz) {
-        redrawChunk(ChunkPos.hashPos(cx, cz));
-    }
 }
