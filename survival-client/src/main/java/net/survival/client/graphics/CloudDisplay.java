@@ -131,11 +131,16 @@ class CloudDisplay
         x += speedX * elapsedTime;
         z += speedZ * elapsedTime;
 
-        if (x >= TOTAL_LENGTH_X)
+        // NOTE: Clouds will run away if speedX or speedZ is too large.
+        if (speedX > 0.0f && x >= TOTAL_LENGTH_X)
             x -= TOTAL_LENGTH_X;
+        else if (speedX < 0.0f && x < 0.0f)
+            x += TOTAL_LENGTH_X;
 
-        if (z >= TOTAL_LENGTH_Z)
+        if (speedZ > 0.0f && z >= TOTAL_LENGTH_Z)
             z -= TOTAL_LENGTH_Z;
+        else if (speedZ < 0.0f && z < 0.0f)
+            z += TOTAL_LENGTH_Z;
     }
 
     public void display(Matrix4f viewMatrix, Matrix4f projectionMatrix, float offsetX, float offsetZ)

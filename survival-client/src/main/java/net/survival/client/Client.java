@@ -221,6 +221,17 @@ public class Client implements AutoCloseable
         if (Keyboard.isKeyPressed(Key._6))
             compositeDisplay.toggleVisibilityFlags(VisibilityFlags.DEBUG_GEOMETRY);
 
+        float spx = compositeDisplay.getCloudSpeedX();
+        float spz = compositeDisplay.getCloudSpeedZ();
+        if (Keyboard.isKeyDown(Key.UP)) {
+            spx += 5.0f;
+            compositeDisplay.setCloudSpeed(spx, spz);
+        }
+        else if (Keyboard.isKeyDown(Key.DOWN)) {
+            spx -= 5.0f;
+            compositeDisplay.setCloudSpeed(spx, spz);
+        }
+
         Iterator<Long2ObjectMap.Entry<Chunk>> chunkMapIt = world.getChunkMapFastIterator();
         while (chunkMapIt.hasNext()) {
             Long2ObjectMap.Entry<Chunk> entry = chunkMapIt.next();
