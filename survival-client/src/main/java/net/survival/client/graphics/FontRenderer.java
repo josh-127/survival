@@ -2,7 +2,7 @@ package net.survival.client.graphics;
 
 import net.survival.client.graphics.opengl.GLImmediateDrawCall;
 
-public class FontRenderer implements GraphicsResource
+class FontRenderer implements GraphicsResource
 {
     private final FontTextureAtlas fontTextureAtlas;
 
