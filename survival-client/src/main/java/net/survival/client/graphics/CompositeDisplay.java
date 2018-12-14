@@ -168,8 +168,59 @@ public class CompositeDisplay implements RenderContext, GraphicsResource
         skyboxDisplay.setColor(br, bg, bb, tr, tg, tb);
     }
 
-    public Camera getCamera() {
-        return camera;
+    @Override
+    public long getCloudSeed() {
+        return cloudDisplay.getSeed();
+    }
+
+    @Override
+    public void setCloudSeed(long to) {
+        cloudDisplay.setSeed(to);
+    }
+
+    @Override
+    public float getCloudDensity() {
+        return cloudDisplay.getDensity();
+    }
+
+    @Override
+    public void setCloudDensity(float to) {
+        cloudDisplay.setDensity(to);
+    }
+
+    @Override
+    public float getCloudElevation() {
+        return cloudDisplay.getElevation();
+    }
+
+    @Override
+    public void setCloudElevation(float to) {
+        cloudDisplay.setElevation(to);
+    }
+
+    @Override
+    public float getCloudSpeedX() {
+        return cloudDisplay.getSpeedX();
+    }
+
+    @Override
+    public float getCloudSpeedZ() {
+        return cloudDisplay.getSpeedZ();
+    }
+
+    @Override
+    public void setCloudSpeed(float dx, float dz) {
+        cloudDisplay.setSpeed(dx, dz);
+    }
+
+    @Override
+    public float getCloudAlpha() {
+        return cloudDisplay.getAlpha();
+    }
+
+    @Override
+    public void setCloudAlpha(float to) {
+        cloudDisplay.setAlpha(to);
     }
 
     public int getViewportWidth() {

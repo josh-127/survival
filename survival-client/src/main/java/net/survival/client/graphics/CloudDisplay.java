@@ -13,44 +13,111 @@ class CloudDisplay
 {
     private static final int MAP_LENGTH_X = 16;
     private static final int MAP_LENGTH_Z = 16;
-    private static final long MAP_SEED = 0L;
-    private static final int PIXEL_SIZE = 16;
-    private static final double DENSITY = 0.5;
-    private static final float POSITION_Y = 144.5f;
-    private static final float SPEED_X = 0.0f;
-    private static final float SPEED_Z = 2.0f;
-    private static final float ALPHA = 0.875f;
+    private static final long DEFAULT_MAP_SEED = 0L;
+    private static final int DEFAULT_SCALE = 16;
+    private static final float DEFAULT_DENSITY = 0.5f;
+    private static final float DEFAULT_ELEVATION = 144.5f;
+    private static final float DEFAULT_SPEED_X = 0.0f;
+    private static final float DEFAULT_SPEED_Z = 2.0f;
+    private static final float DEFAULT_ALPHA = 0.875f;
 
-    private static final int TOTAL_LENGTH_X = MAP_LENGTH_X * PIXEL_SIZE;
-    private static final int TOTAL_LENGTH_Z = MAP_LENGTH_Z * PIXEL_SIZE;
+    private static final int TOTAL_LENGTH_X = MAP_LENGTH_X * DEFAULT_SCALE;
+    private static final int TOTAL_LENGTH_Z = MAP_LENGTH_Z * DEFAULT_SCALE;
 
-    private final float[] vertexPositions;
+    private long mapSeed;
+    private int scale;
+    private float density;
+    private float elevation;
+    private float speedX;
+    private float speedZ;
+    private float alpha;
+    private boolean shouldRebuild;
+
+    private float[] vertexPositions;
     private float x;
     private float z;
 
     public CloudDisplay() {
-        Random random = new Random(MAP_SEED);
+        mapSeed = DEFAULT_MAP_SEED;
+        scale = DEFAULT_SCALE;
+        density = DEFAULT_DENSITY;
+        elevation = DEFAULT_ELEVATION;
+        speedX = DEFAULT_SPEED_X;
+        speedZ = DEFAULT_SPEED_Z;
+        alpha = DEFAULT_ALPHA;
+        rebuildVertexArray();
+    }
+
+    public long getSeed() {
+        return mapSeed;
+    }
+
+    public void setSeed(long to) {
+        mapSeed = to;
+        shouldRebuild = true;
+    }
+
+    public float getDensity() {
+        return density;
+    }
+
+    public void setDensity(float to) {
+        density = to;
+        shouldRebuild = true;
+    }
+
+    public float getElevation() {
+        return elevation;
+    }
+
+    public void setElevation(float to) {
+        elevation = to;
+    }
+
+    public float getSpeedX() {
+        return speedX;
+    }
+
+    public float getSpeedZ() {
+        return speedZ;
+    }
+
+    public void setSpeed(float dx, float dz) {
+        speedX = dx;
+        speedZ = dz;
+    }
+
+    public float getAlpha() {
+        return alpha;
+    }
+
+    public void setAlpha(float to) {
+        alpha = to;
+    }
+
+    private void rebuildVertexArray() {
+        Random random = new Random(mapSeed);
 
         int index = 0;
-        float[] positions = new float[MAP_LENGTH_X * MAP_LENGTH_Z * 12];
+        float[] positions = new float[scale * scale * 12];
 
-        for (int z = 0; z < MAP_LENGTH_Z; ++z) {
-            for (int x = 0; x < MAP_LENGTH_X; ++x) {
-                if (random.nextDouble() >= DENSITY)
+        for (int z = 0; z < scale; ++z) {
+            for (int x = 0; x < scale; ++x) {
+                if (random.nextDouble() >= density)
                     continue;
 
-                float posX = x * PIXEL_SIZE;
-                float posZ = z * PIXEL_SIZE;
+                float posX = x * scale;
+                float posZ = z * scale;
                 positions[index++] = posX;
                 positions[index++] = posZ;
-                positions[index++] = posX + PIXEL_SIZE;
+                positions[index++] = posX + scale;
                 positions[index++] = posZ;
-                positions[index++] = posX + PIXEL_SIZE;
-                positions[index++] = posZ + PIXEL_SIZE;
-                positions[index++] = posX + PIXEL_SIZE;
-                positions[index++] = posZ + PIXEL_SIZE;
+                positions[index++] = posX + scale;
+                positions[index++] = posZ + scale;
+                positions[index++] = posX + scale;
+                positions[index++] = posZ + scale;
                 positions[index++] = posX;
-                positions[index++] = posZ + PIXEL_SIZE;
+                positions[index++] = posZ + scale;
                 positions[index++] = posX;
                 positions[index++] = posZ;
             }
@@ -61,8 +128,8 @@ class CloudDisplay
     }
 
     public void tick(double elapsedTime) {
-        x += SPEED_X * elapsedTime;
-        z += SPEED_Z * elapsedTime;
+        x += speedX * elapsedTime;
+        z += speedZ * elapsedTime;
 
         if (x >= TOTAL_LENGTH_X)
             x -= TOTAL_LENGTH_X;
@@ -73,6 +140,11 @@ class CloudDisplay
 
     public void display(Matrix4f viewMatrix, Matrix4f projectionMatrix, float offsetX, float offsetZ)
     {
+        if (shouldRebuild) {
+            rebuildVertexArray();
+            shouldRebuild = false;
+        }
+
         offsetX = ((int) Math.floor(offsetX) / TOTAL_LENGTH_X) * TOTAL_LENGTH_X;
         offsetZ = ((int) Math.floor(offsetZ) / TOTAL_LENGTH_Z) * TOTAL_LENGTH_Z;
         offsetX += x;
@@ -80,13 +152,19 @@ class CloudDisplay
 
         for (int i = -4; i <= 2; ++i) {
             for (int j = -3; j <= 2; ++j) {
-                displayPart(viewMatrix, projectionMatrix, offsetX + TOTAL_LENGTH_X * j,
+                displayPart(
+                        viewMatrix,
+                        projectionMatrix,
+                        offsetX + TOTAL_LENGTH_X * j,
                         offsetZ + TOTAL_LENGTH_Z * i);
             }
         }
     }
 
-    private void displayPart(Matrix4f viewMatrix, Matrix4f projectionMatrix, float offsetX,
+    private void displayPart(
+            Matrix4f viewMatrix,
+            Matrix4f projectionMatrix,
+            float offsetX,
             float offsetZ)
     {
         GLMatrixStack.setProjectionMatrix(projectionMatrix);
@@ -97,10 +175,10 @@ class CloudDisplay
         GLState.pushBlendFunction(GLBlendFactor.SRC_ALPHA, GLBlendFactor.ONE_MINUS_SRC_ALPHA);
 
         GLImmediateDrawCall drawCall = GLImmediateDrawCall.beginTriangles(null);
-        drawCall.color(1.0f, 1.0f, 1.0f, ALPHA);
+        drawCall.color(1.0f, 1.0f, 1.0f, alpha);
 
         for (int i = 0; i < vertexPositions.length; i += 2) {
-            drawCall.vertex(offsetX + vertexPositions[i], POSITION_Y, offsetZ + vertexPositions[i + 1]);
+            drawCall.vertex(offsetX + vertexPositions[i], elevation, offsetZ + vertexPositions[i + 1]);
         }
 
         drawCall.end();

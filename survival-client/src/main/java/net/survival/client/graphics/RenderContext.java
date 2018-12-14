@@ -50,4 +50,20 @@ public interface RenderContext
     float getSkyboxTopG();
     float getSkyboxTopB();
     void setSkyboxColor(float br, float bg, float bb, float tr, float tg, float tb);
+
+    long getCloudSeed();
+    void setCloudSeed(long to);
+
+    float getCloudDensity();
+    void setCloudDensity(float to);
+
+    float getCloudElevation();
+    void setCloudElevation(float to);
+
+    float getCloudSpeedX();
+    float getCloudSpeedZ();
+    void setCloudSpeed(float dx, float dz);
+
+    float getCloudAlpha();
+    void setCloudAlpha(float to);
 }
