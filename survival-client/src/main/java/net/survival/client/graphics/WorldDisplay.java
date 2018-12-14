@@ -285,8 +285,8 @@ class WorldDisplay implements GraphicsResource
     }
 
     private void updateNonCubicDisplays(HashMap<Chunk, ChunkDisplay> nonCubicDisplays) {
-        float cameraX = camera.getX();
-        float cameraZ = camera.getZ();
+        float cameraX = camera.x;
+        float cameraZ = camera.z;
         float maxViewRadiusSquared = maxViewRadius * maxViewRadius;
 
         Iterator<Long2ObjectMap.Entry<Chunk>> chunkMapIt = world.getChunkMapFastIterator();
@@ -343,8 +343,8 @@ class WorldDisplay implements GraphicsResource
             }
         }
 
-        float cameraX = camera.getX();
-        float cameraZ = camera.getZ();
+        float cameraX = camera.x;
+        float cameraZ = camera.z;
         float maxViewRadiusSquared = maxViewRadius * maxViewRadius;
 
         Iterator<Long2ObjectMap.Entry<Chunk>> chunkMapIt = world.getChunkMapFastIterator();

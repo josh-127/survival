@@ -9,25 +9,57 @@ import net.survival.client.graphics.opengl.GLState;
 
 class SkyboxDisplay
 {
-    public static final float BOTTOM_R = 0.8f;
-    public static final float BOTTOM_G = 1.0f;
-    public static final float BOTTOM_B = 1.0f;
-    public static final float TOP_R = 0.25f;
-    public static final float TOP_G = 0.5f;
-    public static final float TOP_B = 1.0f;
-    public static final float MIDDLE_R = 0.5f * (TOP_R + BOTTOM_R);
-    public static final float MIDDLE_G = 0.5f * (TOP_G + BOTTOM_G);
-    public static final float MIDDLE_B = 0.5f * (TOP_B + BOTTOM_B);
+    public static final float DEFAULT_BOTTOM_R = 0.8f;
+    public static final float DEFAULT_BOTTOM_G = 1.0f;
+    public static final float DEFAULT_BOTTOM_B = 1.0f;
+    public static final float DEFAULT_TOP_R = 0.25f;
+    public static final float DEFAULT_TOP_G = 0.5f;
+    public static final float DEFAULT_TOP_B = 1.0f;
 
-    private Matrix3f tempMatrix;
-    private Matrix4f viewWithoutTranslation;
+    private float bottomR = DEFAULT_BOTTOM_R;
+    private float bottomG = DEFAULT_BOTTOM_G;
+    private float bottomB = DEFAULT_BOTTOM_B;
+    private float topR = DEFAULT_TOP_R;
+    private float topG = DEFAULT_TOP_G;
+    private float topB = DEFAULT_TOP_B;
 
-    public SkyboxDisplay() {
-        tempMatrix = new Matrix3f();
-        viewWithoutTranslation = new Matrix4f();
+    private Matrix3f tempMatrix = new Matrix3f();
+    private Matrix4f viewWithoutTranslation = new Matrix4f();
+
+    public float getBottomR() {
+        return bottomR;
     }
 
-    public void draw(Matrix4f view, Matrix4f projection) {
+    public float getBottomG() {
+        return bottomG;
+    }
+
+    public float getBottomB() {
+        return bottomB;
+    }
+
+    public float getTopR() {
+        return topR;
+    }
+
+    public float getTopG() {
+        return topG;
+    }
+
+    public float getTopB() {
+        return topB;
+    }
+
+    public void setColor(float br, float bg, float bb, float tr, float tg, float tb) {
+        bottomR = br;
+        bottomG = bg;
+        bottomB = bb;
+        topR = tr;
+        topG = tg;
+        topB = tb;
+    }
+
+    public void display(Matrix4f view, Matrix4f projection) {
         view.get3x3(tempMatrix);
         viewWithoutTranslation.identity();
         viewWithoutTranslation.set(tempMatrix);
@@ -39,47 +71,52 @@ class SkyboxDisplay
         {
             GLImmediateDrawCall.beginTriangles(null)
                     // Top
-                    .coloredVertex(-1.0f, 1.0f, -1.0f, TOP_R, TOP_G, TOP_B)
-                    .coloredVertex(1.0f, 1.0f, -1.0f, TOP_R, TOP_G, TOP_B)
-                    .coloredVertex(1.0f, 1.0f, 1.0f, TOP_R, TOP_G, TOP_B)
-                    .coloredVertex(1.0f, 1.0f, 1.0f, TOP_R, TOP_G, TOP_B)
-                    .coloredVertex(-1.0f, 1.0f, 1.0f, TOP_R, TOP_G, TOP_B)
-                    .coloredVertex(-1.0f, 1.0f, -1.0f, TOP_R, TOP_G, TOP_B)
+                    .coloredVertex(-1.0f, 1.0f, -1.0f, topR, topG, topB)
+                    .coloredVertex(1.0f, 1.0f, -1.0f, topR, topG, topB)
+                    .coloredVertex(1.0f, 1.0f, 1.0f, topR, topG, topB)
+                    .coloredVertex(1.0f, 1.0f, 1.0f, topR, topG, topB)
+                    .coloredVertex(-1.0f, 1.0f, 1.0f, topR, topG, topB)
+                    .coloredVertex(-1.0f, 1.0f, -1.0f, topR, topG, topB)
+
                     // Bottom
-                    .coloredVertex(-1.0f, -1.0f, 1.0f, BOTTOM_R, BOTTOM_G, BOTTOM_B)
-                    .coloredVertex(1.0f, -1.0f, 1.0f, BOTTOM_R, BOTTOM_G, BOTTOM_B)
-                    .coloredVertex(1.0f, -1.0f, -1.0f, BOTTOM_R, BOTTOM_G, BOTTOM_B)
-                    .coloredVertex(1.0f, -1.0f, -1.0f, BOTTOM_R, BOTTOM_G, BOTTOM_B)
-                    .coloredVertex(-1.0f, -1.0f, -1.0f, BOTTOM_R, BOTTOM_G, BOTTOM_B)
-                    .coloredVertex(-1.0f, -1.0f, 1.0f, BOTTOM_R, BOTTOM_G, BOTTOM_B)
+                    .coloredVertex(-1.0f, -1.0f, 1.0f, bottomR, bottomG, bottomB)
+                    .coloredVertex(1.0f, -1.0f, 1.0f, bottomR, bottomG, bottomB)
+                    .coloredVertex(1.0f, -1.0f, -1.0f, bottomR, bottomG, bottomB)
+                    .coloredVertex(1.0f, -1.0f, -1.0f, bottomR, bottomG, bottomB)
+                    .coloredVertex(-1.0f, -1.0f, -1.0f, bottomR, bottomG, bottomB)
+                    .coloredVertex(-1.0f, -1.0f, 1.0f, bottomR, bottomG, bottomB)
+
                     // Front
-                    .coloredVertex(1.0f, -1.0f, 1.0f, BOTTOM_R, BOTTOM_G, BOTTOM_B)
-                    .coloredVertex(-1.0f, -1.0f, 1.0f, BOTTOM_R, BOTTOM_G, BOTTOM_B)
-                    .coloredVertex(-1.0f, 1.0f, 1.0f, TOP_R, TOP_G, TOP_B)
-                    .coloredVertex(-1.0f, 1.0f, 1.0f, TOP_R, TOP_G, TOP_B)
-                    .coloredVertex(1.0f, 1.0f, 1.0f, TOP_R, TOP_G, TOP_B)
-                    .coloredVertex(1.0f, -1.0f, 1.0f, BOTTOM_R, BOTTOM_G, BOTTOM_B)
+                    .coloredVertex(1.0f, -1.0f, 1.0f, bottomR, bottomG, bottomB)
+                    .coloredVertex(-1.0f, -1.0f, 1.0f, bottomR, bottomG, bottomB)
+                    .coloredVertex(-1.0f, 1.0f, 1.0f, topR, topG, topB)
+                    .coloredVertex(-1.0f, 1.0f, 1.0f, topR, topG, topB)
+                    .coloredVertex(1.0f, 1.0f, 1.0f, topR, topG, topB)
+                    .coloredVertex(1.0f, -1.0f, 1.0f, bottomR, bottomG, bottomB)
+
                     // Back
-                    .coloredVertex(-1.0f, -1.0f, -1.0f, BOTTOM_R, BOTTOM_G, BOTTOM_B)
-                    .coloredVertex(1.0f, -1.0f, -1.0f, BOTTOM_R, BOTTOM_G, BOTTOM_B)
-                    .coloredVertex(1.0f, 1.0f, -1.0f, TOP_R, TOP_G, TOP_B)
-                    .coloredVertex(1.0f, 1.0f, -1.0f, TOP_R, TOP_G, TOP_B)
-                    .coloredVertex(-1.0f, 1.0f, -1.0f, TOP_R, TOP_G, TOP_B)
-                    .coloredVertex(-1.0f, -1.0f, -1.0f, BOTTOM_R, BOTTOM_G, BOTTOM_B)
+                    .coloredVertex(-1.0f, -1.0f, -1.0f, bottomR, bottomG, bottomB)
+                    .coloredVertex(1.0f, -1.0f, -1.0f, bottomR, bottomG, bottomB)
+                    .coloredVertex(1.0f, 1.0f, -1.0f, topR, topG, topB)
+                    .coloredVertex(1.0f, 1.0f, -1.0f, topR, topG, topB)
+                    .coloredVertex(-1.0f, 1.0f, -1.0f, topR, topG, topB)
+                    .coloredVertex(-1.0f, -1.0f, -1.0f, bottomR, bottomG, bottomB)
+
                     // Left
-                    .coloredVertex(-1.0f, -1.0f, 1.0f, BOTTOM_R, BOTTOM_G, BOTTOM_B)
-                    .coloredVertex(-1.0f, -1.0f, -1.0f, BOTTOM_R, BOTTOM_G, BOTTOM_B)
-                    .coloredVertex(-1.0f, 1.0f, -1.0f, TOP_R, TOP_G, TOP_B)
-                    .coloredVertex(-1.0f, 1.0f, -1.0f, TOP_R, TOP_G, TOP_B)
-                    .coloredVertex(-1.0f, 1.0f, 1.0f, TOP_R, TOP_G, TOP_B)
-                    .coloredVertex(-1.0f, -1.0f, 1.0f, BOTTOM_R, BOTTOM_G, BOTTOM_B)
+                    .coloredVertex(-1.0f, -1.0f, 1.0f, bottomR, bottomG, bottomB)
+                    .coloredVertex(-1.0f, -1.0f, -1.0f, bottomR, bottomG, bottomB)
+                    .coloredVertex(-1.0f, 1.0f, -1.0f, topR, topG, topB)
+                    .coloredVertex(-1.0f, 1.0f, -1.0f, topR, topG, topB)
+                    .coloredVertex(-1.0f, 1.0f, 1.0f, topR, topG, topB)
+                    .coloredVertex(-1.0f, -1.0f, 1.0f, bottomR, bottomG, bottomB)
+
                     // Right
-                    .coloredVertex(1.0f, -1.0f, -1.0f, BOTTOM_R, BOTTOM_G, BOTTOM_B)
-                    .coloredVertex(1.0f, -1.0f, 1.0f, BOTTOM_R, BOTTOM_G, BOTTOM_B)
-                    .coloredVertex(1.0f, 1.0f, 1.0f, TOP_R, TOP_G, TOP_B)
-                    .coloredVertex(1.0f, 1.0f, 1.0f, TOP_R, TOP_G, TOP_B)
-                    .coloredVertex(1.0f, 1.0f, -1.0f, TOP_R, TOP_G, TOP_B)
-                    .coloredVertex(1.0f, -1.0f, -1.0f, BOTTOM_R, BOTTOM_G, BOTTOM_B)
+                    .coloredVertex(1.0f, -1.0f, -1.0f, bottomR, bottomG, bottomB)
+                    .coloredVertex(1.0f, -1.0f, 1.0f, bottomR, bottomG, bottomB)
+                    .coloredVertex(1.0f, 1.0f, 1.0f, topR, topG, topB)
+                    .coloredVertex(1.0f, 1.0f, 1.0f, topR, topG, topB)
+                    .coloredVertex(1.0f, 1.0f, -1.0f, topR, topG, topB)
+                    .coloredVertex(1.0f, -1.0f, -1.0f, bottomR, bottomG, bottomB)
                     .end();
         }
         GLState.popDepthWriteMask();

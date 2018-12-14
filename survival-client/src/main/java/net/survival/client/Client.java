@@ -219,13 +219,18 @@ public class Client implements AutoCloseable
             }
         }
 
-        compositeDisplay.getCamera().moveTo((float) fpvCamera.position.x, (float) fpvCamera.position.y,
+        compositeDisplay.moveCamera(
+                (float) fpvCamera.position.x,
+                (float) fpvCamera.position.y,
                 (float) fpvCamera.position.z);
-        compositeDisplay.getCamera().orient((float) fpvCamera.yaw, (float) fpvCamera.pitch);
-        compositeDisplay.getCamera().setFov((float) Math.toRadians(60.0));
-        compositeDisplay.getCamera().resize(GraphicsSettings.WINDOW_WIDTH,
+        compositeDisplay.orientCamera(
+                (float) fpvCamera.yaw,
+                (float) fpvCamera.pitch);
+        compositeDisplay.setCameraFov((float) Math.toRadians(60.0));
+        compositeDisplay.resizeCamera(
+                GraphicsSettings.WINDOW_WIDTH,
                 GraphicsSettings.WINDOW_HEIGHT);
-        compositeDisplay.getCamera().setClipPlanes(0.0625f, 768.0f);
+        compositeDisplay.setCameraClipPlanes(0.0625f, 768.0f);
 
         compositeDisplay.tick(elapsedTime);
     }
