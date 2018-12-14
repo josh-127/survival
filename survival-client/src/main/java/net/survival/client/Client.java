@@ -10,6 +10,7 @@ import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import net.survival.block.BlockType;
 import net.survival.client.graphics.CompositeDisplay;
 import net.survival.client.graphics.GraphicsSettings;
+import net.survival.client.graphics.VisibilityFlags;
 import net.survival.client.graphics.opengl.GLDisplay;
 import net.survival.client.graphics.opengl.GLRenderContext;
 import net.survival.client.input.GlfwKeyboardAdapter;
@@ -206,6 +207,19 @@ public class Client implements AutoCloseable
             npc.movementStyle = NpcMovementStyle.SLIME;
             world.addCharacter(npc);
         }
+
+        if (Keyboard.isKeyPressed(Key._1))
+            compositeDisplay.toggleVisibilityFlags(VisibilityFlags.BLOCKS);
+        if (Keyboard.isKeyPressed(Key._2))
+            compositeDisplay.toggleVisibilityFlags(VisibilityFlags.ENTITIES);
+        if (Keyboard.isKeyPressed(Key._3))
+            compositeDisplay.toggleVisibilityFlags(VisibilityFlags.SKYBOX);
+        if (Keyboard.isKeyPressed(Key._4))
+            compositeDisplay.toggleVisibilityFlags(VisibilityFlags.CLOUDS);
+        if (Keyboard.isKeyPressed(Key._5))
+            compositeDisplay.toggleVisibilityFlags(VisibilityFlags.HUD);
+        if (Keyboard.isKeyPressed(Key._6))
+            compositeDisplay.toggleVisibilityFlags(VisibilityFlags.DEBUG_GEOMETRY);
 
         Iterator<Long2ObjectMap.Entry<Chunk>> chunkMapIt = world.getChunkMapFastIterator();
         while (chunkMapIt.hasNext()) {
