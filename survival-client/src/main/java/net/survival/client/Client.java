@@ -146,7 +146,6 @@ public class Client implements AutoCloseable
 
         chunkSystem.update();
 
-        ActorSystem.update(world, elapsedTime);
         entitySystem.update(world, elapsedTime);
 
         if (player != null) {

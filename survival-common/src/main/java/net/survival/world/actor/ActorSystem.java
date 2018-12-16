@@ -1,44 +1,35 @@
 package net.survival.world.actor;
 
-import net.survival.world.World;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 public class ActorSystem
 {
-    public static void update(World world, double elapsedTime) {
-        for (Actor actor : world.getActors()) {
-            boolean shouldRetry = true;
-            while (shouldRetry)
-                shouldRetry = update(actor);
-        }
+    private final ArrayList<Actor> actors = new ArrayList<>();
+    private final EventQueue eventQueue;
+    private final ActorServiceCollection services;
 
-        ActorPhysics.update(world, elapsedTime);
-        ActorSorter.sortActors(world);
+    public ActorSystem(EventQueue eventQueue) {
+        this.eventQueue = eventQueue;
+        this.services = new ActorServiceCollection(eventQueue.getProducer());
     }
 
-    @SuppressWarnings({ "rawtypes", "unchecked" })
-    private static boolean update(Actor actor) {
-        if (actor.currentMessage == null) {
-            Object message = actor.loopbackInbox.poll();
-            if (message == null)
-                message = actor.inbox.poll();
+    public void add(Actor actor) {
+        actors.add(actor);
+    }
 
-            actor.currentMessage = message;
+    public ActorServiceCollection getActorServices() {
+        return services;
+    }
+
+    public void collect() {
+        Iterator<Actor> iterator = actors.iterator();
+
+        while (iterator.hasNext()) {
+            Actor actor = iterator.next();
+
+            if (actor.isDead())
+                iterator.remove();
         }
-
-        if (actor.currentMessage == null)
-            return false;
-
-        Object currentMessage = actor.currentMessage;
-        MessageHandler handler = actor.messageHandlers.get(currentMessage.getClass());
-
-        if (handler == null) {
-            actor.currentMessage = null;
-            return true;
-        }
-
-        if (!handler.handleMessage(currentMessage))
-            actor.currentMessage = null;
-
-        return false;
     }
 }

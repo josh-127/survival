@@ -15,7 +15,6 @@ import net.survival.client.graphics.blockrenderer.BlockRenderer;
 import net.survival.client.graphics.model.ModelRenderer;
 import net.survival.client.graphics.model.StaticModel;
 import net.survival.client.graphics.opengl.GLFilterMode;
-import net.survival.client.graphics.opengl.GLImmediateDrawCall;
 import net.survival.client.graphics.opengl.GLMatrixStack;
 import net.survival.client.graphics.opengl.GLTexture;
 import net.survival.client.graphics.opengl.GLWrapMode;
@@ -219,9 +218,6 @@ class WorldDisplay implements GraphicsResource
         for (Actor actor : actors)
             drawActor(actor);
 
-        for (Actor actor : actors)
-            drawActorHitBox(actor);
-
         GLMatrixStack.pop();
     }
 
@@ -234,52 +230,6 @@ class WorldDisplay implements GraphicsResource
 
         StaticModel model = StaticModel.fromActor(actor);
         ModelRenderer.displayStaticModel(model);
-
-        GLMatrixStack.pop();
-    }
-
-    private void drawActorHitBox(Actor actor) {
-        GLMatrixStack.push();
-        GLMatrixStack.translate(
-                (float) actor.getX(),
-                (float) actor.getY(),
-                (float) actor.getZ());
-
-        final float BOX_R = 1.0f;
-        final float BOX_G = 0.0f;
-        final float BOX_B = 1.0f;
-
-        float cbrX = (float) actor.getHitBox().radiusX;
-        float cbrY = (float) actor.getHitBox().radiusY;
-        float cbrZ = (float) actor.getHitBox().radiusZ;
-
-        GLImmediateDrawCall.beginLines(null)
-                .coloredVertex(-cbrX, cbrY, -cbrZ, BOX_R, BOX_G, BOX_B)
-                .coloredVertex(cbrX, cbrY, -cbrZ, BOX_R, BOX_G, BOX_B)
-                .coloredVertex(-cbrX, cbrY, cbrZ, BOX_R, BOX_G, BOX_B)
-                .coloredVertex(cbrX, cbrY, cbrZ, BOX_R, BOX_G, BOX_B)
-                .coloredVertex(-cbrX, cbrY, -cbrZ, BOX_R, BOX_G, BOX_B)
-                .coloredVertex(-cbrX, cbrY, cbrZ, BOX_R, BOX_G, BOX_B)
-                .coloredVertex(cbrX, cbrY, -cbrZ, BOX_R, BOX_G, BOX_B)
-                .coloredVertex(cbrX, cbrY, cbrZ, BOX_R, BOX_G, BOX_B)
-
-                .coloredVertex(-cbrX, -cbrY, -cbrZ, BOX_R, BOX_G, BOX_B)
-                .coloredVertex(cbrX, -cbrY, -cbrZ, BOX_R, BOX_G, BOX_B)
-                .coloredVertex(-cbrX, -cbrY, cbrZ, BOX_R, BOX_G, BOX_B)
-                .coloredVertex(cbrX, -cbrY, cbrZ, BOX_R, BOX_G, BOX_B)
-                .coloredVertex(-cbrX, -cbrY, -cbrZ, BOX_R, BOX_G, BOX_B)
-                .coloredVertex(-cbrX, -cbrY, cbrZ, BOX_R, BOX_G, BOX_B)
-                .coloredVertex(cbrX, -cbrY, -cbrZ, BOX_R, BOX_G, BOX_B)
-                .coloredVertex(cbrX, -cbrY, cbrZ, BOX_R, BOX_G, BOX_B)
-
-                .coloredVertex(-cbrX, -cbrY, -cbrZ, BOX_R, BOX_G, BOX_B)
-                .coloredVertex(-cbrX, cbrY, -cbrZ, BOX_R, BOX_G, BOX_B)
-                .coloredVertex(cbrX, -cbrY, -cbrZ, BOX_R, BOX_G, BOX_B)
-                .coloredVertex(cbrX, cbrY, -cbrZ, BOX_R, BOX_G, BOX_B)
-                .coloredVertex(-cbrX, -cbrY, cbrZ, BOX_R, BOX_G, BOX_B)
-                .coloredVertex(-cbrX, cbrY, cbrZ, BOX_R, BOX_G, BOX_B)
-                .coloredVertex(cbrX, -cbrY, cbrZ, BOX_R, BOX_G, BOX_B)
-                .coloredVertex(cbrX, cbrY, cbrZ, BOX_R, BOX_G, BOX_B).end();
 
         GLMatrixStack.pop();
     }

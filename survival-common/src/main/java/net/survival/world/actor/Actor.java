@@ -1,11 +1,5 @@
 package net.survival.world.actor;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Queue;
-
-import net.survival.util.HitBox;
-
 public abstract class Actor
 {
     long containingChunk;
@@ -22,25 +16,9 @@ public abstract class Actor
     protected double scaleY;
     protected double scaleZ;
 
-    protected double velocityX;
-    protected double velocityY;
-    protected double velocityZ;
-
-    protected HitBox hitBox = HitBox.DEFAULT;
     protected ActorModel model = ActorModel.HUMAN;
 
-    protected int rigidBodyHandle;
-
-    final Queue<Object> inbox = new LinkedList<>();
-    final Queue<Object> loopbackInbox = new LinkedList<>();
-    Object currentMessage;
-
-    // TODO: Should be de-duplicated across same types.
-    final HashMap<Class<?>, MessageHandler<?>> messageHandlers = new HashMap<>();
-
-    protected <M> void whenReceiving(Class<M> messageType, MessageHandler<M> handler) {
-        messageHandlers.put(messageType, handler);
-    }
+    private boolean dead;
 
     public double getX() {
         return x;
@@ -78,23 +56,15 @@ public abstract class Actor
         return scaleZ;
     }
 
-    public double getVelocityX() {
-        return velocityX;
-    }
-
-    public double getVelocityY() {
-        return velocityY;
-    }
-
-    public double getVelocityZ() {
-        return velocityZ;
-    }
-
-    public HitBox getHitBox() {
-        return hitBox;
-    }
-
     public ActorModel getModel() {
         return model;
+    }
+
+    public boolean isDead() {
+        return dead;
+    }
+
+    protected void killSelf() {
+        dead = true;
     }
 }
