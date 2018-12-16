@@ -4,60 +4,42 @@ public abstract class Actor
 {
     long containingChunk;
 
-    protected double x;
-    protected double y;
-    protected double z;
-
-    protected double yaw;
-    protected double pitch;
-    protected double roll;
-
-    protected double scaleX;
-    protected double scaleY;
-    protected double scaleZ;
-
     protected ActorModel model = ActorModel.HUMAN;
 
     private boolean dead;
 
-    public double getX() {
-        return x;
-    }
+    public abstract double getX();
 
-    public double getY() {
-        return y;
-    }
+    public abstract double getY();
 
-    public double getZ() {
-        return z;
-    }
+    public abstract double getZ();
 
     public double getYaw() {
-        return yaw;
+        return 0.0;
     }
 
     public double getPitch() {
-        return pitch;
+        return 0.0;
     }
 
     public double getRoll() {
-        return roll;
+        return 0.0;
     }
 
     public double getScaleX() {
-        return scaleX;
+        return 1.0;
     }
 
     public double getScaleY() {
-        return scaleY;
+        return 1.0;
     }
 
     public double getScaleZ() {
-        return scaleZ;
+        return 1.0;
     }
 
     public ActorModel getModel() {
-        return model;
+        return ActorModel.HUMAN;
     }
 
     public boolean isDead() {

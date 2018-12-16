@@ -4,14 +4,19 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import net.survival.world.World;
+
 public class LocomotiveService
 {
-    public static final double GRAVITY = 3.0;
+    public static final double GRAVITY = 32.0;
+    public static final double TERMINAL_VELOCITY = 30.0;
 
     private final HashMap<Actor, Data> objects = new HashMap<>();
+    private final World world;
     private final EventQueue.Producer eventQueue;
 
-    public LocomotiveService(EventQueue.Producer eventQueue) {
+    public LocomotiveService(World world, EventQueue.Producer eventQueue) {
+        this.world = world;
         this.eventQueue = eventQueue;
     }
 
