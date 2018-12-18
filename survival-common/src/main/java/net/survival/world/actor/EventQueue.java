@@ -8,7 +8,8 @@ public class EventQueue
 {
     private final Queue<EventPacket> upcomingEvents = new LinkedList<>();
     private final Producer producer = new Producer();
-    private final Consumer consumer = new Consumer();
+    private final ConsumerIterator consumerIterator = new ConsumerIterator();
+    private final Consumer consumer = new Consumer(consumerIterator);
 
     public Producer getProducer() {
         return producer;
@@ -36,7 +37,21 @@ public class EventQueue
         }
     }
 
-    public class Consumer implements Iterator<EventPacket>
+    public class Consumer implements Iterable<EventPacket>
+    {
+        private final ConsumerIterator underlyingIterator;
+
+        private Consumer(ConsumerIterator iterator) {
+            underlyingIterator = iterator;
+        }
+
+        @Override
+        public Iterator<EventPacket> iterator() {
+            return underlyingIterator;
+        }
+    }
+
+    private class ConsumerIterator implements Iterator<EventPacket>
     {
         @Override
         public boolean hasNext() {

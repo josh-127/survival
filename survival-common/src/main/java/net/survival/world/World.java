@@ -1,6 +1,7 @@
 package net.survival.world;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
@@ -131,6 +132,17 @@ public class World implements BlockStorage
 
     public void addActor(Actor actor) {
         actors.add(actor);
+    }
+
+    public void collectActors() {
+        Iterator<Actor> iterator = actors.iterator();
+
+        while (iterator.hasNext()) {
+            Actor actor = iterator.next();
+
+            if (actor.isDead())
+                iterator.remove();
+        }
     }
 
     private Chunk getChunkFromGlobalPos(int x, int z, String exceptionMessage) {

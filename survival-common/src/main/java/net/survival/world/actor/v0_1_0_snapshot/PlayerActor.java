@@ -1,6 +1,7 @@
 package net.survival.world.actor.v0_1_0_snapshot;
 
 import net.survival.world.actor.Actor;
+import net.survival.world.actor.ActorServiceCollection;
 
 public class PlayerActor extends Actor
 {
@@ -13,6 +14,9 @@ public class PlayerActor extends Actor
         this.y = y;
         this.z = z;
     }
+
+    @Override
+    public void setup(ActorServiceCollection services) {}
 
     @Override
     public double getX() {

@@ -2,11 +2,16 @@ package net.survival.world.actor;
 
 public abstract class Actor
 {
-    long containingChunk;
-
-    protected ActorModel model = ActorModel.HUMAN;
-
     private boolean dead;
+
+    public abstract void setup(ActorServiceCollection services);
+
+    public void onEventNotification(ActorServiceCollection services, Object eventArgs) {
+        if (eventArgs == AlarmService.FINISHED_TOKEN)
+            onAlarm(services);
+    }
+
+    protected void onAlarm(ActorServiceCollection services) {}
 
     public abstract double getX();
 

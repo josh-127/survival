@@ -26,7 +26,10 @@ import net.survival.entity.Player;
 import net.survival.util.HitBox;
 import net.survival.world.EntitySystem;
 import net.survival.world.World;
-import net.survival.world.actor.ActorSystem;
+import net.survival.world.actor.ActorServiceCollection;
+import net.survival.world.actor.AlarmService;
+import net.survival.world.actor.EventQueue;
+import net.survival.world.actor.LocomotiveService;
 import net.survival.world.actor.v0_1_0_snapshot.NpcActor;
 import net.survival.world.chunk.Chunk;
 import net.survival.world.chunk.ChunkDatabase;
@@ -58,6 +61,11 @@ public class Client implements AutoCloseable
 
     private Player player;
 
+    private final EventQueue eventQueue;
+    private final AlarmService alarmService;
+    private final LocomotiveService locomotiveService;
+    private final ActorServiceCollection actorServiceCollection;
+
     private Client() {
         world = new World();
         
@@ -74,6 +82,11 @@ public class Client implements AutoCloseable
                 GraphicsSettings.WINDOW_HEIGHT);
 
         fpvCamera = new FpvCamera(new Vector3d(60.0, 72.0, 20.0), 0.0f, -1.0f);
+
+        eventQueue = new EventQueue();
+        alarmService = new AlarmService(eventQueue.getProducer());
+        locomotiveService = new LocomotiveService(world, eventQueue.getProducer());
+        actorServiceCollection = new ActorServiceCollection(alarmService, locomotiveService);
     }
 
     @Override
@@ -148,6 +161,15 @@ public class Client implements AutoCloseable
 
         entitySystem.update(world, elapsedTime);
 
+        world.collectActors();
+        alarmService.tick(elapsedTime);
+        locomotiveService.tick(elapsedTime);
+
+        EventQueue.Consumer eventConsumer = eventQueue.getConsumer();
+        for (EventQueue.EventPacket eventPacket : eventConsumer) {
+            eventPacket.target.onEventNotification(actorServiceCollection, eventPacket.eventArgs);
+        }
+
         if (player != null) {
             fpvCamera.position.x = player.x;
             fpvCamera.position.y = player.y + 0.8;
@@ -182,6 +204,8 @@ public class Client implements AutoCloseable
                     fpvCamera.position.y,
                     fpvCamera.position.z);
             world.addActor(npcActor);
+
+            npcActor.setup(actorServiceCollection);
         }
 
         if (Keyboard.isKeyPressed(Key.Y)) {

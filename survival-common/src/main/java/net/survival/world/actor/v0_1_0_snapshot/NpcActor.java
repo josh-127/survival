@@ -2,6 +2,7 @@ package net.survival.world.actor.v0_1_0_snapshot;
 
 import net.survival.world.actor.Actor;
 import net.survival.world.actor.ActorModel;
+import net.survival.world.actor.ActorServiceCollection;
 
 public class NpcActor extends Actor
 {
@@ -13,8 +14,17 @@ public class NpcActor extends Actor
         this.x = x;
         this.y = y;
         this.z = z;
+    }
 
-        model = ActorModel.HUMAN;
+    @Override
+    public void setup(ActorServiceCollection services) {
+        services.getAlarmService().setAlarm(this, 1.0);
+    }
+
+    @Override
+    protected void onAlarm(ActorServiceCollection services) {
+        z += 0.25;
+        services.getAlarmService().setAlarm(this, 1.0);
     }
 
     @Override
