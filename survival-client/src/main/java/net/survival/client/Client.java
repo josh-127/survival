@@ -62,7 +62,7 @@ public class Client implements AutoCloseable
     private Player player;
 
     private final EventQueue eventQueue;
-    private final AlarmService alarmService;
+    private final AlarmService[] alarmServices;
     private final LocomotiveService locomotiveService;
     private final ActorServiceCollection actorServiceCollection;
 
@@ -84,9 +84,11 @@ public class Client implements AutoCloseable
         fpvCamera = new FpvCamera(new Vector3d(60.0, 72.0, 20.0), 0.0f, -1.0f);
 
         eventQueue = new EventQueue();
-        alarmService = new AlarmService(eventQueue.getProducer());
+        alarmServices = new AlarmService[16];
+        for (int i = 0; i < alarmServices.length; ++i)
+            alarmServices[i] = new AlarmService(eventQueue.getProducer(), i);
         locomotiveService = new LocomotiveService(world, eventQueue.getProducer());
-        actorServiceCollection = new ActorServiceCollection(alarmService, locomotiveService);
+        actorServiceCollection = new ActorServiceCollection(alarmServices, locomotiveService);
     }
 
     @Override
@@ -162,7 +164,8 @@ public class Client implements AutoCloseable
         entitySystem.update(world, elapsedTime);
 
         world.collectActors();
-        alarmService.tick(elapsedTime);
+        for (AlarmService alarmService : alarmServices)
+            alarmService.tick(elapsedTime);
         locomotiveService.tick(elapsedTime);
 
         EventQueue.Consumer eventConsumer = eventQueue.getConsumer();

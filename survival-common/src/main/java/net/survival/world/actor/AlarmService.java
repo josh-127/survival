@@ -5,13 +5,13 @@ import java.util.Iterator;
 
 public class AlarmService
 {
-    public static final Object FINISHED_TOKEN = new Object();
-
     private final ArrayList<Instance> instances = new ArrayList<>();
     private final EventQueue.Producer eventQueue;
+    private final int id;
 
-    public AlarmService(EventQueue.Producer eventQueue) {
+    public AlarmService(EventQueue.Producer eventQueue, int id) {
         this.eventQueue = eventQueue;
+        this.id = id;
     }
 
     public void setAlarm(Actor actor, double duration) {
@@ -25,7 +25,7 @@ public class AlarmService
             instance.remainingTime -= elapsedTime;
 
             if (instance.remainingTime <= 0.0)
-                eventQueue.notifyActor(instance.actor, FINISHED_TOKEN);
+                eventQueue.notifyActor(instance.actor, new FinishedToken(id));
         }
     }
 
@@ -48,6 +48,14 @@ public class AlarmService
         public Instance(Actor actor, double duration) {
             this.actor = actor;
             remainingTime = duration;
+        }
+    }
+
+    public static class FinishedToken {
+        public final int alarmID;
+
+        public FinishedToken(int alarmID) {
+            this.alarmID = alarmID;
         }
     }
 }
