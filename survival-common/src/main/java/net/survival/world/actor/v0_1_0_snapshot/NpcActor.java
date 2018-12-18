@@ -19,18 +19,18 @@ public class NpcActor extends Actor
     @Override
     public void setup(ActorServiceCollection services) {
         services.getAlarmService(0).setAlarm(this, 1.0);
-        services.getAlarmService(1).setAlarm(this, 0.25);
+        services.getAlarmService(1).setAlarm(this, 0.16);
     }
 
     @Override
     protected void onAlarm(ActorServiceCollection services, int alarmID) {
         if (alarmID == 0) {
-            z += 0.25;
+            z += 1.0;
             services.getAlarmService(0).setAlarm(this, 1.0);
         }
         else if (alarmID == 1) {
-            yaw += 0.25;
-            services.getAlarmService(1).setAlarm(this, 0.25);
+            yaw += 0.05;
+            services.getAlarmService(1).setAlarm(this, 0.01);
         }
     }
 
@@ -47,5 +47,10 @@ public class NpcActor extends Actor
     @Override
     public double getZ() {
         return z;
+    }
+
+    @Override
+    public double getYaw() {
+        return yaw;
     }
 }
