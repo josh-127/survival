@@ -1,52 +1,52 @@
 package net.survival.world.actor.v0_1_0_snapshot;
 
+import net.survival.util.HitBox;
 import net.survival.world.actor.Actor;
 import net.survival.world.actor.ActorServiceCollection;
+import net.survival.world.actor.LocomotiveService;
 
 public class NpcActor extends Actor
 {
-    private double x;
-    private double y;
-    private double z;
+    private final double initialX;
+    private final double initialY;
+    private final double initialZ;
     private double yaw;
 
+    private LocomotiveService.Component locomotion;
+
     public NpcActor(double x, double y, double z) {
-        this.x = x;
-        this.y = y;
-        this.z = z;
+        initialX = x;
+        initialY = y;
+        initialZ = z;
     }
 
     @Override
     public void setup(ActorServiceCollection services) {
         services.getAlarmService(0).setAlarm(this, 1.0);
-        services.getAlarmService(1).setAlarm(this, 0.16);
+        locomotion = services.getLocomotiveService().subscribe(this, initialX, initialY, initialZ, HitBox.NPC);
     }
 
     @Override
     protected void onAlarm(ActorServiceCollection services, int alarmID) {
         if (alarmID == 0) {
-            z += 1.0;
+            yaw += 1.0;
             services.getAlarmService(0).setAlarm(this, 1.0);
-        }
-        else if (alarmID == 1) {
-            yaw += 0.05;
-            services.getAlarmService(1).setAlarm(this, 0.01);
         }
     }
 
     @Override
     public double getX() {
-        return x;
+        return locomotion.getX();
     }
 
     @Override
     public double getY() {
-        return y;
+        return locomotion.getY();
     }
 
     @Override
     public double getZ() {
-        return z;
+        return locomotion.getZ();
     }
 
     @Override

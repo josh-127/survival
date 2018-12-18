@@ -87,7 +87,7 @@ public class Client implements AutoCloseable
         alarmServices = new AlarmService[16];
         for (int i = 0; i < alarmServices.length; ++i)
             alarmServices[i] = new AlarmService(eventQueue.getProducer(), i);
-        locomotiveService = new LocomotiveService(world, eventQueue.getProducer());
+        locomotiveService = new LocomotiveService(eventQueue.getProducer(), world);
         actorServiceCollection = new ActorServiceCollection(alarmServices, locomotiveService);
     }
 
