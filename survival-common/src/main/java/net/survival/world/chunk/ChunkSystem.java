@@ -14,7 +14,7 @@ public class ChunkSystem
     private static final int GENERATOR_LOAD_RATE = 2;
 
     private final World world;
-    private final ChunkLoader chunkLoader;
+    private final ChunkStageMask chunkStageMask;
 
     private final ChunkDbPipe.ClientSide chunkDbPipe;
     private final ChunkProvider chunkGenerator;
@@ -22,13 +22,13 @@ public class ChunkSystem
 
     public ChunkSystem(
             World world,
-            ChunkLoader chunkLoader,
+            ChunkStageMask chunkStageMask,
             ChunkDbPipe.ClientSide chunkDbPipe,
             ChunkProvider chunkGenerator,
             WorldDecorator worldDecorator)
     {
         this.world = world;
-        this.chunkLoader = chunkLoader;
+        this.chunkStageMask = chunkStageMask;
 
         this.chunkDbPipe = chunkDbPipe;
         this.chunkGenerator = chunkGenerator;
@@ -36,7 +36,7 @@ public class ChunkSystem
     }
 
     public void update() {
-        LongSet requestedChunks = chunkLoader.getChunkPositions();
+        LongSet requestedChunks = chunkStageMask.getChunkPositions();
 
         ObjectIterator<Long2ObjectMap.Entry<Chunk>> iterator = world.getChunkMapFastIterator();
         while (iterator.hasNext()) {

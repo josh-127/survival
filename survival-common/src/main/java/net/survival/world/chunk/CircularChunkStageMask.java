@@ -3,7 +3,7 @@ package net.survival.world.chunk;
 import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
 import it.unimi.dsi.fastutil.longs.LongSet;
 
-public class CircularChunkLoader implements ChunkLoader
+public class CircularChunkStageMask implements ChunkStageMask
 {
     private final LongSet chunkPositions;
     private final int radius;
@@ -11,7 +11,7 @@ public class CircularChunkLoader implements ChunkLoader
     private int prevOffsetCX;
     private int prevOffsetCZ;
 
-    public CircularChunkLoader(int radius) {
+    public CircularChunkStageMask(int radius) {
         chunkPositions = new LongOpenHashSet(radius * radius);
         this.radius = radius;
 

@@ -38,7 +38,7 @@ import net.survival.world.chunk.ChunkServer;
 import net.survival.world.chunk.ChunkSystem;
 import net.survival.world.gen.InfiniteChunkGenerator;
 import net.survival.world.gen.decoration.WorldDecorator;
-import net.survival.world.chunk.CircularChunkLoader;
+import net.survival.world.chunk.CircularChunkStageMask;
 
 public class Client implements AutoCloseable
 {
@@ -49,7 +49,7 @@ public class Client implements AutoCloseable
 
     private final World world;
 
-    private final CircularChunkLoader chunkLoader;
+    private final CircularChunkStageMask chunkLoader;
     private final InfiniteChunkGenerator chunkGenerator;
     private final WorldDecorator worldDecorator;
     private final ChunkSystem chunkSystem;
@@ -69,7 +69,7 @@ public class Client implements AutoCloseable
     private Client(ChunkDbPipe.ClientSide chunkDbPipe) {
         world = new World();
 
-        chunkLoader = new CircularChunkLoader(10);
+        chunkLoader = new CircularChunkStageMask(10);
         chunkGenerator = new InfiniteChunkGenerator(22L);
         worldDecorator = WorldDecorator.createDefault();
         chunkSystem = new ChunkSystem(world, chunkLoader, chunkDbPipe, chunkGenerator, worldDecorator);
@@ -303,7 +303,7 @@ public class Client implements AutoCloseable
                 chunkDbPipe.getServerSide());
 
         Thread chunkServerThread = new Thread(chunkServer);
-        //chunkServerThread.start();
+        chunkServerThread.start();
 
         final double MILLIS_PER_TICK = SECONDS_PER_TICK * 1000.0;
         long now = System.currentTimeMillis();
