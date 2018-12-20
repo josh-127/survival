@@ -10,7 +10,7 @@ class ChunkDirectory
 {
     // The ordering of on-disk chunkDirectory entries depends on Long2LongMap's implementation.
     // However, any change in the implementation will still be backwards compatible with
-    // ChunkDatabase's file format.
+    // ChunkServer's file format.
     private final Long2ObjectOpenHashMap<VirtualAllocationUnit> entries;
 
     public ChunkDirectory() {

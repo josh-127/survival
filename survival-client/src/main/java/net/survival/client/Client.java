@@ -32,8 +32,9 @@ import net.survival.world.actor.EventQueue;
 import net.survival.world.actor.LocomotiveService;
 import net.survival.world.actor.v0_1_0_snapshot.NpcActor;
 import net.survival.world.chunk.Chunk;
-import net.survival.world.chunk.ChunkDatabase;
+import net.survival.world.chunk.ChunkDbPipe;
 import net.survival.world.chunk.ChunkPos;
+import net.survival.world.chunk.ChunkServer;
 import net.survival.world.chunk.ChunkSystem;
 import net.survival.world.gen.InfiniteChunkGenerator;
 import net.survival.world.gen.decoration.WorldDecorator;
@@ -49,7 +50,6 @@ public class Client implements AutoCloseable
     private final World world;
 
     private final CircularChunkLoader chunkLoader;
-    private final ChunkDatabase chunkDatabase;
     private final InfiniteChunkGenerator chunkGenerator;
     private final WorldDecorator worldDecorator;
     private final ChunkSystem chunkSystem;
@@ -66,15 +66,13 @@ public class Client implements AutoCloseable
     private final LocomotiveService locomotiveService;
     private final ActorServiceCollection actorServiceCollection;
 
-    private Client() {
+    private Client(ChunkDbPipe.ClientSide chunkDbPipe) {
         world = new World();
-        
+
         chunkLoader = new CircularChunkLoader(10);
-        chunkDatabase = new ChunkDatabase(new File(System.getProperty("user.dir") + "/../.world/chunks"));
-        chunkDatabase.start();
         chunkGenerator = new InfiniteChunkGenerator(22L);
         worldDecorator = WorldDecorator.createDefault();
-        chunkSystem = new ChunkSystem(world, chunkLoader, chunkDatabase, chunkGenerator, worldDecorator);
+        chunkSystem = new ChunkSystem(world, chunkLoader, chunkDbPipe, chunkGenerator, worldDecorator);
 
         entitySystem = new EntitySystem();
 
@@ -93,8 +91,6 @@ public class Client implements AutoCloseable
 
     @Override
     public void close() throws RuntimeException {
-        chunkSystem.saveAllChunks();
-        chunkDatabase.finish();
         compositeDisplay.close();
     }
 
@@ -290,7 +286,7 @@ public class Client implements AutoCloseable
         compositeDisplay.display(frameRate);
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         GLDisplay display = new GLDisplay(GraphicsSettings.WINDOW_WIDTH,
                 GraphicsSettings.WINDOW_HEIGHT, WINDOW_TITLE);
         GlfwKeyboardAdapter keyboardAdapter = new GlfwKeyboardAdapter();
@@ -299,7 +295,15 @@ public class Client implements AutoCloseable
         GLFW.glfwSetCursorPosCallback(display.getUnderlyingGlfwWindow(), mouseAdapter);
         GLRenderContext.init();
 
-        Client program = new Client();
+        ChunkDbPipe chunkDbPipe = new ChunkDbPipe();
+
+        Client program = new Client(chunkDbPipe.getClientSide());
+        ChunkServer chunkServer = new ChunkServer(
+                new File(System.getProperty("user.dir") + "/../.world/chunks"),
+                chunkDbPipe.getServerSide());
+
+        Thread chunkServerThread = new Thread(chunkServer);
+        //chunkServerThread.start();
 
         final double MILLIS_PER_TICK = SECONDS_PER_TICK * 1000.0;
         long now = System.currentTimeMillis();
@@ -341,6 +345,9 @@ public class Client implements AutoCloseable
 
             GLDisplay.pollEvents();
         }
+
+        chunkServer.stop();
+        chunkServerThread.join();
 
         program.close();
         display.close();
