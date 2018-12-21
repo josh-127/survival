@@ -4,6 +4,7 @@ public class ChunkRequest
 {
     public static final byte TYPE_GET = 1;
     public static final byte TYPE_POST = 2;
+    public static final byte TYPE_CLOSE = 3;
 
     public final long chunkPos;
     public final Chunk chunk;
@@ -29,5 +30,9 @@ public class ChunkRequest
 
     public static ChunkRequest createPostRequest(int cx, int cz, Chunk chunk) {
         return createPostRequest(ChunkPos.hashPos(cx, cz), chunk);
+    }
+
+    public static ChunkRequest createCloseRequest() {
+        return new ChunkRequest(0L, null, TYPE_CLOSE);
     }
 }

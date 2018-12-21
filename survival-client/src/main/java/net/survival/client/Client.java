@@ -33,6 +33,7 @@ import net.survival.world.actor.v0_1_0_snapshot.NpcActor;
 import net.survival.world.chunk.Chunk;
 import net.survival.world.chunk.ChunkDbPipe;
 import net.survival.world.chunk.ChunkPos;
+import net.survival.world.chunk.ChunkRequest;
 import net.survival.world.chunk.ChunkServer;
 import net.survival.world.chunk.ChunkSystem;
 import net.survival.world.gen.InfiniteChunkGenerator;
@@ -342,7 +343,7 @@ public class Client implements AutoCloseable
             GLDisplay.pollEvents();
         }
 
-        chunkServer.stop();
+        chunkDbPipe.getClientSide().request(ChunkRequest.createCloseRequest());
         chunkServerThread.join();
 
         program.close();

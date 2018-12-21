@@ -24,10 +24,6 @@ public class ChunkServer implements Runnable
         this.chunkPipe = chunkPipe;
     }
 
-    public void stop() {
-        running.set(false);
-    }
-
     @Override
     @SuppressWarnings("resource")
     public void run() {
@@ -39,7 +35,10 @@ public class ChunkServer implements Runnable
                 loadMetadata();
 
             while (running.get()) {
-                for (ChunkRequest request : chunkPipe.getRequests()) {
+                ChunkRequest request;
+
+                do {
+                    request = chunkPipe.waitForRequest();
                     long chunkPos = request.chunkPos;
 
                     if (request.type == ChunkRequest.TYPE_GET) {
@@ -49,7 +48,12 @@ public class ChunkServer implements Runnable
                     else if (request.type == ChunkRequest.TYPE_POST) {
                         saveChunk(chunkPos, request.chunk);
                     }
+                    else if (request.type == ChunkRequest.TYPE_CLOSE) {
+                        running.set(false);
+                        break;
+                    }
                 }
+                while (request != null);
             }
 
             saveMetadata();
