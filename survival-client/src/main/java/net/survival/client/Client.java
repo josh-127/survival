@@ -18,6 +18,7 @@ import net.survival.client.input.GlfwMouseAdapter;
 import net.survival.client.input.Key;
 import net.survival.client.input.Keyboard;
 import net.survival.client.input.Mouse;
+import net.survival.client.ui.BasicUI;
 import net.survival.entity.CharacterModel;
 import net.survival.entity.Npc;
 import net.survival.entity.NpcMovementStyle;
@@ -56,6 +57,9 @@ public class Client implements AutoCloseable
 
     private final EntitySystem entitySystem;
 
+    private final BasicUI basicUI = new BasicUI();
+    private final BasicUI.Server uiServer;
+
     private final CompositeDisplay compositeDisplay;
     private final FpvCamera fpvCamera;
 
@@ -76,8 +80,13 @@ public class Client implements AutoCloseable
 
         entitySystem = new EntitySystem();
 
-        compositeDisplay = new CompositeDisplay(world, GraphicsSettings.WINDOW_WIDTH,
-                GraphicsSettings.WINDOW_HEIGHT);
+        uiServer = basicUI.getServer();
+
+        compositeDisplay = new CompositeDisplay(
+                world,
+                GraphicsSettings.WINDOW_WIDTH,
+                GraphicsSettings.WINDOW_HEIGHT,
+                basicUI.getClient());
 
         fpvCamera = new FpvCamera(new Vector3d(60.0, 72.0, 20.0), 0.0f, -1.0f);
 
@@ -260,6 +269,8 @@ public class Client implements AutoCloseable
             else
                 Mouse.setMode(Mouse.MODE_NORMAL);
         }
+
+        uiServer.button("1234567890", 0, 48, 80, 32 + 48);
 
         Iterator<Long2ObjectMap.Entry<Chunk>> chunkMapIt = world.getChunkMapFastIterator();
         while (chunkMapIt.hasNext()) {

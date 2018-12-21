@@ -6,6 +6,7 @@ import net.survival.client.graphics.opengl.GLImmediateDrawCall;
 import net.survival.client.graphics.opengl.GLMatrixStack;
 import net.survival.client.graphics.opengl.GLRenderContext;
 import net.survival.client.graphics.opengl.GLState;
+import net.survival.client.ui.BasicUI;
 import net.survival.world.World;
 
 public class CompositeDisplay implements RenderContext, GraphicsResource
@@ -15,7 +16,7 @@ public class CompositeDisplay implements RenderContext, GraphicsResource
     private final WorldDisplay worldDisplay;
     private final SkyboxDisplay skyboxDisplay = new SkyboxDisplay();
     private final CloudDisplay cloudDisplay = new CloudDisplay();
-    private final FontRenderer fontRenderer = new FontRenderer();
+    private final UIDisplay uiDisplay;
 
     private int viewportWidth;
     private int viewportHeight;
@@ -26,16 +27,18 @@ public class CompositeDisplay implements RenderContext, GraphicsResource
     private Matrix4f cameraProjectionMatrix = new Matrix4f();
     private Matrix4f hudProjectionMatrix = new Matrix4f();
 
-    public CompositeDisplay(World world, int viewportWidth, int viewportHeight) {
+    public CompositeDisplay(World world, int viewportWidth, int viewportHeight, BasicUI.Client uiClientPipe) {
         worldDisplay = new WorldDisplay(world, camera, 512.0f);
         this.viewportWidth = viewportWidth;
         this.viewportHeight = viewportHeight;
+
+        uiDisplay = new UIDisplay(uiClientPipe);
     }
 
     @Override
     public void close() {
         worldDisplay.close();
-        fontRenderer.close();
+        uiDisplay.close();
     }
 
     @Override
@@ -289,14 +292,12 @@ public class CompositeDisplay implements RenderContext, GraphicsResource
         // Display HUD.
         if (isVisible(VisibilityFlags.HUD)) {
             hudProjectionMatrix.identity();
-            hudProjectionMatrix.ortho2D(-getViewportAspectRatio(), getViewportAspectRatio(), -1.0f, 1.0f);
+            hudProjectionMatrix.ortho2D(0.0f, viewportWidth, viewportHeight, 0.0f);
             GLMatrixStack.setProjectionMatrix(hudProjectionMatrix);
-    
+
             GLMatrixStack.push();
             GLMatrixStack.loadIdentity();
-            GLMatrixStack.translate(-getViewportAspectRatio() * 0.9375f, 0.875f, 0.0f);
-            GLMatrixStack.scale(0.05f, 0.05f, 0.05f);
-            fontRenderer.drawText(String.valueOf(frameRate), 0.0f, 0.0f, 0.0f);
+            uiDisplay.display();
             GLMatrixStack.pop();
         }
     }

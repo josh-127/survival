@@ -15,8 +15,10 @@ class FontRenderer implements GraphicsResource
         fontTextureAtlas.close();
     }
 
-    public void drawText(String text, float x, float y, float z) {
+    public void drawText(String text, float x, float y, float z, float scaleX, float scaleY) {
         float cursorX = x;
+        float fontWidth = fontTextureAtlas.fontWidth * scaleX;
+        float fontHeight = fontTextureAtlas.fontHeight * scaleY;
 
         GLImmediateDrawCall drawCall = GLImmediateDrawCall
                 .beginTriangles(fontTextureAtlas.characters);
@@ -29,14 +31,14 @@ class FontRenderer implements GraphicsResource
             float u2 = fontTextureAtlas.getTexCoordU2(c);
             float v2 = fontTextureAtlas.getTexCoordV2(c);
 
-            drawCall.texturedVertex(cursorX,        y,        z, u1, v1);
-            drawCall.texturedVertex(cursorX + 1.0f, y,        z, u2, v1);
-            drawCall.texturedVertex(cursorX + 1.0f, y + 1.0f, z, u2, v2);
-            drawCall.texturedVertex(cursorX + 1.0f, y + 1.0f, z, u2, v2);
-            drawCall.texturedVertex(cursorX,        y + 1.0f, z, u1, v2);
-            drawCall.texturedVertex(cursorX,        y,        z, u1, v1);
+            drawCall.texturedVertex(cursorX,             y + fontHeight, z, u1, v2);
+            drawCall.texturedVertex(cursorX + fontWidth, y + fontHeight, z, u2, v2);
+            drawCall.texturedVertex(cursorX + fontWidth, y,              z, u2, v1);
+            drawCall.texturedVertex(cursorX + fontWidth, y,              z, u2, v1);
+            drawCall.texturedVertex(cursorX,             y,              z, u1, v1);
+            drawCall.texturedVertex(cursorX,             y + fontHeight, z, u1, v2);
 
-            cursorX += 1.0f;
+            cursorX += fontWidth;
         }
 
         drawCall.end();

@@ -9,6 +9,8 @@ import net.survival.client.graphics.opengl.GLWrapMode;
 class FontTextureAtlas implements GraphicsResource
 {
     public final GLTexture characters;
+    public final int fontWidth;
+    public final int fontHeight;
 
     public FontTextureAtlas() {
         Bitmap bitmap = Bitmap.fromFile(GraphicsSettings.FONT_PATH);
@@ -22,6 +24,9 @@ class FontTextureAtlas implements GraphicsResource
                 .setWrapS(GLWrapMode.REPEAT)
                 .setWrapT(GLWrapMode.REPEAT)
                 .endBind();
+
+        fontWidth = bitmap.getWidth() / 16;
+        fontHeight = bitmap.getHeight() / 16;
     }
 
     @Override
@@ -34,7 +39,7 @@ class FontTextureAtlas implements GraphicsResource
     }
 
     public float getTexCoordV1(char c) {
-        return getTexCoordV2(c) + (1.0f / 16.0f);
+        return (c / 16) / 16.0f;
     }
 
     public float getTexCoordU2(char c) {
@@ -42,6 +47,6 @@ class FontTextureAtlas implements GraphicsResource
     }
 
     public float getTexCoordV2(char c) {
-        return (c / 16) / 16.0f;
+        return getTexCoordV1(c) + (1.0f / 16.0f);
     }
 }
