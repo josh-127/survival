@@ -101,6 +101,8 @@ public class Client implements AutoCloseable
     @Override
     public void close() throws RuntimeException {
         compositeDisplay.close();
+
+        chunkSystem.saveAllChunks();
     }
 
     public void tick(double elapsedTime) {
@@ -305,6 +307,14 @@ public class Client implements AutoCloseable
     }
 
     public static void main(String[] args) throws InterruptedException {
+        ChunkDbPipe chunkDbPipe = new ChunkDbPipe();
+        ChunkServer chunkServer = new ChunkServer(
+                new File(System.getProperty("user.dir") + "/../.world/chunks"),
+                chunkDbPipe.getServerSide());
+
+        Thread chunkServerThread = new Thread(chunkServer);
+        chunkServerThread.start();
+
         GLDisplay display = new GLDisplay(GraphicsSettings.WINDOW_WIDTH,
                 GraphicsSettings.WINDOW_HEIGHT, WINDOW_TITLE);
         GlfwKeyboardAdapter keyboardAdapter = new GlfwKeyboardAdapter();
@@ -313,15 +323,7 @@ public class Client implements AutoCloseable
         GLFW.glfwSetCursorPosCallback(display.getUnderlyingGlfwWindow(), mouseAdapter);
         GLRenderContext.init();
 
-        ChunkDbPipe chunkDbPipe = new ChunkDbPipe();
-
         Client program = new Client(chunkDbPipe.getClientSide());
-        ChunkServer chunkServer = new ChunkServer(
-                new File(System.getProperty("user.dir") + "/../.world/chunks"),
-                chunkDbPipe.getServerSide());
-
-        Thread chunkServerThread = new Thread(chunkServer);
-        chunkServerThread.start();
 
         final double MILLIS_PER_TICK = SECONDS_PER_TICK * 1000.0;
         long now = System.currentTimeMillis();
@@ -361,10 +363,10 @@ public class Client implements AutoCloseable
             GLDisplay.pollEvents();
         }
 
-        chunkDbPipe.getClientSide().request(ChunkRequest.createCloseRequest());
-        chunkServerThread.join();
-
         program.close();
         display.close();
+
+        chunkDbPipe.getClientSide().request(ChunkRequest.createCloseRequest());
+        chunkServerThread.join();
     }
 }

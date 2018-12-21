@@ -44,10 +44,17 @@ public class ChunkSystem
         saveTimer = SAVE_RATE;
     }
 
+    public void saveAllChunks() {
+        saveChunks();
+    }
+
     public void update(double elapsedTime) {
         saveTimer -= elapsedTime;
-        if (saveTimer <= 0.0)
+        if (saveTimer <= 0.0) {
             saveChunks();
+            maskOutChunks();
+            saveTimer = SAVE_RATE;
+        }
 
         LongSet missingChunks = getMissingChunkPosSet();
         loadMissingChunksFromDb(missingChunks);
@@ -70,8 +77,6 @@ public class ChunkSystem
     }
 
     private void saveChunks() {
-        System.out.println("Saving chunks...");
-
         // Save all loaded chunks.
         ObjectIterator<Long2ObjectMap.Entry<Chunk>> iterator = world.getChunkMapFastIterator();
         while (iterator.hasNext()) {
@@ -81,9 +86,10 @@ public class ChunkSystem
 
             chunkDbPipe.request(ChunkRequest.createPostRequest(hashedPos, chunk));
         }
+    }
 
-        // Mask out chunks after saving.
-        iterator = world.getChunkMapFastIterator();
+    private void maskOutChunks() {
+        ObjectIterator<Long2ObjectMap.Entry<Chunk>> iterator = world.getChunkMapFastIterator();
         LongSet mask = chunkStageMask.getChunkPositions();
 
         while (iterator.hasNext()) {
@@ -93,8 +99,6 @@ public class ChunkSystem
             if (!mask.contains(hashedPos))
                 iterator.remove();
         }
-
-        saveTimer = SAVE_RATE;
     }
 
     private void loadMissingChunksFromDb(LongSet missingChunks) {
