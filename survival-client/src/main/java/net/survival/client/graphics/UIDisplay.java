@@ -54,7 +54,13 @@ public class UIDisplay implements GraphicsResource
     }
 
     private void displayRectangle(GLImmediateDrawCall drawCall, RectangleElement e) {
-        drawCall.color(1.0f, 1.0f, 1.0f);
+        if (e.held)
+            drawCall.color(0.2f, 0.2f, 0.2f);
+        else if (e.hovered)
+            drawCall.color(0.8f, 0.8f, 0.8f);
+        else
+            drawCall.color(0.5f, 0.5f, 0.5f);
+
         drawCall.vertex(e.left, e.bottom, 0.0f);
         drawCall.vertex(e.right, e.bottom, 0.0f);
         drawCall.vertex(e.right, e.top, 0.0f);

@@ -272,7 +272,7 @@ public class Client implements AutoCloseable
                 Mouse.setMode(Mouse.MODE_NORMAL);
         }
 
-        uiServer.button("1234567890", 0, 48, 80, 32 + 48);
+        uiServer.button("...", 0, 48, 80, 32 + 48);
 
         Iterator<Long2ObjectMap.Entry<Chunk>> chunkMapIt = world.getChunkMapFastIterator();
         while (chunkMapIt.hasNext()) {
