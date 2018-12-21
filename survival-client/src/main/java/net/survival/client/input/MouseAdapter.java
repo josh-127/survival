@@ -18,4 +18,8 @@ public abstract class MouseAdapter
         Mouse.prevRmbDown = Mouse.rmbDown;
         Mouse.rmbDown = down;
     }
+
+    protected void clearModeChangedFlag() {
+        Mouse.modeChanged = false;
+    }
 }

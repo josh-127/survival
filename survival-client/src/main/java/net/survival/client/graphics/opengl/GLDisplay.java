@@ -26,7 +26,6 @@ public class GLDisplay implements GraphicsResource
         }
 
         window = glfwCreateWindow(width, height, title, 0, 0);
-        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
         glfwMakeContextCurrent(window);
 
         long monitor = glfwGetPrimaryMonitor();

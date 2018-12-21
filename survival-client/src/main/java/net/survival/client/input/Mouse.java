@@ -2,6 +2,9 @@ package net.survival.client.input;
 
 public final class Mouse
 {
+    public static final int MODE_NORMAL = 0;
+    public static final int MODE_CENTERED = 1;
+
     static double x;
     static double y;
     static double prevX;
@@ -10,6 +13,8 @@ public final class Mouse
     static boolean rmbDown;
     static boolean prevLmbDown;
     static boolean prevRmbDown;
+    static int mode;
+    static boolean modeChanged;
 
     private Mouse() {}
 
@@ -59,5 +64,14 @@ public final class Mouse
 
     public static boolean isRmbReleased() {
         return !rmbDown && prevRmbDown;
+    }
+
+    public static int getMode() {
+        return mode;
+    }
+
+    public static void setMode(int to) {
+        mode = to;
+        modeChanged = true;
     }
 }

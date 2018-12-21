@@ -254,6 +254,13 @@ public class Client implements AutoCloseable
             compositeDisplay.setCloudSpeed(spx, spz);
         }
 
+        if (Keyboard.isKeyPressed(Key.TAB)) {
+            if (Mouse.getMode() == Mouse.MODE_NORMAL)
+                Mouse.setMode(Mouse.MODE_CENTERED);
+            else
+                Mouse.setMode(Mouse.MODE_NORMAL);
+        }
+
         Iterator<Long2ObjectMap.Entry<Chunk>> chunkMapIt = world.getChunkMapFastIterator();
         while (chunkMapIt.hasNext()) {
             Long2ObjectMap.Entry<Chunk> entry = chunkMapIt.next();
