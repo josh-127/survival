@@ -29,10 +29,14 @@ public class ChunkServer implements Runnable
     }
 
     @Override
+    @SuppressWarnings("resource")
     public void run() {
         try {
-            if (!loadMetadata())
-                return;
+            boolean fileExists = file.exists();
+            fileChannel = new RandomAccessFile(file, "rw").getChannel();
+
+            if (fileExists)
+                loadMetadata();
 
             while (running.get()) {
                 for (ChunkRequest request : chunkPipe.getRequests()) {
@@ -56,12 +60,18 @@ public class ChunkServer implements Runnable
         }
     }
 
-    private Chunk loadChunk(long chunkPos) {
+    private Chunk loadChunk(long chunkPos) throws IOException {
         VirtualAllocationUnit existingVau = directory.get(chunkPos);
         if (existingVau == null)
             return null;
 
         ByteBuffer compressedData = ByteBuffer.allocateDirect((int) existingVau.length);
+
+        fileChannel.position(existingVau.address);
+        while (compressedData.hasRemaining())
+            fileChannel.read(compressedData);
+        compressedData.flip();
+
         Chunk chunk = ChunkCodec.decompressChunk(compressedData);
 
         return chunk;
@@ -84,39 +94,28 @@ public class ChunkServer implements Runnable
             fileChannel.write(compressedData);
     }
 
-    @SuppressWarnings("resource")
-    private boolean loadMetadata() throws IOException {
-        boolean fileExists = file.exists();
+    private void loadMetadata() throws IOException {
+        ByteBuffer buffer = ByteBuffer.allocate(FOOTER_LENGTH);
+        fileChannel.position(file.length() - FOOTER_LENGTH);
+        while (buffer.hasRemaining())
+            fileChannel.read(buffer);
+        buffer.flip();
 
-        if (fileExists) {
-            fileChannel = new RandomAccessFile(file, "rw").getChannel();
+        VirtualAllocationUnit allocatorVau = new VirtualAllocationUnit();
+        VirtualAllocationUnit directoryVau = new VirtualAllocationUnit();
+        allocatorVau.readFrom(buffer);
+        directoryVau.readFrom(buffer);
 
-            ByteBuffer buffer = ByteBuffer.allocate(FOOTER_LENGTH);
-            fileChannel.position(file.length() - FOOTER_LENGTH);
-            while (buffer.hasRemaining())
-                fileChannel.read(buffer);
-            buffer.flip();
+        int metadataSectionSize = (int) (allocatorVau.length + directoryVau.length);
+        ByteBuffer metadataBuffer = ByteBuffer.allocateDirect(metadataSectionSize);
 
-            VirtualAllocationUnit allocatorVau = new VirtualAllocationUnit();
-            VirtualAllocationUnit directoryVau = new VirtualAllocationUnit();
-            allocatorVau.readFrom(buffer);
-            directoryVau.readFrom(buffer);
+        fileChannel.position(allocatorVau.address);
+        while (metadataBuffer.hasRemaining())
+            fileChannel.read(metadataBuffer);
+        metadataBuffer.flip();
 
-            int metadataSectionSize = (int) (allocatorVau.length + directoryVau.length);
-            ByteBuffer metadataBuffer = ByteBuffer.allocateDirect(metadataSectionSize);
-
-            fileChannel.position(allocatorVau.address);
-            while (metadataBuffer.hasRemaining())
-                fileChannel.read(metadataBuffer);
-            metadataBuffer.flip();
-
-            allocator.readFrom(metadataBuffer);
-            directory.readFrom(metadataBuffer);
-
-            return true;
-        }
-
-        return false;
+        allocator.readFrom(metadataBuffer);
+        directory.readFrom(metadataBuffer);
     }
 
     private void saveMetadata() throws IOException {

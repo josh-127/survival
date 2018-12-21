@@ -154,7 +154,7 @@ public class Client implements AutoCloseable
         int cz = ChunkPos.toChunkZ((int) Math.floor(fpvCamera.position.z));
         chunkLoader.setCenter(cx, cz);
 
-        chunkSystem.update();
+        chunkSystem.update(elapsedTime);
 
         entitySystem.update(world, elapsedTime);
 
