@@ -54,21 +54,6 @@ public class ChunkSystem
         generateChunks(missingChunks.iterator());
     }
 
-    private void saveChunks() {
-        System.out.println("Saving chunks...");
-
-        ObjectIterator<Long2ObjectMap.Entry<Chunk>> iterator = world.getChunkMapFastIterator();
-        while (iterator.hasNext()) {
-            Long2ObjectMap.Entry<Chunk> entry = iterator.next();
-            long hashedPos = entry.getLongKey();
-            Chunk chunk = entry.getValue();
-
-            chunkDbPipe.request(ChunkRequest.createPostRequest(hashedPos, chunk));
-        }
-
-        saveTimer = SAVE_RATE;
-    }
-
     private LongSet getMissingChunkPosSet() {
         LongSet missingChunks = chunkStageMask.getChunkPositions();
 
@@ -82,6 +67,34 @@ public class ChunkSystem
         }
 
         return missingChunks;
+    }
+
+    private void saveChunks() {
+        System.out.println("Saving chunks...");
+
+        // Save all loaded chunks.
+        ObjectIterator<Long2ObjectMap.Entry<Chunk>> iterator = world.getChunkMapFastIterator();
+        while (iterator.hasNext()) {
+            Long2ObjectMap.Entry<Chunk> entry = iterator.next();
+            long hashedPos = entry.getLongKey();
+            Chunk chunk = entry.getValue();
+
+            chunkDbPipe.request(ChunkRequest.createPostRequest(hashedPos, chunk));
+        }
+
+        // Mask out chunks after saving.
+        iterator = world.getChunkMapFastIterator();
+        LongSet mask = chunkStageMask.getChunkPositions();
+
+        while (iterator.hasNext()) {
+            Long2ObjectMap.Entry<Chunk> entry = iterator.next();
+            long hashedPos = entry.getLongKey();
+
+            if (!mask.contains(hashedPos))
+                iterator.remove();
+        }
+
+        saveTimer = SAVE_RATE;
     }
 
     private void loadMissingChunksFromDb(LongSet missingChunks) {
