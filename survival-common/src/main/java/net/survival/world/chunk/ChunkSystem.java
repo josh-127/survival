@@ -13,6 +13,7 @@ import net.survival.world.gen.decoration.WorldDecorator;
 public class ChunkSystem
 {
     private static final int GENERATOR_LOAD_RATE = 2;
+    private static final int DATABASE_LOAD_RATE = 4;
     private static final double SAVE_RATE = 10.0;
 
     private final World world;
@@ -86,7 +87,7 @@ public class ChunkSystem
     private void loadMissingChunksFromDb(LongSet missingChunks) {
         LongIterator iterator = missingChunks.iterator();
 
-        while (iterator.hasNext()) {
+        for (int i = 0; iterator.hasNext() && i < DATABASE_LOAD_RATE; ++i) {
             long hashedPos = iterator.nextLong();
 
             if (!loadingChunks.contains(hashedPos)) {
