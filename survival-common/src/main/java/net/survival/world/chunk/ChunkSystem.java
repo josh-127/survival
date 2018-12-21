@@ -1,5 +1,7 @@
 package net.survival.world.chunk;
 
+import java.util.Iterator;
+
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.LongArraySet;
 import it.unimi.dsi.fastutil.longs.LongIterator;
@@ -120,7 +122,6 @@ public class ChunkSystem
             missingChunksIt.remove();
         }
 
-        /*
         Iterator<Long2ObjectMap.Entry<Chunk>> chunkMapIt = world.getChunkMapFastIterator();
         while (chunkMapIt.hasNext()) {
             Long2ObjectMap.Entry<Chunk> entry = chunkMapIt.next();
@@ -142,6 +143,5 @@ public class ChunkSystem
                 chunk.markDecorated();
             }
         }
-        */
     }
 }
