@@ -37,7 +37,7 @@ public class BasicUI
                     Mouse.getY() >= top &&
                     Mouse.getY() < bottom;
 
-            boolean held = Mouse.isLmbDown();
+            boolean held = hovered && Mouse.isLmbDown();
 
             controlsToDisplay.add(ControlDisplayDesc.createButton(
                     hovered, held, left, top, right, bottom, text, fontSize));
