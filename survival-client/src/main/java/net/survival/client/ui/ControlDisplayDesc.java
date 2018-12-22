@@ -13,6 +13,7 @@ public class ControlDisplayDesc
     public final int right;
     public final int bottom;
     public final String text;
+    public final double fontSize;
 
     private ControlDisplayDesc(
             int type,
@@ -22,7 +23,8 @@ public class ControlDisplayDesc
             int top,
             int right,
             int bottom,
-            String text)
+            String text,
+            double fontSize)
     {
         this.type = type;
         this.hovered = hovered;
@@ -32,6 +34,7 @@ public class ControlDisplayDesc
         this.right = right;
         this.bottom = bottom;
         this.text = text;
+        this.fontSize = fontSize;
     }
 
     public static ControlDisplayDesc createButton(
@@ -41,12 +44,13 @@ public class ControlDisplayDesc
             int top,
             int right,
             int bottom,
-            String text)
+            String text,
+            double fontSize)
     {
-        return new ControlDisplayDesc(TYPE_BUTTON, hovered, held, left, top, right, bottom, text);
+        return new ControlDisplayDesc(TYPE_BUTTON, hovered, held, left, top, right, bottom, text, fontSize);
     }
 
-    public static ControlDisplayDesc createLabel(int left, int top, String text) {
-        return new ControlDisplayDesc(TYPE_LABEL, false, false, left, top, 0, 0, text);
+    public static ControlDisplayDesc createLabel(int left, int top, String text, double fontSize) {
+        return new ControlDisplayDesc(TYPE_LABEL, false, false, left, top, 0, 0, text, fontSize);
     }
 }

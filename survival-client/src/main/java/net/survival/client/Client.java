@@ -272,7 +272,7 @@ public class Client implements AutoCloseable
                 Mouse.setMode(Mouse.MODE_NORMAL);
         }
 
-        if (uiServer.button("...", 0, 48, 80, 32 + 48)) {
+        if (uiServer.button("...", 3.0, 0, 48, 80, 32 + 48)) {
             compositeDisplay.setCloudSeed(compositeDisplay.getCloudSeed() + 1L);
         }
 

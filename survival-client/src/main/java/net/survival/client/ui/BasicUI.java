@@ -23,7 +23,14 @@ public class BasicUI
 
     public class Server
     {
-        public boolean button(String text, int left, int top, int right, int bottom) {
+        public boolean button(
+                String text,
+                double fontSize,
+                int left,
+                int top,
+                int right,
+                int bottom)
+        {
             boolean hovered =
                     Mouse.getX() >= left &&
                     Mouse.getX() < right &&
@@ -32,12 +39,13 @@ public class BasicUI
 
             boolean held = Mouse.isLmbDown();
 
-            controlsToDisplay.add(ControlDisplayDesc.createButton(hovered, held, left, top, right, bottom, text));
+            controlsToDisplay.add(ControlDisplayDesc.createButton(
+                    hovered, held, left, top, right, bottom, text, fontSize));
             return hovered && Mouse.isLmbReleased();
         }
 
-        public void label(String text, int left, int top) {
-            controlsToDisplay.add(ControlDisplayDesc.createLabel(left, top, text));
+        public void label(String text, double fontSize, int left, int top) {
+            controlsToDisplay.add(ControlDisplayDesc.createLabel(left, top, text, fontSize));
         }
     }
 

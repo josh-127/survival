@@ -33,10 +33,12 @@ public class UIDisplay implements GraphicsResource
                         desc.top,
                         desc.right,
                         desc.bottom));
-                textToDisplay.add(new TextElement(desc.text, desc.left, desc.top));
+                textToDisplay.add(new TextElement(
+                        desc.text, desc.fontSize, desc.left, desc.top));
             }
             else if (desc.type == ControlDisplayDesc.TYPE_LABEL) {
-                textToDisplay.add(new TextElement(desc.text, desc.left, desc.top));
+                textToDisplay.add(new TextElement(
+                        desc.text, desc.fontSize, desc.left, desc.top));
             }
         }
 
@@ -70,7 +72,13 @@ public class UIDisplay implements GraphicsResource
     }
 
     private void displayText(TextElement e) {
-        fontRenderer.drawText(e.text, e.left, e.top, 0.0f, 3.0f, 3.0f);
+        fontRenderer.drawText(
+                e.text,
+                e.left,
+                e.top,
+                0.0f,
+                (float) e.fontSize,
+                (float) e.fontSize);
     }
 
     private static class RectangleElement
@@ -102,11 +110,13 @@ public class UIDisplay implements GraphicsResource
     private static class TextElement
     {
         public final String text;
+        public final double fontSize;
         public final int left;
         public final int top;
 
-        public TextElement(String text, int left, int top) {
+        public TextElement(String text, double fontSize, int left, int top) {
             this.text = text;
+            this.fontSize = fontSize;
             this.left = left;
             this.top = top;
         }
