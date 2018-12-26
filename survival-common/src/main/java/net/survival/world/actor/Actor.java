@@ -6,14 +6,14 @@ public abstract class Actor
 
     public abstract void setup(ActorServiceCollection services);
 
-    public void onEventNotification(Object eventArgs) {
+    public void onEventNotification(EventQueue.Producer eventQueue, Object eventArgs) {
         if (eventArgs instanceof AlarmService.FinishedToken) {
             AlarmService.FinishedToken finishedToken = (AlarmService.FinishedToken) eventArgs;
-            onAlarm(finishedToken.alarmID);
+            onAlarm(eventQueue, finishedToken.alarmID);
         }
     }
 
-    protected void onAlarm(int alarmID) {}
+    protected void onAlarm(EventQueue.Producer eventQueue, int alarmID) {}
 
     public abstract double getX();
 
