@@ -177,7 +177,7 @@ public class Client implements AutoCloseable
 
         EventQueue.Consumer eventConsumer = eventQueue.getConsumer();
         for (EventQueue.EventPacket eventPacket : eventConsumer) {
-            eventPacket.target.onEventNotification(actorServiceCollection, eventPacket.eventArgs);
+            eventPacket.target.onEventNotification(eventPacket.eventArgs);
         }
 
         if (player != null) {

@@ -27,10 +27,9 @@ public class NpcActor extends Actor
     }
 
     @Override
-    protected void onAlarm(ActorServiceCollection services, int alarmID) {
+    protected void onAlarm(int alarmID) {
         if (alarmID == 0) {
             yaw += 1.0;
-            services.getAlarmService(0).setAlarm(this, 1.0);
         }
     }
 
