@@ -3,9 +3,10 @@ package net.survival.world.actor.v0_1_0_snapshot;
 import net.survival.util.HitBox;
 import net.survival.world.actor.Actor;
 import net.survival.world.actor.ActorServiceCollection;
+import net.survival.world.actor.Locomotive;
 import net.survival.world.actor.LocomotiveService;
 
-public class NpcActor extends Actor
+public class NpcActor extends Actor implements Locomotive
 {
     private final double initialX;
     private final double initialY;
@@ -51,5 +52,15 @@ public class NpcActor extends Actor
     @Override
     public double getYaw() {
         return yaw;
+    }
+
+    @Override
+    public double getMovementDirectionX() {
+        return 0.0;
+    }
+
+    @Override
+    public double getMovementDirectionZ() {
+        return 1.0;
     }
 }

@@ -6,6 +6,7 @@ import java.util.Map;
 
 import net.survival.block.BlockType;
 import net.survival.util.HitBox;
+import net.survival.util.MathEx;
 import net.survival.world.World;
 import net.survival.world.chunk.Chunk;
 
@@ -24,6 +25,9 @@ public class LocomotiveService
     }
 
     public LocomotiveService.Component subscribe(Actor actor, double x, double y, double z, HitBox hitBox) {
+        if (!(actor instanceof Locomotive))
+            throw new IllegalArgumentException("Actor must implement the Locomotive interface.");
+
         Component component = new Component(x, y, z, hitBox);
         objects.put(actor, component);
 
@@ -44,6 +48,20 @@ public class LocomotiveService
 
     public void tick(double elapsedTime) {
         collect();
+
+        for (Actor actor : world.getActors()) {
+            Component component = objects.get(actor);
+            if (component == null)
+                continue;
+
+            Locomotive locomotive = (Locomotive) actor;
+            double directionX = locomotive.getMovementDirectionX();
+            double directionZ = locomotive.getMovementDirectionZ();
+            double speed = MathEx.magnitude(directionX, directionZ);
+
+            component.velocityX = directionX / speed;
+            component.velocityZ = directionZ / speed;
+        }
 
         applyGravity(world, elapsedTime);
         applyVelocities(world, elapsedTime);
