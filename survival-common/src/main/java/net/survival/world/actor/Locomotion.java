@@ -73,10 +73,17 @@ public class Locomotion
 
                 double directionX = actor.getMovementDirectionX();
                 double directionZ = actor.getMovementDirectionZ();
-                double speed = MathEx.magnitude(directionX, directionZ);
+                double sqrSpeed = MathEx.sqrMagnitude(directionX, directionZ);
 
-                component.velocityX = directionX / speed;
-                component.velocityZ = directionZ / speed;
+                if (sqrSpeed > 0.0) {
+                    double speed = Math.sqrt(sqrSpeed);
+                    component.velocityX = directionX / speed;
+                    component.velocityZ = directionZ / speed;
+                }
+                else {
+                    component.velocityX = 0.0;
+                    component.velocityZ = 0.0;
+                }
             }
 
             applyGravity(world, elapsedTime);
