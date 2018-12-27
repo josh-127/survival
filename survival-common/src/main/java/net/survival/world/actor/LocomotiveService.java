@@ -25,9 +25,6 @@ public class LocomotiveService
     }
 
     public LocomotiveService.Component subscribe(Actor actor, double x, double y, double z, HitBox hitBox) {
-        if (!(actor instanceof Locomotive))
-            throw new IllegalArgumentException("Actor must implement the Locomotive interface.");
-
         Component component = new Component(x, y, z, hitBox);
         objects.put(actor, component);
 
@@ -54,9 +51,8 @@ public class LocomotiveService
             if (component == null)
                 continue;
 
-            Locomotive locomotive = (Locomotive) actor;
-            double directionX = locomotive.getMovementDirectionX();
-            double directionZ = locomotive.getMovementDirectionZ();
+            double directionX = actor.getMovementDirectionX();
+            double directionZ = actor.getMovementDirectionZ();
             double speed = MathEx.magnitude(directionX, directionZ);
 
             component.velocityX = directionX / speed;

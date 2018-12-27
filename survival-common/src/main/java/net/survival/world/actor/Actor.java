@@ -56,4 +56,12 @@ public abstract class Actor
     protected void killSelf() {
         dead = true;
     }
+
+    public double getMovementDirectionX() {
+        return 0.0;
+    }
+
+    public double getMovementDirectionZ() {
+        return 0.0;
+    }
 }
