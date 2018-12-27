@@ -3,9 +3,12 @@ package net.survival.world.actor;
 public class ActorServiceCollection
 {
     private final AlarmService[] alarmServices;
-    private final LocomotiveService locomotiveService;
+    private final Locomotion.Service locomotiveService;
 
-    public ActorServiceCollection(AlarmService[] alarmServices, LocomotiveService locomotiveService) {
+    public ActorServiceCollection(
+            AlarmService[] alarmServices,
+            Locomotion.Service locomotiveService)
+    {
         this.alarmServices = alarmServices;
         this.locomotiveService = locomotiveService;
     }
@@ -14,7 +17,7 @@ public class ActorServiceCollection
         return alarmServices[alarmID];
     }
 
-    public LocomotiveService getLocomotiveService() {
+    public Locomotion.Service getLocomotiveService() {
         return locomotiveService;
     }
 }

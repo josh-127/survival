@@ -23,7 +23,7 @@ import net.survival.world.World;
 import net.survival.world.actor.ActorServiceCollection;
 import net.survival.world.actor.AlarmService;
 import net.survival.world.actor.ActorEventQueue;
-import net.survival.world.actor.LocomotiveService;
+import net.survival.world.actor.Locomotion;
 import net.survival.world.actor.v0_1_0_snapshot.NpcActor;
 import net.survival.world.chunk.Chunk;
 import net.survival.world.chunk.ChunkDbPipe;
@@ -57,7 +57,7 @@ public class Client implements AutoCloseable
 
     private final ActorEventQueue actorEventQueue;
     private final AlarmService[] alarmServices;
-    private final LocomotiveService locomotiveService;
+    private final Locomotion.Service locomotiveService;
     private final ActorServiceCollection actorServiceCollection;
 
     private Client(ChunkDbPipe.ClientSide chunkDbPipe) {
@@ -82,7 +82,7 @@ public class Client implements AutoCloseable
         alarmServices = new AlarmService[16];
         for (int i = 0; i < alarmServices.length; ++i)
             alarmServices[i] = new AlarmService(actorEventQueue.getProducer(), i);
-        locomotiveService = new LocomotiveService(actorEventQueue.getProducer(), world);
+        locomotiveService = new Locomotion.Service(actorEventQueue.getProducer(), world);
         actorServiceCollection = new ActorServiceCollection(alarmServices, locomotiveService);
     }
 

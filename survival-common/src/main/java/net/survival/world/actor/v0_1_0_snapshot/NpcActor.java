@@ -4,7 +4,7 @@ import net.survival.util.HitBox;
 import net.survival.world.actor.Actor;
 import net.survival.world.actor.ActorServiceCollection;
 import net.survival.world.actor.ActorEventQueue;
-import net.survival.world.actor.LocomotiveService;
+import net.survival.world.actor.Locomotion;
 
 public class NpcActor extends Actor
 {
@@ -13,7 +13,7 @@ public class NpcActor extends Actor
     private final double initialZ;
     private double yaw;
 
-    private LocomotiveService.Component locomotion;
+    private Locomotion.Component locomotion;
 
     public NpcActor(double x, double y, double z) {
         initialX = x;
