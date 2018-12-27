@@ -4,7 +4,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Queue;
 
-public class EventQueue
+public class ActorEventQueue
 {
     private final Queue<EventPacket> upcomingEvents = new LinkedList<>();
     private final Producer producer = new Producer();

@@ -16,11 +16,11 @@ public class LocomotiveService
     public static final double TERMINAL_VELOCITY = 30.0;
 
     private final HashMap<Actor, Component> objects = new HashMap<>();
-    private final EventQueue.Producer eventQueue;
+    private final ActorEventQueue.Producer actorEventQueue;
     private final World world;
 
-    public LocomotiveService(EventQueue.Producer eventQueue, World world) {
-        this.eventQueue = eventQueue;
+    public LocomotiveService(ActorEventQueue.Producer actorEventQueue, World world) {
+        this.actorEventQueue = actorEventQueue;
         this.world = world;
     }
 

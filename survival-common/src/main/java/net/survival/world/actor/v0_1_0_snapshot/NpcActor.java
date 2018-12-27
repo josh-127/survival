@@ -3,7 +3,7 @@ package net.survival.world.actor.v0_1_0_snapshot;
 import net.survival.util.HitBox;
 import net.survival.world.actor.Actor;
 import net.survival.world.actor.ActorServiceCollection;
-import net.survival.world.actor.EventQueue;
+import net.survival.world.actor.ActorEventQueue;
 import net.survival.world.actor.Locomotive;
 import net.survival.world.actor.LocomotiveService;
 
@@ -29,7 +29,7 @@ public class NpcActor extends Actor implements Locomotive
     }
 
     @Override
-    protected void onAlarm(EventQueue.Producer eventQueue, int alarmID) {
+    protected void onAlarm(ActorEventQueue.Producer actorEventQueue, int alarmID) {
         if (alarmID == 0) {
             yaw += 1.0;
         }

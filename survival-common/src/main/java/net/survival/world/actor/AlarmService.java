@@ -6,11 +6,11 @@ import java.util.Iterator;
 public class AlarmService
 {
     private final ArrayList<Instance> instances = new ArrayList<>();
-    private final EventQueue.Producer eventQueue;
+    private final ActorEventQueue.Producer actorEventQueue;
     private final int id;
 
-    public AlarmService(EventQueue.Producer eventQueue, int id) {
-        this.eventQueue = eventQueue;
+    public AlarmService(ActorEventQueue.Producer actorEventQueue, int id) {
+        this.actorEventQueue = actorEventQueue;
         this.id = id;
     }
 
@@ -25,7 +25,7 @@ public class AlarmService
             instance.remainingTime -= elapsedTime;
 
             if (instance.remainingTime <= 0.0)
-                eventQueue.notifyActor(instance.actor, new FinishedToken(id));
+                actorEventQueue.notifyActor(instance.actor, new FinishedToken(id));
         }
     }
 

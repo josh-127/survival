@@ -28,7 +28,7 @@ import net.survival.world.EntitySystem;
 import net.survival.world.World;
 import net.survival.world.actor.ActorServiceCollection;
 import net.survival.world.actor.AlarmService;
-import net.survival.world.actor.EventQueue;
+import net.survival.world.actor.ActorEventQueue;
 import net.survival.world.actor.LocomotiveService;
 import net.survival.world.actor.v0_1_0_snapshot.NpcActor;
 import net.survival.world.chunk.Chunk;
@@ -65,7 +65,7 @@ public class Client implements AutoCloseable
 
     private Player player;
 
-    private final EventQueue eventQueue;
+    private final ActorEventQueue actorEventQueue;
     private final AlarmService[] alarmServices;
     private final LocomotiveService locomotiveService;
     private final ActorServiceCollection actorServiceCollection;
@@ -90,11 +90,11 @@ public class Client implements AutoCloseable
 
         fpvCamera = new FpvCamera(new Vector3d(60.0, 72.0, 20.0), 0.0f, -1.0f);
 
-        eventQueue = new EventQueue();
+        actorEventQueue = new ActorEventQueue();
         alarmServices = new AlarmService[16];
         for (int i = 0; i < alarmServices.length; ++i)
-            alarmServices[i] = new AlarmService(eventQueue.getProducer(), i);
-        locomotiveService = new LocomotiveService(eventQueue.getProducer(), world);
+            alarmServices[i] = new AlarmService(actorEventQueue.getProducer(), i);
+        locomotiveService = new LocomotiveService(actorEventQueue.getProducer(), world);
         actorServiceCollection = new ActorServiceCollection(alarmServices, locomotiveService);
     }
 
@@ -175,8 +175,8 @@ public class Client implements AutoCloseable
             alarmService.tick(elapsedTime);
         locomotiveService.tick(elapsedTime);
 
-        EventQueue.Consumer eventConsumer = eventQueue.getConsumer();
-        for (EventQueue.EventPacket eventPacket : eventConsumer) {
+        ActorEventQueue.Consumer eventConsumer = actorEventQueue.getConsumer();
+        for (ActorEventQueue.EventPacket eventPacket : eventConsumer) {
             // TODO: First parameter shouldn't be null.
             eventPacket.target.onEventNotification(null, eventPacket.eventArgs);
         }
