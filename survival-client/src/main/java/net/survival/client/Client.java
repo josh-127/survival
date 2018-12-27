@@ -19,9 +19,11 @@ import net.survival.client.input.Key;
 import net.survival.client.input.Keyboard;
 import net.survival.client.input.Mouse;
 import net.survival.client.ui.BasicUI;
+import net.survival.util.MathEx;
 import net.survival.world.World;
 import net.survival.world.actor.ActorServiceCollection;
 import net.survival.world.actor.AlarmService;
+import net.survival.world.actor.ExternalAxisInput;
 import net.survival.world.actor.ActorEventQueue;
 import net.survival.world.actor.Locomotion;
 import net.survival.world.actor.v0_1_0_snapshot.NpcActor;
@@ -57,7 +59,8 @@ public class Client implements AutoCloseable
 
     private final ActorEventQueue actorEventQueue;
     private final AlarmService[] alarmServices;
-    private final Locomotion.Service locomotiveService;
+    private final ExternalAxisInput.Service externalAxisInput;
+    private final Locomotion.Service locomotion;
     private final ActorServiceCollection actorServiceCollection;
 
     private Client(ChunkDbPipe.ClientSide chunkDbPipe) {
@@ -82,8 +85,9 @@ public class Client implements AutoCloseable
         alarmServices = new AlarmService[16];
         for (int i = 0; i < alarmServices.length; ++i)
             alarmServices[i] = new AlarmService(actorEventQueue.getProducer(), i);
-        locomotiveService = new Locomotion.Service(actorEventQueue.getProducer(), world);
-        actorServiceCollection = new ActorServiceCollection(alarmServices, locomotiveService);
+        externalAxisInput = new ExternalAxisInput.Service();
+        locomotion = new Locomotion.Service(actorEventQueue.getProducer(), world);
+        actorServiceCollection = new ActorServiceCollection(alarmServices, externalAxisInput, locomotion);
     }
 
     @Override
@@ -137,10 +141,27 @@ public class Client implements AutoCloseable
 
         chunkSystem.update(elapsedTime);
 
+        double npcAxisX = 0.0;
+        double npcAxisZ = 0.0;
+        if (Keyboard.isKeyDown(Key.I))
+            npcAxisZ += 1.0;
+        if (Keyboard.isKeyDown(Key.K))
+            npcAxisZ -= 1.0;
+        if (Keyboard.isKeyDown(Key.J))
+            npcAxisX += 1.0;
+        if (Keyboard.isKeyDown(Key.L))
+            npcAxisX -= 1.0;
+        double npcAxisLength = MathEx.magnitude(npcAxisX, npcAxisZ);
+        if (npcAxisLength > 0.0) {
+            npcAxisX /= npcAxisLength;
+            npcAxisZ /= npcAxisLength;
+        }
+
         world.collectActors();
         for (AlarmService alarmService : alarmServices)
             alarmService.tick(elapsedTime);
-        locomotiveService.tick(elapsedTime);
+        externalAxisInput.setDirection(npcAxisX, 0.0, npcAxisZ);
+        locomotion.tick(elapsedTime);
 
         ActorEventQueue.Consumer eventConsumer = actorEventQueue.getConsumer();
         for (ActorEventQueue.EventPacket eventPacket : eventConsumer) {
