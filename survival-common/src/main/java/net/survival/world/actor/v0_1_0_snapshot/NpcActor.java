@@ -62,6 +62,6 @@ public class NpcActor extends Actor implements Locomotive
 
     @Override
     public double getMovementDirectionZ() {
-        return 1.0;
+        return 3.0;
     }
 }

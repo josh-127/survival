@@ -120,12 +120,12 @@ public class Client implements AutoCloseable
         }
 
         if (Keyboard.isKeyDown(Key.SPACE))
-            joystickY = 1.0;
+            joystickY = 0.5;
         if (Keyboard.isKeyDown(Key.LEFT_SHIFT))
-            joystickY = -1.0;
+            joystickY = -0.5;
 
         {
-            final double CAMERA_SPEED = 40.0;
+            final double CAMERA_SPEED = 20.0;
             fpvCamera.position.x += joystickX * CAMERA_SPEED * elapsedTime;
             fpvCamera.position.z += joystickZ * CAMERA_SPEED * elapsedTime;
             fpvCamera.position.y += joystickY * 20.0 * elapsedTime;
