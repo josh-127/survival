@@ -25,7 +25,7 @@ public class ChunkRequest
     }
 
     public static ChunkRequest createPostRequest(long chunkPos, Chunk chunk) {
-        return new ChunkRequest(chunkPos, chunk, TYPE_POST);
+        return new ChunkRequest(chunkPos, chunk.makeCopy(), TYPE_POST);
     }
 
     public static ChunkRequest createPostRequest(int cx, int cz, Chunk chunk) {
