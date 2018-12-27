@@ -1,9 +1,7 @@
 package net.survival.world.chunk;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 
-import net.survival.entity.Character;
 import net.survival.world.BlockStorage;
 
 public class Chunk implements BlockStorage
@@ -15,28 +13,23 @@ public class Chunk implements BlockStorage
     public static final int VOLUME = BASE_AREA * YLENGTH;
 
     public static final int BLOCKS_MODIFIED = 1;
-    public static final int CHARACTERS_MODIFIED = 2;
 
     public final short[] blockIDs;
-    private final ArrayList<Character> characters;
 
     private int modified;
     private boolean decorated;
 
     public Chunk() {
         blockIDs = new short[VOLUME];
-        characters = new ArrayList<>();
     }
 
-    private Chunk(short[] blockIDs, ArrayList<Character> characters) {
+    private Chunk(short[] blockIDs) {
         this.blockIDs = blockIDs;
-        this.characters = characters;
     }
 
     public Chunk makeCopy() {
         short[] copyOfBlockIDs = Arrays.copyOf(blockIDs, VOLUME);
-        ArrayList<Character> copyOfCharacters = new ArrayList<>(characters);
-        return new Chunk(copyOfBlockIDs, copyOfCharacters);
+        return new Chunk(copyOfBlockIDs);
     }
 
     @Override
@@ -58,26 +51,12 @@ public class Chunk implements BlockStorage
         return lx >= 0 && ly >= 0 && lz >= 0 && lx < XLENGTH && ly < YLENGTH && lz < ZLENGTH;
     }
 
-    public Iterable<Character> iterateCharacters() {
-        modified |= CHARACTERS_MODIFIED;
-        return characters;
-    }
-
-    public void addCharacter(Character character) {
-        characters.add(character);
-        modified |= CHARACTERS_MODIFIED;
-    }
-
     public int getModificationFlags() {
         return modified;
     }
 
     public boolean isBlocksModified() {
         return (modified & BLOCKS_MODIFIED) != 0;
-    }
-
-    public boolean isCharactersModified() {
-        return (modified & CHARACTERS_MODIFIED) != 0;
     }
 
     public void clearModificationFlags() {

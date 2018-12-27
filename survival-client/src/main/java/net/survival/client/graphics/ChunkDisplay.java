@@ -2,14 +2,9 @@ package net.survival.client.graphics;
 
 import net.survival.block.BlockFace;
 import net.survival.client.graphics.blockrenderer.BlockRenderer;
-import net.survival.client.graphics.model.ModelRenderer;
-import net.survival.client.graphics.model.StaticModel;
 import net.survival.client.graphics.opengl.GLDisplayList;
-import net.survival.client.graphics.opengl.GLImmediateDrawCall;
-import net.survival.client.graphics.opengl.GLMatrixStack;
 import net.survival.client.graphics.opengl.GLRenderContext;
 import net.survival.client.graphics.opengl.GLTexture;
-import net.survival.entity.Character;
 import net.survival.world.chunk.Chunk;
 
 class ChunkDisplay implements GraphicsResource
@@ -367,74 +362,6 @@ class ChunkDisplay implements GraphicsResource
     public void displayBlocks() {
         if (displayList != null)
             GLRenderContext.callDisplayList(displayList, texture);
-    }
-
-    /**
-     * Displays the chunk's containing entities.
-     */
-    public void displayEntities() {
-        for (Character character : chunk.iterateCharacters()) {
-            if (!character.visible)
-                continue;
-
-            displayCharacter(character);
-            displayCharacterHitBox(character);
-        }
-    }
-
-    private void displayCharacter(Character character) {
-        GLMatrixStack.push();
-        GLMatrixStack.translate((float) character.x, (float) character.y, (float) character.z);
-        GLMatrixStack.rotate((float) character.yaw, 0.0f, 1.0f, 0.0f);
-        GLMatrixStack.rotate((float) character.pitch, 1.0f, 0.0f, 0.0f);
-        GLMatrixStack.rotate((float) character.roll, 0.0f, 0.0f, 1.0f);
-
-        StaticModel model = StaticModel.fromCharacter(character);
-        ModelRenderer.displayStaticModel(model);
-
-        GLMatrixStack.pop();
-    }
-
-    private void displayCharacterHitBox(Character character) {
-        GLMatrixStack.push();
-        GLMatrixStack.translate((float) character.x, (float) character.y, (float) character.z);
-
-        final float BOX_R = 1.0f;
-        final float BOX_G = 0.0f;
-        final float BOX_B = 1.0f;
-
-        float cbrX = (float) character.hitBox.radiusX;
-        float cbrY = (float) character.hitBox.radiusY;
-        float cbrZ = (float) character.hitBox.radiusZ;
-
-        GLImmediateDrawCall.beginLines(null).coloredVertex(-cbrX, cbrY, -cbrZ, BOX_R, BOX_G, BOX_B)
-                .coloredVertex(cbrX, cbrY, -cbrZ, BOX_R, BOX_G, BOX_B)
-                .coloredVertex(-cbrX, cbrY, cbrZ, BOX_R, BOX_G, BOX_B)
-                .coloredVertex(cbrX, cbrY, cbrZ, BOX_R, BOX_G, BOX_B)
-                .coloredVertex(-cbrX, cbrY, -cbrZ, BOX_R, BOX_G, BOX_B)
-                .coloredVertex(-cbrX, cbrY, cbrZ, BOX_R, BOX_G, BOX_B)
-                .coloredVertex(cbrX, cbrY, -cbrZ, BOX_R, BOX_G, BOX_B)
-                .coloredVertex(cbrX, cbrY, cbrZ, BOX_R, BOX_G, BOX_B)
-
-                .coloredVertex(-cbrX, -cbrY, -cbrZ, BOX_R, BOX_G, BOX_B)
-                .coloredVertex(cbrX, -cbrY, -cbrZ, BOX_R, BOX_G, BOX_B)
-                .coloredVertex(-cbrX, -cbrY, cbrZ, BOX_R, BOX_G, BOX_B)
-                .coloredVertex(cbrX, -cbrY, cbrZ, BOX_R, BOX_G, BOX_B)
-                .coloredVertex(-cbrX, -cbrY, -cbrZ, BOX_R, BOX_G, BOX_B)
-                .coloredVertex(-cbrX, -cbrY, cbrZ, BOX_R, BOX_G, BOX_B)
-                .coloredVertex(cbrX, -cbrY, -cbrZ, BOX_R, BOX_G, BOX_B)
-                .coloredVertex(cbrX, -cbrY, cbrZ, BOX_R, BOX_G, BOX_B)
-
-                .coloredVertex(-cbrX, -cbrY, -cbrZ, BOX_R, BOX_G, BOX_B)
-                .coloredVertex(-cbrX, cbrY, -cbrZ, BOX_R, BOX_G, BOX_B)
-                .coloredVertex(cbrX, -cbrY, -cbrZ, BOX_R, BOX_G, BOX_B)
-                .coloredVertex(cbrX, cbrY, -cbrZ, BOX_R, BOX_G, BOX_B)
-                .coloredVertex(-cbrX, -cbrY, cbrZ, BOX_R, BOX_G, BOX_B)
-                .coloredVertex(-cbrX, cbrY, cbrZ, BOX_R, BOX_G, BOX_B)
-                .coloredVertex(cbrX, -cbrY, cbrZ, BOX_R, BOX_G, BOX_B)
-                .coloredVertex(cbrX, cbrY, cbrZ, BOX_R, BOX_G, BOX_B).end();
-
-        GLMatrixStack.pop();
     }
 
     public boolean isEmpty() {

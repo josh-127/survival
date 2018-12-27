@@ -1,24 +1,14 @@
 package net.survival.server;
 
-import net.survival.world.EntityRelocator;
-import net.survival.world.World;
-
 public class Server
 {
     private static final double TICKS_PER_SECOND = 60.0;
     private static final double SECONDS_PER_TICK = 1.0 / TICKS_PER_SECOND;
 
-    private final World world;
-
-    private final EntityRelocator entityRelocator;
-
     private Server() {
-        world = new World();
-        entityRelocator = new EntityRelocator();
     }
 
     public void tick(double elapsedTime) {
-        entityRelocator.relocateEntities(world);
     }
 
     public static void main(String[] args) {

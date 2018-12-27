@@ -6,7 +6,6 @@ import java.util.Iterator;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectIterator;
-import net.survival.entity.Character;
 import net.survival.world.actor.Actor;
 import net.survival.world.chunk.Chunk;
 import net.survival.world.chunk.ChunkPos;
@@ -118,12 +117,6 @@ public class World implements BlockStorage
         int localZ = ChunkPos.toLocalZ(ChunkPos.toChunkZ(z), z);
 
         return chunk.replaceBlockIfExists(localX, y, localZ, replacement);
-    }
-
-    public void addCharacter(Character character) {
-        Chunk chunk = getChunkFromGlobalPos((int) character.x, (int) character.z,
-                "Cannot place a character in an unloaded chunk.");
-        chunk.addCharacter(character);
     }
 
     public ArrayList<Actor> getActors() {

@@ -8,7 +8,6 @@ import org.lwjgl.assimp.AIScene;
 import org.lwjgl.assimp.AIString;
 import org.lwjgl.assimp.AIVector3D;
 
-import net.survival.entity.Character;
 import net.survival.world.actor.Actor;
 
 import static org.lwjgl.assimp.Assimp.*;
@@ -37,19 +36,6 @@ public class StaticModel
     private StaticModel(int meshCount, String absoluteFilePath) {
         meshes = new Mesh[meshCount];
         this.absoluteFilePath = absoluteFilePath;
-    }
-
-    public static StaticModel fromCharacter(Character character) {
-        switch (character.model) {
-        case CHICKEN: return chicken;
-        case COW:     return cow;
-        case GOAT:    return goat;
-        case HUMAN:   return human;
-        case PIG:     return pig;
-        case SLIME:   return slime;
-        }
-
-        throw new RuntimeException();
     }
 
     public static StaticModel fromActor(Actor actor) {

@@ -25,12 +25,6 @@ import net.survival.world.chunk.ChunkPos;
 
 class WorldDisplay implements GraphicsResource
 {
-    //
-    // TODO: *FaceDisplays all have bad names, because they also
-    // contain entities to be drawn. Rename these variables
-    // something else.
-    //
-
     private final World world;
     private HashMap<Chunk, ChunkDisplay> nonCubicDisplays;
     private HashMap<Chunk, ChunkDisplay> topFaceDisplays;
@@ -161,18 +155,6 @@ class WorldDisplay implements GraphicsResource
     }
 
     private void drawNonCubicDisplays(HashMap<Chunk, ChunkDisplay> displays, Matrix4f viewMatrix) {
-        // Entities
-        GLMatrixStack.push();
-        GLMatrixStack.load(viewMatrix);
-
-        for (Map.Entry<Chunk, ChunkDisplay> entry : displays.entrySet()) {
-            ChunkDisplay display = entry.getValue();
-            display.displayEntities();
-        }
-
-        GLMatrixStack.pop();
-
-        // Blocks
         for (Map.Entry<Chunk, ChunkDisplay> entry : displays.entrySet()) {
             ChunkDisplay display = entry.getValue();
 

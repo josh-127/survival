@@ -19,12 +19,6 @@ import net.survival.client.input.Key;
 import net.survival.client.input.Keyboard;
 import net.survival.client.input.Mouse;
 import net.survival.client.ui.BasicUI;
-import net.survival.entity.CharacterModel;
-import net.survival.entity.Npc;
-import net.survival.entity.NpcMovementStyle;
-import net.survival.entity.Player;
-import net.survival.util.HitBox;
-import net.survival.world.EntitySystem;
 import net.survival.world.World;
 import net.survival.world.actor.ActorServiceCollection;
 import net.survival.world.actor.AlarmService;
@@ -55,15 +49,11 @@ public class Client implements AutoCloseable
     private final WorldDecorator worldDecorator;
     private final ChunkSystem chunkSystem;
 
-    private final EntitySystem entitySystem;
-
     private final BasicUI basicUI = new BasicUI();
     private final BasicUI.Server uiServer;
 
     private final CompositeDisplay compositeDisplay;
     private final FpvCamera fpvCamera;
-
-    private Player player;
 
     private final ActorEventQueue actorEventQueue;
     private final AlarmService[] alarmServices;
@@ -77,8 +67,6 @@ public class Client implements AutoCloseable
         chunkGenerator = new InfiniteChunkGenerator(22L);
         worldDecorator = WorldDecorator.createDefault();
         chunkSystem = new ChunkSystem(world, chunkLoader, chunkDbPipe, chunkGenerator, worldDecorator);
-
-        entitySystem = new EntitySystem();
 
         uiServer = basicUI.getServer();
 
@@ -110,17 +98,6 @@ public class Client implements AutoCloseable
         double cursorDY = Mouse.getDeltaY();
         fpvCamera.rotate(-cursorDX / 128.0, -cursorDY / 128.0);
 
-        if (Keyboard.isKeyPressed(Key.R)) {
-            Player newPlayer = new Player();
-            newPlayer.x = player != null ? player.x : fpvCamera.position.x;
-            newPlayer.y = player != null ? player.y + 3.0 : fpvCamera.position.y;
-            newPlayer.z = player != null ? player.z : fpvCamera.position.z;
-            newPlayer.hitBox = HitBox.PLAYER;
-            newPlayer.visible = false;
-            player = newPlayer;
-            world.addCharacter(newPlayer);
-        }
-
         double joystickX = 0.0;
         double joystickZ = 0.0;
         double joystickY = 0.0;
@@ -142,20 +119,12 @@ public class Client implements AutoCloseable
             joystickZ -= Math.cos(fpvCamera.yaw + Math.PI / 2.0);
         }
 
-        if (Keyboard.isKeyDown(Key.SPACE)) {
+        if (Keyboard.isKeyDown(Key.SPACE))
             joystickY = 1.0;
-        }
-        if (Keyboard.isKeyDown(Key.LEFT_SHIFT)) {
+        if (Keyboard.isKeyDown(Key.LEFT_SHIFT))
             joystickY = -1.0;
-        }
 
-        if (player != null) {
-            player.setMoveDirectionControlValues(joystickX, joystickZ);
-
-            if (Keyboard.isKeyPressed(Key.SPACE))
-                player.setJumpControlValue();
-        }
-        else {
+        {
             final double CAMERA_SPEED = 40.0;
             fpvCamera.position.x += joystickX * CAMERA_SPEED * elapsedTime;
             fpvCamera.position.z += joystickZ * CAMERA_SPEED * elapsedTime;
@@ -168,8 +137,6 @@ public class Client implements AutoCloseable
 
         chunkSystem.update(elapsedTime);
 
-        entitySystem.update(world, elapsedTime);
-
         world.collectActors();
         for (AlarmService alarmService : alarmServices)
             alarmService.tick(elapsedTime);
@@ -179,12 +146,6 @@ public class Client implements AutoCloseable
         for (ActorEventQueue.EventPacket eventPacket : eventConsumer) {
             // TODO: First parameter shouldn't be null.
             eventPacket.target.onEventNotification(null, eventPacket.eventArgs);
-        }
-
-        if (player != null) {
-            fpvCamera.position.x = player.x;
-            fpvCamera.position.y = player.y + 0.8;
-            fpvCamera.position.z = player.z;
         }
 
         if (Mouse.isLmbPressed() || Mouse.isRmbPressed()) {
@@ -217,29 +178,6 @@ public class Client implements AutoCloseable
             world.addActor(npcActor);
 
             npcActor.setup(actorServiceCollection);
-        }
-
-        if (Keyboard.isKeyPressed(Key.Y)) {
-            Npc npc = new Npc();
-            npc.x = fpvCamera.position.x;
-            npc.y = fpvCamera.position.y;
-            npc.z = fpvCamera.position.z;
-            npc.hitBox = HitBox.NPC;
-            npc.moveSpeed = 4.0;
-            npc.model = CharacterModel.GOAT;
-            world.addCharacter(npc);
-        }
-
-        if (Keyboard.isKeyPressed(Key.U)) {
-            Npc npc = new Npc();
-            npc.x = fpvCamera.position.x;
-            npc.y = fpvCamera.position.y;
-            npc.z = fpvCamera.position.z;
-            npc.hitBox = HitBox.NPC;
-            npc.moveSpeed = 4.0;
-            npc.model = CharacterModel.SLIME;
-            npc.movementStyle = NpcMovementStyle.SLIME;
-            world.addCharacter(npc);
         }
 
         if (Keyboard.isKeyPressed(Key._1))
