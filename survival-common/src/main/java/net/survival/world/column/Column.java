@@ -1,8 +1,8 @@
-package net.survival.world.chunk;
+package net.survival.world.column;
 
 import net.survival.world.BlockStorage;
 
-public class ChunkColumn implements BlockStorage
+public class Column implements BlockStorage
 {
     public static final int HEIGHT = 8;
     public static final int XLENGTH = Chunk.XLENGTH;
@@ -18,22 +18,22 @@ public class ChunkColumn implements BlockStorage
     private int modified;
     private boolean decorated;
 
-    public ChunkColumn() {
+    public Column() {
         chunks = new Chunk[HEIGHT];
     }
 
-    private ChunkColumn(Chunk[] chunks) {
+    private Column(Chunk[] chunks) {
         this.chunks = chunks;
     }
 
-    public ChunkColumn makeCopy() {
+    public Column makeCopy() {
         Chunk[] copyOfChunks = new Chunk[HEIGHT];
         for (int i = 0; i < HEIGHT; ++i) {
             if (chunks[i] != null)
                 copyOfChunks[i] = chunks[i].makeCopy();
         }
 
-        return new ChunkColumn(copyOfChunks);
+        return new Column(copyOfChunks);
     }
 
     public Chunk getChunk(int index) {

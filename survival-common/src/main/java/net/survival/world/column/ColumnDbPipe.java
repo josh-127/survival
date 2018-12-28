@@ -1,12 +1,12 @@
-package net.survival.world.chunk;
+package net.survival.world.column;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-public class ChunkDbPipe
+public class ColumnDbPipe
 {
-    private final LinkedBlockingQueue<ChunkRequest> requests = new LinkedBlockingQueue<>();
-    private final ConcurrentLinkedQueue<ChunkResponse> responses = new ConcurrentLinkedQueue<>();
+    private final LinkedBlockingQueue<ColumnRequest> requests = new LinkedBlockingQueue<>();
+    private final ConcurrentLinkedQueue<ColumnResponse> responses = new ConcurrentLinkedQueue<>();
     private final ServerSide serverSide = new ServerSide();
     private final ClientSide clientSide = new ClientSide();
 
@@ -20,7 +20,7 @@ public class ChunkDbPipe
 
     public class ServerSide
     {
-        public ChunkRequest waitForRequest() {
+        public ColumnRequest waitForRequest() {
             try {
                 return requests.take();
             } catch (InterruptedException e) {
@@ -28,18 +28,18 @@ public class ChunkDbPipe
             }
         }
 
-        public void respond(ChunkResponse response) {
+        public void respond(ColumnResponse response) {
             responses.add(response);
         }
     }
 
     public class ClientSide
     {
-        public ChunkResponse pollResponse() {
+        public ColumnResponse pollResponse() {
             return responses.poll();
         }
 
-        public void request(ChunkRequest request) {
+        public void request(ColumnRequest request) {
             requests.add(request);
         }
     }

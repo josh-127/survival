@@ -1,4 +1,4 @@
-package net.survival.world.chunk;
+package net.survival.world.column;
 
 import java.nio.ByteBuffer;
 
@@ -6,14 +6,14 @@ import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectIterator;
 
-class ChunkDirectory
+class ColumnDirectory
 {
-    // The ordering of on-disk chunkDirectory entries depends on Long2LongMap's implementation.
+    // The ordering of on-disk columnDirectory entries depends on Long2LongMap's implementation.
     // However, any change in the implementation will still be backwards compatible with
-    // ChunkServer's file format.
+    // ColumnServer's file format.
     private final Long2ObjectOpenHashMap<VirtualAllocationUnit> entries;
 
-    public ChunkDirectory() {
+    public ColumnDirectory() {
         entries = new Long2ObjectOpenHashMap<>();
     }
 

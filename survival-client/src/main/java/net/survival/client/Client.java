@@ -19,23 +19,22 @@ import net.survival.client.input.GlfwMouseAdapter;
 import net.survival.client.input.Keyboard;
 import net.survival.client.input.Mouse;
 import net.survival.client.ui.BasicUI;
-import net.survival.util.MathEx;
 import net.survival.world.World;
 import net.survival.world.actor.Actor;
 import net.survival.world.actor.Message;
 import net.survival.world.actor.TickMessage;
 import net.survival.world.actor.interaction.InteractionContext;
 import net.survival.world.actor.v0_1_0_snapshot.NpcActor;
-import net.survival.world.chunk.ChunkColumn;
-import net.survival.world.chunk.ChunkDbPipe;
-import net.survival.world.chunk.ChunkColumnPos;
-import net.survival.world.chunk.ChunkRequest;
-import net.survival.world.chunk.ChunkServer;
-import net.survival.world.chunk.ChunkSystem;
-import net.survival.world.gen.InfiniteChunkGenerator;
+import net.survival.world.column.CircularColumnStageMask;
+import net.survival.world.column.Column;
+import net.survival.world.column.ColumnDbPipe;
+import net.survival.world.column.ColumnPos;
+import net.survival.world.column.ColumnRequest;
+import net.survival.world.column.ColumnServer;
+import net.survival.world.column.ColumnSystem;
+import net.survival.world.gen.InfiniteColumnGenerator;
 import net.survival.world.gen.decoration.WorldDecorator;
 import survival.input.Key;
-import net.survival.world.chunk.CircularChunkStageMask;
 
 public class Client implements AutoCloseable
 {
@@ -46,10 +45,10 @@ public class Client implements AutoCloseable
 
     private final World world = new World();
 
-    private final CircularChunkStageMask chunkMask = new CircularChunkStageMask(10);
-    private final InfiniteChunkGenerator chunkGenerator = new InfiniteChunkGenerator(22L);
+    private final CircularColumnStageMask columnMask = new CircularColumnStageMask(10);
+    private final InfiniteColumnGenerator columnGenerator = new InfiniteColumnGenerator(22L);
     private final WorldDecorator worldDecorator = WorldDecorator.createDefault();
-    private final ChunkSystem chunkSystem;
+    private final ColumnSystem columnSystem;
 
     private final BasicUI basicUI = new BasicUI();
     private final BasicUI.Server uiServer;
@@ -64,8 +63,8 @@ public class Client implements AutoCloseable
     private final InteractionContext interactionContext = new InteractionContext(
             blockInteraction, keyboardInteraction, tickInteraction);
 
-    private Client(ChunkDbPipe.ClientSide chunkDbPipe) {
-        chunkSystem = new ChunkSystem(world, chunkMask, chunkDbPipe, chunkGenerator, worldDecorator);
+    private Client(ColumnDbPipe.ClientSide columnDbPipe) {
+        columnSystem = new ColumnSystem(world, columnMask, columnDbPipe, columnGenerator, worldDecorator);
 
         uiServer = basicUI.getServer();
 
@@ -79,7 +78,7 @@ public class Client implements AutoCloseable
     @Override
     public void close() throws RuntimeException {
         compositeDisplay.close();
-        chunkSystem.saveAllChunks();
+        columnSystem.saveAllColumns();
     }
 
     public void tick(double elapsedTime) {
@@ -107,12 +106,12 @@ public class Client implements AutoCloseable
         fpvCamera.position.y += jsY * 20.0 * elapsedTime;
 
         //
-        // Chunk System
+        // Column System
         //
-        int cx = ChunkColumnPos.toChunkX((int) Math.floor(fpvCamera.position.x));
-        int cz = ChunkColumnPos.toChunkZ((int) Math.floor(fpvCamera.position.z));
-        chunkMask.setCenter(cx, cz);
-        chunkSystem.update(elapsedTime);
+        int cx = ColumnPos.toColumnX((int) Math.floor(fpvCamera.position.x));
+        int cz = ColumnPos.toColumnZ((int) Math.floor(fpvCamera.position.z));
+        columnMask.setCenter(cx, cz);
+        columnSystem.update(elapsedTime);
 
         //
         // Actor System
@@ -141,15 +140,15 @@ public class Client implements AutoCloseable
         //
         // Client Display
         //
-        Iterator<Long2ObjectMap.Entry<ChunkColumn>> chunkMapIt = world.getChunkMapFastIterator();
-        while (chunkMapIt.hasNext()) {
-            Long2ObjectMap.Entry<ChunkColumn> entry = chunkMapIt.next();
+        Iterator<Long2ObjectMap.Entry<Column>> columnMapIt = world.getColumnMapFastIterator();
+        while (columnMapIt.hasNext()) {
+            Long2ObjectMap.Entry<Column> entry = columnMapIt.next();
             long hashedPos = entry.getLongKey();
-            ChunkColumn chunkColumn = entry.getValue();
+            Column column = entry.getValue();
 
-            if (chunkColumn.isBlocksModified()) {
-                chunkColumn.clearModificationFlags();
-                compositeDisplay.redrawChunk(hashedPos);
+            if (column.isBlocksModified()) {
+                column.clearModificationFlags();
+                compositeDisplay.redrawColumn(hashedPos);
             }
         }
 
@@ -167,13 +166,13 @@ public class Client implements AutoCloseable
     }
 
     public static void main(String[] args) throws InterruptedException {
-        ChunkDbPipe chunkDbPipe = new ChunkDbPipe();
-        ChunkServer chunkServer = new ChunkServer(
-                new File(System.getProperty("user.dir") + "/../.world/chunks"),
-                chunkDbPipe.getServerSide());
+        ColumnDbPipe columnDbPipe = new ColumnDbPipe();
+        ColumnServer columnServer = new ColumnServer(
+                new File(System.getProperty("user.dir") + "/../.world/columns"),
+                columnDbPipe.getServerSide());
 
-        Thread chunkServerThread = new Thread(chunkServer);
-        chunkServerThread.start();
+        Thread columnServerThread = new Thread(columnServer);
+        columnServerThread.start();
 
         GLDisplay display = new GLDisplay(GraphicsSettings.WINDOW_WIDTH,
                 GraphicsSettings.WINDOW_HEIGHT, WINDOW_TITLE);
@@ -183,7 +182,7 @@ public class Client implements AutoCloseable
         GLFW.glfwSetCursorPosCallback(display.getUnderlyingGlfwWindow(), mouseAdapter);
         GLRenderContext.init();
 
-        Client program = new Client(chunkDbPipe.getClientSide());
+        Client program = new Client(columnDbPipe.getClientSide());
 
         final double MILLIS_PER_TICK = SECONDS_PER_TICK * 1000.0;
         long now = System.currentTimeMillis();
@@ -226,8 +225,8 @@ public class Client implements AutoCloseable
         program.close();
         display.close();
 
-        chunkDbPipe.getClientSide().request(ChunkRequest.createCloseRequest());
-        chunkServerThread.join();
+        columnDbPipe.getClientSide().request(ColumnRequest.createCloseRequest());
+        columnServerThread.join();
     }
 
     private void temporaryTestCode() {

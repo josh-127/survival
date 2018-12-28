@@ -4,8 +4,8 @@ import java.util.Random;
 
 import net.survival.block.BlockType;
 import net.survival.world.World;
-import net.survival.world.chunk.ChunkColumn;
-import net.survival.world.chunk.ChunkColumnPos;
+import net.survival.world.column.Column;
+import net.survival.world.column.ColumnPos;
 
 public class SmallTreeDecorator implements WorldDecorator
 {
@@ -16,25 +16,25 @@ public class SmallTreeDecorator implements WorldDecorator
     }
 
     @Override
-    public void decorate(int cx, int cz, ChunkColumn chunkColumn, World world) {
-        random.setSeed(ChunkColumnPos.hashPos(cx, cz));
+    public void decorate(int cx, int cz, Column column, World world) {
+        random.setSeed(ColumnPos.hashPos(cx, cz));
 
         for (int i = 0; i < 2; ++i)
-            generateTree(cx, cz, chunkColumn, world);
+            generateTree(cx, cz, column, world);
     }
 
-    private void generateTree(int cx, int cz, ChunkColumn chunkColumn, World world) {
-        int originX = random.nextInt(ChunkColumn.XLENGTH);
-        int originZ = random.nextInt(ChunkColumn.ZLENGTH);
-        int groundY = chunkColumn.getTopLevel(originX, originZ);
+    private void generateTree(int cx, int cz, Column column, World world) {
+        int originX = random.nextInt(Column.XLENGTH);
+        int originZ = random.nextInt(Column.ZLENGTH);
+        int groundY = column.getTopLevel(originX, originZ);
 
-        if (chunkColumn.getBlock(originX, groundY, originZ) != BlockType.GRASS.id)
+        if (column.getBlock(originX, groundY, originZ) != BlockType.GRASS.id)
             return;
         
-        chunkColumn.setBlock(originX, groundY, originZ, BlockType.DIRT.id);
+        column.setBlock(originX, groundY, originZ, BlockType.DIRT.id);
 
-        int globalX = ChunkColumnPos.toGlobalX(cx, originX);
-        int globalZ = ChunkColumnPos.toGlobalZ(cz, originZ);
+        int globalX = ColumnPos.toGlobalX(cx, originX);
+        int globalZ = ColumnPos.toGlobalZ(cz, originZ);
 
         final int RADIUS = 5;
         final int HEIGHT = 10;
@@ -49,15 +49,15 @@ public class SmallTreeDecorator implements WorldDecorator
                     int gy = groundY + y + 4;
                     int gz = globalZ + z;
 
-                    if (gy < ChunkColumn.YLENGTH)
+                    if (gy < Column.YLENGTH)
                         world.placeBlockIfEmpty(gx, gy, gz, BlockType.OAK_LEAVES.id);
                 }
             }
         }
 
         for (int y = groundY + 1; y <= groundY + 8; ++y) {
-            if (y < ChunkColumn.YLENGTH)
-                chunkColumn.setBlock(originX, y, originZ, BlockType.OAK_LOG.id);
+            if (y < Column.YLENGTH)
+                column.setBlock(originX, y, originZ, BlockType.OAK_LOG.id);
         }
     }
 }

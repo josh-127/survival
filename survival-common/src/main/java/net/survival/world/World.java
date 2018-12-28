@@ -6,116 +6,116 @@ import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectIterator;
 import net.survival.world.actor.Actor;
-import net.survival.world.chunk.ChunkColumn;
-import net.survival.world.chunk.ChunkColumnPos;
+import net.survival.world.column.Column;
+import net.survival.world.column.ColumnPos;
 
 public class World implements BlockStorage
 {
-    private final Long2ObjectOpenHashMap<ChunkColumn> chunkColumns;
+    private final Long2ObjectOpenHashMap<Column> columns;
     private final ArrayList<Actor> actors;
 
     public World() {
-        chunkColumns = new Long2ObjectOpenHashMap<>(1024);
+        columns = new Long2ObjectOpenHashMap<>(1024);
         actors = new ArrayList<>(1024);
     }
 
-    public ChunkColumn getChunk(int cx, int cz) {
-        return chunkColumns.get(ChunkColumnPos.hashPos(cx, cz));
+    public Column getColumn(int cx, int cz) {
+        return columns.get(ColumnPos.hashPos(cx, cz));
     }
 
-    public ChunkColumn getChunk(long hashedPos) {
-        return chunkColumns.get(hashedPos);
+    public Column getColumn(long hashedPos) {
+        return columns.get(hashedPos);
     }
 
-    public boolean containsChunk(int cx, int cz) {
-        return chunkColumns.containsKey(ChunkColumnPos.hashPos(cx, cz));
+    public boolean containsColumn(int cx, int cz) {
+        return columns.containsKey(ColumnPos.hashPos(cx, cz));
     }
 
-    public boolean containsChunk(long hashedPos) {
-        return chunkColumns.containsKey(hashedPos);
+    public boolean containsColumn(long hashedPos) {
+        return columns.containsKey(hashedPos);
     }
 
-    public Iterable<Long2ObjectMap.Entry<ChunkColumn>> iterateChunkMap() {
-        return chunkColumns.long2ObjectEntrySet();
+    public Iterable<Long2ObjectMap.Entry<Column>> iterateColumnMap() {
+        return columns.long2ObjectEntrySet();
     }
 
-    public ObjectIterator<Long2ObjectMap.Entry<ChunkColumn>> getChunkMapIterator() {
-        return chunkColumns.long2ObjectEntrySet().iterator();
+    public ObjectIterator<Long2ObjectMap.Entry<Column>> getColumnMapIterator() {
+        return columns.long2ObjectEntrySet().iterator();
     }
 
-    public ObjectIterator<Long2ObjectMap.Entry<ChunkColumn>> getChunkMapFastIterator() {
-        return chunkColumns.long2ObjectEntrySet().fastIterator();
+    public ObjectIterator<Long2ObjectMap.Entry<Column>> getColumnMapFastIterator() {
+        return columns.long2ObjectEntrySet().fastIterator();
     }
 
-    public Iterable<ChunkColumn> iterateChunks() {
-        return chunkColumns.values();
+    public Iterable<Column> iterateColumns() {
+        return columns.values();
     }
 
-    public void addChunk(int cx, int cz, ChunkColumn chunkColumn) {
-        chunkColumns.put(ChunkColumnPos.hashPos(cx, cz), chunkColumn);
+    public void addColumn(int cx, int cz, Column column) {
+        columns.put(ColumnPos.hashPos(cx, cz), column);
     }
 
-    public void addChunk(long hashedPos, ChunkColumn chunkColumn) {
-        chunkColumns.put(hashedPos, chunkColumn);
+    public void addColumn(long hashedPos, Column column) {
+        columns.put(hashedPos, column);
     }
 
-    public void removeChunk(int cx, int cz) {
-        chunkColumns.remove(ChunkColumnPos.hashPos(cx, cz));
+    public void removeColumn(int cx, int cz) {
+        columns.remove(ColumnPos.hashPos(cx, cz));
     }
 
-    public void removeChunk(long hashedPos) {
-        chunkColumns.remove(hashedPos);
+    public void removeColumn(long hashedPos) {
+        columns.remove(hashedPos);
     }
 
     @Override
     public short getBlock(int x, int y, int z) {
-        int cx = ChunkColumnPos.toChunkX(x);
-        int cz = ChunkColumnPos.toChunkZ(z);
+        int cx = ColumnPos.toColumnX(x);
+        int cz = ColumnPos.toColumnZ(z);
 
-        ChunkColumn chunkColumn = chunkColumns.get(ChunkColumnPos.hashPos(cx, cz));
-        if (chunkColumn == null)
-            throw new RuntimeException("Cannot query a block in an unloaded chunk.");
+        Column column = columns.get(ColumnPos.hashPos(cx, cz));
+        if (column == null)
+            throw new RuntimeException("Cannot query a block in an unloaded column.");
 
-        int localX = ChunkColumnPos.toLocalX(cx, x);
-        int localZ = ChunkColumnPos.toLocalZ(cz, z);
+        int localX = ColumnPos.toLocalX(cx, x);
+        int localZ = ColumnPos.toLocalZ(cz, z);
 
-        return chunkColumn.getBlock(localX, y, localZ);
+        return column.getBlock(localX, y, localZ);
     }
 
     @Override
     public void setBlock(int x, int y, int z, short to) {
-        ChunkColumn chunkColumn = getChunkFromGlobalPos(x, z, "Cannot place/replace a block in an unloaded chunk.");
-        int localX = ChunkColumnPos.toLocalX(ChunkColumnPos.toChunkX(x), x);
-        int localZ = ChunkColumnPos.toLocalZ(ChunkColumnPos.toChunkZ(z), z);
+        Column column = getColumnFromGlobalPos(x, z, "Cannot place/replace a block in an unloaded column.");
+        int localX = ColumnPos.toLocalX(ColumnPos.toColumnX(x), x);
+        int localZ = ColumnPos.toLocalZ(ColumnPos.toColumnZ(z), z);
 
-        chunkColumn.setBlock(localX, y, localZ, to);
+        column.setBlock(localX, y, localZ, to);
     }
 
     @Override
     public int getTopLevel(int x, int z) {
-        ChunkColumn chunkColumn = getChunkFromGlobalPos(x, z, "Cannot query a block in an unloaded chunk.");
-        int localX = ChunkColumnPos.toLocalX(ChunkColumnPos.toChunkX(x), x);
-        int localZ = ChunkColumnPos.toLocalZ(ChunkColumnPos.toChunkZ(z), z);
+        Column column = getColumnFromGlobalPos(x, z, "Cannot query a block in an unloaded column.");
+        int localX = ColumnPos.toLocalX(ColumnPos.toColumnX(x), x);
+        int localZ = ColumnPos.toLocalZ(ColumnPos.toColumnZ(z), z);
 
-        return chunkColumn.getTopLevel(localX, localZ);
+        return column.getTopLevel(localX, localZ);
     }
 
     @Override
     public boolean placeBlockIfEmpty(int x, int y, int z, short to) {
-        ChunkColumn chunkColumn = getChunkFromGlobalPos(x, z, "Cannot place a block in an unloaded chunk.");
-        int localX = ChunkColumnPos.toLocalX(ChunkColumnPos.toChunkX(x), x);
-        int localZ = ChunkColumnPos.toLocalZ(ChunkColumnPos.toChunkZ(z), z);
+        Column column = getColumnFromGlobalPos(x, z, "Cannot place a block in an unloaded column.");
+        int localX = ColumnPos.toLocalX(ColumnPos.toColumnX(x), x);
+        int localZ = ColumnPos.toLocalZ(ColumnPos.toColumnZ(z), z);
 
-        return chunkColumn.placeBlockIfEmpty(localX, y, localZ, to);
+        return column.placeBlockIfEmpty(localX, y, localZ, to);
     }
 
     @Override
     public boolean replaceBlockIfExists(int x, int y, int z, short replacement) {
-        ChunkColumn chunkColumn = getChunkFromGlobalPos(x, z, "Cannot replace a block in an unloaded chunk.");
-        int localX = ChunkColumnPos.toLocalX(ChunkColumnPos.toChunkX(x), x);
-        int localZ = ChunkColumnPos.toLocalZ(ChunkColumnPos.toChunkZ(z), z);
+        Column column = getColumnFromGlobalPos(x, z, "Cannot replace a block in an unloaded column.");
+        int localX = ColumnPos.toLocalX(ColumnPos.toColumnX(x), x);
+        int localZ = ColumnPos.toLocalZ(ColumnPos.toColumnZ(z), z);
 
-        return chunkColumn.replaceBlockIfExists(localX, y, localZ, replacement);
+        return column.replaceBlockIfExists(localX, y, localZ, replacement);
     }
 
     public ArrayList<Actor> getActors() {
@@ -126,14 +126,14 @@ public class World implements BlockStorage
         actors.add(actor);
     }
 
-    private ChunkColumn getChunkFromGlobalPos(int x, int z, String exceptionMessage) {
-        int cx = ChunkColumnPos.toChunkX(x);
-        int cz = ChunkColumnPos.toChunkZ(z);
+    private Column getColumnFromGlobalPos(int x, int z, String exceptionMessage) {
+        int cx = ColumnPos.toColumnX(x);
+        int cz = ColumnPos.toColumnZ(z);
 
-        ChunkColumn chunkColumn = chunkColumns.get(ChunkColumnPos.hashPos(cx, cz));
-        if (chunkColumn == null)
+        Column column = columns.get(ColumnPos.hashPos(cx, cz));
+        if (column == null)
             throw new RuntimeException(exceptionMessage);
         
-        return chunkColumn;
+        return column;
     }
 }

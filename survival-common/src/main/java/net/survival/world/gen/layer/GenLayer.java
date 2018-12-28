@@ -30,12 +30,12 @@ public class GenLayer extends ByteMap2D
     }
 
     protected Random rngFromPosition(Random random, int x, int z) {
-        long chunkSeed = IntNoise.white2D(x, z, baseSeed);
+        long columnSeed = IntNoise.white2D(x, z, baseSeed);
 
         if (random == null)
-            random = new Random(chunkSeed);
+            random = new Random(columnSeed);
         else
-            random.setSeed(chunkSeed);
+            random.setSeed(columnSeed);
 
         return random;
     }

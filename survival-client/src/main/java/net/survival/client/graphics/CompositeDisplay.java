@@ -132,8 +132,8 @@ public class CompositeDisplay implements RenderContext, GraphicsResource
     }
 
     @Override
-    public void redrawChunk(long hashedPos) {
-        worldDisplay.redrawChunk(hashedPos);
+    public void redrawColumn(long hashedPos) {
+        worldDisplay.redrawColumn(hashedPos);
     }
 
     @Override

@@ -1,27 +1,27 @@
-package net.survival.world.chunk;
+package net.survival.world.column;
 
 import java.nio.ByteBuffer;
 
-class ChunkColumnCodec
+class ColumnCodec
 {
-    private static final int CHUNK_HEADER_SIZE = 2;
+    private static final int COLUMN_HEADER_SIZE = 2;
 
-    public static ByteBuffer compressChunkColumn(ChunkColumn chunkColumn) {
-        int compressedDataLength = ChunkColumn.VOLUME * 2 + CHUNK_HEADER_SIZE;
+    public static ByteBuffer compressColumn(Column column) {
+        int compressedDataLength = Column.VOLUME * 2 + COLUMN_HEADER_SIZE;
         ByteBuffer compressedData = ByteBuffer.allocate(compressedDataLength);
 
-        byte flags = (byte) (chunkColumn.isDecorated() ? 1 : 0);
+        byte flags = (byte) (column.isDecorated() ? 1 : 0);
         compressedData.put(flags);
 
         byte enabledChunks = 0;
-        for (int i = 0; i < ChunkColumn.HEIGHT; ++i) {
-            if (chunkColumn.getChunk(i) != null)
+        for (int i = 0; i < Column.HEIGHT; ++i) {
+            if (column.getChunk(i) != null)
                 enabledChunks |= 1 << i;
         }
         compressedData.put(enabledChunks);
 
-        for (int i = 0; i < ChunkColumn.HEIGHT; ++i) {
-            Chunk chunk = chunkColumn.getChunk(i);
+        for (int i = 0; i < Column.HEIGHT; ++i) {
+            Chunk chunk = column.getChunk(i);
             if (chunk != null)
                 compressChunk(chunk, compressedData);
         }
@@ -53,28 +53,28 @@ class ChunkColumnCodec
         compressedData.putShort((short) -1);
     }
 
-    public static ChunkColumn decompressChunkColumn(ByteBuffer compressedChunkData) {
-        ChunkColumn chunkColumn = new ChunkColumn();
+    public static Column decompressColumn(ByteBuffer compressedData) {
+        Column column = new Column();
 
-        byte flags = compressedChunkData.get();
+        byte flags = compressedData.get();
         if ((flags & 1) != 0)
-            chunkColumn.markDecorated();
+            column.markDecorated();
 
-        byte enabledChunks = compressedChunkData.get();
+        byte enabledChunks = compressedData.get();
 
-        for (int i = 0; i < ChunkColumn.HEIGHT; ++i) {
+        for (int i = 0; i < Column.HEIGHT; ++i) {
             if ((enabledChunks & (1 << i)) != 0) {
-                Chunk chunk = chunkColumn.getChunkLazy(i);
-                decompressChunk(compressedChunkData, chunk);
+                Chunk chunk = column.getChunkLazy(i);
+                decompressChunk(compressedData, chunk);
             }
         }
 
-        return chunkColumn;
+        return column;
     }
 
-    private static void decompressChunk(ByteBuffer compressedChunkData, Chunk chunk) {
+    private static void decompressChunk(ByteBuffer compressedData, Chunk chunk) {
         int index = 0;
-        short rleStrip = compressedChunkData.getShort();
+        short rleStrip = compressedData.getShort();
 
         while (rleStrip != -1) {
             int length = ((rleStrip & 0xF000) >>> 12) + 1;
@@ -83,7 +83,7 @@ class ChunkColumnCodec
             for (int i = 0; i < length; ++i)
                 chunk.blockIDs[index++] = blockID;
 
-            rleStrip = compressedChunkData.getShort();
+            rleStrip = compressedData.getShort();
         }
     }
 }

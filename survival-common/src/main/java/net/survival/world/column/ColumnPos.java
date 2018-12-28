@@ -1,35 +1,35 @@
-package net.survival.world.chunk;
+package net.survival.world.column;
 
-public class ChunkColumnPos
+public class ColumnPos
 {
-    private ChunkColumnPos() {}
+    private ColumnPos() {}
 
     public static boolean positionEquals(int cx1, int cz1, int cx2, int cz2) {
         return cx1 == cx2 && cz1 == cz2;
     }
 
-    public static int toChunkX(int x) {
-        return (int) Math.floor((double) x / ChunkColumn.XLENGTH);
+    public static int toColumnX(int x) {
+        return (int) Math.floor((double) x / Column.XLENGTH);
     }
 
-    public static int toChunkZ(int z) {
-        return (int) Math.floor((double) z / ChunkColumn.ZLENGTH);
+    public static int toColumnZ(int z) {
+        return (int) Math.floor((double) z / Column.ZLENGTH);
     }
 
     public static int toLocalX(int cx, int gx) {
-        return gx - cx * ChunkColumn.XLENGTH;
+        return gx - cx * Column.XLENGTH;
     }
 
     public static int toLocalZ(int cz, int gz) {
-        return gz - cz * ChunkColumn.ZLENGTH;
+        return gz - cz * Column.ZLENGTH;
     }
 
     public static int toGlobalX(int cx, int lx) {
-        return lx + cx * ChunkColumn.XLENGTH;
+        return lx + cx * Column.XLENGTH;
     }
 
     public static int toGlobalZ(int cz, int lz) {
-        return lz + cz * ChunkColumn.ZLENGTH;
+        return lz + cz * Column.ZLENGTH;
     }
 
     public static int getGlobalWestBound(int cx) {
@@ -37,7 +37,7 @@ public class ChunkColumnPos
     }
 
     public static int getGlobalEastBound(int cx) {
-        return toGlobalX(cx, ChunkColumn.XLENGTH);
+        return toGlobalX(cx, Column.XLENGTH);
     }
 
     public static int getGlobalNorthBound(int cz) {
@@ -45,22 +45,22 @@ public class ChunkColumnPos
     }
 
     public static int getGlobalSouthBound(int cz) {
-        return toGlobalZ(cz, ChunkColumn.ZLENGTH);
+        return toGlobalZ(cz, Column.ZLENGTH);
     }
 
     public static boolean isInBounds(int lx, int ly, int lz) {
-        return lx >= 0 && lx < ChunkColumn.XLENGTH && ly >= 0 && ly < ChunkColumn.YLENGTH && lz >= 0
-                && lz < ChunkColumn.ZLENGTH;
+        return lx >= 0 && lx < Column.XLENGTH && ly >= 0 && ly < Column.YLENGTH && lz >= 0
+                && lz < Column.ZLENGTH;
     }
 
     /**
-     * Hashes a chunk position into a 64-bit integer. Bits 0-31: chunk x-position
-     * Bits 32-63: chunk z-position
+     * Hashes a column position into a 64-bit integer. Bits 0-31: column x-position
+     * Bits 32-63: column z-position
      * 
      * @param cx
-     *            chunk x-position
+     *            column x-position
      * @param cz
-     *            chunk z-position
+     *            column z-position
      * @return the hashed position
      */
     public static long hashPos(int cx, int cz) {
@@ -68,24 +68,24 @@ public class ChunkColumnPos
     }
 
     /**
-     * Retrieves the chunk x-position from a hashed position.
+     * Retrieves the column x-position from a hashed position.
      * 
      * @param hashedPos
      *            hashed position
-     * @return chunk x-position
+     * @return column x-position
      */
-    public static int chunkXFromHashedPos(long hashedPos) {
+    public static int columnXFromHashedPos(long hashedPos) {
         return (int) (hashedPos & 0x00000000FFFFFFFFL);
     }
 
     /**
-     * Retrieves the chunk z-position from a hashed position.
+     * Retrieves the column z-position from a hashed position.
      * 
      * @param hashedPos
      *            hashed position
-     * @return chunk z-position
+     * @return column z-position
      */
-    public static int chunkZFromHashedPos(long hashedPos) {
+    public static int columnZFromHashedPos(long hashedPos) {
         return (int) ((hashedPos & 0xFFFFFFFF00000000L) >>> 32L);
     }
 }

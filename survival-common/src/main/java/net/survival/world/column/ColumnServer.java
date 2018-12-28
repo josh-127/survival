@@ -1,4 +1,4 @@
-package net.survival.world.chunk;
+package net.survival.world.column;
 
 import java.io.File;
 import java.io.IOException;
@@ -7,21 +7,21 @@ import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class ChunkServer implements Runnable
+public class ColumnServer implements Runnable
 {
     private static int FOOTER_LENGTH = 2 * VirtualAllocationUnit.STRUCTURE_SIZE;
 
     private final File file;
     private final VirtualMemoryAllocator allocator = new VirtualMemoryAllocator();
-    private final ChunkDirectory directory = new ChunkDirectory();
+    private final ColumnDirectory directory = new ColumnDirectory();
 
     private final AtomicBoolean running = new AtomicBoolean(true);
-    private final ChunkDbPipe.ServerSide chunkPipe;
+    private final ColumnDbPipe.ServerSide columnPipe;
     private FileChannel fileChannel;
 
-    public ChunkServer(File file, ChunkDbPipe.ServerSide chunkPipe) {
+    public ColumnServer(File file, ColumnDbPipe.ServerSide columnPipe) {
         this.file = file;
-        this.chunkPipe = chunkPipe;
+        this.columnPipe = columnPipe;
     }
 
     @Override
@@ -35,20 +35,20 @@ public class ChunkServer implements Runnable
                 loadMetadata();
 
             while (running.get()) {
-                ChunkRequest request;
+                ColumnRequest request;
 
                 do {
-                    request = chunkPipe.waitForRequest();
-                    long chunkPos = request.chunkPos;
+                    request = columnPipe.waitForRequest();
+                    long columnPos = request.columnPos;
 
-                    if (request.type == ChunkRequest.TYPE_GET) {
-                        chunkPipe.respond(new ChunkResponse(
-                                chunkPos, loadChunk(chunkPos)));
+                    if (request.type == ColumnRequest.TYPE_GET) {
+                        columnPipe.respond(new ColumnResponse(
+                                columnPos, loadColumn(columnPos)));
                     }
-                    else if (request.type == ChunkRequest.TYPE_POST) {
-                        saveChunk(chunkPos, request.chunkColumn);
+                    else if (request.type == ColumnRequest.TYPE_POST) {
+                        saveColumn(columnPos, request.column);
                     }
-                    else if (request.type == ChunkRequest.TYPE_CLOSE) {
+                    else if (request.type == ColumnRequest.TYPE_CLOSE) {
                         running.set(false);
                         break;
                     }
@@ -64,8 +64,8 @@ public class ChunkServer implements Runnable
         }
     }
 
-    private ChunkColumn loadChunk(long chunkPos) throws IOException {
-        VirtualAllocationUnit existingVau = directory.get(chunkPos);
+    private Column loadColumn(long columnPos) throws IOException {
+        VirtualAllocationUnit existingVau = directory.get(columnPos);
         if (existingVau == null)
             return null;
 
@@ -76,24 +76,24 @@ public class ChunkServer implements Runnable
             fileChannel.read(compressedData);
         compressedData.flip();
 
-        ChunkColumn chunkColumn = ChunkColumnCodec.decompressChunkColumn(compressedData);
+        Column column = ColumnCodec.decompressColumn(compressedData);
 
-        return chunkColumn;
+        return column;
     }
 
-    private void saveChunk(long chunkPos, ChunkColumn chunkColumn) throws IOException {
-        VirtualAllocationUnit existingVau = directory.get(chunkPos);
+    private void saveColumn(long columnPos, Column column) throws IOException {
+        VirtualAllocationUnit existingVau = directory.get(columnPos);
         if (existingVau != null)
             allocator.freeMemory(existingVau.address);
 
-        ByteBuffer compressedData = ChunkColumnCodec.compressChunkColumn(chunkColumn);
-        VirtualAllocationUnit chunkVau = allocator.allocateMemoryAndReturnVau(compressedData.limit());
-        if (chunkVau == null)
-            throw new RuntimeException("Cannot allocate anymore chunks.");
+        ByteBuffer compressedData = ColumnCodec.compressColumn(column);
+        VirtualAllocationUnit columnVau = allocator.allocateMemoryAndReturnVau(compressedData.limit());
+        if (columnVau == null)
+            throw new RuntimeException("Cannot allocate anymore columns.");
 
-        directory.put(chunkPos, chunkVau);
+        directory.put(columnPos, columnVau);
 
-        fileChannel.position(chunkVau.address);
+        fileChannel.position(columnVau.address);
         while (compressedData.hasRemaining())
             fileChannel.write(compressedData);
     }

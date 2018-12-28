@@ -1,4 +1,4 @@
-package net.survival.world.chunk;
+package net.survival.world.column;
 
 import java.util.Arrays;
 

@@ -1,18 +1,18 @@
-package net.survival.world.chunk;
+package net.survival.world.column;
 
 import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
 import it.unimi.dsi.fastutil.longs.LongSet;
 
-public class CircularChunkStageMask implements ChunkStageMask
+public class CircularColumnStageMask implements ColumnStageMask
 {
-    private final LongSet chunkPositions;
+    private final LongSet columnPositions;
     private final int radius;
 
     private int prevOffsetCX;
     private int prevOffsetCZ;
 
-    public CircularChunkStageMask(int radius) {
-        chunkPositions = new LongOpenHashSet(radius * radius);
+    public CircularColumnStageMask(int radius) {
+        columnPositions = new LongOpenHashSet(radius * radius);
         this.radius = radius;
 
         forceSetCenter(0, 0);
@@ -26,7 +26,7 @@ public class CircularChunkStageMask implements ChunkStageMask
     }
 
     private void forceSetCenter(int offsetCX, int offsetCZ) {
-        chunkPositions.clear();
+        columnPositions.clear();
 
         int radiusSquared = radius * radius;
 
@@ -35,15 +35,15 @@ public class CircularChunkStageMask implements ChunkStageMask
                 if (squareDistance(x, z) <= radiusSquared) {
                     int cx = offsetCX + x;
                     int cz = offsetCZ + z;
-                    chunkPositions.add(ChunkColumnPos.hashPos(cx, cz));
+                    columnPositions.add(ColumnPos.hashPos(cx, cz));
                 }
             }
         }
     }
 
     @Override
-    public LongSet getChunkPositions() {
-        return new LongOpenHashSet(chunkPositions);
+    public LongSet getColumnPositions() {
+        return new LongOpenHashSet(columnPositions);
     }
 
     private int squareDistance(int x, int z) {

@@ -4,7 +4,7 @@ import net.survival.block.BlockType;
 import net.survival.util.HitBox;
 import net.survival.util.MathEx;
 import net.survival.world.actor.interaction.InteractionContext;
-import net.survival.world.chunk.ChunkColumn;
+import net.survival.world.column.Column;
 
 public class Locomotion
 {
@@ -107,7 +107,7 @@ public class Locomotion
 
         int floorY = (int) Math.floor(y - hitBox.radiusY);
 
-        if (floorY < 0 || floorY + 1 >= ChunkColumn.YLENGTH)
+        if (floorY < 0 || floorY + 1 >= Column.YLENGTH)
             return false;
 
         for (int blockZ = startZ; blockZ <= endZ; ++blockZ) {
@@ -146,7 +146,7 @@ public class Locomotion
 
         int ceilingY = (int) Math.floor(y + hitBox.radiusY);
 
-        if (ceilingY - 1 < 0 || ceilingY >= ChunkColumn.YLENGTH)
+        if (ceilingY - 1 < 0 || ceilingY >= Column.YLENGTH)
             return false;
 
         for (int blockZ = startZ; blockZ <= endZ; ++blockZ) {
@@ -178,7 +178,7 @@ public class Locomotion
         int startY = (int) Math.floor(y - hitBox.radiusY);
         int endY = (int) Math.floor(y + hitBox.radiusY);
 
-        if (startY < 0 || endY >= ChunkColumn.YLENGTH)
+        if (startY < 0 || endY >= Column.YLENGTH)
             return false;
 
         int startZ = (int) Math.floor(z - hitBox.radiusZ);
@@ -215,7 +215,7 @@ public class Locomotion
         int startY = (int) Math.floor(y - hitBox.radiusY);
         int endY = (int) Math.floor(y + hitBox.radiusY);
 
-        if (startY < 0 || endY >= ChunkColumn.YLENGTH)
+        if (startY < 0 || endY >= Column.YLENGTH)
             return false;
 
         int startZ = (int) Math.floor(z - hitBox.radiusZ);
@@ -252,7 +252,7 @@ public class Locomotion
         int startY = (int) Math.floor(y - hitBox.radiusY);
         int endY = (int) Math.floor(y + hitBox.radiusY);
 
-        if (startY < 0 || endY >= ChunkColumn.YLENGTH)
+        if (startY < 0 || endY >= Column.YLENGTH)
             return false;
 
         int startX = (int) Math.floor(x - hitBox.radiusX);
@@ -289,7 +289,7 @@ public class Locomotion
         int startY = (int) Math.floor(y - hitBox.radiusY);
         int endY = (int) Math.floor(y + hitBox.radiusY);
 
-        if (startY < 0 || endY >= ChunkColumn.YLENGTH)
+        if (startY < 0 || endY >= Column.YLENGTH)
             return false;
 
         int startX = (int) Math.floor(x - hitBox.radiusX);
