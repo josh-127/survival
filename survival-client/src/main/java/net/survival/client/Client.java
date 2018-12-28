@@ -44,32 +44,28 @@ public class Client implements AutoCloseable
     private static final double TICKS_PER_SECOND = 60.0;
     private static final double SECONDS_PER_TICK = 1.0 / TICKS_PER_SECOND;
 
-    private final World world;
+    private final World world = new World();
 
-    private final CircularChunkStageMask chunkLoader;
-    private final InfiniteChunkGenerator chunkGenerator;
-    private final WorldDecorator worldDecorator;
+    private final CircularChunkStageMask chunkMask = new CircularChunkStageMask(10);
+    private final InfiniteChunkGenerator chunkGenerator = new InfiniteChunkGenerator(22L);
+    private final WorldDecorator worldDecorator = WorldDecorator.createDefault();
     private final ChunkSystem chunkSystem;
 
     private final BasicUI basicUI = new BasicUI();
     private final BasicUI.Server uiServer;
 
     private final CompositeDisplay compositeDisplay;
-    private final FpvCamera fpvCamera;
+    private final FpvCamera fpvCamera = new FpvCamera(new Vector3d(60.0, 72.0, 20.0), 0.0f, -1.0f);
 
     private final ArrayList<Message> actorMessages = new ArrayList<>();
-    private final LocalBlockInteractionAdapter blockInteraction;
+    private final LocalBlockInteractionAdapter blockInteraction = new LocalBlockInteractionAdapter(world);
     private final LocalKeyboardInteractionAdapter keyboardInteraction = new LocalKeyboardInteractionAdapter();
     private final LocalTickInteractionAdapter tickInteraction = new LocalTickInteractionAdapter();
-    private final InteractionContext interactionContext;
+    private final InteractionContext interactionContext = new InteractionContext(
+            blockInteraction, keyboardInteraction, tickInteraction);
 
     private Client(ChunkDbPipe.ClientSide chunkDbPipe) {
-        world = new World();
-
-        chunkLoader = new CircularChunkStageMask(10);
-        chunkGenerator = new InfiniteChunkGenerator(22L);
-        worldDecorator = WorldDecorator.createDefault();
-        chunkSystem = new ChunkSystem(world, chunkLoader, chunkDbPipe, chunkGenerator, worldDecorator);
+        chunkSystem = new ChunkSystem(world, chunkMask, chunkDbPipe, chunkGenerator, worldDecorator);
 
         uiServer = basicUI.getServer();
 
@@ -78,80 +74,49 @@ public class Client implements AutoCloseable
                 GraphicsSettings.WINDOW_WIDTH,
                 GraphicsSettings.WINDOW_HEIGHT,
                 basicUI.getClient());
-
-        fpvCamera = new FpvCamera(new Vector3d(60.0, 72.0, 20.0), 0.0f, -1.0f);
-
-        blockInteraction = new LocalBlockInteractionAdapter(world);
-        interactionContext = new InteractionContext(blockInteraction, keyboardInteraction, tickInteraction);
     }
 
     @Override
     public void close() throws RuntimeException {
         compositeDisplay.close();
-
         chunkSystem.saveAllChunks();
     }
 
     public void tick(double elapsedTime) {
+        //
+        // Camera
+        //
+        final double CAMERA_SPEED = 20.0;
+        final double PI = Math.PI;
         double cursorDX = Mouse.getDeltaX();
         double cursorDY = Mouse.getDeltaY();
+        double jsX = 0.0;
+        double jsZ = 0.0;
+        double jsY = 0.0;
+        double camYaw = fpvCamera.yaw;
+        if (Keyboard.isKeyDown(Key.W)) { jsX += Math.sin(camYaw); jsZ -= Math.cos(camYaw); }
+        if (Keyboard.isKeyDown(Key.S)) { jsX += Math.sin(camYaw + PI); jsZ -= Math.cos(camYaw + PI); }
+        if (Keyboard.isKeyDown(Key.A)) { jsX += Math.sin(camYaw - PI / 2.0); jsZ -= Math.cos(camYaw - PI / 2.0); }
+        if (Keyboard.isKeyDown(Key.D)) { jsX += Math.sin(camYaw + PI / 2.0); jsZ -= Math.cos(camYaw + PI / 2.0); }
+        if (Keyboard.isKeyDown(Key.SPACE)) jsY = 0.5;
+        if (Keyboard.isKeyDown(Key.LEFT_SHIFT)) jsY = -0.5;
+
         fpvCamera.rotate(-cursorDX / 128.0, -cursorDY / 128.0);
+        fpvCamera.position.x += jsX * CAMERA_SPEED * elapsedTime;
+        fpvCamera.position.z += jsZ * CAMERA_SPEED * elapsedTime;
+        fpvCamera.position.y += jsY * 20.0 * elapsedTime;
 
-        double joystickX = 0.0;
-        double joystickZ = 0.0;
-        double joystickY = 0.0;
-
-        if (Keyboard.isKeyDown(Key.W)) {
-            joystickX += Math.sin(fpvCamera.yaw);
-            joystickZ -= Math.cos(fpvCamera.yaw);
-        }
-        if (Keyboard.isKeyDown(Key.S)) {
-            joystickX += Math.sin(fpvCamera.yaw + Math.PI);
-            joystickZ -= Math.cos(fpvCamera.yaw + Math.PI);
-        }
-        if (Keyboard.isKeyDown(Key.A)) {
-            joystickX += Math.sin(fpvCamera.yaw - Math.PI / 2.0);
-            joystickZ -= Math.cos(fpvCamera.yaw - Math.PI / 2.0);
-        }
-        if (Keyboard.isKeyDown(Key.D)) {
-            joystickX += Math.sin(fpvCamera.yaw + Math.PI / 2.0);
-            joystickZ -= Math.cos(fpvCamera.yaw + Math.PI / 2.0);
-        }
-
-        if (Keyboard.isKeyDown(Key.SPACE))
-            joystickY = 0.5;
-        if (Keyboard.isKeyDown(Key.LEFT_SHIFT))
-            joystickY = -0.5;
-
-        {
-            final double CAMERA_SPEED = 20.0;
-            fpvCamera.position.x += joystickX * CAMERA_SPEED * elapsedTime;
-            fpvCamera.position.z += joystickZ * CAMERA_SPEED * elapsedTime;
-            fpvCamera.position.y += joystickY * 20.0 * elapsedTime;
-        }
-
+        //
+        // Chunk System
+        //
         int cx = ChunkPos.toChunkX((int) Math.floor(fpvCamera.position.x));
         int cz = ChunkPos.toChunkZ((int) Math.floor(fpvCamera.position.z));
-        chunkLoader.setCenter(cx, cz);
-
+        chunkMask.setCenter(cx, cz);
         chunkSystem.update(elapsedTime);
 
-        double npcAxisX = 0.0;
-        double npcAxisZ = 0.0;
-        if (Keyboard.isKeyDown(Key.I))
-            npcAxisZ += 1.0;
-        if (Keyboard.isKeyDown(Key.K))
-            npcAxisZ -= 1.0;
-        if (Keyboard.isKeyDown(Key.J))
-            npcAxisX += 1.0;
-        if (Keyboard.isKeyDown(Key.L))
-            npcAxisX -= 1.0;
-        double npcAxisLength = MathEx.magnitude(npcAxisX, npcAxisZ);
-        if (npcAxisLength > 0.0) {
-            npcAxisX /= npcAxisLength;
-            npcAxisZ /= npcAxisLength;
-        }
-
+        //
+        // Actor System
+        //
         tickInteraction.setElapsedTime(elapsedTime);
         actorMessages.add(TickMessage.DEFAULT);
 
@@ -168,71 +133,14 @@ public class Client implements AutoCloseable
             }
         }
 
-        if (Mouse.isLmbPressed() || Mouse.isRmbPressed()) {
-            double px = fpvCamera.position.x;
-            double py = fpvCamera.position.y;
-            double pz = fpvCamera.position.z;
-            final double DELTA = 0.0078125;
-            for (double zz = 0.0; zz < 7.0; zz += DELTA) {
-                px += DELTA * Math.sin(fpvCamera.yaw) * Math.cos(fpvCamera.pitch);
-                py += DELTA * Math.sin(fpvCamera.pitch);
-                pz -= DELTA * Math.cos(fpvCamera.yaw) * Math.cos(fpvCamera.pitch);
-                int pxi = (int) Math.floor(px);
-                int pyi = (int) Math.floor(py);
-                int pzi = (int) Math.floor(pz);
-                if (world.getBlock(pxi, pyi, pzi) != BlockType.EMPTY.id) {
-                    if (Mouse.isLmbPressed())
-                        world.setBlock(pxi, pyi, pzi, BlockType.EMPTY.id);
-                    else if (Mouse.isRmbPressed())
-                        world.setBlock(pxi, pyi, pzi, BlockType.OAK_FENCE.id);
-                    break;
-                }
-            }
-        }
+        //
+        // Temporary Test Code
+        //
+        temporaryTestCode();
 
-        if (Keyboard.isKeyPressed(Key.T)) {
-            NpcActor npcActor = new NpcActor(
-                    fpvCamera.position.x,
-                    fpvCamera.position.y,
-                    fpvCamera.position.z);
-            world.addActor(npcActor);
-        }
-
-        if (Keyboard.isKeyPressed(Key._1))
-            compositeDisplay.toggleVisibilityFlags(VisibilityFlags.BLOCKS);
-        if (Keyboard.isKeyPressed(Key._2))
-            compositeDisplay.toggleVisibilityFlags(VisibilityFlags.ENTITIES);
-        if (Keyboard.isKeyPressed(Key._3))
-            compositeDisplay.toggleVisibilityFlags(VisibilityFlags.SKYBOX);
-        if (Keyboard.isKeyPressed(Key._4))
-            compositeDisplay.toggleVisibilityFlags(VisibilityFlags.CLOUDS);
-        if (Keyboard.isKeyPressed(Key._5))
-            compositeDisplay.toggleVisibilityFlags(VisibilityFlags.HUD);
-        if (Keyboard.isKeyPressed(Key._6))
-            compositeDisplay.toggleVisibilityFlags(VisibilityFlags.DEBUG_GEOMETRY);
-
-        float spx = compositeDisplay.getCloudSpeedX();
-        float spz = compositeDisplay.getCloudSpeedZ();
-        if (Keyboard.isKeyDown(Key.UP)) {
-            spx += 5.0f;
-            compositeDisplay.setCloudSpeed(spx, spz);
-        }
-        else if (Keyboard.isKeyDown(Key.DOWN)) {
-            spx -= 5.0f;
-            compositeDisplay.setCloudSpeed(spx, spz);
-        }
-
-        if (Keyboard.isKeyPressed(Key.TAB)) {
-            if (Mouse.getMode() == Mouse.MODE_NORMAL)
-                Mouse.setMode(Mouse.MODE_CENTERED);
-            else
-                Mouse.setMode(Mouse.MODE_NORMAL);
-        }
-
-        if (uiServer.button("...", 3.0, 0, 48, 80, 32 + 48)) {
-            compositeDisplay.setCloudSeed(compositeDisplay.getCloudSeed() + 1L);
-        }
-
+        //
+        // Client Display
+        //
         Iterator<Long2ObjectMap.Entry<Chunk>> chunkMapIt = world.getChunkMapFastIterator();
         while (chunkMapIt.hasNext()) {
             Long2ObjectMap.Entry<Chunk> entry = chunkMapIt.next();
@@ -246,18 +154,11 @@ public class Client implements AutoCloseable
         }
 
         compositeDisplay.moveCamera(
-                (float) fpvCamera.position.x,
-                (float) fpvCamera.position.y,
-                (float) fpvCamera.position.z);
-        compositeDisplay.orientCamera(
-                (float) fpvCamera.yaw,
-                (float) fpvCamera.pitch);
+                (float) fpvCamera.position.x, (float) fpvCamera.position.y, (float) fpvCamera.position.z);
+        compositeDisplay.orientCamera((float) fpvCamera.yaw, (float) fpvCamera.pitch);
         compositeDisplay.setCameraFov((float) Math.toRadians(60.0));
-        compositeDisplay.resizeCamera(
-                GraphicsSettings.WINDOW_WIDTH,
-                GraphicsSettings.WINDOW_HEIGHT);
+        compositeDisplay.resizeCamera(GraphicsSettings.WINDOW_WIDTH, GraphicsSettings.WINDOW_HEIGHT);
         compositeDisplay.setCameraClipPlanes(0.0625f, 768.0f);
-
         compositeDisplay.tick(elapsedTime);
     }
 
@@ -327,5 +228,72 @@ public class Client implements AutoCloseable
 
         chunkDbPipe.getClientSide().request(ChunkRequest.createCloseRequest());
         chunkServerThread.join();
+    }
+
+    private void temporaryTestCode() {
+        if (Mouse.isLmbPressed() || Mouse.isRmbPressed()) {
+            double px = fpvCamera.position.x;
+            double py = fpvCamera.position.y;
+            double pz = fpvCamera.position.z;
+            final double DELTA = 0.0078125;
+            for (double zz = 0.0; zz < 7.0; zz += DELTA) {
+                px += DELTA * Math.sin(fpvCamera.yaw) * Math.cos(fpvCamera.pitch);
+                py += DELTA * Math.sin(fpvCamera.pitch);
+                pz -= DELTA * Math.cos(fpvCamera.yaw) * Math.cos(fpvCamera.pitch);
+                int pxi = (int) Math.floor(px);
+                int pyi = (int) Math.floor(py);
+                int pzi = (int) Math.floor(pz);
+                if (world.getBlock(pxi, pyi, pzi) != BlockType.EMPTY.id) {
+                    if (Mouse.isLmbPressed())
+                        world.setBlock(pxi, pyi, pzi, BlockType.EMPTY.id);
+                    else if (Mouse.isRmbPressed())
+                        world.setBlock(pxi, pyi, pzi, BlockType.OAK_FENCE.id);
+                    break;
+                }
+            }
+        }
+
+        if (Keyboard.isKeyPressed(Key.T)) {
+            NpcActor npcActor = new NpcActor(
+                    fpvCamera.position.x,
+                    fpvCamera.position.y,
+                    fpvCamera.position.z);
+            world.addActor(npcActor);
+        }
+
+        if (Keyboard.isKeyPressed(Key._1))
+            compositeDisplay.toggleVisibilityFlags(VisibilityFlags.BLOCKS);
+        if (Keyboard.isKeyPressed(Key._2))
+            compositeDisplay.toggleVisibilityFlags(VisibilityFlags.ENTITIES);
+        if (Keyboard.isKeyPressed(Key._3))
+            compositeDisplay.toggleVisibilityFlags(VisibilityFlags.SKYBOX);
+        if (Keyboard.isKeyPressed(Key._4))
+            compositeDisplay.toggleVisibilityFlags(VisibilityFlags.CLOUDS);
+        if (Keyboard.isKeyPressed(Key._5))
+            compositeDisplay.toggleVisibilityFlags(VisibilityFlags.HUD);
+        if (Keyboard.isKeyPressed(Key._6))
+            compositeDisplay.toggleVisibilityFlags(VisibilityFlags.DEBUG_GEOMETRY);
+
+        float spx = compositeDisplay.getCloudSpeedX();
+        float spz = compositeDisplay.getCloudSpeedZ();
+        if (Keyboard.isKeyDown(Key.UP)) {
+            spx += 5.0f;
+            compositeDisplay.setCloudSpeed(spx, spz);
+        }
+        else if (Keyboard.isKeyDown(Key.DOWN)) {
+            spx -= 5.0f;
+            compositeDisplay.setCloudSpeed(spx, spz);
+        }
+
+        if (Keyboard.isKeyPressed(Key.TAB)) {
+            if (Mouse.getMode() == Mouse.MODE_NORMAL)
+                Mouse.setMode(Mouse.MODE_CENTERED);
+            else
+                Mouse.setMode(Mouse.MODE_NORMAL);
+        }
+
+        if (uiServer.button("...", 3.0, 0, 48, 80, 32 + 48)) {
+            compositeDisplay.setCloudSeed(compositeDisplay.getCloudSeed() + 1L);
+        }
     }
 }
