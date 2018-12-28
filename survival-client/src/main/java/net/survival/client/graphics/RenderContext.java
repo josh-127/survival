@@ -1,6 +1,6 @@
 package net.survival.client.graphics;
 
-import net.survival.world.chunk.ChunkPos;
+import net.survival.world.chunk.ChunkColumnPos;
 
 public interface RenderContext
 {
@@ -40,7 +40,7 @@ public interface RenderContext
 
     void redrawChunk(long hashedPos);
     default void redrawChunk(int cx, int cz) {
-        redrawChunk(ChunkPos.hashPos(cx, cz));
+        redrawChunk(ChunkColumnPos.hashPos(cx, cz));
     }
 
     float getSkyboxBottomR();

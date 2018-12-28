@@ -3,10 +3,10 @@ package net.survival.world.chunk;
 public class ChunkResponse
 {
     public final long chunkPos;
-    public final Chunk chunk;
+    public final ChunkColumn chunkColumn;
 
-    public ChunkResponse(long chunkPos, Chunk chunk) {
+    public ChunkResponse(long chunkPos, ChunkColumn chunkColumn) {
         this.chunkPos = chunkPos;
-        this.chunk = chunk;
+        this.chunkColumn = chunkColumn;
     }
 }

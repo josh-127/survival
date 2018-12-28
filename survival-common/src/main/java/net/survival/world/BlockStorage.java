@@ -1,7 +1,7 @@
 package net.survival.world;
 
 import net.survival.block.BlockType;
-import net.survival.world.chunk.Chunk;
+import net.survival.world.chunk.ChunkColumn;
 
 public interface BlockStorage
 {
@@ -22,7 +22,7 @@ public interface BlockStorage
     }
 
     default int getTopLevel(int x, int z) {
-        int topLevel = Chunk.YLENGTH - 1;
+        int topLevel = ChunkColumn.YLENGTH - 1;
 
         while (topLevel >= 0 && getBlock(x, topLevel, z) == 0)
             --topLevel;

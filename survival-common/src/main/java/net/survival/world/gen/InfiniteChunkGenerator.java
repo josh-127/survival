@@ -5,20 +5,20 @@ import net.survival.util.DoubleMap2D;
 import net.survival.util.DoubleMap3D;
 import net.survival.util.ImprovedNoiseGenerator3D;
 import net.survival.world.biome.BiomeType;
-import net.survival.world.chunk.Chunk;
+import net.survival.world.chunk.ChunkColumn;
 import net.survival.world.chunk.ChunkProvider;
-import net.survival.world.chunk.ChunkPos;
+import net.survival.world.chunk.ChunkColumnPos;
 import net.survival.world.gen.layer.GenLayer;
 import net.survival.world.gen.layer.GenLayerFactory;
 
 public class InfiniteChunkGenerator implements ChunkProvider
 {
-    private static final int NBLOCK_YLENGTH = Chunk.YLENGTH / 32;
-    private static final int NBLOCK_ZLENGTH = Chunk.ZLENGTH / 4;
-    private static final int NBLOCK_XLENGTH = Chunk.XLENGTH / 4;
-    private static final int NMAP_YLENGTH = (Chunk.YLENGTH / NBLOCK_YLENGTH) + 1;
-    private static final int NMAP_ZLENGTH = (Chunk.ZLENGTH / NBLOCK_ZLENGTH) + 1;
-    private static final int NMAP_XLENGTH = (Chunk.XLENGTH / NBLOCK_XLENGTH) + 1;
+    private static final int NBLOCK_YLENGTH = ChunkColumn.YLENGTH / 32;
+    private static final int NBLOCK_ZLENGTH = ChunkColumn.ZLENGTH / 4;
+    private static final int NBLOCK_XLENGTH = ChunkColumn.XLENGTH / 4;
+    private static final int NMAP_YLENGTH = (ChunkColumn.YLENGTH / NBLOCK_YLENGTH) + 1;
+    private static final int NMAP_ZLENGTH = (ChunkColumn.ZLENGTH / NBLOCK_ZLENGTH) + 1;
+    private static final int NMAP_XLENGTH = (ChunkColumn.XLENGTH / NBLOCK_XLENGTH) + 1;
 
     private static final double MAIN_NOISE_XSCALE = 1.0 / 128.0;
     private static final double MAIN_NOISE_YSCALE = 1.0 / 128.0;
@@ -43,46 +43,46 @@ public class InfiniteChunkGenerator implements ChunkProvider
         mainNoiseGenerator = new ImprovedNoiseGenerator3D(MAIN_NOISE_XSCALE, MAIN_NOISE_YSCALE,
                 MAIN_NOISE_ZSCALE, MAIN_NOISE_OCTAVE_COUNT, seed);
 
-        biomeLayer = GenLayerFactory.createBiomeLayer(Chunk.XLENGTH * 4, Chunk.ZLENGTH * 4, seed);
+        biomeLayer = GenLayerFactory.createBiomeLayer(ChunkColumn.XLENGTH * 4, ChunkColumn.ZLENGTH * 4, seed);
 
         densityMap = new DoubleMap3D(NMAP_XLENGTH, NMAP_YLENGTH, NMAP_ZLENGTH);
-        minElevationMap = new DoubleMap2D(Chunk.XLENGTH, Chunk.ZLENGTH);
-        elevationRangeMap = new DoubleMap2D(Chunk.XLENGTH, Chunk.ZLENGTH);
+        minElevationMap = new DoubleMap2D(ChunkColumn.XLENGTH, ChunkColumn.ZLENGTH);
+        elevationRangeMap = new DoubleMap2D(ChunkColumn.XLENGTH, ChunkColumn.ZLENGTH);
     }
 
     @Override
-    public Chunk provideChunk(long hashedPos) {
-        int cx = ChunkPos.chunkXFromHashedPos(hashedPos);
-        int cz = ChunkPos.chunkZFromHashedPos(hashedPos);
+    public ChunkColumn provideChunk(long hashedPos) {
+        int cx = ChunkColumnPos.chunkXFromHashedPos(hashedPos);
+        int cz = ChunkColumnPos.chunkZFromHashedPos(hashedPos);
         int offsetX = cx * (NMAP_XLENGTH - 1);
         int offsetZ = cz * (NMAP_ZLENGTH - 1);
-        int globalX = ChunkPos.toGlobalX(cx, 0);
-        int globalZ = ChunkPos.toGlobalZ(cz, 0);
+        int globalX = ChunkColumnPos.toGlobalX(cx, 0);
+        int globalZ = ChunkColumnPos.toGlobalZ(cz, 0);
 
         mainNoiseGenerator.generate(densityMap, offsetX, 0.0, offsetZ);
         biomeLayer.generate(globalX, globalZ);
 
-        Chunk chunk = new Chunk();
-        generateBase(chunk);
-        replaceBlocks(cx, cz, chunk);
+        ChunkColumn chunkColumn = new ChunkColumn();
+        generateBase(chunkColumn);
+        replaceBlocks(cx, cz, chunkColumn);
 
-        return chunk;
+        return chunkColumn;
     }
 
-    private void replaceBlocks(int cx, int cz, Chunk chunk) {
-        for (int z = 0; z < Chunk.ZLENGTH; ++z) {
-            for (int x = 0; x < Chunk.XLENGTH; ++x)
-                chunk.setBlock(x, 0, z, BlockType.BEDROCK.id);
+    private void replaceBlocks(int cx, int cz, ChunkColumn chunkColumn) {
+        for (int z = 0; z < ChunkColumn.ZLENGTH; ++z) {
+            for (int x = 0; x < ChunkColumn.XLENGTH; ++x)
+                chunkColumn.setBlock(x, 0, z, BlockType.BEDROCK.id);
         }
 
-        for (int z = 0; z < Chunk.ZLENGTH; ++z) {
-            for (int x = 0; x < Chunk.XLENGTH; ++x) {
+        for (int z = 0; z < ChunkColumn.ZLENGTH; ++z) {
+            for (int x = 0; x < ChunkColumn.XLENGTH; ++x) {
                 BiomeType biome = BiomeType.byID(biomeLayer.sampleNearest(x, z));
                 int state = 0;
                 int counter = 3;
 
-                for (int y = Chunk.YLENGTH - 1; y >= 1; --y) {
-                    if (chunk.getBlock(x, y, z) != BlockType.TEMP_SOLID.id) {
+                for (int y = ChunkColumn.YLENGTH - 1; y >= 1; --y) {
+                    if (chunkColumn.getBlock(x, y, z) != BlockType.TEMP_SOLID.id) {
                         state = 0;
                         counter = 3;
                         continue;
@@ -90,13 +90,13 @@ public class InfiniteChunkGenerator implements ChunkProvider
 
                     switch (state) {
                     case 0:
-                        chunk.setBlock(x, y, z, biome.getTopBlockID());
+                        chunkColumn.setBlock(x, y, z, biome.getTopBlockID());
                         ++state;
                         break;
 
                     case 1:
                         if (counter > 0) {
-                            chunk.setBlock(x, y, z, BlockType.DIRT.id);
+                            chunkColumn.setBlock(x, y, z, BlockType.DIRT.id);
                             --counter;
 
                             if (counter == 0) {
@@ -108,7 +108,7 @@ public class InfiniteChunkGenerator implements ChunkProvider
                         break;
 
                     case 2:
-                        chunk.setBlock(x, y, z, BlockType.STONE.id);
+                        chunkColumn.setBlock(x, y, z, BlockType.STONE.id);
                         break;
                     }
                 }
@@ -116,16 +116,16 @@ public class InfiniteChunkGenerator implements ChunkProvider
         }
     }
 
-    private void generateBase(Chunk chunk) {
-        generateElevationMaps(minElevationMap, elevationRangeMap, chunk, biomeLayer);
+    private void generateBase(ChunkColumn chunkColumn) {
+        generateElevationMaps(minElevationMap, elevationRangeMap, chunkColumn, biomeLayer);
 
-        for (int y = 0; y < Chunk.YLENGTH; ++y) {
+        for (int y = 0; y < ChunkColumn.YLENGTH; ++y) {
             double noiseMapY = (double) y / NBLOCK_YLENGTH;
 
-            for (int z = 0; z < Chunk.ZLENGTH; ++z) {
+            for (int z = 0; z < ChunkColumn.ZLENGTH; ++z) {
                 double noiseMapZ = (double) z / NBLOCK_ZLENGTH;
 
-                for (int x = 0; x < Chunk.XLENGTH; ++x) {
+                for (int x = 0; x < ChunkColumn.XLENGTH; ++x) {
                     double noiseMapX = (double) x / NBLOCK_XLENGTH;
 
                     double density = densityMap.sampleLinear(noiseMapX, noiseMapY, noiseMapZ);
@@ -135,19 +135,19 @@ public class InfiniteChunkGenerator implements ChunkProvider
                     double threshold = (y - minElevation) / elevationRange;
 
                     if (density >= threshold)
-                        chunk.setBlock(x, y, z, BlockType.TEMP_SOLID.id);
+                        chunkColumn.setBlock(x, y, z, BlockType.TEMP_SOLID.id);
                     else if (y <= OCEAN_LEVEL)
-                        chunk.setBlock(x, y, z, BlockType.WATER.id);
+                        chunkColumn.setBlock(x, y, z, BlockType.WATER.id);
                 }
             }
         }
     }
 
     private void generateElevationMaps(DoubleMap2D minElevationMap, DoubleMap2D elevationRangeMap,
-            Chunk chunk, GenLayer genLayer)
+            ChunkColumn chunkColumn, GenLayer genLayer)
     {
-        for (int z = 0; z < Chunk.ZLENGTH; ++z) {
-            for (int x = 0; x < Chunk.XLENGTH; ++x) {
+        for (int z = 0; z < ChunkColumn.ZLENGTH; ++z) {
+            for (int x = 0; x < ChunkColumn.XLENGTH; ++x) {
                 double avgMinElevation = 0.0;
                 double avgMaxElevation = 0.0;
 

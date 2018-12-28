@@ -20,19 +20,19 @@ import net.survival.client.graphics.opengl.GLTexture;
 import net.survival.client.graphics.opengl.GLWrapMode;
 import net.survival.world.World;
 import net.survival.world.actor.Actor;
-import net.survival.world.chunk.Chunk;
-import net.survival.world.chunk.ChunkPos;
+import net.survival.world.chunk.ChunkColumn;
+import net.survival.world.chunk.ChunkColumnPos;
 
 class WorldDisplay implements GraphicsResource
 {
     private final World world;
-    private HashMap<Chunk, ChunkDisplay> nonCubicDisplays;
-    private HashMap<Chunk, ChunkDisplay> topFaceDisplays;
-    private HashMap<Chunk, ChunkDisplay> bottomFaceDisplays;
-    private HashMap<Chunk, ChunkDisplay> leftFaceDisplays;
-    private HashMap<Chunk, ChunkDisplay> rightFaceDisplays;
-    private HashMap<Chunk, ChunkDisplay> frontFaceDisplays;
-    private HashMap<Chunk, ChunkDisplay> backFaceDisplays;
+    private HashMap<ChunkColumn, ChunkDisplay> nonCubicDisplays;
+    private HashMap<ChunkColumn, ChunkDisplay> topFaceDisplays;
+    private HashMap<ChunkColumn, ChunkDisplay> bottomFaceDisplays;
+    private HashMap<ChunkColumn, ChunkDisplay> leftFaceDisplays;
+    private HashMap<ChunkColumn, ChunkDisplay> rightFaceDisplays;
+    private HashMap<ChunkColumn, ChunkDisplay> frontFaceDisplays;
+    private HashMap<ChunkColumn, ChunkDisplay> backFaceDisplays;
     private final GLTexture overlayTexture;
 
     private final LongSet chunksToRedraw;
@@ -154,15 +154,15 @@ class WorldDisplay implements GraphicsResource
         chunksToRedraw.clear();
     }
 
-    private void drawNonCubicDisplays(HashMap<Chunk, ChunkDisplay> displays, Matrix4f viewMatrix) {
-        for (Map.Entry<Chunk, ChunkDisplay> entry : displays.entrySet()) {
+    private void drawNonCubicDisplays(HashMap<ChunkColumn, ChunkDisplay> displays, Matrix4f viewMatrix) {
+        for (Map.Entry<ChunkColumn, ChunkDisplay> entry : displays.entrySet()) {
             ChunkDisplay display = entry.getValue();
 
             if (display.isEmpty())
                 continue;
 
-            float globalX = ChunkPos.toGlobalX(display.chunkX, 0);
-            float globalZ = ChunkPos.toGlobalZ(display.chunkZ, 0);
+            float globalX = ChunkColumnPos.toGlobalX(display.chunkX, 0);
+            float globalZ = ChunkColumnPos.toGlobalZ(display.chunkZ, 0);
 
             modelViewMatrix.set(viewMatrix).translate(globalX, 0.0f, globalZ);
             GLMatrixStack.load(modelViewMatrix);
@@ -170,19 +170,19 @@ class WorldDisplay implements GraphicsResource
         }
     }
 
-    private void drawFaceDisplays(HashMap<Chunk, ChunkDisplay> faceDisplays, BlockFace blockFace,
+    private void drawFaceDisplays(HashMap<ChunkColumn, ChunkDisplay> faceDisplays, BlockFace blockFace,
             boolean drawOverlay, Matrix4f viewMatrix)
     {
         // Block Faces
         if (!drawOverlay) {
-            for (Map.Entry<Chunk, ChunkDisplay> entry : faceDisplays.entrySet()) {
+            for (Map.Entry<ChunkColumn, ChunkDisplay> entry : faceDisplays.entrySet()) {
                 ChunkDisplay display = entry.getValue();
 
                 if (display.isEmpty())
                     continue;
 
-                float globalX = ChunkPos.toGlobalX(display.chunkX, 0);
-                float globalZ = ChunkPos.toGlobalZ(display.chunkZ, 0);
+                float globalX = ChunkColumnPos.toGlobalX(display.chunkX, 0);
+                float globalZ = ChunkColumnPos.toGlobalZ(display.chunkZ, 0);
 
                 modelViewMatrix.set(viewMatrix).translate(globalX, 0.0f, globalZ);
                 GLMatrixStack.load(modelViewMatrix);
@@ -216,41 +216,41 @@ class WorldDisplay implements GraphicsResource
         GLMatrixStack.pop();
     }
 
-    private void updateNonCubicDisplays(HashMap<Chunk, ChunkDisplay> nonCubicDisplays) {
+    private void updateNonCubicDisplays(HashMap<ChunkColumn, ChunkDisplay> nonCubicDisplays) {
         float cameraX = camera.x;
         float cameraZ = camera.z;
         float maxViewRadiusSquared = maxViewRadius * maxViewRadius;
 
-        Iterator<Long2ObjectMap.Entry<Chunk>> chunkMapIt = world.getChunkMapFastIterator();
+        Iterator<Long2ObjectMap.Entry<ChunkColumn>> chunkMapIt = world.getChunkMapFastIterator();
         while (chunkMapIt.hasNext()) {
-            Long2ObjectMap.Entry<Chunk> entry = chunkMapIt.next();
+            Long2ObjectMap.Entry<ChunkColumn> entry = chunkMapIt.next();
             long hashedPos = entry.getLongKey();
-            Chunk chunk = entry.getValue();
+            ChunkColumn chunkColumn = entry.getValue();
 
-            int cx = ChunkPos.chunkXFromHashedPos(hashedPos);
-            int cz = ChunkPos.chunkZFromHashedPos(hashedPos);
+            int cx = ChunkColumnPos.chunkXFromHashedPos(hashedPos);
+            int cz = ChunkColumnPos.chunkZFromHashedPos(hashedPos);
 
-            float relativeX = ChunkPos.toGlobalX(cx, Chunk.XLENGTH / 2) - cameraX;
-            float relativeZ = ChunkPos.toGlobalZ(cz, Chunk.ZLENGTH / 2) - cameraZ;
+            float relativeX = ChunkColumnPos.toGlobalX(cx, ChunkColumn.XLENGTH / 2) - cameraX;
+            float relativeZ = ChunkColumnPos.toGlobalZ(cz, ChunkColumn.ZLENGTH / 2) - cameraZ;
             float squareDistance = (relativeX * relativeX) + (relativeZ * relativeZ);
 
             if (squareDistance >= maxViewRadiusSquared)
                 continue;
 
-            ChunkDisplay existingDisplay = nonCubicDisplays.get(chunk);
+            ChunkDisplay existingDisplay = nonCubicDisplays.get(chunkColumn);
             boolean needsUpdating = existingDisplay == null || chunksToRedraw.contains(hashedPos);
 
             if (needsUpdating) {
                 if (existingDisplay != null)
                     existingDisplay.close();
 
-                nonCubicDisplays.put(chunk, ChunkDisplay.create(cx, cz, chunk, null, null));
+                nonCubicDisplays.put(chunkColumn, ChunkDisplay.create(cx, cz, chunkColumn, null, null));
             }
         }
 
-        Iterator<Map.Entry<Chunk, ChunkDisplay>> faceDisplaysIt = nonCubicDisplays.entrySet().iterator();
+        Iterator<Map.Entry<ChunkColumn, ChunkDisplay>> faceDisplaysIt = nonCubicDisplays.entrySet().iterator();
         while (faceDisplaysIt.hasNext()) {
-            Map.Entry<Chunk, ChunkDisplay> entry = faceDisplaysIt.next();
+            Map.Entry<ChunkColumn, ChunkDisplay> entry = faceDisplaysIt.next();
             ChunkDisplay chunkDisplay = entry.getValue();
 
             if (!world.containsChunk(chunkDisplay.chunkX, chunkDisplay.chunkZ)) {
@@ -260,7 +260,7 @@ class WorldDisplay implements GraphicsResource
         }
     }
 
-    private void updateFaceDisplays(HashMap<Chunk, ChunkDisplay> faceDisplays, BlockFace blockFace)
+    private void updateFaceDisplays(HashMap<ChunkColumn, ChunkDisplay> faceDisplays, BlockFace blockFace)
     {
         int dx = 0;
         int dz = 0;
@@ -279,25 +279,25 @@ class WorldDisplay implements GraphicsResource
         float cameraZ = camera.z;
         float maxViewRadiusSquared = maxViewRadius * maxViewRadius;
 
-        Iterator<Long2ObjectMap.Entry<Chunk>> chunkMapIt = world.getChunkMapFastIterator();
+        Iterator<Long2ObjectMap.Entry<ChunkColumn>> chunkMapIt = world.getChunkMapFastIterator();
         while (chunkMapIt.hasNext()) {
-            Long2ObjectMap.Entry<Chunk> entry = chunkMapIt.next();
+            Long2ObjectMap.Entry<ChunkColumn> entry = chunkMapIt.next();
             long hashedPos = entry.getLongKey();
-            Chunk chunk = entry.getValue();
+            ChunkColumn chunkColumn = entry.getValue();
 
-            int cx = ChunkPos.chunkXFromHashedPos(hashedPos);
-            int cz = ChunkPos.chunkZFromHashedPos(hashedPos);
+            int cx = ChunkColumnPos.chunkXFromHashedPos(hashedPos);
+            int cz = ChunkColumnPos.chunkZFromHashedPos(hashedPos);
 
-            float relativeX = ChunkPos.toGlobalX(cx, Chunk.XLENGTH / 2) - cameraX;
-            float relativeZ = ChunkPos.toGlobalZ(cz, Chunk.ZLENGTH / 2) - cameraZ;
+            float relativeX = ChunkColumnPos.toGlobalX(cx, ChunkColumn.XLENGTH / 2) - cameraX;
+            float relativeZ = ChunkColumnPos.toGlobalZ(cz, ChunkColumn.ZLENGTH / 2) - cameraZ;
             float squareDistance = (relativeX * relativeX) + (relativeZ * relativeZ);
 
             if (squareDistance >= maxViewRadiusSquared)
                 continue;
 
-            ChunkDisplay existingDisplay = faceDisplays.get(chunk);
-            Chunk adjacentChunk = world.getChunk(cx + dx, cz + dz);
-            long adjacentHashedPos = ChunkPos.hashPos(cx + dx, cz + dz);
+            ChunkDisplay existingDisplay = faceDisplays.get(chunkColumn);
+            ChunkColumn adjacentChunk = world.getChunk(cx + dx, cz + dz);
+            long adjacentHashedPos = ChunkColumnPos.hashPos(cx + dx, cz + dz);
 
             boolean needsUpdating = existingDisplay == null
                     || (existingDisplay.adjacentChunk == null && adjacentChunk != null)
@@ -308,13 +308,13 @@ class WorldDisplay implements GraphicsResource
                 if (existingDisplay != null)
                     existingDisplay.close();
 
-                faceDisplays.put(chunk, ChunkDisplay.create(cx, cz, chunk, adjacentChunk, blockFace));
+                faceDisplays.put(chunkColumn, ChunkDisplay.create(cx, cz, chunkColumn, adjacentChunk, blockFace));
             }
         }
 
-        Iterator<Map.Entry<Chunk, ChunkDisplay>> faceDisplaysIt = faceDisplays.entrySet().iterator();
+        Iterator<Map.Entry<ChunkColumn, ChunkDisplay>> faceDisplaysIt = faceDisplays.entrySet().iterator();
         while (faceDisplaysIt.hasNext()) {
-            Map.Entry<Chunk, ChunkDisplay> entry = faceDisplaysIt.next();
+            Map.Entry<ChunkColumn, ChunkDisplay> entry = faceDisplaysIt.next();
             ChunkDisplay chunkDisplay = entry.getValue();
 
             if (!world.containsChunk(chunkDisplay.chunkX, chunkDisplay.chunkZ)) {

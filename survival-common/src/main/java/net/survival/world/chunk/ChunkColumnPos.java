@@ -1,35 +1,35 @@
 package net.survival.world.chunk;
 
-public class ChunkPos
+public class ChunkColumnPos
 {
-    private ChunkPos() {}
+    private ChunkColumnPos() {}
 
     public static boolean positionEquals(int cx1, int cz1, int cx2, int cz2) {
         return cx1 == cx2 && cz1 == cz2;
     }
 
     public static int toChunkX(int x) {
-        return (int) Math.floor((double) x / Chunk.XLENGTH);
+        return (int) Math.floor((double) x / ChunkColumn.XLENGTH);
     }
 
     public static int toChunkZ(int z) {
-        return (int) Math.floor((double) z / Chunk.ZLENGTH);
+        return (int) Math.floor((double) z / ChunkColumn.ZLENGTH);
     }
 
     public static int toLocalX(int cx, int gx) {
-        return gx - cx * Chunk.XLENGTH;
+        return gx - cx * ChunkColumn.XLENGTH;
     }
 
     public static int toLocalZ(int cz, int gz) {
-        return gz - cz * Chunk.ZLENGTH;
+        return gz - cz * ChunkColumn.ZLENGTH;
     }
 
     public static int toGlobalX(int cx, int lx) {
-        return lx + cx * Chunk.XLENGTH;
+        return lx + cx * ChunkColumn.XLENGTH;
     }
 
     public static int toGlobalZ(int cz, int lz) {
-        return lz + cz * Chunk.ZLENGTH;
+        return lz + cz * ChunkColumn.ZLENGTH;
     }
 
     public static int getGlobalWestBound(int cx) {
@@ -37,7 +37,7 @@ public class ChunkPos
     }
 
     public static int getGlobalEastBound(int cx) {
-        return toGlobalX(cx, Chunk.XLENGTH);
+        return toGlobalX(cx, ChunkColumn.XLENGTH);
     }
 
     public static int getGlobalNorthBound(int cz) {
@@ -45,12 +45,12 @@ public class ChunkPos
     }
 
     public static int getGlobalSouthBound(int cz) {
-        return toGlobalZ(cz, Chunk.ZLENGTH);
+        return toGlobalZ(cz, ChunkColumn.ZLENGTH);
     }
 
     public static boolean isInBounds(int lx, int ly, int lz) {
-        return lx >= 0 && lx < Chunk.XLENGTH && ly >= 0 && ly < Chunk.YLENGTH && lz >= 0
-                && lz < Chunk.ZLENGTH;
+        return lx >= 0 && lx < ChunkColumn.XLENGTH && ly >= 0 && ly < ChunkColumn.YLENGTH && lz >= 0
+                && lz < ChunkColumn.ZLENGTH;
     }
 
     /**

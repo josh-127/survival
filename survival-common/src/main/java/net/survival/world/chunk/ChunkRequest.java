@@ -7,12 +7,12 @@ public class ChunkRequest
     public static final byte TYPE_CLOSE = 3;
 
     public final long chunkPos;
-    public final Chunk chunk;
+    public final ChunkColumn chunkColumn;
     public final byte type;
 
-    private ChunkRequest(long chunkPos, Chunk chunk, byte type) {
+    private ChunkRequest(long chunkPos, ChunkColumn chunkColumn, byte type) {
         this.chunkPos = chunkPos;
-        this.chunk = chunk;
+        this.chunkColumn = chunkColumn;
         this.type = type;
     }
 
@@ -21,15 +21,15 @@ public class ChunkRequest
     }
 
     public static ChunkRequest createGetRequest(int cx, int cz) {
-        return createGetRequest(ChunkPos.hashPos(cx, cz));
+        return createGetRequest(ChunkColumnPos.hashPos(cx, cz));
     }
 
-    public static ChunkRequest createPostRequest(long chunkPos, Chunk chunk) {
-        return new ChunkRequest(chunkPos, chunk.makeCopy(), TYPE_POST);
+    public static ChunkRequest createPostRequest(long chunkPos, ChunkColumn chunkColumn) {
+        return new ChunkRequest(chunkPos, chunkColumn.makeCopy(), TYPE_POST);
     }
 
-    public static ChunkRequest createPostRequest(int cx, int cz, Chunk chunk) {
-        return createPostRequest(ChunkPos.hashPos(cx, cz), chunk);
+    public static ChunkRequest createPostRequest(int cx, int cz, ChunkColumn chunkColumn) {
+        return createPostRequest(ChunkColumnPos.hashPos(cx, cz), chunkColumn);
     }
 
     public static ChunkRequest createCloseRequest() {

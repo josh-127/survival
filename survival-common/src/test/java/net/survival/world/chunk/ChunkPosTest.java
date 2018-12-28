@@ -16,7 +16,7 @@ public class ChunkPosTest
     public void hashPos_givenASetOfGeneralCasePositions_returnsCorrectResult(int cx, int cz,
             long expected)
     {
-        assertEquals(expected, ChunkPos.hashPos(cx, cz));
+        assertEquals(expected, ChunkColumnPos.hashPos(cx, cz));
     }
 
     @Test
@@ -24,8 +24,8 @@ public class ChunkPosTest
     public void chunkXYZFromHashedPos_givenASetOfGeneralCasePositions_returnsCorrectResult(
             int expectedX, int expectedZ, long hashedPos)
     {
-        assertEquals(expectedX, ChunkPos.chunkXFromHashedPos(hashedPos));
-        assertEquals(expectedZ, ChunkPos.chunkZFromHashedPos(hashedPos));
+        assertEquals(expectedX, ChunkColumnPos.chunkXFromHashedPos(hashedPos));
+        assertEquals(expectedZ, ChunkColumnPos.chunkZFromHashedPos(hashedPos));
     }
 
     @SuppressWarnings("unused")
@@ -44,56 +44,56 @@ public class ChunkPosTest
 
     @Test
     public void hashPos_givenAPositionAtTheOrigin_returnsCorrectResult() {
-        assertEquals(0L, ChunkPos.hashPos(0, 0));
+        assertEquals(0L, ChunkColumnPos.hashPos(0, 0));
     }
 
     @Test
     public void chunkXZFromHashedPos_givenAPositionAtTheOrigin_returnsCorrectResult() {
-        assertEquals(0, ChunkPos.chunkXFromHashedPos(0L));
-        assertEquals(0, ChunkPos.chunkZFromHashedPos(0L));
+        assertEquals(0, ChunkColumnPos.chunkXFromHashedPos(0L));
+        assertEquals(0, ChunkColumnPos.chunkZFromHashedPos(0L));
     }
 
     @Test
     public void hashPos_givenAMaximumPositiveXPosition_returnsCorrectResult() {
-        assertEquals(0x7FFFFFFFL, ChunkPos.hashPos(0x7FFFFFFF, 0));
+        assertEquals(0x7FFFFFFFL, ChunkColumnPos.hashPos(0x7FFFFFFF, 0));
     }
 
     @Test
     public void chunkXZFromHashedPos_givenAMaximumPositiveXPosition_returnsCorrectResult() {
-        assertEquals(0x7FFFFFFF, ChunkPos.chunkXFromHashedPos(0x7FFFFFFFL));
-        assertEquals(0, ChunkPos.chunkZFromHashedPos(0x7FFFFFFFL));
+        assertEquals(0x7FFFFFFF, ChunkColumnPos.chunkXFromHashedPos(0x7FFFFFFFL));
+        assertEquals(0, ChunkColumnPos.chunkZFromHashedPos(0x7FFFFFFFL));
     }
 
     @Test
     public void hashPos_givenAMaximumNegativeXPosition_returnsCorrectResult() {
-        assertEquals(0x80000000L, ChunkPos.hashPos(0x80000000, 0));
+        assertEquals(0x80000000L, ChunkColumnPos.hashPos(0x80000000, 0));
     }
 
     @Test
     public void chunkXZFromHashedPos_givenAMaximumNegativeXPosition_returnsCorrectResult() {
-        assertEquals(0x80000000, ChunkPos.chunkXFromHashedPos(0x80000000L));
-        assertEquals(0, ChunkPos.chunkZFromHashedPos(0x80000000L));
+        assertEquals(0x80000000, ChunkColumnPos.chunkXFromHashedPos(0x80000000L));
+        assertEquals(0, ChunkColumnPos.chunkZFromHashedPos(0x80000000L));
     }
 
     @Test
     public void hashPos_givenAMaximumPositiveZPosition_returnsCorrectResult() {
-        assertEquals(0x7FFFFFFF00000000L, ChunkPos.hashPos(0, 0x7FFFFFFF));
+        assertEquals(0x7FFFFFFF00000000L, ChunkColumnPos.hashPos(0, 0x7FFFFFFF));
     }
 
     @Test
     public void chunkXZFromHashedPos_givenAMaximumPositiveZPosition_returnsCorrectResult() {
-        assertEquals(0, ChunkPos.chunkXFromHashedPos(0x7FFFFFFF00000000L));
-        assertEquals(0x7FFFFFFF, ChunkPos.chunkZFromHashedPos(0x7FFFFFFF00000000L));
+        assertEquals(0, ChunkColumnPos.chunkXFromHashedPos(0x7FFFFFFF00000000L));
+        assertEquals(0x7FFFFFFF, ChunkColumnPos.chunkZFromHashedPos(0x7FFFFFFF00000000L));
     }
 
     @Test
     public void hashPos_givenAMaximumNegativeZPosition_returnsCorrectResult() {
-        assertEquals(0x8000000000000000L, ChunkPos.hashPos(0, 0x80000000));
+        assertEquals(0x8000000000000000L, ChunkColumnPos.hashPos(0, 0x80000000));
     }
 
     @Test
     public void chunkXZFromHashedPos_givenAMaximumNegativeZPosition_returnsCorrectResult() {
-        assertEquals(0, ChunkPos.chunkXFromHashedPos(0x8000000000000000L));
-        assertEquals(0x80000000, ChunkPos.chunkZFromHashedPos(0x8000000000000000L));
+        assertEquals(0, ChunkColumnPos.chunkXFromHashedPos(0x8000000000000000L));
+        assertEquals(0x80000000, ChunkColumnPos.chunkZFromHashedPos(0x8000000000000000L));
     }
 }

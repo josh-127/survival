@@ -2,9 +2,9 @@ package net.survival.world.chunk;
 
 public interface ChunkProvider
 {
-    Chunk provideChunk(long hashedPos);
+    ChunkColumn provideChunk(long hashedPos);
 
-    default Chunk provideChunk(int cx, int cz) {
-        return provideChunk(ChunkPos.hashPos(cx, cz));
+    default ChunkColumn provideChunk(int cx, int cz) {
+        return provideChunk(ChunkColumnPos.hashPos(cx, cz));
     }
 }

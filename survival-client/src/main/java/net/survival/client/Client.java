@@ -26,9 +26,9 @@ import net.survival.world.actor.Message;
 import net.survival.world.actor.TickMessage;
 import net.survival.world.actor.interaction.InteractionContext;
 import net.survival.world.actor.v0_1_0_snapshot.NpcActor;
-import net.survival.world.chunk.Chunk;
+import net.survival.world.chunk.ChunkColumn;
 import net.survival.world.chunk.ChunkDbPipe;
-import net.survival.world.chunk.ChunkPos;
+import net.survival.world.chunk.ChunkColumnPos;
 import net.survival.world.chunk.ChunkRequest;
 import net.survival.world.chunk.ChunkServer;
 import net.survival.world.chunk.ChunkSystem;
@@ -109,8 +109,8 @@ public class Client implements AutoCloseable
         //
         // Chunk System
         //
-        int cx = ChunkPos.toChunkX((int) Math.floor(fpvCamera.position.x));
-        int cz = ChunkPos.toChunkZ((int) Math.floor(fpvCamera.position.z));
+        int cx = ChunkColumnPos.toChunkX((int) Math.floor(fpvCamera.position.x));
+        int cz = ChunkColumnPos.toChunkZ((int) Math.floor(fpvCamera.position.z));
         chunkMask.setCenter(cx, cz);
         chunkSystem.update(elapsedTime);
 
@@ -141,14 +141,14 @@ public class Client implements AutoCloseable
         //
         // Client Display
         //
-        Iterator<Long2ObjectMap.Entry<Chunk>> chunkMapIt = world.getChunkMapFastIterator();
+        Iterator<Long2ObjectMap.Entry<ChunkColumn>> chunkMapIt = world.getChunkMapFastIterator();
         while (chunkMapIt.hasNext()) {
-            Long2ObjectMap.Entry<Chunk> entry = chunkMapIt.next();
+            Long2ObjectMap.Entry<ChunkColumn> entry = chunkMapIt.next();
             long hashedPos = entry.getLongKey();
-            Chunk chunk = entry.getValue();
+            ChunkColumn chunkColumn = entry.getValue();
 
-            if (chunk.isBlocksModified()) {
-                chunk.clearModificationFlags();
+            if (chunkColumn.isBlocksModified()) {
+                chunkColumn.clearModificationFlags();
                 compositeDisplay.redrawChunk(hashedPos);
             }
         }

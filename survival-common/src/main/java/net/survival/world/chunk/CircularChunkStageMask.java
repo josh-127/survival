@@ -35,7 +35,7 @@ public class CircularChunkStageMask implements ChunkStageMask
                 if (squareDistance(x, z) <= radiusSquared) {
                     int cx = offsetCX + x;
                     int cz = offsetCZ + z;
-                    chunkPositions.add(ChunkPos.hashPos(cx, cz));
+                    chunkPositions.add(ChunkColumnPos.hashPos(cx, cz));
                 }
             }
         }

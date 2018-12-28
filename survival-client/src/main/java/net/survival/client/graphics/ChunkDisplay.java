@@ -6,6 +6,7 @@ import net.survival.client.graphics.opengl.GLDisplayList;
 import net.survival.client.graphics.opengl.GLRenderContext;
 import net.survival.client.graphics.opengl.GLTexture;
 import net.survival.world.chunk.Chunk;
+import net.survival.world.chunk.ChunkColumn;
 
 class ChunkDisplay implements GraphicsResource
 {
@@ -20,8 +21,8 @@ class ChunkDisplay implements GraphicsResource
     public final GLDisplayList displayList;
     public final int chunkX;
     public final int chunkZ;
-    public final Chunk chunk;
-    public final Chunk adjacentChunk;
+    public final ChunkColumn chunkColumn;
+    public final ChunkColumn adjacentChunk;
     public final BlockFace blockFace;
     public final GLTexture texture;
 
@@ -29,8 +30,8 @@ class ChunkDisplay implements GraphicsResource
             GLDisplayList displayList,
             int cx,
             int cz,
-            Chunk chunk,
-            Chunk adjacentChunk,
+            ChunkColumn chunkColumn,
+            ChunkColumn adjacentChunk,
             BlockFace blockFace,
             GLTexture texture
     )
@@ -38,75 +39,75 @@ class ChunkDisplay implements GraphicsResource
         this.displayList = displayList;
         this.chunkX = cx;
         this.chunkZ = cz;
-        this.chunk = chunk;
+        this.chunkColumn = chunkColumn;
         this.adjacentChunk = adjacentChunk;
         this.texture = texture;
         this.blockFace = blockFace;
     }
 
-    public static ChunkDisplay create(int cx, int cz, Chunk chunk, Chunk adjacentChunk, BlockFace blockFace) {
+    public static ChunkDisplay create(int cx, int cz, ChunkColumn chunkColumn, ChunkColumn adjacentChunk, BlockFace blockFace) {
         if (blockFace == null)
-            return createNonCubicFaces(cx, cz, chunk);
+            return createNonCubicFaces(cx, cz, chunkColumn);
 
         GLDisplayList.Builder builder = new GLDisplayList.Builder();
 
         switch (blockFace) {
         case TOP:
             return new ChunkDisplay(
-                    createTopFaces(chunk, builder),
+                    createTopFaces(chunkColumn, builder),
                     cx,
                     cz,
-                    chunk,
+                    chunkColumn,
                     adjacentChunk,
                     blockFace,
                     BlockRenderer.topFaceTextures.blockTextures);
 
         case BOTTOM:
             return new ChunkDisplay(
-                    createBottomFaces(chunk, builder),
+                    createBottomFaces(chunkColumn, builder),
                     cx,
                     cz,
-                    chunk,
+                    chunkColumn,
                     adjacentChunk,
                     blockFace,
                     BlockRenderer.bottomFaceTextures.blockTextures);
 
         case LEFT:
             return new ChunkDisplay(
-                    createLeftFaces(chunk, adjacentChunk, builder),
+                    createLeftFaces(chunkColumn, adjacentChunk, builder),
                     cx,
                     cz,
-                    chunk,
+                    chunkColumn,
                     adjacentChunk,
                     blockFace,
                     BlockRenderer.leftFaceTextures.blockTextures);
 
         case RIGHT:
             return new ChunkDisplay(
-                    createRightFaces(chunk, adjacentChunk, builder),
+                    createRightFaces(chunkColumn, adjacentChunk, builder),
                     cx,
                     cz,
-                    chunk,
+                    chunkColumn,
                     adjacentChunk,
                     blockFace,
                     BlockRenderer.rightFaceTextures.blockTextures);
 
         case FRONT:
             return new ChunkDisplay(
-                    createFrontFaces(chunk, adjacentChunk, builder),
+                    createFrontFaces(chunkColumn, adjacentChunk, builder),
                     cx,
                     cz,
-                    chunk,
+                    chunkColumn,
                     adjacentChunk,
                     blockFace,
                     BlockRenderer.frontFaceTextures.blockTextures);
 
         case BACK:
             return new ChunkDisplay(
-                    createBackFaces(chunk, adjacentChunk, builder),
+                    createBackFaces(chunkColumn, adjacentChunk, builder),
                     cx,
                     cz,
-                    chunk,
+                    chunkColumn,
                     adjacentChunk,
                     blockFace,
                     BlockRenderer.backFaceTextures.blockTextures);
@@ -115,27 +116,27 @@ class ChunkDisplay implements GraphicsResource
         throw new IllegalArgumentException("blockFace");
     }
 
-    private static GLDisplayList createTopFaces(Chunk chunk, GLDisplayList.Builder builder) {
+    private static GLDisplayList createTopFaces(ChunkColumn chunkColumn, GLDisplayList.Builder builder) {
         builder.setColor(TOP_FACE_SHADE, TOP_FACE_SHADE, TOP_FACE_SHADE);
 
-        for (int i = 0; i < Chunk.VOLUME - Chunk.BASE_AREA; ++i) {
-            int x = i % Chunk.XLENGTH;
-            int z = (i / Chunk.XLENGTH) % Chunk.ZLENGTH;
-            int y = i / Chunk.BASE_AREA;
+        for (int i = 0; i < ChunkColumn.VOLUME - ChunkColumn.BASE_AREA; ++i) {
+            int x = i % ChunkColumn.XLENGTH;
+            int z = (i / ChunkColumn.XLENGTH) % ChunkColumn.ZLENGTH;
+            int y = i / ChunkColumn.BASE_AREA;
 
-            short blockID = chunk.blockIDs[i];
-            short adjacentBlockID = chunk.blockIDs[i + Chunk.BASE_AREA];
+            short blockID = chunkColumn.getBlock(x, y, z);
+            short adjacentBlockID = chunkColumn.getBlock(x, y + 1, z);
 
             BlockRenderer.byBlockID(blockID).pushTopFaces(
                     x, y, z, blockID, adjacentBlockID, builder);
         }
 
-        for (int i = Chunk.VOLUME - Chunk.BASE_AREA; i < Chunk.VOLUME; ++i) {
-            int x = i % Chunk.XLENGTH;
-            int z = (i / Chunk.XLENGTH) % Chunk.ZLENGTH;
-            int y = i / Chunk.BASE_AREA;
+        for (int i = ChunkColumn.VOLUME - ChunkColumn.BASE_AREA; i < ChunkColumn.VOLUME; ++i) {
+            int x = i % ChunkColumn.XLENGTH;
+            int z = (i / ChunkColumn.XLENGTH) % ChunkColumn.ZLENGTH;
+            int y = i / ChunkColumn.BASE_AREA;
 
-            short blockID = chunk.blockIDs[i];
+            short blockID = chunkColumn.getBlock(x, y, z);
 
             BlockRenderer.byBlockID(blockID).pushTopFaces(
                     x, y, z, blockID, (short) 0, builder);
@@ -144,16 +145,16 @@ class ChunkDisplay implements GraphicsResource
         return builder.build();
     }
 
-    private static GLDisplayList createBottomFaces(Chunk chunk, GLDisplayList.Builder builder) {
+    private static GLDisplayList createBottomFaces(ChunkColumn chunkColumn, GLDisplayList.Builder builder) {
         builder.setColor(BOTTOM_FACE_SHADE, BOTTOM_FACE_SHADE, BOTTOM_FACE_SHADE);
 
-        for (int i = Chunk.BASE_AREA; i < Chunk.VOLUME; ++i) {
-            int x = i % Chunk.XLENGTH;
-            int z = (i / Chunk.XLENGTH) % Chunk.ZLENGTH;
-            int y = i / Chunk.BASE_AREA;
+        for (int i = ChunkColumn.BASE_AREA; i < ChunkColumn.VOLUME; ++i) {
+            int x = i % ChunkColumn.XLENGTH;
+            int z = (i / ChunkColumn.XLENGTH) % ChunkColumn.ZLENGTH;
+            int y = i / ChunkColumn.BASE_AREA;
 
-            short blockID = chunk.blockIDs[i];
-            short adjacentBlockID = chunk.blockIDs[i - Chunk.BASE_AREA];
+            short blockID = chunkColumn.getBlock(x, y, z);
+            short adjacentBlockID = chunkColumn.getBlock(x, y - 1, z);
 
             BlockRenderer.byBlockID(blockID).pushBottomFaces(
                     x, y, z, blockID, adjacentBlockID, builder);
@@ -162,18 +163,18 @@ class ChunkDisplay implements GraphicsResource
         return builder.build();
     }
 
-    private static GLDisplayList createLeftFaces(Chunk chunk, Chunk adjacentChunk, GLDisplayList.Builder builder) {
+    private static GLDisplayList createLeftFaces(ChunkColumn chunkColumn, ChunkColumn adjacentChunk, GLDisplayList.Builder builder) {
         builder.setColor(LEFT_FACE_SHADE, LEFT_FACE_SHADE, LEFT_FACE_SHADE);
 
-        for (int y = 0; y < Chunk.YLENGTH; ++y) {
-            int indexY = y * Chunk.BASE_AREA;
+        for (int y = 0; y < ChunkColumn.YLENGTH; ++y) {
+            int indexY = y * ChunkColumn.BASE_AREA;
 
-            for (int z = 0; z < Chunk.ZLENGTH; ++z) {
-                int indexYZ = indexY + (z * Chunk.XLENGTH);
+            for (int z = 0; z < ChunkColumn.ZLENGTH; ++z) {
+                int indexYZ = indexY + (z * ChunkColumn.XLENGTH);
 
-                for (int x = 1; x < Chunk.XLENGTH; ++x) {
-                    short blockID = chunk.blockIDs[indexYZ + x];
-                    short adjacentBlockID = chunk.blockIDs[indexYZ + x - 1];
+                for (int x = 1; x < ChunkColumn.XLENGTH; ++x) {
+                    short blockID = chunkColumn.getBlock(x, y, z);
+                    short adjacentBlockID = chunkColumn.getBlock(x - 1, y, z);
 
                     BlockRenderer.byBlockID(blockID).pushLeftFaces(
                             x, y, z, blockID, adjacentBlockID, builder);
@@ -182,14 +183,14 @@ class ChunkDisplay implements GraphicsResource
         }
 
         if (adjacentChunk != null) {
-            for (int y = 0; y < Chunk.YLENGTH; ++y) {
-                int indexY = y * Chunk.BASE_AREA;
+            for (int y = 0; y < ChunkColumn.YLENGTH; ++y) {
+                int indexY = y * ChunkColumn.BASE_AREA;
 
-                for (int z = 0; z < Chunk.ZLENGTH; ++z) {
-                    int indexYZ = indexY + (z * Chunk.XLENGTH);
+                for (int z = 0; z < ChunkColumn.ZLENGTH; ++z) {
+                    int indexYZ = indexY + (z * ChunkColumn.XLENGTH);
 
-                    short blockID = chunk.blockIDs[indexYZ];
-                    short adjacentBlockID = adjacentChunk.blockIDs[indexYZ + Chunk.XLENGTH - 1];
+                    short blockID = chunkColumn.getBlock(0, y, z);
+                    short adjacentBlockID = adjacentChunk.getBlock(Chunk.XLENGTH - 1, y, z);
 
                     BlockRenderer.byBlockID(blockID).pushLeftFaces(
                             0, y, z, blockID, adjacentBlockID, builder);
@@ -200,18 +201,18 @@ class ChunkDisplay implements GraphicsResource
         return builder.build();
     }
 
-    private static GLDisplayList createRightFaces(Chunk chunk, Chunk adjacentChunk, GLDisplayList.Builder builder) {
+    private static GLDisplayList createRightFaces(ChunkColumn chunkColumn, ChunkColumn adjacentChunk, GLDisplayList.Builder builder) {
         builder.setColor(RIGHT_FACE_SHADE, RIGHT_FACE_SHADE, RIGHT_FACE_SHADE);
 
-        for (int y = 0; y < Chunk.YLENGTH; ++y) {
-            int indexY = y * Chunk.BASE_AREA;
+        for (int y = 0; y < ChunkColumn.YLENGTH; ++y) {
+            int indexY = y * ChunkColumn.BASE_AREA;
 
-            for (int z = 0; z < Chunk.ZLENGTH; ++z) {
-                int indexYZ = indexY + (z * Chunk.XLENGTH);
+            for (int z = 0; z < ChunkColumn.ZLENGTH; ++z) {
+                int indexYZ = indexY + (z * ChunkColumn.XLENGTH);
 
-                for (int x = 0; x < Chunk.XLENGTH - 1; ++x) {
-                    short blockID = chunk.blockIDs[indexYZ + x];
-                    short adjacentBlockID = chunk.blockIDs[indexYZ + x + 1];
+                for (int x = 0; x < ChunkColumn.XLENGTH - 1; ++x) {
+                    short blockID = chunkColumn.getBlock(x, y, z);
+                    short adjacentBlockID = chunkColumn.getBlock(x + 1, y, z);
 
                     BlockRenderer.byBlockID(blockID).pushRightFaces(
                             x, y, z, blockID, adjacentBlockID, builder);
@@ -220,17 +221,17 @@ class ChunkDisplay implements GraphicsResource
         }
 
         if (adjacentChunk != null) {
-            for (int y = 0; y < Chunk.YLENGTH; ++y) {
-                int indexY = y * Chunk.BASE_AREA;
+            for (int y = 0; y < ChunkColumn.YLENGTH; ++y) {
+                int indexY = y * ChunkColumn.BASE_AREA;
 
-                for (int z = 0; z < Chunk.ZLENGTH; ++z) {
-                    int indexYZ = indexY + (z * Chunk.XLENGTH);
+                for (int z = 0; z < ChunkColumn.ZLENGTH; ++z) {
+                    int indexYZ = indexY + (z * ChunkColumn.XLENGTH);
 
-                    short blockID = chunk.blockIDs[indexYZ + Chunk.XLENGTH - 1];
-                    short adjacentBlockID = adjacentChunk.blockIDs[indexYZ];
+                    short blockID = chunkColumn.getBlock(Chunk.XLENGTH - 1, y, z);
+                    short adjacentBlockID = adjacentChunk.getBlock(0, y, z);
 
                     BlockRenderer.byBlockID(blockID).pushRightFaces(
-                            Chunk.XLENGTH - 1, y, z, blockID, adjacentBlockID, builder);
+                            ChunkColumn.XLENGTH - 1, y, z, blockID, adjacentBlockID, builder);
                 }
             }
         }
@@ -238,20 +239,20 @@ class ChunkDisplay implements GraphicsResource
         return builder.build();
     }
 
-    private static GLDisplayList createFrontFaces(Chunk chunk, Chunk adjacentChunk, GLDisplayList.Builder builder) {
+    private static GLDisplayList createFrontFaces(ChunkColumn chunkColumn, ChunkColumn adjacentChunk, GLDisplayList.Builder builder) {
         builder.setColor(FRONT_FACE_SHADE, FRONT_FACE_SHADE, FRONT_FACE_SHADE);
 
-        for (int y = 0; y < Chunk.YLENGTH; ++y) {
-            int indexY = y * Chunk.BASE_AREA;
+        for (int y = 0; y < ChunkColumn.YLENGTH; ++y) {
+            int indexY = y * ChunkColumn.BASE_AREA;
 
-            for (int z = 0; z < Chunk.ZLENGTH - 1; ++z) {
-                int indexYZ = indexY + (z * Chunk.XLENGTH);
+            for (int z = 0; z < ChunkColumn.ZLENGTH - 1; ++z) {
+                int indexYZ = indexY + (z * ChunkColumn.XLENGTH);
 
-                for (int x = 0; x < Chunk.XLENGTH; ++x) {
+                for (int x = 0; x < ChunkColumn.XLENGTH; ++x) {
                     int indexYZX = indexYZ + x;
 
-                    short blockID = chunk.blockIDs[indexYZX];
-                    short adjacentBlockID = chunk.blockIDs[indexYZX + Chunk.XLENGTH];
+                    short blockID = chunkColumn.getBlock(x, y, z);
+                    short adjacentBlockID = chunkColumn.getBlock(x, y, z + 1);
 
                     BlockRenderer.byBlockID(blockID).pushFrontFaces(
                             x, y, z, blockID, adjacentBlockID, builder);
@@ -260,18 +261,18 @@ class ChunkDisplay implements GraphicsResource
         }
 
         if (adjacentChunk != null) {
-            int indexZ = Chunk.BASE_AREA - Chunk.XLENGTH;
+            int indexZ = ChunkColumn.BASE_AREA - ChunkColumn.XLENGTH;
 
-            for (int y = 0; y < Chunk.YLENGTH; ++y) {
-                int indexY = y * Chunk.BASE_AREA;
+            for (int y = 0; y < ChunkColumn.YLENGTH; ++y) {
+                int indexY = y * ChunkColumn.BASE_AREA;
                 int indexYZ = indexZ + indexY;
 
-                for (int x = 0; x < Chunk.XLENGTH; ++x) {
-                    short blockID = chunk.blockIDs[indexYZ + x];
-                    short adjacentBlockID = adjacentChunk.blockIDs[indexY + x];
+                for (int x = 0; x < ChunkColumn.XLENGTH; ++x) {
+                    short blockID = chunkColumn.getBlock(x, y, Chunk.ZLENGTH - 1);
+                    short adjacentBlockID = adjacentChunk.getBlock(x, y, 0);
 
                     BlockRenderer.byBlockID(blockID).pushFrontFaces(
-                            x, y, Chunk.ZLENGTH - 1, blockID, adjacentBlockID, builder);
+                            x, y, ChunkColumn.ZLENGTH - 1, blockID, adjacentBlockID, builder);
                 }
             }
         }
@@ -279,20 +280,20 @@ class ChunkDisplay implements GraphicsResource
         return builder.build();
     }
 
-    private static GLDisplayList createBackFaces(Chunk chunk, Chunk adjacentChunk, GLDisplayList.Builder builder) {
+    private static GLDisplayList createBackFaces(ChunkColumn chunkColumn, ChunkColumn adjacentChunk, GLDisplayList.Builder builder) {
         builder.setColor(BACK_FACE_SHADE, BACK_FACE_SHADE, BACK_FACE_SHADE);
 
-        for (int y = 0; y < Chunk.YLENGTH; ++y) {
-            int indexY = y * Chunk.BASE_AREA;
+        for (int y = 0; y < ChunkColumn.YLENGTH; ++y) {
+            int indexY = y * ChunkColumn.BASE_AREA;
 
-            for (int z = 1; z < Chunk.ZLENGTH; ++z) {
-                int indexYZ = indexY + (z * Chunk.XLENGTH);
+            for (int z = 1; z < ChunkColumn.ZLENGTH; ++z) {
+                int indexYZ = indexY + (z * ChunkColumn.XLENGTH);
 
-                for (int x = 0; x < Chunk.XLENGTH; ++x) {
+                for (int x = 0; x < ChunkColumn.XLENGTH; ++x) {
                     int indexYZX = indexYZ + x;
 
-                    short blockID = chunk.blockIDs[indexYZX];
-                    short adjacentBlockID = chunk.blockIDs[indexYZX - Chunk.XLENGTH];
+                    short blockID = chunkColumn.getBlock(x, y, z);
+                    short adjacentBlockID = chunkColumn.getBlock(x, y, z - 1);
 
                     BlockRenderer.byBlockID(blockID).pushBackFaces(
                             x, y, z, blockID, adjacentBlockID, builder);
@@ -301,13 +302,13 @@ class ChunkDisplay implements GraphicsResource
         }
 
         if (adjacentChunk != null) {
-            for (int y = 0; y < Chunk.YLENGTH; ++y) {
-                int indexY = y * Chunk.BASE_AREA;
-                int adjacentIndexYZ = indexY + Chunk.BASE_AREA - Chunk.XLENGTH;
+            for (int y = 0; y < ChunkColumn.YLENGTH; ++y) {
+                int indexY = y * ChunkColumn.BASE_AREA;
+                int adjacentIndexYZ = indexY + ChunkColumn.BASE_AREA - ChunkColumn.XLENGTH;
 
-                for (int x = 0; x < Chunk.XLENGTH; ++x) {
-                    short blockID = chunk.blockIDs[indexY + x];
-                    short adjacentBlockID = adjacentChunk.blockIDs[adjacentIndexYZ + x];
+                for (int x = 0; x < ChunkColumn.XLENGTH; ++x) {
+                    short blockID = chunkColumn.getBlock(x, y, 0);
+                    short adjacentBlockID = adjacentChunk.getBlock(x, y, Chunk.ZLENGTH - 1);
 
                     BlockRenderer.byBlockID(blockID).pushBackFaces(
                             x, y, 0, blockID, adjacentBlockID, builder);
@@ -318,22 +319,21 @@ class ChunkDisplay implements GraphicsResource
         return builder.build();
     }
 
-    private static ChunkDisplay createNonCubicFaces(int cx, int cz, Chunk chunk) {
+    private static ChunkDisplay createNonCubicFaces(int cx, int cz, ChunkColumn chunkColumn) {
         GLDisplayList.Builder builder = new GLDisplayList.Builder();
         GLTexture texture = BlockRenderer.topFaceTextures.blockTextures;
         boolean shouldCreateDisplayList = false;
 
         builder.setColor(NON_CUBIC_SHADE, NON_CUBIC_SHADE, NON_CUBIC_SHADE);
 
-        for (int i = 0; i < Chunk.VOLUME; ++i) {
-            short blockID = chunk.blockIDs[i];
+        for (int i = 0; i < ChunkColumn.VOLUME; ++i) {
+            int x = i % ChunkColumn.XLENGTH;
+            int z = (i / ChunkColumn.XLENGTH) % ChunkColumn.ZLENGTH;
+            int y = i / ChunkColumn.BASE_AREA;
+            short blockID = chunkColumn.getBlock(x, y, z);
 
             if (!BlockRenderer.byBlockID(blockID).nonCubic)
                 continue;
-
-            int x = i % Chunk.XLENGTH;
-            int z = (i / Chunk.XLENGTH) % Chunk.ZLENGTH;
-            int y = i / Chunk.BASE_AREA;
 
             BlockRenderer.byBlockID(blockID).pushNonCubic(x, y, z, blockID, builder);
             shouldCreateDisplayList = true;
@@ -347,7 +347,7 @@ class ChunkDisplay implements GraphicsResource
             builder.build().close();
 
         return new ChunkDisplay(
-                displayList, cx, cz, chunk, null, null, texture);
+                displayList, cx, cz, chunkColumn, null, null, texture);
     }
 
     @Override

@@ -46,7 +46,7 @@ public class ChunkServer implements Runnable
                                 chunkPos, loadChunk(chunkPos)));
                     }
                     else if (request.type == ChunkRequest.TYPE_POST) {
-                        saveChunk(chunkPos, request.chunk);
+                        saveChunk(chunkPos, request.chunkColumn);
                     }
                     else if (request.type == ChunkRequest.TYPE_CLOSE) {
                         running.set(false);
@@ -64,7 +64,7 @@ public class ChunkServer implements Runnable
         }
     }
 
-    private Chunk loadChunk(long chunkPos) throws IOException {
+    private ChunkColumn loadChunk(long chunkPos) throws IOException {
         VirtualAllocationUnit existingVau = directory.get(chunkPos);
         if (existingVau == null)
             return null;
@@ -76,17 +76,17 @@ public class ChunkServer implements Runnable
             fileChannel.read(compressedData);
         compressedData.flip();
 
-        Chunk chunk = ChunkCodec.decompressChunk(compressedData);
+        ChunkColumn chunkColumn = ChunkColumnCodec.decompressChunkColumn(compressedData);
 
-        return chunk;
+        return chunkColumn;
     }
 
-    private void saveChunk(long chunkPos, Chunk chunk) throws IOException {
+    private void saveChunk(long chunkPos, ChunkColumn chunkColumn) throws IOException {
         VirtualAllocationUnit existingVau = directory.get(chunkPos);
         if (existingVau != null)
             allocator.freeMemory(existingVau.address);
 
-        ByteBuffer compressedData = ChunkCodec.compressChunk(chunk);
+        ByteBuffer compressedData = ChunkColumnCodec.compressChunkColumn(chunkColumn);
         VirtualAllocationUnit chunkVau = allocator.allocateMemoryAndReturnVau(compressedData.limit());
         if (chunkVau == null)
             throw new RuntimeException("Cannot allocate anymore chunks.");

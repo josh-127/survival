@@ -64,9 +64,9 @@ public class ChunkSystem
     private LongSet getMissingChunkPosSet() {
         LongSet missingChunks = chunkStageMask.getChunkPositions();
 
-        ObjectIterator<Long2ObjectMap.Entry<Chunk>> iterator = world.getChunkMapFastIterator();
+        ObjectIterator<Long2ObjectMap.Entry<ChunkColumn>> iterator = world.getChunkMapFastIterator();
         while (iterator.hasNext()) {
-            Long2ObjectMap.Entry<Chunk> entry = iterator.next();
+            Long2ObjectMap.Entry<ChunkColumn> entry = iterator.next();
             long hashedPos = entry.getLongKey();
 
             if (missingChunks.contains(hashedPos))
@@ -78,22 +78,22 @@ public class ChunkSystem
 
     private void saveChunks() {
         // Save all loaded chunks.
-        ObjectIterator<Long2ObjectMap.Entry<Chunk>> iterator = world.getChunkMapFastIterator();
+        ObjectIterator<Long2ObjectMap.Entry<ChunkColumn>> iterator = world.getChunkMapFastIterator();
         while (iterator.hasNext()) {
-            Long2ObjectMap.Entry<Chunk> entry = iterator.next();
+            Long2ObjectMap.Entry<ChunkColumn> entry = iterator.next();
             long hashedPos = entry.getLongKey();
-            Chunk chunk = entry.getValue();
+            ChunkColumn chunkColumn = entry.getValue();
 
-            chunkDbPipe.request(ChunkRequest.createPostRequest(hashedPos, chunk));
+            chunkDbPipe.request(ChunkRequest.createPostRequest(hashedPos, chunkColumn));
         }
     }
 
     private void maskOutChunks() {
-        ObjectIterator<Long2ObjectMap.Entry<Chunk>> iterator = world.getChunkMapFastIterator();
+        ObjectIterator<Long2ObjectMap.Entry<ChunkColumn>> iterator = world.getChunkMapFastIterator();
         LongSet mask = chunkStageMask.getChunkPositions();
 
         while (iterator.hasNext()) {
-            Long2ObjectMap.Entry<Chunk> entry = iterator.next();
+            Long2ObjectMap.Entry<ChunkColumn> entry = iterator.next();
             long hashedPos = entry.getLongKey();
 
             if (!mask.contains(hashedPos))
@@ -121,12 +121,12 @@ public class ChunkSystem
                 response = chunkDbPipe.pollResponse())
         {
             long hashedPos = response.chunkPos;
-            Chunk chunk = response.chunk;
+            ChunkColumn chunkColumn = response.chunkColumn;
 
             loadingChunks.remove(hashedPos);
 
-            if (chunk != null)
-                world.addChunk(hashedPos, chunk);
+            if (chunkColumn != null)
+                world.addChunk(hashedPos, chunkColumn);
             else
                 missingChunks.add(hashedPos);
         }
@@ -135,18 +135,18 @@ public class ChunkSystem
     private void generateChunks(LongIterator missingChunksIt) {
         for (int i = 0; i < GENERATOR_LOAD_RATE && missingChunksIt.hasNext(); ++i) {
             long hashedPos = missingChunksIt.nextLong();
-            Chunk generatedChunk = chunkGenerator.provideChunk(hashedPos);
+            ChunkColumn generatedChunk = chunkGenerator.provideChunk(hashedPos);
             world.addChunk(hashedPos, generatedChunk);
             missingChunksIt.remove();
         }
 
-        Iterator<Long2ObjectMap.Entry<Chunk>> chunkMapIt = world.getChunkMapFastIterator();
+        Iterator<Long2ObjectMap.Entry<ChunkColumn>> chunkMapIt = world.getChunkMapFastIterator();
         while (chunkMapIt.hasNext()) {
-            Long2ObjectMap.Entry<Chunk> entry = chunkMapIt.next();
+            Long2ObjectMap.Entry<ChunkColumn> entry = chunkMapIt.next();
             long hashedPos = entry.getLongKey();
-            int cx = ChunkPos.chunkXFromHashedPos(hashedPos);
-            int cz = ChunkPos.chunkZFromHashedPos(hashedPos);
-            Chunk chunk = entry.getValue();
+            int cx = ChunkColumnPos.chunkXFromHashedPos(hashedPos);
+            int cz = ChunkColumnPos.chunkZFromHashedPos(hashedPos);
+            ChunkColumn chunkColumn = entry.getValue();
 
             boolean isFullySurrounded = true;
             for (int z = -1; z <= 1 && isFullySurrounded; ++z) {
@@ -156,9 +156,9 @@ public class ChunkSystem
                 }
             }
 
-            if (!chunk.isDecorated() && isFullySurrounded) {
-                worldDecorator.decorate(cx, cz, chunk, world);
-                chunk.markDecorated();
+            if (!chunkColumn.isDecorated() && isFullySurrounded) {
+                worldDecorator.decorate(cx, cz, chunkColumn, world);
+                chunkColumn.markDecorated();
             }
         }
     }
