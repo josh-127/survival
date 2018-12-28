@@ -19,6 +19,7 @@ import net.survival.client.input.GlfwMouseAdapter;
 import net.survival.client.input.Keyboard;
 import net.survival.client.input.Mouse;
 import net.survival.client.ui.BasicUI;
+import net.survival.input.Key;
 import net.survival.world.World;
 import net.survival.world.actor.Actor;
 import net.survival.world.actor.Message;
@@ -34,7 +35,6 @@ import net.survival.world.column.ColumnServer;
 import net.survival.world.column.ColumnSystem;
 import net.survival.world.gen.InfiniteColumnGenerator;
 import net.survival.world.gen.decoration.WorldDecorator;
-import survival.input.Key;
 
 public class Client implements AutoCloseable
 {

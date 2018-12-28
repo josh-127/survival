@@ -1,4 +1,4 @@
-package survival.input;
+package net.survival.input;
 
 public enum Key
 {

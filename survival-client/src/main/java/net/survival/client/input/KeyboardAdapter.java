@@ -1,6 +1,6 @@
 package net.survival.client.input;
 
-import survival.input.Key;
+import net.survival.input.Key;
 
 public abstract class KeyboardAdapter
 {

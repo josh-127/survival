@@ -1,6 +1,6 @@
 package net.survival.world.actor.interaction;
 
-import survival.input.Key;
+import net.survival.input.Key;
 
 public class InteractionContext
 {

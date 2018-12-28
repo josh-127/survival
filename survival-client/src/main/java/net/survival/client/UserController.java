@@ -4,7 +4,7 @@ import org.joml.Vector3d;
 
 import net.survival.client.input.Keyboard;
 import net.survival.client.input.Mouse;
-import survival.input.Key;
+import net.survival.input.Key;
 
 class UserController
 {
