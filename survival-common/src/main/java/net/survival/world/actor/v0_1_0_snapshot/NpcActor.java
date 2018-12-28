@@ -2,38 +2,23 @@ package net.survival.world.actor.v0_1_0_snapshot;
 
 import net.survival.util.HitBox;
 import net.survival.world.actor.Actor;
-import net.survival.world.actor.ActorServiceCollection;
-import net.survival.world.actor.ExternalAxisInput;
-import net.survival.world.actor.ActorEventQueue;
 import net.survival.world.actor.Locomotion;
+import net.survival.world.actor.Message;
+import net.survival.world.actor.TickMessage;
+import net.survival.world.actor.interaction.InteractionContext;
 
-public class NpcActor extends Actor
+public class NpcActor implements Actor
 {
-    private final double initialX;
-    private final double initialY;
-    private final double initialZ;
-    private double yaw;
-
-    private ExternalAxisInput.Component input;
-    private Locomotion.Component locomotion;
+    private final Locomotion locomotion;
 
     public NpcActor(double x, double y, double z) {
-        initialX = x;
-        initialY = y;
-        initialZ = z;
+        locomotion = new Locomotion(x, y, z, HitBox.DEFAULT);
     }
 
     @Override
-    public void setup(ActorServiceCollection services) {
-        services.getAlarmService(0).setAlarm(this, 1.0);
-        input = services.getExternalAxisInputService().subscribe(this);
-        locomotion = services.getLocomotiveService().subscribe(this, initialX, initialY, initialZ, HitBox.NPC);
-    }
-
-    @Override
-    protected void onAlarm(ActorEventQueue.Producer actorEventQueue, int alarmID) {
-        if (alarmID == 0) {
-            yaw += 1.0;
+    public void update(InteractionContext ic, Message message) {
+        if (message instanceof TickMessage) {
+            locomotion.tick(this, ic);
         }
     }
 
@@ -50,20 +35,5 @@ public class NpcActor extends Actor
     @Override
     public double getZ() {
         return locomotion.getZ();
-    }
-
-    @Override
-    public double getYaw() {
-        return yaw;
-    }
-
-    @Override
-    public double getMovementDirectionX() {
-        return input.getDirectionX();
-    }
-
-    @Override
-    public double getMovementDirectionZ() {
-        return input.getDirectionZ();
     }
 }

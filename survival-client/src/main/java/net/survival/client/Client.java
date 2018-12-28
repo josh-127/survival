@@ -1,6 +1,7 @@
 package net.survival.client;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Iterator;
 
 import org.joml.Vector3d;
@@ -15,17 +16,15 @@ import net.survival.client.graphics.opengl.GLDisplay;
 import net.survival.client.graphics.opengl.GLRenderContext;
 import net.survival.client.input.GlfwKeyboardAdapter;
 import net.survival.client.input.GlfwMouseAdapter;
-import net.survival.client.input.Key;
 import net.survival.client.input.Keyboard;
 import net.survival.client.input.Mouse;
 import net.survival.client.ui.BasicUI;
 import net.survival.util.MathEx;
 import net.survival.world.World;
-import net.survival.world.actor.ActorServiceCollection;
-import net.survival.world.actor.AlarmService;
-import net.survival.world.actor.ExternalAxisInput;
-import net.survival.world.actor.ActorEventQueue;
-import net.survival.world.actor.Locomotion;
+import net.survival.world.actor.Actor;
+import net.survival.world.actor.Message;
+import net.survival.world.actor.TickMessage;
+import net.survival.world.actor.interaction.InteractionContext;
 import net.survival.world.actor.v0_1_0_snapshot.NpcActor;
 import net.survival.world.chunk.Chunk;
 import net.survival.world.chunk.ChunkDbPipe;
@@ -35,6 +34,7 @@ import net.survival.world.chunk.ChunkServer;
 import net.survival.world.chunk.ChunkSystem;
 import net.survival.world.gen.InfiniteChunkGenerator;
 import net.survival.world.gen.decoration.WorldDecorator;
+import survival.input.Key;
 import net.survival.world.chunk.CircularChunkStageMask;
 
 public class Client implements AutoCloseable
@@ -57,11 +57,11 @@ public class Client implements AutoCloseable
     private final CompositeDisplay compositeDisplay;
     private final FpvCamera fpvCamera;
 
-    private final ActorEventQueue actorEventQueue;
-    private final AlarmService[] alarmServices;
-    private final ExternalAxisInput.Service externalAxisInput;
-    private final Locomotion.Service locomotion;
-    private final ActorServiceCollection actorServiceCollection;
+    private final ArrayList<Message> actorMessages = new ArrayList<>();
+    private final LocalBlockInteractionAdapter blockInteraction;
+    private final LocalKeyboardInteractionAdapter keyboardInteraction = new LocalKeyboardInteractionAdapter();
+    private final LocalTickInteractionAdapter tickInteraction = new LocalTickInteractionAdapter();
+    private final InteractionContext interactionContext;
 
     private Client(ChunkDbPipe.ClientSide chunkDbPipe) {
         world = new World();
@@ -81,13 +81,8 @@ public class Client implements AutoCloseable
 
         fpvCamera = new FpvCamera(new Vector3d(60.0, 72.0, 20.0), 0.0f, -1.0f);
 
-        actorEventQueue = new ActorEventQueue();
-        alarmServices = new AlarmService[16];
-        for (int i = 0; i < alarmServices.length; ++i)
-            alarmServices[i] = new AlarmService(actorEventQueue.getProducer(), i);
-        externalAxisInput = new ExternalAxisInput.Service();
-        locomotion = new Locomotion.Service(actorEventQueue.getProducer(), world);
-        actorServiceCollection = new ActorServiceCollection(alarmServices, externalAxisInput, locomotion);
+        blockInteraction = new LocalBlockInteractionAdapter(world);
+        interactionContext = new InteractionContext(blockInteraction, keyboardInteraction, tickInteraction);
     }
 
     @Override
@@ -157,16 +152,20 @@ public class Client implements AutoCloseable
             npcAxisZ /= npcAxisLength;
         }
 
-        world.collectActors();
-        for (AlarmService alarmService : alarmServices)
-            alarmService.tick(elapsedTime);
-        externalAxisInput.setDirection(npcAxisX, 0.0, npcAxisZ);
-        locomotion.tick(elapsedTime);
+        tickInteraction.setElapsedTime(elapsedTime);
+        actorMessages.add(TickMessage.DEFAULT);
 
-        ActorEventQueue.Consumer eventConsumer = actorEventQueue.getConsumer();
-        for (ActorEventQueue.EventPacket eventPacket : eventConsumer) {
-            // TODO: First parameter shouldn't be null.
-            eventPacket.target.onEventNotification(null, eventPacket.eventArgs);
+        while (!actorMessages.isEmpty()) {
+            ArrayList<Message> remainingMessages = new ArrayList<>(actorMessages);
+            actorMessages.clear();
+
+            for (Message message : remainingMessages) {
+                if (message.recipient == Message.ALL_ACTORS) {
+                    for (Actor actor : world.getActors()) {
+                        actor.update(interactionContext, message);
+                    }
+                }
+            }
         }
 
         if (Mouse.isLmbPressed() || Mouse.isRmbPressed()) {
@@ -197,8 +196,6 @@ public class Client implements AutoCloseable
                     fpvCamera.position.y,
                     fpvCamera.position.z);
             world.addActor(npcActor);
-
-            npcActor.setup(actorServiceCollection);
         }
 
         if (Keyboard.isKeyPressed(Key._1))

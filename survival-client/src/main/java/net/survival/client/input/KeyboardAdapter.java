@@ -1,5 +1,7 @@
 package net.survival.client.input;
 
+import survival.input.Key;
+
 public abstract class KeyboardAdapter
 {
     protected void pressKey(Key key) {

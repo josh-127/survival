@@ -3,6 +3,8 @@ package net.survival.client.input;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWKeyCallbackI;
 
+import survival.input.Key;
+
 public class GlfwKeyboardAdapter extends KeyboardAdapter implements GLFWKeyCallbackI
 {
     @Override

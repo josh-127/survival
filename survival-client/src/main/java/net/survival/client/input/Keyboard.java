@@ -1,5 +1,7 @@
 package net.survival.client.input;
 
+import survival.input.Key;
+
 public final class Keyboard
 {
     static boolean[] prevKeyState = new boolean[Key.getCachedValues().length];
