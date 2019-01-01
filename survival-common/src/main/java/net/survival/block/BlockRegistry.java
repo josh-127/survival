@@ -44,9 +44,8 @@ public class BlockRegistry
             table.get(name).add(value);
         }
 
-        int lastIndex = table.size() - 1;
         for (BlockProperty property : properties) {
-            table.get(property.name).set(lastIndex, property.value);
+            table.get(property.name).set(count, property.value);
         }
 
         ++count;
