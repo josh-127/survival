@@ -1,8 +1,10 @@
 package net.survival.block;
 
-public enum KnownBlockProperty
+public final class KnownBlockProperty
 {
-    ID,
-    VERSION_INTRODUCED,
-    FEATURE_SET;
+    public static final String ID = "ID";
+    public static final String VERSION_INTRODUCED = "VERSION_INTRODUCED";
+    public static final String FEATURE_SET = "FEATURE_SET";
+
+    private KnownBlockProperty() {}
 }
