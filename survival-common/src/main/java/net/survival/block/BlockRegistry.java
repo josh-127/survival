@@ -78,7 +78,7 @@ public class BlockRegistry
 
     private BlockState blockStateFromRow(int row) {
         TreeMap<String, Object> properties = new TreeMap<>();
-        properties.put(KnownBlockProperty.ID.name(), row);
+        properties.put(KnownBlockProperty.ID, row);
 
         for (Map.Entry<String, ArrayList<Object>> entry : table.entrySet()) {
             String propertyName = entry.getKey();
