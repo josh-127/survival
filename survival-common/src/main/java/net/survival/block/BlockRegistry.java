@@ -19,6 +19,10 @@ public class BlockRegistry
         return () -> new BlockTableIterator(filter); 
     }
 
+    public BlockState queryByID(int id) {
+        return blockStateFromRow(id);
+    }
+
     public void update(Predicate<BlockState> condition, BlockPropertyUpdate... mutations) {
         for (int i = 0; i < count; ++i) {
             BlockState entry = blockStateFromRow(i);
