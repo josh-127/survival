@@ -123,8 +123,8 @@ class ColumnDisplay implements GraphicsResource
             int z = (i / Column.XLENGTH) % Column.ZLENGTH;
             int y = i / Column.BASE_AREA;
 
-            short blockID = column.getBlock(x, y, z);
-            short adjacentBlockID = column.getBlock(x, y + 1, z);
+            int blockID = column.getBlock(x, y, z);
+            int adjacentBlockID = column.getBlock(x, y + 1, z);
 
             BlockRenderer.byBlockID(blockID).pushTopFaces(
                     x, y, z, blockID, adjacentBlockID, builder);
@@ -135,7 +135,7 @@ class ColumnDisplay implements GraphicsResource
             int z = (i / Column.XLENGTH) % Column.ZLENGTH;
             int y = i / Column.BASE_AREA;
 
-            short blockID = column.getBlock(x, y, z);
+            int blockID = column.getBlock(x, y, z);
 
             BlockRenderer.byBlockID(blockID).pushTopFaces(
                     x, y, z, blockID, (short) 0, builder);
@@ -152,8 +152,8 @@ class ColumnDisplay implements GraphicsResource
             int z = (i / Column.XLENGTH) % Column.ZLENGTH;
             int y = i / Column.BASE_AREA;
 
-            short blockID = column.getBlock(x, y, z);
-            short adjacentBlockID = column.getBlock(x, y - 1, z);
+            int blockID = column.getBlock(x, y, z);
+            int adjacentBlockID = column.getBlock(x, y - 1, z);
 
             BlockRenderer.byBlockID(blockID).pushBottomFaces(
                     x, y, z, blockID, adjacentBlockID, builder);
@@ -172,8 +172,8 @@ class ColumnDisplay implements GraphicsResource
                 int indexYZ = indexY + (z * Column.XLENGTH);
 
                 for (int x = 1; x < Column.XLENGTH; ++x) {
-                    short blockID = column.getBlock(x, y, z);
-                    short adjacentBlockID = column.getBlock(x - 1, y, z);
+                    int blockID = column.getBlock(x, y, z);
+                    int adjacentBlockID = column.getBlock(x - 1, y, z);
 
                     BlockRenderer.byBlockID(blockID).pushLeftFaces(
                             x, y, z, blockID, adjacentBlockID, builder);
@@ -188,8 +188,8 @@ class ColumnDisplay implements GraphicsResource
                 for (int z = 0; z < Column.ZLENGTH; ++z) {
                     int indexYZ = indexY + (z * Column.XLENGTH);
 
-                    short blockID = column.getBlock(0, y, z);
-                    short adjacentBlockID = adjacentColumn.getBlock(Column.XLENGTH - 1, y, z);
+                    int blockID = column.getBlock(0, y, z);
+                    int adjacentBlockID = adjacentColumn.getBlock(Column.XLENGTH - 1, y, z);
 
                     BlockRenderer.byBlockID(blockID).pushLeftFaces(
                             0, y, z, blockID, adjacentBlockID, builder);
@@ -210,8 +210,8 @@ class ColumnDisplay implements GraphicsResource
                 int indexYZ = indexY + (z * Column.XLENGTH);
 
                 for (int x = 0; x < Column.XLENGTH - 1; ++x) {
-                    short blockID = column.getBlock(x, y, z);
-                    short adjacentBlockID = column.getBlock(x + 1, y, z);
+                    int blockID = column.getBlock(x, y, z);
+                    int adjacentBlockID = column.getBlock(x + 1, y, z);
 
                     BlockRenderer.byBlockID(blockID).pushRightFaces(
                             x, y, z, blockID, adjacentBlockID, builder);
@@ -226,8 +226,8 @@ class ColumnDisplay implements GraphicsResource
                 for (int z = 0; z < Column.ZLENGTH; ++z) {
                     int indexYZ = indexY + (z * Column.XLENGTH);
 
-                    short blockID = column.getBlock(Column.XLENGTH - 1, y, z);
-                    short adjacentBlockID = adjacentColumn.getBlock(0, y, z);
+                    int blockID = column.getBlock(Column.XLENGTH - 1, y, z);
+                    int adjacentBlockID = adjacentColumn.getBlock(0, y, z);
 
                     BlockRenderer.byBlockID(blockID).pushRightFaces(
                             Column.XLENGTH - 1, y, z, blockID, adjacentBlockID, builder);
@@ -250,8 +250,8 @@ class ColumnDisplay implements GraphicsResource
                 for (int x = 0; x < Column.XLENGTH; ++x) {
                     int indexYZX = indexYZ + x;
 
-                    short blockID = column.getBlock(x, y, z);
-                    short adjacentBlockID = column.getBlock(x, y, z + 1);
+                    int blockID = column.getBlock(x, y, z);
+                    int adjacentBlockID = column.getBlock(x, y, z + 1);
 
                     BlockRenderer.byBlockID(blockID).pushFrontFaces(
                             x, y, z, blockID, adjacentBlockID, builder);
@@ -267,8 +267,8 @@ class ColumnDisplay implements GraphicsResource
                 int indexYZ = indexZ + indexY;
 
                 for (int x = 0; x < Column.XLENGTH; ++x) {
-                    short blockID = column.getBlock(x, y, Column.ZLENGTH - 1);
-                    short adjacentBlockID = adjacentColumn.getBlock(x, y, 0);
+                    int blockID = column.getBlock(x, y, Column.ZLENGTH - 1);
+                    int adjacentBlockID = adjacentColumn.getBlock(x, y, 0);
 
                     BlockRenderer.byBlockID(blockID).pushFrontFaces(
                             x, y, Column.ZLENGTH - 1, blockID, adjacentBlockID, builder);
@@ -291,8 +291,8 @@ class ColumnDisplay implements GraphicsResource
                 for (int x = 0; x < Column.XLENGTH; ++x) {
                     int indexYZX = indexYZ + x;
 
-                    short blockID = column.getBlock(x, y, z);
-                    short adjacentBlockID = column.getBlock(x, y, z - 1);
+                    int blockID = column.getBlock(x, y, z);
+                    int adjacentBlockID = column.getBlock(x, y, z - 1);
 
                     BlockRenderer.byBlockID(blockID).pushBackFaces(
                             x, y, z, blockID, adjacentBlockID, builder);
@@ -306,8 +306,8 @@ class ColumnDisplay implements GraphicsResource
                 int adjacentIndexYZ = indexY + Column.BASE_AREA - Column.XLENGTH;
 
                 for (int x = 0; x < Column.XLENGTH; ++x) {
-                    short blockID = column.getBlock(x, y, 0);
-                    short adjacentBlockID = adjacentColumn.getBlock(x, y, Column.ZLENGTH - 1);
+                    int blockID = column.getBlock(x, y, 0);
+                    int adjacentBlockID = adjacentColumn.getBlock(x, y, Column.ZLENGTH - 1);
 
                     BlockRenderer.byBlockID(blockID).pushBackFaces(
                             x, y, 0, blockID, adjacentBlockID, builder);
@@ -329,7 +329,7 @@ class ColumnDisplay implements GraphicsResource
             int x = i % Column.XLENGTH;
             int z = (i / Column.XLENGTH) % Column.ZLENGTH;
             int y = i / Column.BASE_AREA;
-            short blockID = column.getBlock(x, y, z);
+            int blockID = column.getBlock(x, y, z);
 
             if (!BlockRenderer.byBlockID(blockID).nonCubic)
                 continue;

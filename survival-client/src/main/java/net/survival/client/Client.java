@@ -8,7 +8,6 @@ import org.joml.Vector3d;
 import org.lwjgl.glfw.GLFW;
 
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
-import net.survival.block.BlockType;
 import net.survival.client.graphics.CompositeDisplay;
 import net.survival.client.graphics.GraphicsSettings;
 import net.survival.client.graphics.VisibilityFlags;
@@ -242,11 +241,9 @@ public class Client implements AutoCloseable
                 int pxi = (int) Math.floor(px);
                 int pyi = (int) Math.floor(py);
                 int pzi = (int) Math.floor(pz);
-                if (world.getBlock(pxi, pyi, pzi) != BlockType.EMPTY.id) {
+                if (world.getBlock(pxi, pyi, pzi) != 0) {
                     if (Mouse.isLmbPressed())
-                        world.setBlock(pxi, pyi, pzi, BlockType.EMPTY.id);
-                    else if (Mouse.isRmbPressed())
-                        world.setBlock(pxi, pyi, pzi, BlockType.OAK_FENCE.id);
+                        world.setBlock(pxi, pyi, pzi, 0);
                     break;
                 }
             }

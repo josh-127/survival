@@ -1,24 +1,25 @@
 package net.survival.world;
 
-import net.survival.block.BlockType;
+import net.survival.block.BlockRegistry;
+import net.survival.block.BlockState;
 import net.survival.world.column.Column;
 
 public interface BlockStorage
 {
-    short getBlock(int x, int y, int z);
+    int getBlock(int x, int y, int z);
 
-    void setBlock(int x, int y, int z, short to);
+    void setBlock(int x, int y, int z, int to);
 
-    default BlockType getBlockType(int x, int y, int z) {
-        return BlockType.byID(getBlock(x, y, z));
+    default BlockState getBlockState(int x, int y, int z) {
+        return BlockRegistry.INSTANCE.getBlock(getBlock(x, y, z));
     }
 
-    default short sampleNearestBlock(double x, double y, double z) {
+    default int sampleNearestBlock(double x, double y, double z) {
         return getBlock((int) Math.floor(x), (int) Math.floor(y), (int) Math.floor(z));
     }
 
-    default BlockType sampleNearestBlockType(double x, double y, double z) {
-        return getBlockType((int) Math.floor(x), (int) Math.floor(y), (int) Math.floor(z));
+    default BlockState sampleNearestBlockState(double x, double y, double z) {
+        return getBlockState((int) Math.floor(x), (int) Math.floor(y), (int) Math.floor(z));
     }
 
     default int getTopLevel(int x, int z) {

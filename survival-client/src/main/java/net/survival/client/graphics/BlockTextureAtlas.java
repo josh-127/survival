@@ -1,7 +1,8 @@
 package net.survival.client.graphics;
 
 import net.survival.block.BlockFace;
-import net.survival.block.BlockType;
+import net.survival.block.BlockRegistry;
+import net.survival.block.BlockState;
 import net.survival.client.graphics.opengl.GLFilterMode;
 import net.survival.client.graphics.opengl.GLTexture;
 import net.survival.client.graphics.opengl.GLWrapMode;
@@ -17,16 +18,16 @@ public class BlockTextureAtlas implements GraphicsResource
 
     public BlockTextureAtlas(BlockFace blockFace) {
         Bitmap atlas = new Bitmap(256, 256);
-        for (BlockType blockType : BlockType.iterateAll()) {
-            if (blockType.getTexture(blockFace) == null)
+        for (BlockState blockState : BlockRegistry.INSTANCE.iterateAllBlocks()) {
+            if (blockState.getTexture(blockFace) == null)
                 continue;
 
-            int dstIndex = blockType.id;
+            int dstIndex = blockState.getID();
             int dstX = (dstIndex % 16) * 16;
             int dstY = (dstIndex / 16) * 16;
             Bitmap blockBitmap = Bitmap.fromFile(
                     GraphicsSettings.BLOCKS_PATH +
-                    blockType.getTexture(blockFace));
+                    blockState.getTexture(blockFace));
             Bitmap.blit(blockBitmap, 0, 0, 16, 16, atlas, dstX, dstY);
         }
 
@@ -66,19 +67,19 @@ public class BlockTextureAtlas implements GraphicsResource
         blockTextures.close();
     }
 
-    public float getTexCoordU1(short blockID) {
+    public float getTexCoordU1(int blockID) {
         return texCoords[blockID << 2];
     }
 
-    public float getTexCoordV1(short blockID) {
+    public float getTexCoordV1(int blockID) {
         return texCoords[(blockID << 2) + 1];
     }
 
-    public float getTexCoordU2(short blockID) {
+    public float getTexCoordU2(int blockID) {
         return texCoords[(blockID << 2) + 2];
     }
 
-    public float getTexCoordV2(short blockID) {
+    public float getTexCoordV2(int blockID) {
         return texCoords[(blockID << 2) + 3];
     }
 }

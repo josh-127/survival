@@ -11,7 +11,7 @@ class SaplingRenderer extends BlockRenderer
     }
 
     @Override
-    public void pushNonCubic(int x, int y, int z, short blockID, GLDisplayList.Builder builder) {
+    public void pushNonCubic(int x, int y, int z, int blockID, GLDisplayList.Builder builder) {
         float u1 = topFaceTextures.getTexCoordU1(blockID);
         float u2 = topFaceTextures.getTexCoordU2(blockID);
         float v1 = topFaceTextures.getTexCoordV1(blockID);

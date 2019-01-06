@@ -56,7 +56,7 @@ public class Column implements BlockStorage
     }
 
     @Override
-    public short getBlock(int x, int y, int z) {
+    public int getBlock(int x, int y, int z) {
         int index = y / Chunk.YLENGTH;
 
         if (chunks[index] == null)
@@ -66,7 +66,7 @@ public class Column implements BlockStorage
     }
 
     @Override
-    public void setBlock(int x, int y, int z, short to) {
+    public void setBlock(int x, int y, int z, int to) {
         int index = y / Chunk.YLENGTH;
 
         if (chunks[index] == null) {

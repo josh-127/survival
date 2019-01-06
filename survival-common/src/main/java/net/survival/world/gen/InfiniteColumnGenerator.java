@@ -1,6 +1,6 @@
 package net.survival.world.gen;
 
-import net.survival.block.BlockType;
+import net.survival.block.BlockRegistry;
 import net.survival.util.DoubleMap2D;
 import net.survival.util.DoubleMap3D;
 import net.survival.util.ImprovedNoiseGenerator3D;
@@ -39,6 +39,12 @@ public class InfiniteColumnGenerator implements ColumnProvider
     private final DoubleMap2D minElevationMap;
     private final DoubleMap2D elevationRangeMap;
 
+    private final int bedrockID;
+    private final int tempSolidID;
+    private final int stoneID;
+    private final int dirtID;
+    private final int waterID;
+
     public InfiniteColumnGenerator(long seed) {
         mainNoiseGenerator = new ImprovedNoiseGenerator3D(MAIN_NOISE_XSCALE, MAIN_NOISE_YSCALE,
                 MAIN_NOISE_ZSCALE, MAIN_NOISE_OCTAVE_COUNT, seed);
@@ -48,6 +54,12 @@ public class InfiniteColumnGenerator implements ColumnProvider
         densityMap = new DoubleMap3D(NMAP_XLENGTH, NMAP_YLENGTH, NMAP_ZLENGTH);
         minElevationMap = new DoubleMap2D(Column.XLENGTH, Column.ZLENGTH);
         elevationRangeMap = new DoubleMap2D(Column.XLENGTH, Column.ZLENGTH);
+
+        bedrockID = BlockRegistry.INSTANCE.guessFirstBlock("bedrock").getID();
+        tempSolidID = BlockRegistry.INSTANCE.guessFirstBlock("<temp_solid>").getID();
+        stoneID = BlockRegistry.INSTANCE.guessFirstBlock("raw andesite stone").getID();
+        dirtID = BlockRegistry.INSTANCE.guessFirstBlock("andesite dirt").getID();
+        waterID = BlockRegistry.INSTANCE.guessFirstBlock("water").getID();
     }
 
     @Override
@@ -72,7 +84,7 @@ public class InfiniteColumnGenerator implements ColumnProvider
     private void replaceBlocks(int cx, int cz, Column column) {
         for (int z = 0; z < Column.ZLENGTH; ++z) {
             for (int x = 0; x < Column.XLENGTH; ++x)
-                column.setBlock(x, 0, z, BlockType.BEDROCK.id);
+                column.setBlock(x, 0, z, bedrockID);
         }
 
         for (int z = 0; z < Column.ZLENGTH; ++z) {
@@ -82,7 +94,7 @@ public class InfiniteColumnGenerator implements ColumnProvider
                 int counter = 3;
 
                 for (int y = Column.YLENGTH - 1; y >= 1; --y) {
-                    if (column.getBlock(x, y, z) != BlockType.TEMP_SOLID.id) {
+                    if (column.getBlock(x, y, z) != tempSolidID) {
                         state = 0;
                         counter = 3;
                         continue;
@@ -96,7 +108,7 @@ public class InfiniteColumnGenerator implements ColumnProvider
 
                     case 1:
                         if (counter > 0) {
-                            column.setBlock(x, y, z, BlockType.DIRT.id);
+                            column.setBlock(x, y, z, dirtID);
                             --counter;
 
                             if (counter == 0) {
@@ -108,7 +120,7 @@ public class InfiniteColumnGenerator implements ColumnProvider
                         break;
 
                     case 2:
-                        column.setBlock(x, y, z, BlockType.STONE.id);
+                        column.setBlock(x, y, z, stoneID);
                         break;
                     }
                 }
@@ -135,9 +147,9 @@ public class InfiniteColumnGenerator implements ColumnProvider
                     double threshold = (y - minElevation) / elevationRange;
 
                     if (density >= threshold)
-                        column.setBlock(x, y, z, BlockType.TEMP_SOLID.id);
+                        column.setBlock(x, y, z, tempSolidID);
                     else if (y <= OCEAN_LEVEL)
-                        column.setBlock(x, y, z, BlockType.WATER.id);
+                        column.setBlock(x, y, z, waterID);
                 }
             }
         }

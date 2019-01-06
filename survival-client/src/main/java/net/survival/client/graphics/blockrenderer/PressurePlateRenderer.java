@@ -1,6 +1,6 @@
 package net.survival.client.graphics.blockrenderer;
 
-import net.survival.block.BlockType;
+import net.survival.block.BlockRegistry;
 import net.survival.client.graphics.opengl.GLDisplayList;
 
 class PressurePlateRenderer extends BlockRenderer
@@ -16,10 +16,10 @@ class PressurePlateRenderer extends BlockRenderer
     }
 
     @Override
-    public void pushTopFaces(int x, int y, int z, short blockID, short adjacentBlockID,
+    public void pushTopFaces(int x, int y, int z, int blockID, int adjacentBlockID,
             GLDisplayList.Builder builder)
     {
-        if (BlockType.byID(adjacentBlockID).getModel().isBlockingBottom())
+        if (BlockRegistry.INSTANCE.getBlock(adjacentBlockID).getModel().isBlockingBottom())
             return;
 
         float left = x + PADDING;
@@ -39,10 +39,10 @@ class PressurePlateRenderer extends BlockRenderer
     }
 
     @Override
-    public void pushBottomFaces(int x, int y, int z, short blockID, short adjacentBlockID,
+    public void pushBottomFaces(int x, int y, int z, int blockID, int adjacentBlockID,
             GLDisplayList.Builder builder)
     {
-        if (BlockType.byID(adjacentBlockID).getModel().isBlockingTop())
+        if (BlockRegistry.INSTANCE.getBlock(adjacentBlockID).getModel().isBlockingTop())
             return;
 
         float left = x + PADDING;
@@ -62,10 +62,10 @@ class PressurePlateRenderer extends BlockRenderer
     }
 
     @Override
-    public void pushLeftFaces(int x, int y, int z, short blockID, short adjacentBlockID,
+    public void pushLeftFaces(int x, int y, int z, int blockID, int adjacentBlockID,
             GLDisplayList.Builder builder)
     {
-        if (BlockType.byID(adjacentBlockID).getModel().isBlockingRight())
+        if (BlockRegistry.INSTANCE.getBlock(adjacentBlockID).getModel().isBlockingRight())
             return;
 
         float left = x + PADDING;
@@ -84,10 +84,10 @@ class PressurePlateRenderer extends BlockRenderer
     }
 
     @Override
-    public void pushRightFaces(int x, int y, int z, short blockID, short adjacentBlockID,
+    public void pushRightFaces(int x, int y, int z, int blockID, int adjacentBlockID,
             GLDisplayList.Builder builder)
     {
-        if (BlockType.byID(adjacentBlockID).getModel().isBlockingLeft())
+        if (BlockRegistry.INSTANCE.getBlock(adjacentBlockID).getModel().isBlockingLeft())
             return;
 
         float right = x + 1.0f - PADDING;
@@ -106,10 +106,10 @@ class PressurePlateRenderer extends BlockRenderer
     }
 
     @Override
-    public void pushFrontFaces(int x, int y, int z, short blockID, short adjacentBlockID,
+    public void pushFrontFaces(int x, int y, int z, int blockID, int adjacentBlockID,
             GLDisplayList.Builder builder)
     {
-        if (BlockType.byID(adjacentBlockID).getModel().isBlockingBack())
+        if (BlockRegistry.INSTANCE.getBlock(adjacentBlockID).getModel().isBlockingBack())
             return;
 
         float left = x + PADDING;
@@ -128,10 +128,10 @@ class PressurePlateRenderer extends BlockRenderer
     }
 
     @Override
-    public void pushBackFaces(int x, int y, int z, short blockID,
-            short adjacentBlockID, GLDisplayList.Builder builder)
+    public void pushBackFaces(int x, int y, int z, int blockID, int adjacentBlockID,
+            GLDisplayList.Builder builder)
     {
-        if (BlockType.byID(adjacentBlockID).getModel().isBlockingFront())
+        if (BlockRegistry.INSTANCE.getBlock(adjacentBlockID).getModel().isBlockingFront())
             return;
 
         float left = x + PADDING;

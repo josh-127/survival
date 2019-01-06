@@ -2,7 +2,8 @@ package net.survival.client.graphics.blockrenderer;
 
 import net.survival.block.BlockFace;
 import net.survival.block.BlockModel;
-import net.survival.block.BlockType;
+import net.survival.block.BlockRegistry;
+import net.survival.block.BlockState;
 import net.survival.client.graphics.BlockTextureAtlas;
 import net.survival.client.graphics.opengl.GLDisplayList;
 
@@ -20,12 +21,12 @@ public abstract class BlockRenderer
     private static final BlockRenderer[] blockRenderers = new BlockRenderer[BlockModel.getCachedValues().length];
     private static final BlockRenderer defaultBlockRenderer = new DefaultBlockRenderer();
 
-    protected static final boolean[] blockToBlockingTopTable = new boolean[BlockType.getCachedValues().length];
-    protected static final boolean[] blockToBlockingBottomTable = new boolean[BlockType.getCachedValues().length];
-    protected static final boolean[] blockToBlockingLeftTable = new boolean[BlockType.getCachedValues().length];
-    protected static final boolean[] blockToBlockingRightTable = new boolean[BlockType.getCachedValues().length];
-    protected static final boolean[] blockToBlockingFrontTable = new boolean[BlockType.getCachedValues().length];
-    protected static final boolean[] blockToBlockingBackTable = new boolean[BlockType.getCachedValues().length];
+    protected static final boolean[] blockToBlockingTopTable = new boolean[(int) BlockRegistry.INSTANCE.stream().count()];
+    protected static final boolean[] blockToBlockingBottomTable = new boolean[(int) BlockRegistry.INSTANCE.stream().count()];
+    protected static final boolean[] blockToBlockingLeftTable = new boolean[(int) BlockRegistry.INSTANCE.stream().count()];
+    protected static final boolean[] blockToBlockingRightTable = new boolean[(int) BlockRegistry.INSTANCE.stream().count()];
+    protected static final boolean[] blockToBlockingFrontTable = new boolean[(int) BlockRegistry.INSTANCE.stream().count()];
+    protected static final boolean[] blockToBlockingBackTable = new boolean[(int) BlockRegistry.INSTANCE.stream().count()];
 
     static {
         for (int i = 0; i < blockRenderers.length; ++i)
@@ -49,45 +50,45 @@ public abstract class BlockRenderer
         blockRenderers[BlockModel.PRESSURE_PLATE_ON.id] = new PressurePlateRenderer(0.03125f);
 
         for (int i = 0; i < blockToBlockingTopTable.length; ++i) {
-            BlockType block = BlockType.byID((short) i);
+            BlockState blockState = BlockRegistry.INSTANCE.getBlock(i);
 
-            if (block != null)
-                blockToBlockingTopTable[i] = block.getModel().isBlockingTop();
+            if (blockState != null)
+                blockToBlockingTopTable[i] = blockState.getModel().isBlockingTop();
         }
 
         for (int i = 0; i < blockToBlockingBottomTable.length; ++i) {
-            BlockType block = BlockType.byID((short) i);
+            BlockState blockState = BlockRegistry.INSTANCE.getBlock(i);
 
-            if (block != null)
-                blockToBlockingBottomTable[i] = block.getModel().isBlockingBottom();
+            if (blockState != null)
+                blockToBlockingBottomTable[i] = blockState.getModel().isBlockingBottom();
         }
 
         for (int i = 0; i < blockToBlockingLeftTable.length; ++i) {
-            BlockType block = BlockType.byID((short) i);
+            BlockState blockState = BlockRegistry.INSTANCE.getBlock(i);
 
-            if (block != null)
-                blockToBlockingLeftTable[i] = block.getModel().isBlockingLeft();
+            if (blockState != null)
+                blockToBlockingLeftTable[i] = blockState.getModel().isBlockingLeft();
         }
 
         for (int i = 0; i < blockToBlockingRightTable.length; ++i) {
-            BlockType block = BlockType.byID((short) i);
+            BlockState blockState = BlockRegistry.INSTANCE.getBlock(i);
 
-            if (block != null)
-                blockToBlockingRightTable[i] = block.getModel().isBlockingRight();
+            if (blockState != null)
+                blockToBlockingRightTable[i] = blockState.getModel().isBlockingRight();
         }
 
         for (int i = 0; i < blockToBlockingFrontTable.length; ++i) {
-            BlockType block = BlockType.byID((short) i);
+            BlockState blockState = BlockRegistry.INSTANCE.getBlock(i);
 
-            if (block != null)
-                blockToBlockingFrontTable[i] = block.getModel().isBlockingFront();
+            if (blockState != null)
+                blockToBlockingFrontTable[i] = blockState.getModel().isBlockingFront();
         }
 
         for (int i = 0; i < blockToBlockingBackTable.length; ++i) {
-            BlockType block = BlockType.byID((short) i);
+            BlockState blockState = BlockRegistry.INSTANCE.getBlock(i);
 
-            if (block != null)
-                blockToBlockingBackTable[i] = block.getModel().isBlockingBack();
+            if (blockState != null)
+                blockToBlockingBackTable[i] = blockState.getModel().isBlockingBack();
         }
     }
 
@@ -109,33 +110,33 @@ public abstract class BlockRenderer
         this.nonCubic = nonCubic;
     }
 
-    public static BlockRenderer byBlockID(short blockID) {
-        return blockRenderers[BlockType.byID(blockID).getModel().id];
+    public static BlockRenderer byBlockID(int blockID) {
+        return blockRenderers[BlockRegistry.INSTANCE.getBlock(blockID).getModel().id];
     }
 
-    public void pushNonCubic(int x, int y, int z, short blockID, GLDisplayList.Builder builder) {}
+    public void pushNonCubic(int x, int y, int z, int blockID, GLDisplayList.Builder builder) {}
 
-    public void pushTopFaces(int x, int y, int z, short blockID, short adjacentBlockID,
+    public void pushTopFaces(int x, int y, int z, int blockID, int adjacentBlockID,
             GLDisplayList.Builder builder)
     {}
 
-    public void pushBottomFaces(int x, int y, int z, short blockID, short adjacentBlockID,
+    public void pushBottomFaces(int x, int y, int z, int blockID, int adjacentBlockID,
             GLDisplayList.Builder builder)
     {}
 
-    public void pushLeftFaces(int x, int y, int z, short blockID, short adjacentBlockID,
+    public void pushLeftFaces(int x, int y, int z, int blockID, int adjacentBlockID,
             GLDisplayList.Builder builder)
     {}
 
-    public void pushRightFaces(int x, int y, int z, short blockID, short adjacentBlockID,
+    public void pushRightFaces(int x, int y, int z, int blockID, int adjacentBlockID,
             GLDisplayList.Builder builder)
     {}
 
-    public void pushFrontFaces(int x, int y, int z, short blockID, short adjacentBlockID,
+    public void pushFrontFaces(int x, int y, int z, int blockID, int adjacentBlockID,
             GLDisplayList.Builder builder)
     {}
 
-    public void pushBackFaces(int x, int y, int z, short blockID, short adjacentBlockID,
+    public void pushBackFaces(int x, int y, int z, int blockID, int adjacentBlockID,
             GLDisplayList.Builder builder)
     {}
 }

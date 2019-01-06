@@ -2,7 +2,6 @@ package net.survival.world.gen.decoration;
 
 import java.util.Random;
 
-import net.survival.block.BlockType;
 import net.survival.world.World;
 import net.survival.world.column.Column;
 import net.survival.world.column.ColumnPos;
@@ -19,10 +18,13 @@ public class SmallTreeDecorator implements WorldDecorator
     public void decorate(int cx, int cz, Column column, World world) {
         random.setSeed(ColumnPos.hashPos(cx, cz));
 
+        /*
         for (int i = 0; i < 2; ++i)
             generateTree(cx, cz, column, world);
+*/
     }
 
+/*
     private void generateTree(int cx, int cz, Column column, World world) {
         int originX = random.nextInt(Column.XLENGTH);
         int originZ = random.nextInt(Column.ZLENGTH);
@@ -60,4 +62,5 @@ public class SmallTreeDecorator implements WorldDecorator
                 column.setBlock(originX, y, originZ, BlockType.OAK_LOG.id);
         }
     }
+*/
 }

@@ -68,7 +68,7 @@ public class World implements BlockStorage
     }
 
     @Override
-    public short getBlock(int x, int y, int z) {
+    public int getBlock(int x, int y, int z) {
         int cx = ColumnPos.toColumnX(x);
         int cz = ColumnPos.toColumnZ(z);
 
@@ -83,7 +83,7 @@ public class World implements BlockStorage
     }
 
     @Override
-    public void setBlock(int x, int y, int z, short to) {
+    public void setBlock(int x, int y, int z, int to) {
         Column column = getColumnFromGlobalPos(x, z, "Cannot place/replace a block in an unloaded column.");
         int localX = ColumnPos.toLocalX(ColumnPos.toColumnX(x), x);
         int localZ = ColumnPos.toLocalZ(ColumnPos.toColumnZ(z), z);

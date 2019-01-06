@@ -28,13 +28,13 @@ public class Chunk implements BlockStorage
     }
 
     @Override
-    public short getBlock(int x, int y, int z) {
+    public int getBlock(int x, int y, int z) {
         return blockIDs[localPositionToIndex(x, y, z)];
     }
 
     @Override
-    public void setBlock(int x, int y, int z, short to) {
-        blockIDs[localPositionToIndex(x, y, z)] = to;
+    public void setBlock(int x, int y, int z, int to) {
+        blockIDs[localPositionToIndex(x, y, z)] = (short) to;
     }
 
     public int localPositionToIndex(int x, int y, int z) {

@@ -1,5 +1,6 @@
 package net.survival.world.actor.interaction;
 
+import net.survival.block.BlockState;
 import net.survival.input.Key;
 
 public class InteractionContext
@@ -38,10 +39,10 @@ public class InteractionContext
         return keyboard.isKeyReleased(key);
     }
 
-    public short getBlock(int x, int y, int z) {
+    public BlockState getBlock(int x, int y, int z) {
         return blocks.getBlock(x, y, z);
     }
 
-    public void setBlock(int x, int y, int z, short to) {
+    public void setBlock(int x, int y, int z, BlockState to) {
     }
 }

@@ -1,41 +1,41 @@
 package net.survival.world.biome;
 
-import net.survival.block.BlockType;
+import net.survival.block.BlockRegistry;
 
 public enum BiomeType
 {
     OCEAN((bt) -> {
-        bt.topBlockID = BlockType.DIRT.id;
+        bt.topBlockID = BlockRegistry.INSTANCE.guessFirstBlock("andesite dirt").getID();
         bt.minElevation = 16.0;
         bt.maxElevation = 61.0;
         bt.biomeViewerColor = 0x000000FF;
     }),
     GRASSLAND((bt) -> {
-        bt.topBlockID = BlockType.GRASS.id;
+        bt.topBlockID = BlockRegistry.INSTANCE.guessFirstBlock("grass").getID();
         bt.minElevation = 65.0;
         bt.maxElevation = 72.0;
         bt.biomeViewerColor = 0x0000FF00;
     }),
     FOREST((bt) -> {
-        bt.topBlockID = BlockType.GRASS.id;
+        bt.topBlockID = BlockRegistry.INSTANCE.guessFirstBlock("grass").getID();
         bt.minElevation = 72.0;
         bt.maxElevation = 86.0;
         bt.biomeViewerColor = 0x00009F00;
     }),
     EXTREME_HILLS((bt) -> {
-        bt.topBlockID = BlockType.GRASS.id;
+        bt.topBlockID = BlockRegistry.INSTANCE.guessFirstBlock("grass").getID();
         bt.minElevation = 72.0;
         bt.maxElevation = 128.0;
         bt.biomeViewerColor = 0x00FF7F00;
     }),
     DESERT((bt) -> {
-        bt.topBlockID = BlockType.SAND.id;
+        bt.topBlockID = BlockRegistry.INSTANCE.guessFirstBlock("andesite sand").getID();
         bt.minElevation = 65.0;
         bt.maxElevation = 72.0;
         bt.biomeViewerColor = 0x00FFFF00;
     }),
     TUNDRA((bt) -> {
-        bt.topBlockID = BlockType.GRASS.id;
+        bt.topBlockID = BlockRegistry.INSTANCE.guessFirstBlock("grass").getID();
         bt.minElevation = 65.0;
         bt.maxElevation = 72.0;
         bt.biomeViewerColor = 0x0000FFFF;
@@ -43,7 +43,7 @@ public enum BiomeType
 
     private static final BiomeType[] cachedValues = values();
 
-    private short topBlockID;
+    private int topBlockID;
 
     private double minElevation;
     private double maxElevation;
@@ -51,7 +51,7 @@ public enum BiomeType
     private int biomeViewerColor;
 
     private BiomeType(Builder builder) {
-        topBlockID = BlockType.STONE.id;
+        topBlockID = BlockRegistry.INSTANCE.guessFirstBlock("andesite stone").getID();
         minElevation = 0.0;
         maxElevation = 1.0;
         builder.build(this);
@@ -65,7 +65,7 @@ public enum BiomeType
         return cachedValues[id];
     }
 
-    public short getTopBlockID() {
+    public int getTopBlockID() {
         return topBlockID;
     }
 

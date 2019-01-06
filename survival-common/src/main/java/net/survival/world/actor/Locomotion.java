@@ -1,6 +1,6 @@
 package net.survival.world.actor;
 
-import net.survival.block.BlockType;
+import net.survival.block.BlockState;
 import net.survival.util.HitBox;
 import net.survival.util.MathEx;
 import net.survival.world.actor.interaction.InteractionContext;
@@ -112,16 +112,14 @@ public class Locomotion
 
         for (int blockZ = startZ; blockZ <= endZ; ++blockZ) {
             for (int blockX = startX; blockX <= endX; ++blockX) {
-                short aboveFloorBlockID = ic.getBlock(blockX, floorY + 1, blockZ);
-                BlockType aboveFloorBlockType = BlockType.byID(aboveFloorBlockID);
+                BlockState aboveFloorBlock = ic.getBlock(blockX, floorY + 1, blockZ);
 
-                if (aboveFloorBlockType.isSolid())
+                if (aboveFloorBlock.isSolid())
                     continue;
 
-                short floorBlockID = ic.getBlock(blockX, floorY, blockZ);
-                BlockType floorBlockType = BlockType.byID(floorBlockID);
+                BlockState floorBlock = ic.getBlock(blockX, floorY, blockZ);
 
-                if (floorBlockType.isSolid()
+                if (floorBlock.isSolid()
                         && getDominantAxis(blockX, floorY, blockZ) == 1
                         && intersectsFloorPlane(blockX, floorY, blockZ))
                 {
@@ -151,16 +149,14 @@ public class Locomotion
 
         for (int blockZ = startZ; blockZ <= endZ; ++blockZ) {
             for (int blockX = startX; blockX <= endX; ++blockX) {
-                short belowCeilingBlockID = ic.getBlock(blockX, ceilingY - 1, blockZ);
-                BlockType belowCeilingBlockType = BlockType.byID(belowCeilingBlockID);
+                BlockState belowCeilingBlock = ic.getBlock(blockX, ceilingY - 1, blockZ);
 
-                if (belowCeilingBlockType.isSolid())
+                if (belowCeilingBlock.isSolid())
                     continue;
 
-                short ceilingBlockID = ic.getBlock(blockX, ceilingY, blockZ);
-                BlockType ceilingBlockType = BlockType.byID(ceilingBlockID);
+                BlockState ceilingBlock = ic.getBlock(blockX, ceilingY, blockZ);
 
-                if (ceilingBlockType.isSolid()
+                if (ceilingBlock.isSolid()
                         && getDominantAxis(blockX, ceilingY, blockZ) == 1
                         && intersectsCeilingPlane(blockX, ceilingY, blockZ))
                 {
@@ -188,16 +184,14 @@ public class Locomotion
 
         for (int blockY = startY; blockY <= endY; ++blockY) {
             for (int blockZ = startZ; blockZ <= endZ; ++blockZ) {
-                short adjacentBlockID = ic.getBlock(wallX - 1, blockY, blockZ);
-                BlockType adjacentBlockType = BlockType.byID(adjacentBlockID);
+                BlockState adjacentBlock = ic.getBlock(wallX - 1, blockY, blockZ);
 
-                if (adjacentBlockType.isSolid())
+                if (adjacentBlock.isSolid())
                     continue;
 
-                short wallBlockID = ic.getBlock(wallX, blockY, blockZ);
-                BlockType wallBlockType = BlockType.byID(wallBlockID);
+                BlockState wallBlock = ic.getBlock(wallX, blockY, blockZ);
 
-                if (wallBlockType.isSolid()
+                if (wallBlock.isSolid()
                         && getDominantAxis(wallX, blockY, blockZ) == 0
                         && intersectsLeftPlane(wallX, blockY, blockZ))
                 {
@@ -225,16 +219,14 @@ public class Locomotion
 
         for (int blockY = startY; blockY <= endY; ++blockY) {
             for (int blockZ = startZ; blockZ <= endZ; ++blockZ) {
-                short adjacentBlockID = ic.getBlock(wallX + 1, blockY, blockZ);
-                BlockType adjacentBlockType = BlockType.byID(adjacentBlockID);
+                BlockState adjacentBlock = ic.getBlock(wallX + 1, blockY, blockZ);
 
-                if (adjacentBlockType.isSolid())
+                if (adjacentBlock.isSolid())
                     continue;
 
-                short wallBlockID = ic.getBlock(wallX, blockY, blockZ);
-                BlockType wallBlockType = BlockType.byID(wallBlockID);
+                BlockState wallBlock = ic.getBlock(wallX, blockY, blockZ);
 
-                if (wallBlockType.isSolid()
+                if (wallBlock.isSolid()
                         && getDominantAxis(wallX, blockY, blockZ) == 0
                         && intersectsRightPlane(wallX, blockY, blockZ))
                 {
@@ -262,16 +254,14 @@ public class Locomotion
 
         for (int blockY = startY; blockY <= endY; ++blockY) {
             for (int blockX = startX; blockX <= endX; ++blockX) {
-                short adjacentBlockID = ic.getBlock(blockX, blockY, wallZ + 1);
-                BlockType adjacentBlockType = BlockType.byID(adjacentBlockID);
+                BlockState adjacentBlock = ic.getBlock(blockX, blockY, wallZ + 1);
 
-                if (adjacentBlockType.isSolid())
+                if (adjacentBlock.isSolid())
                     continue;
 
-                short wallBlockID = ic.getBlock(blockX, blockY, wallZ);
-                BlockType wallBlockType = BlockType.byID(wallBlockID);
+                BlockState wallBlock = ic.getBlock(blockX, blockY, wallZ);
 
-                if (wallBlockType.isSolid()
+                if (wallBlock.isSolid()
                         && getDominantAxis(blockX, blockY, wallZ) == 2
                         && intersectsFrontPlane(blockX, blockY, wallZ))
                 {
@@ -299,16 +289,14 @@ public class Locomotion
 
         for (int blockY = startY; blockY <= endY; ++blockY) {
             for (int blockX = startX; blockX <= endX; ++blockX) {
-                short adjacentBlockID = ic.getBlock(blockX, blockY, wallZ - 1);
-                BlockType adjacentBlockType = BlockType.byID(adjacentBlockID);
+                BlockState adjacentBlock = ic.getBlock(blockX, blockY, wallZ - 1);
 
-                if (adjacentBlockType.isSolid())
+                if (adjacentBlock.isSolid())
                     continue;
 
-                short wallBlockID = ic.getBlock(blockX, blockY, wallZ);
-                BlockType wallBlockType = BlockType.byID(wallBlockID);
+                BlockState wallBlock = ic.getBlock(blockX, blockY, wallZ);
 
-                if (wallBlockType.isSolid()
+                if (wallBlock.isSolid()
                         && getDominantAxis(blockX, blockY, wallZ) == 2
                         && intersectsBackPlane(blockX, blockY, wallZ))
                 {

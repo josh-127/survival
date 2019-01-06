@@ -12,7 +12,7 @@ class FenceRenderer extends BlockRenderer
     }
 
     @Override
-    public void pushTopFaces(int x, int y, int z, short blockID, short adjacentBlockID,
+    public void pushTopFaces(int x, int y, int z, int blockID, int adjacentBlockID,
             GLDisplayList.Builder builder)
     {
         float u1 = topFaceTextures.getTexCoordU1(blockID);
@@ -34,7 +34,7 @@ class FenceRenderer extends BlockRenderer
     }
 
     @Override
-    public void pushBottomFaces(int x, int y, int z, short blockID, short adjacentBlockID,
+    public void pushBottomFaces(int x, int y, int z, int blockID, int adjacentBlockID,
             GLDisplayList.Builder builder)
     {
         float u1 = topFaceTextures.getTexCoordU1(blockID);
@@ -56,7 +56,7 @@ class FenceRenderer extends BlockRenderer
     }
 
     @Override
-    public void pushLeftFaces(int x, int y, int z, short blockID, short adjacentBlockID,
+    public void pushLeftFaces(int x, int y, int z, int blockID, int adjacentBlockID,
             GLDisplayList.Builder builder)
     {
         float u1 = topFaceTextures.getTexCoordU1(blockID);
@@ -77,7 +77,7 @@ class FenceRenderer extends BlockRenderer
     }
 
     @Override
-    public void pushRightFaces(int x, int y, int z, short blockID, short adjacentBlockID,
+    public void pushRightFaces(int x, int y, int z, int blockID, int adjacentBlockID,
             GLDisplayList.Builder builder)
     {
         float u1 = topFaceTextures.getTexCoordU1(blockID);
@@ -98,7 +98,7 @@ class FenceRenderer extends BlockRenderer
     }
 
     @Override
-    public void pushFrontFaces(int x, int y, int z, short blockID, short adjacentBlockID,
+    public void pushFrontFaces(int x, int y, int z, int blockID, int adjacentBlockID,
             GLDisplayList.Builder builder)
     {
         float u1 = topFaceTextures.getTexCoordU1(blockID);
@@ -119,8 +119,8 @@ class FenceRenderer extends BlockRenderer
     }
 
     @Override
-    public void pushBackFaces(int x, int y, int z, short blockID,
-            short adjacentBlockID, GLDisplayList.Builder builder)
+    public void pushBackFaces(int x, int y, int z, int blockID, int adjacentBlockID,
+            GLDisplayList.Builder builder)
     {
         float u1 = topFaceTextures.getTexCoordU1(blockID);
         float u2 = topFaceTextures.getTexCoordU2(blockID);

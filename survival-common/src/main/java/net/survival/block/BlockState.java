@@ -1,7 +1,8 @@
 package net.survival.block;
 
-public class BlockState
+public class BlockState implements Comparable<BlockState>
 {
+    private final int id;
     private final String internalName;
     private final String displayName;
     private final String keywords;
@@ -12,6 +13,7 @@ public class BlockState
     private final String[] textures;
 
     private BlockState(
+            int id,
             String internalName,
             String displayName,
             String keywords,
@@ -21,6 +23,7 @@ public class BlockState
             BlockModel model,
             String[] textures)
     {
+        this.id = id;
         this.internalName = internalName;
         this.displayName = displayName;
         this.keywords = keywords;
@@ -29,6 +32,31 @@ public class BlockState
         this.solid = solid;
         this.model = model;
         this.textures = textures;
+    }
+
+    @Override
+    public int compareTo(BlockState o) {
+        if (id < o.id) return -1;
+        if (id > o.id) return 1; 
+        return 0;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null || !obj.getClass().equals(BlockState.class))
+            return false;
+
+        BlockState other = (BlockState) obj;
+        return id == other.id;
+    }
+    
+    @Override
+    public int hashCode() {
+        return Integer.hashCode(id);
+    }
+
+    public int getID() {
+        return id;
     }
 
     public String getInternalName() {
@@ -65,6 +93,7 @@ public class BlockState
 
     public static class Builder
     {
+        private final BlockRegistry registry;
         private String internalName = "<UNDEFINED>";
         private String displayName = "<UNDEFINED>";
         private String keywords = "";
@@ -74,8 +103,13 @@ public class BlockState
         private BlockModel model = BlockModel.DEFAULT;
         private final String[] textures = new String[BlockFace.getCachedValues().length];
 
+        public Builder(BlockRegistry registry) {
+            this.registry = registry;
+        }
+
         public BlockState build() {
             return new BlockState(
+                    registry.getNextID(),
                     internalName,
                     displayName,
                     keywords,
