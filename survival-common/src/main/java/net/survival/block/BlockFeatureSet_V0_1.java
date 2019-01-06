@@ -40,21 +40,25 @@ final class BlockFeatureSet_V0_1 implements BlockFeatureSet
             builder.withInternalName(format("%s_%s", materialName, "clay"));
             builder.withDisplayName(format("%s %s", materialName, "clay"));
             builder.withKeywords(format("%s %s", materialName, "clay"));
+            builder.withTextureOnAllFaces(format("TerraFirmaCraft/blocks/clay/%s.png", materialName));
             registry.registerBlock(builder.build());
 
             builder.withInternalName(format("%s_%s", materialName, "raw stone"));
             builder.withDisplayName(format("%s %s", materialName, "raw stone"));
             builder.withKeywords(format("%s %s", materialName, "raw stone"));
+            builder.withTextureOnAllFaces(format("TerraFirmaCraft/blocks/stone_raw/%s.png", materialName));
             registry.registerBlock(builder.build());
 
             builder.withInternalName(format("%s_%s", materialName, "dirt"));
             builder.withDisplayName(format("%s %s", materialName, "dirt"));
             builder.withKeywords(format("%s %s", materialName, "dirt"));
+            builder.withTextureOnAllFaces(format("TerraFirmaCraft/blocks/dirt/%s.png", materialName));
             registry.registerBlock(builder.build());
 
             builder.withInternalName(format("%s_%s", materialName, "sand"));
             builder.withDisplayName(format("%s %s", materialName, "sand"));
             builder.withKeywords(format("%s %s", materialName, "sand"));
+            builder.withTextureOnAllFaces(format("TerraFirmaCraft/blocks/sand/%s.png", materialName));
             registry.registerBlock(builder.build());
         }
 
@@ -62,12 +66,16 @@ final class BlockFeatureSet_V0_1 implements BlockFeatureSet
                 .withInternalName("grass")
                 .withDisplayName("Grass")
                 .withKeywords("grass")
+                .withTextureOnSides("ProgrammerArt-v3.0/textures/blocks/grass_side.png")
+                .withTexture(BlockFace.TOP, "ProgrammerArt-v3.0/textures/blocks/grass_top.png")
+                .withTexture(BlockFace.BOTTOM, "ProgrammerArt-v3.0/textures/blocks/dirt.png")
                 .build());
 
         registry.registerBlock(new BlockState.Builder(registry)
                 .withInternalName("water")
                 .withDisplayName("Water")
                 .withKeywords("water")
+                .withTextureOnAllFaces("textures/blocks/water.png")
                 .build());
     }
 
