@@ -9,16 +9,21 @@ Default Controls
 ----------------
 Keyboard and mouse controls are hard-coded for now.
 
-| Action/Button     | Action            |
-|-------------------|-------------------|
-| W, A, S, D        | Move horizontally |
-| Space             | Jump              |
-| R                 | Spawn player      |
-| T                 | Spawn human       |
-| Y                 | Spawn slime       |
-| U                 | Spawn goat        |
-| Mouse movement    | Look around       |
-| Left mouse button | Break block       |
+| Action/Button     | Action                   |
+|-------------------|--------------------------|
+| W, A, S, D        | Move horizontally        |
+| Space             | Jump                     |
+| R                 | Spawn player             |
+| T                 | Spawn human              |
+| Mouse movement    | Look around              |
+| Left mouse button | Break block              |
+| Tab               | Toggle cursor mode       |
+| 1                 | Toggle block visibility  |
+| 2                 | Toggle entity visibility |
+| 3                 | Toggle sky visibility    |
+| 4                 | Toggle cloud visibility  |
+| 5                 | Toggle UI visibility     |
+
 
 Building
 --------
