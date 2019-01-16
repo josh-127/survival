@@ -7,7 +7,7 @@ class ColumnCodec
     private static final int COLUMN_HEADER_SIZE = 2;
 
     public static ByteBuffer compressColumn(Column column) {
-        int compressedDataLength = Column.VOLUME * 2 + COLUMN_HEADER_SIZE;
+        int compressedDataLength = Column.VOLUME * 4 + COLUMN_HEADER_SIZE;
         ByteBuffer compressedData = ByteBuffer.allocate(compressedDataLength);
 
         byte flags = (byte) (column.isDecorated() ? 1 : 0);
@@ -31,26 +31,9 @@ class ColumnCodec
     }
 
     private static void compressChunk(Chunk chunk, ByteBuffer compressedData) {
-        int counter = 0;
-
-        while (counter < Chunk.VOLUME) {
-            int start = counter;
-            int startBlockID = chunk.blockIDs[start];
-
-            while (counter < Chunk.VOLUME
-                    && counter - start < 16
-                    && chunk.blockIDs[counter] == startBlockID)
-            {
-                ++counter;
-            }
-
-            short rleStrip = (short) (startBlockID & 0x0FFF);
-            rleStrip |= (short) (((counter - start - 1) & 0xF) << 12);
-
-            compressedData.putShort(rleStrip);
+        for (int i = 0; i < Chunk.VOLUME; ++i) {
+            compressedData.putInt(chunk.blockIDs[i]);
         }
-
-        compressedData.putShort((short) -1);
     }
 
     public static Column decompressColumn(ByteBuffer compressedData) {
@@ -73,17 +56,8 @@ class ColumnCodec
     }
 
     private static void decompressChunk(ByteBuffer compressedData, Chunk chunk) {
-        int index = 0;
-        short rleStrip = compressedData.getShort();
-
-        while (rleStrip != -1) {
-            int length = ((rleStrip & 0xF000) >>> 12) + 1;
-            short blockID = (short) (rleStrip & 0x0FFF);
-
-            for (int i = 0; i < length; ++i)
-                chunk.blockIDs[index++] = blockID;
-
-            rleStrip = compressedData.getShort();
+        for (int i = 0; i < Chunk.VOLUME; ++i) {
+            chunk.blockIDs[i] = compressedData.getInt();
         }
     }
 }

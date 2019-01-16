@@ -4,7 +4,7 @@ import java.nio.ByteBuffer;
 
 class VirtualAllocationUnit
 {
-    public static final long MAX_LENGTH = 65536;
+    public static final long MAX_LENGTH = 16777216;
     public static final int STRUCTURE_SIZE = 17;
 
     public long address;
