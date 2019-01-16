@@ -1,7 +1,6 @@
 package net.survival.client;
 
-import net.survival.block.BlockRegistry;
-import net.survival.block.BlockState;
+import net.survival.block.Block;
 import net.survival.world.World;
 import net.survival.world.actor.interaction.BlockInteractionAdapter;
 
@@ -14,11 +13,12 @@ public class LocalBlockInteractionAdapter implements BlockInteractionAdapter
     }
 
     @Override
-    public BlockState getBlock(int x, int y, int z) {
-        return BlockRegistry.INSTANCE.getBlock(world.getBlock(x, y, z));
+    public Block getBlock(int x, int y, int z) {
+        return world.getBlockState(x, y, z);
     }
 
     @Override
-    public void setBlock(int x, int y, int z, BlockState to) {
+    public void setBlock(int x, int y, int z, Block to) {
+        world.setBlockState(x, y, z, to);
     }
 }

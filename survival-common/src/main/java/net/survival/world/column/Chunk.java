@@ -12,29 +12,29 @@ public class Chunk implements BlockStorage
     public static final int BASE_AREA = XLENGTH * ZLENGTH;
     public static final int VOLUME = BASE_AREA * YLENGTH;
 
-    public final short[] blockIDs;
+    public final int[] blockIDs;
 
     public Chunk() {
-        blockIDs = new short[VOLUME];
+        blockIDs = new int[VOLUME];
     }
 
-    private Chunk(short[] blockIDs) {
+    private Chunk(int[] blockIDs) {
         this.blockIDs = blockIDs;
     }
 
     public Chunk makeCopy() {
-        short[] copyOfBlockIDs = Arrays.copyOf(blockIDs, VOLUME);
+        int[] copyOfBlockIDs = Arrays.copyOf(blockIDs, VOLUME);
         return new Chunk(copyOfBlockIDs);
     }
 
     @Override
-    public int getBlock(int x, int y, int z) {
+    public int getBlockFullID(int x, int y, int z) {
         return blockIDs[localPositionToIndex(x, y, z)];
     }
 
     @Override
-    public void setBlock(int x, int y, int z, int to) {
-        blockIDs[localPositionToIndex(x, y, z)] = (short) to;
+    public void setBlockFullID(int x, int y, int z, int to) {
+        blockIDs[localPositionToIndex(x, y, z)] = to;
     }
 
     public int localPositionToIndex(int x, int y, int z) {

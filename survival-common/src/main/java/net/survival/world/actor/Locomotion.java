@@ -1,6 +1,6 @@
 package net.survival.world.actor;
 
-import net.survival.block.BlockState;
+import net.survival.block.Block;
 import net.survival.util.HitBox;
 import net.survival.util.MathEx;
 import net.survival.world.actor.interaction.InteractionContext;
@@ -112,12 +112,12 @@ public class Locomotion
 
         for (int blockZ = startZ; blockZ <= endZ; ++blockZ) {
             for (int blockX = startX; blockX <= endX; ++blockX) {
-                BlockState aboveFloorBlock = ic.getBlock(blockX, floorY + 1, blockZ);
+                Block aboveFloorBlock = ic.getBlock(blockX, floorY + 1, blockZ);
 
                 if (aboveFloorBlock.isSolid())
                     continue;
 
-                BlockState floorBlock = ic.getBlock(blockX, floorY, blockZ);
+                Block floorBlock = ic.getBlock(blockX, floorY, blockZ);
 
                 if (floorBlock.isSolid()
                         && getDominantAxis(blockX, floorY, blockZ) == 1
@@ -149,12 +149,12 @@ public class Locomotion
 
         for (int blockZ = startZ; blockZ <= endZ; ++blockZ) {
             for (int blockX = startX; blockX <= endX; ++blockX) {
-                BlockState belowCeilingBlock = ic.getBlock(blockX, ceilingY - 1, blockZ);
+                Block belowCeilingBlock = ic.getBlock(blockX, ceilingY - 1, blockZ);
 
                 if (belowCeilingBlock.isSolid())
                     continue;
 
-                BlockState ceilingBlock = ic.getBlock(blockX, ceilingY, blockZ);
+                Block ceilingBlock = ic.getBlock(blockX, ceilingY, blockZ);
 
                 if (ceilingBlock.isSolid()
                         && getDominantAxis(blockX, ceilingY, blockZ) == 1
@@ -184,12 +184,12 @@ public class Locomotion
 
         for (int blockY = startY; blockY <= endY; ++blockY) {
             for (int blockZ = startZ; blockZ <= endZ; ++blockZ) {
-                BlockState adjacentBlock = ic.getBlock(wallX - 1, blockY, blockZ);
+                Block adjacentBlock = ic.getBlock(wallX - 1, blockY, blockZ);
 
                 if (adjacentBlock.isSolid())
                     continue;
 
-                BlockState wallBlock = ic.getBlock(wallX, blockY, blockZ);
+                Block wallBlock = ic.getBlock(wallX, blockY, blockZ);
 
                 if (wallBlock.isSolid()
                         && getDominantAxis(wallX, blockY, blockZ) == 0
@@ -219,12 +219,12 @@ public class Locomotion
 
         for (int blockY = startY; blockY <= endY; ++blockY) {
             for (int blockZ = startZ; blockZ <= endZ; ++blockZ) {
-                BlockState adjacentBlock = ic.getBlock(wallX + 1, blockY, blockZ);
+                Block adjacentBlock = ic.getBlock(wallX + 1, blockY, blockZ);
 
                 if (adjacentBlock.isSolid())
                     continue;
 
-                BlockState wallBlock = ic.getBlock(wallX, blockY, blockZ);
+                Block wallBlock = ic.getBlock(wallX, blockY, blockZ);
 
                 if (wallBlock.isSolid()
                         && getDominantAxis(wallX, blockY, blockZ) == 0
@@ -254,12 +254,12 @@ public class Locomotion
 
         for (int blockY = startY; blockY <= endY; ++blockY) {
             for (int blockX = startX; blockX <= endX; ++blockX) {
-                BlockState adjacentBlock = ic.getBlock(blockX, blockY, wallZ + 1);
+                Block adjacentBlock = ic.getBlock(blockX, blockY, wallZ + 1);
 
                 if (adjacentBlock.isSolid())
                     continue;
 
-                BlockState wallBlock = ic.getBlock(blockX, blockY, wallZ);
+                Block wallBlock = ic.getBlock(blockX, blockY, wallZ);
 
                 if (wallBlock.isSolid()
                         && getDominantAxis(blockX, blockY, wallZ) == 2
@@ -289,12 +289,12 @@ public class Locomotion
 
         for (int blockY = startY; blockY <= endY; ++blockY) {
             for (int blockX = startX; blockX <= endX; ++blockX) {
-                BlockState adjacentBlock = ic.getBlock(blockX, blockY, wallZ - 1);
+                Block adjacentBlock = ic.getBlock(blockX, blockY, wallZ - 1);
 
                 if (adjacentBlock.isSolid())
                     continue;
 
-                BlockState wallBlock = ic.getBlock(blockX, blockY, wallZ);
+                Block wallBlock = ic.getBlock(blockX, blockY, wallZ);
 
                 if (wallBlock.isSolid()
                         && getDominantAxis(blockX, blockY, wallZ) == 2

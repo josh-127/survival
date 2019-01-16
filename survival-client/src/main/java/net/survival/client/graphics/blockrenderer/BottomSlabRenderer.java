@@ -1,6 +1,6 @@
 package net.survival.client.graphics.blockrenderer;
 
-import net.survival.block.BlockRegistry;
+import net.survival.block.BlockID;
 import net.survival.client.graphics.opengl.GLDisplayList.Builder;
 
 class BottomSlabRenderer extends BlockRenderer
@@ -29,7 +29,7 @@ class BottomSlabRenderer extends BlockRenderer
     public void pushBottomFaces(int x, int y, int z, int blockID, int adjacentBlockID,
             Builder builder)
     {
-        if (BlockRegistry.INSTANCE.getBlock(adjacentBlockID).getModel().isBlockingTop())
+        if (blockToBlockingTopTable[BlockID.typeIDFromFullID(adjacentBlockID)])
             return;
 
         float u1 = bottomFaceTextures.getTexCoordU1(blockID);
@@ -48,7 +48,7 @@ class BottomSlabRenderer extends BlockRenderer
     public void pushLeftFaces(int x, int y, int z, int blockID, int adjacentBlockID,
             Builder builder)
     {
-        if (BlockRegistry.INSTANCE.getBlock(adjacentBlockID).getModel().isBlockingRight())
+        if (blockToBlockingRightTable[BlockID.typeIDFromFullID(adjacentBlockID)])
             return;
 
         float u1 = leftFaceTextures.getTexCoordU1(blockID);
@@ -67,7 +67,7 @@ class BottomSlabRenderer extends BlockRenderer
     public void pushRightFaces(int x, int y, int z, int blockID, int adjacentBlockID,
             Builder builder)
     {
-        if (BlockRegistry.INSTANCE.getBlock(adjacentBlockID).getModel().isBlockingRight())
+        if (blockToBlockingLeftTable[BlockID.typeIDFromFullID(adjacentBlockID)])
             return;
 
         float u1 = rightFaceTextures.getTexCoordU1(blockID);
@@ -86,7 +86,7 @@ class BottomSlabRenderer extends BlockRenderer
     public void pushFrontFaces(int x, int y, int z, int blockID, int adjacentBlockID,
             Builder builder)
     {
-        if (BlockRegistry.INSTANCE.getBlock(adjacentBlockID).getModel().isBlockingBack())
+        if (blockToBlockingBackTable[BlockID.typeIDFromFullID(adjacentBlockID)])
             return;
 
         float u1 = frontFaceTextures.getTexCoordU1(blockID);
@@ -105,7 +105,7 @@ class BottomSlabRenderer extends BlockRenderer
     public void pushBackFaces(int x, int y, int z, int blockID, int adjacentBlockID,
             Builder builder)
     {
-        if (BlockRegistry.INSTANCE.getBlock(adjacentBlockID).getModel().isBlockingFront())
+        if (blockToBlockingFrontTable[BlockID.typeIDFromFullID(adjacentBlockID)])
             return;
 
         float u1 = backFaceTextures.getTexCoordU1(blockID);

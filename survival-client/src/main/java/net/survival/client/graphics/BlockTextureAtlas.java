@@ -1,8 +1,8 @@
 package net.survival.client.graphics;
 
+import net.survival.block.Block;
 import net.survival.block.BlockFace;
-import net.survival.block.BlockRegistry;
-import net.survival.block.BlockState;
+import net.survival.block.BlockType;
 import net.survival.client.graphics.opengl.GLFilterMode;
 import net.survival.client.graphics.opengl.GLTexture;
 import net.survival.client.graphics.opengl.GLWrapMode;
@@ -18,16 +18,18 @@ public class BlockTextureAtlas implements GraphicsResource
 
     public BlockTextureAtlas(BlockFace blockFace) {
         Bitmap atlas = new Bitmap(256, 256);
-        for (BlockState blockState : BlockRegistry.INSTANCE.iterateAllBlocks()) {
-            if (blockState.getTexture(blockFace) == null)
+        for (Block block : BlockType.getAllBlocks()) {
+            if (block == null)
+                continue;
+            if (block.getTexture(blockFace) == null)
                 continue;
 
-            int dstIndex = blockState.getID();
+            int dstIndex = block.getTypeID();
             int dstX = (dstIndex % 16) * 16;
             int dstY = (dstIndex / 16) * 16;
             Bitmap blockBitmap = Bitmap.fromFile(
                     GraphicsSettings.BLOCKS_PATH +
-                    blockState.getTexture(blockFace));
+                    block.getTexture(blockFace));
             Bitmap.blit(blockBitmap, 0, 0, 16, 16, atlas, dstX, dstY);
         }
 

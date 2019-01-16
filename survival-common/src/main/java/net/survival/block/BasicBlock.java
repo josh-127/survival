@@ -1,32 +1,25 @@
 package net.survival.block;
 
-public class BlockState implements Comparable<BlockState>
+public class BasicBlock extends Block
 {
-    private final int id;
-    private final String internalName;
-    private final String displayName;
-    private final String keywords;
-    private final double hardness;
-    private final double resistance;
-    private final boolean solid;
-    private final BlockModel model;
-    private final String[] textures;
+    protected final String displayName;
+    protected final double hardness;
+    protected final double resistance;
+    protected final boolean solid;
+    protected final BlockModel model;
+    protected final String[] textures;
 
-    private BlockState(
-            int id,
-            String internalName,
+    private BasicBlock(
+            short typeID,
             String displayName,
-            String keywords,
             double hardness,
             double resistance,
             boolean solid,
             BlockModel model,
             String[] textures)
     {
-        this.id = id;
-        this.internalName = internalName;
+        super(typeID);
         this.displayName = displayName;
-        this.keywords = keywords;
         this.hardness = hardness;
         this.resistance = resistance;
         this.solid = solid;
@@ -35,84 +28,63 @@ public class BlockState implements Comparable<BlockState>
     }
 
     @Override
-    public int compareTo(BlockState o) {
-        if (id < o.id) return -1;
-        if (id > o.id) return 1; 
+    protected short getEncodedState() {
         return 0;
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (obj == null || !obj.getClass().equals(BlockState.class))
-            return false;
-
-        BlockState other = (BlockState) obj;
-        return id == other.id;
+    public Block withState(short encodedState) {
+        return this;
     }
-    
+
     @Override
-    public int hashCode() {
-        return Integer.hashCode(id);
-    }
-
-    public int getID() {
-        return id;
-    }
-
-    public String getInternalName() {
-        return internalName;
-    }
-
     public String getDisplayName() {
         return displayName;
     }
 
-    public String getKeywords() {
-        return keywords;
-    }
-
+    @Override
     public double getHardness() {
         return hardness;
     }
 
+    @Override
     public double getResistance() {
         return resistance;
     }
-    
+
+    @Override
     public boolean isSolid() {
         return solid;
     }
 
+    @Override
     public BlockModel getModel() {
         return model;
     }
-    
+
+    @Override
     public String getTexture(BlockFace blockFace) {
         return textures[blockFace.ordinal()];
     }
 
     public static class Builder
     {
-        private final BlockRegistry registry;
-        private String internalName = "<UNDEFINED>";
-        private String displayName = "<UNDEFINED>";
-        private String keywords = "";
+        private final short typeID;
+        private String displayName = "<undefined>";
         private double hardness = 1.0;
         private double resistance = 1.0;
         private boolean solid = true;
         private BlockModel model = BlockModel.DEFAULT;
-        private final String[] textures = new String[BlockFace.getCachedValues().length];
+        private String[] textures = new String[BlockFace.getCachedValues().length];
 
-        public Builder(BlockRegistry registry) {
-            this.registry = registry;
+        public Builder(short typeID) {
+            this.typeID = typeID;
         }
 
-        public BlockState build() {
-            return new BlockState(
-                    registry.getNextID(),
-                    internalName,
+        public BasicBlock build() {
+            return new BasicBlock(
+                    typeID,
                     displayName,
-                    keywords,
                     hardness,
                     resistance,
                     solid,
@@ -120,18 +92,8 @@ public class BlockState implements Comparable<BlockState>
                     textures);
         }
 
-        public Builder withInternalName(String as) {
-            internalName = as;
-            return this;
-        }
-
         public Builder withDisplayName(String as) {
             displayName = as;
-            return this;
-        }
-
-        public Builder withKeywords(String as) {
-            keywords = as;
             return this;
         }
 
@@ -145,8 +107,8 @@ public class BlockState implements Comparable<BlockState>
             return this;
         }
 
-        public Builder withSolidEnabled(boolean enabled) {
-            solid = enabled;
+        public Builder withSolidity(boolean as) {
+            solid = as;
             return this;
         }
 
@@ -154,12 +116,12 @@ public class BlockState implements Comparable<BlockState>
             model = as;
             return this;
         }
-        
+
         public Builder withTexture(BlockFace blockFace, String as) {
-            textures[blockFace.ordinal()] = as;;
+            textures[blockFace.ordinal()] = as;
             return this;
         }
-        
+
         public Builder withTextureOnSides(String as) {
             textures[BlockFace.LEFT.ordinal()] = as;
             textures[BlockFace.RIGHT.ordinal()] = as;
@@ -167,9 +129,15 @@ public class BlockState implements Comparable<BlockState>
             textures[BlockFace.BACK.ordinal()] = as;
             return this;
         }
-        
+
+        public Builder withTextureOnTopAndBottom(String as) {
+            textures[BlockFace.TOP.ordinal()] = as;
+            textures[BlockFace.BOTTOM.ordinal()] = as;
+            return this;
+        }
+
         public Builder withTextureOnAllFaces(String as) {
-            for (int i = 0; i < BlockFace.getCachedValues().length; ++i)
+            for (int i = 0; i < textures.length; ++i)
                 textures[i] = as;
             return this;
         }

@@ -1,6 +1,6 @@
 package net.survival.client.graphics.blockrenderer;
 
-import net.survival.block.BlockRegistry;
+import net.survival.block.BlockID;
 import net.survival.client.graphics.opengl.GLDisplayList.Builder;
 
 class SouthStairsRenderer extends BlockRenderer
@@ -18,7 +18,7 @@ class SouthStairsRenderer extends BlockRenderer
         float v1 = topFaceTextures.getTexCoordV1(blockID);
         float v2 = topFaceTextures.getTexCoordV2(blockID);
 
-        if (!BlockRegistry.INSTANCE.getBlock(adjacentBlockID).getModel().isBlockingBottom()) {
+        if (!blockToBlockingBottomTable[BlockID.typeIDFromFullID(adjacentBlockID)]) {
             builder.setTexCoord(u1, v1); builder.pushVertex(x,        y + 1.0f, z + 1.0f);
             builder.setTexCoord(u2, v1); builder.pushVertex(x + 1.0f, y + 1.0f, z + 1.0f);
             builder.setTexCoord(u2, v2); builder.pushVertex(x + 1.0f, y + 1.0f, z + 0.5f);
@@ -39,7 +39,7 @@ class SouthStairsRenderer extends BlockRenderer
     public void pushBottomFaces(int x, int y, int z, int blockID, int adjacentBlockID,
             Builder builder)
     {
-        if (BlockRegistry.INSTANCE.getBlock(adjacentBlockID).getModel().isBlockingTop())
+        if (blockToBlockingTopTable[BlockID.typeIDFromFullID(adjacentBlockID)])
             return;
 
         float u1 = bottomFaceTextures.getTexCoordU1(blockID);
@@ -58,7 +58,7 @@ class SouthStairsRenderer extends BlockRenderer
     public void pushLeftFaces(int x, int y, int z, int blockID, int adjacentBlockID,
             Builder builder)
     {
-        if (BlockRegistry.INSTANCE.getBlock(adjacentBlockID).getModel().isBlockingRight())
+        if (blockToBlockingRightTable[BlockID.typeIDFromFullID(adjacentBlockID)])
             return;
 
         float u1 = leftFaceTextures.getTexCoordU1(blockID);
@@ -84,7 +84,7 @@ class SouthStairsRenderer extends BlockRenderer
     public void pushRightFaces(int x, int y, int z, int blockID, int adjacentBlockID,
             Builder builder)
     {
-        if (BlockRegistry.INSTANCE.getBlock(adjacentBlockID).getModel().isBlockingLeft())
+        if (blockToBlockingLeftTable[BlockID.typeIDFromFullID(adjacentBlockID)])
             return;
 
         float u1 = rightFaceTextures.getTexCoordU1(blockID);
@@ -110,7 +110,7 @@ class SouthStairsRenderer extends BlockRenderer
     public void pushFrontFaces(int x, int y, int z, int blockID, int adjacentBlockID,
             Builder builder)
     {
-        if (BlockRegistry.INSTANCE.getBlock(adjacentBlockID).getModel().isBlockingBack())
+        if (blockToBlockingBackTable[BlockID.typeIDFromFullID(adjacentBlockID)])
             return;
 
         float u1 = frontFaceTextures.getTexCoordU1(blockID);
@@ -134,7 +134,7 @@ class SouthStairsRenderer extends BlockRenderer
         float v1 = backFaceTextures.getTexCoordV1(blockID);
         float v2 = backFaceTextures.getTexCoordV2(blockID);
 
-        if (!BlockRegistry.INSTANCE.getBlock(adjacentBlockID).getModel().isBlockingFront()) {
+        if (!blockToBlockingFrontTable[BlockID.typeIDFromFullID(adjacentBlockID)]) {
             builder.setTexCoord(u1, v1); builder.pushVertex(x + 1.0f, y,        z);
             builder.setTexCoord(u2, v1); builder.pushVertex(x,        y,        z);
             builder.setTexCoord(u2, v2); builder.pushVertex(x,        y + 0.5f, z);

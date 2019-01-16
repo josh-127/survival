@@ -1,41 +1,41 @@
 package net.survival.world.biome;
 
-import net.survival.block.BlockRegistry;
+import net.survival.block.BlockType;
 
 public enum BiomeType
 {
     OCEAN((bt) -> {
-        bt.topBlockID = BlockRegistry.INSTANCE.guessFirstBlock("andesite dirt").getID();
+        bt.topBlockID = BlockType.DIRT.getFullID();
         bt.minElevation = 16.0;
         bt.maxElevation = 61.0;
         bt.biomeViewerColor = 0x000000FF;
     }),
     GRASSLAND((bt) -> {
-        bt.topBlockID = BlockRegistry.INSTANCE.guessFirstBlock("grass").getID();
+        bt.topBlockID = BlockType.GRASS_BLOCK.getFullID();
         bt.minElevation = 65.0;
         bt.maxElevation = 72.0;
         bt.biomeViewerColor = 0x0000FF00;
     }),
     FOREST((bt) -> {
-        bt.topBlockID = BlockRegistry.INSTANCE.guessFirstBlock("grass").getID();
+        bt.topBlockID = BlockType.GRASS_BLOCK.getFullID();
         bt.minElevation = 72.0;
         bt.maxElevation = 86.0;
         bt.biomeViewerColor = 0x00009F00;
     }),
     EXTREME_HILLS((bt) -> {
-        bt.topBlockID = BlockRegistry.INSTANCE.guessFirstBlock("grass").getID();
+        bt.topBlockID = BlockType.GRASS_BLOCK.getFullID();
         bt.minElevation = 72.0;
         bt.maxElevation = 128.0;
         bt.biomeViewerColor = 0x00FF7F00;
     }),
     DESERT((bt) -> {
-        bt.topBlockID = BlockRegistry.INSTANCE.guessFirstBlock("andesite sand").getID();
+        bt.topBlockID = BlockType.SAND.getFullID();
         bt.minElevation = 65.0;
         bt.maxElevation = 72.0;
         bt.biomeViewerColor = 0x00FFFF00;
     }),
     TUNDRA((bt) -> {
-        bt.topBlockID = BlockRegistry.INSTANCE.guessFirstBlock("grass").getID();
+        bt.topBlockID = BlockType.GRASS_BLOCK.getFullID();
         bt.minElevation = 65.0;
         bt.maxElevation = 72.0;
         bt.biomeViewerColor = 0x0000FFFF;
@@ -51,7 +51,7 @@ public enum BiomeType
     private int biomeViewerColor;
 
     private BiomeType(Builder builder) {
-        topBlockID = BlockRegistry.INSTANCE.guessFirstBlock("andesite stone").getID();
+        topBlockID = BlockType.STONE.getFullID();
         minElevation = 0.0;
         maxElevation = 1.0;
         builder.build(this);

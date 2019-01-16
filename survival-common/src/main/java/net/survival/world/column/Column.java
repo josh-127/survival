@@ -56,24 +56,24 @@ public class Column implements BlockStorage
     }
 
     @Override
-    public int getBlock(int x, int y, int z) {
+    public int getBlockFullID(int x, int y, int z) {
         int index = y / Chunk.YLENGTH;
 
         if (chunks[index] == null)
             return 0;
 
-        return chunks[index].getBlock(x, y % Chunk.YLENGTH, z);
+        return chunks[index].getBlockFullID(x, y % Chunk.YLENGTH, z);
     }
 
     @Override
-    public void setBlock(int x, int y, int z, int to) {
+    public void setBlockFullID(int x, int y, int z, int to) {
         int index = y / Chunk.YLENGTH;
 
         if (chunks[index] == null) {
             chunks[index] = new Chunk();
         }
 
-        chunks[index].setBlock(x, y % Chunk.YLENGTH, z, to);
+        chunks[index].setBlockFullID(x, y % Chunk.YLENGTH, z, to);
         modified |= BLOCKS_MODIFIED;
     }
 

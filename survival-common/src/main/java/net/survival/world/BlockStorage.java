@@ -1,39 +1,43 @@
 package net.survival.world;
 
-import net.survival.block.BlockRegistry;
-import net.survival.block.BlockState;
+import net.survival.block.Block;
+import net.survival.block.BlockType;
 import net.survival.world.column.Column;
 
 public interface BlockStorage
 {
-    int getBlock(int x, int y, int z);
+    int getBlockFullID(int x, int y, int z);
 
-    void setBlock(int x, int y, int z, int to);
+    void setBlockFullID(int x, int y, int z, int to);
 
-    default BlockState getBlockState(int x, int y, int z) {
-        return BlockRegistry.INSTANCE.getBlock(getBlock(x, y, z));
+    default Block getBlockState(int x, int y, int z) {
+        return BlockType.byFullID(getBlockFullID(x, y, z));
+    }
+
+    default void setBlockState(int x, int y, int z, Block to) {
+        setBlockFullID(x, y, z, to.getFullID());
     }
 
     default int sampleNearestBlock(double x, double y, double z) {
-        return getBlock((int) Math.floor(x), (int) Math.floor(y), (int) Math.floor(z));
+        return getBlockFullID((int) Math.floor(x), (int) Math.floor(y), (int) Math.floor(z));
     }
 
-    default BlockState sampleNearestBlockState(double x, double y, double z) {
+    default Block sampleNearestBlockState(double x, double y, double z) {
         return getBlockState((int) Math.floor(x), (int) Math.floor(y), (int) Math.floor(z));
     }
 
     default int getTopLevel(int x, int z) {
         int topLevel = Column.YLENGTH - 1;
 
-        while (topLevel >= 0 && getBlock(x, topLevel, z) == 0)
+        while (topLevel >= 0 && getBlockFullID(x, topLevel, z) == 0)
             --topLevel;
 
         return topLevel;
     }
 
     default boolean placeBlockIfEmpty(int x, int y, int z, short blockID) {
-        if (getBlock(x, y, z) == 0) {
-            setBlock(x, y, z, blockID);
+        if (getBlockFullID(x, y, z) == 0) {
+            setBlockFullID(x, y, z, blockID);
             return true;
         }
 
@@ -41,8 +45,8 @@ public interface BlockStorage
     }
 
     default boolean replaceBlockIfExists(int x, int y, int z, short replacement) {
-        if (getBlock(x, y, z) != 0) {
-            setBlock(x, y, z, replacement);
+        if (getBlockFullID(x, y, z) != 0) {
+            setBlockFullID(x, y, z, replacement);
             return true;
         }
 

@@ -1,9 +1,9 @@
 package net.survival.world.actor.interaction;
 
-import net.survival.block.BlockState;
+import net.survival.block.Block;
 
 public interface BlockInteractionAdapter
 {
-    BlockState getBlock(int x, int y, int z);
-    void setBlock(int x, int y, int z, BlockState to);
+    Block getBlock(int x, int y, int z);
+    void setBlock(int x, int y, int z, Block to);
 }
