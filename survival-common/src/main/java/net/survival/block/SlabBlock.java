@@ -7,6 +7,11 @@ public class SlabBlock extends StatefulBlock
     }
 
     @Override
+    protected Block withState(short encodedState) {
+        return new SlabBlock(typeID, encodedState, baseBlock);
+    }
+
+    @Override
     public BlockModel getModel() {
         return getSlabPosition().getModel();
     }

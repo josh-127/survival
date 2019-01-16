@@ -1,6 +1,6 @@
 package net.survival.block;
 
-public class StatefulBlock extends Block
+public abstract class StatefulBlock extends Block
 {
     protected final short encodedState;
     protected final BasicBlock baseBlock;
@@ -14,11 +14,6 @@ public class StatefulBlock extends Block
     @Override
     protected short getEncodedState() {
         return encodedState;
-    }
-
-    @Override
-    public Block withState(short encodedState) {
-        return new StatefulBlock(typeID, encodedState, baseBlock);
     }
 
     @Override

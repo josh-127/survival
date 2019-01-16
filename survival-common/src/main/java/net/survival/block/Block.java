@@ -15,6 +15,14 @@ public abstract class Block
     public int getFullID() {
         return (typeID << 16) | getEncodedState();
     }
+    
+    public boolean is(Block block) {
+        return getFullID() == block.getFullID();
+    }
+
+    public boolean isType(Block block) {
+        return typeID == block.typeID;
+    }
 
     protected abstract short getEncodedState();
     protected abstract Block withState(short encodedState);

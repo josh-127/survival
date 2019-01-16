@@ -7,6 +7,11 @@ public class StairBlock extends StatefulBlock
     }
 
     @Override
+    protected Block withState(short encodedState) {
+        return new StairBlock(typeID, encodedState, baseBlock);
+    }
+
+    @Override
     public BlockModel getModel() {
         return getDirection().getModel();
     }
