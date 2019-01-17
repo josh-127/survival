@@ -15,13 +15,13 @@ import net.survival.client.graphics.opengl.GLFilterMode;
 import net.survival.client.graphics.opengl.GLMatrixStack;
 import net.survival.client.graphics.opengl.GLTexture;
 import net.survival.client.graphics.opengl.GLWrapMode;
-import net.survival.world.World;
+import net.survival.world.BlockSpace;
 import net.survival.world.column.Column;
 import net.survival.world.column.ColumnPos;
 
-class WorldDisplay implements GraphicsResource
+class BlockDisplay implements GraphicsResource
 {
-    private final World world;
+    private final BlockSpace blockSpace;
     private HashMap<Column, ColumnDisplay> nonCubicDisplays;
     private HashMap<Column, ColumnDisplay> topFaceDisplays;
     private HashMap<Column, ColumnDisplay> bottomFaceDisplays;
@@ -40,8 +40,8 @@ class WorldDisplay implements GraphicsResource
     private Matrix4f cameraProjectionMatrix;
     private Matrix4f modelViewMatrix;
 
-    public WorldDisplay(World world, Camera camera, float maxViewRadius) {
-        this.world = world;
+    public BlockDisplay(BlockSpace blockSpace, Camera camera, float maxViewRadius) {
+        this.blockSpace = blockSpace;
 
         nonCubicDisplays = new HashMap<>();
         topFaceDisplays = new HashMap<>();
@@ -190,7 +190,7 @@ class WorldDisplay implements GraphicsResource
         float cameraZ = camera.z;
         float maxViewRadiusSquared = maxViewRadius * maxViewRadius;
 
-        Iterator<Long2ObjectMap.Entry<Column>> columnMapIt = world.getColumnMapFastIterator();
+        Iterator<Long2ObjectMap.Entry<Column>> columnMapIt = blockSpace.getColumnMapFastIterator();
         while (columnMapIt.hasNext()) {
             Long2ObjectMap.Entry<Column> entry = columnMapIt.next();
             long hashedPos = entry.getLongKey();
@@ -222,7 +222,7 @@ class WorldDisplay implements GraphicsResource
             Map.Entry<Column, ColumnDisplay> entry = faceDisplaysIt.next();
             ColumnDisplay columnDisplay = entry.getValue();
 
-            if (!world.containsColumn(columnDisplay.columnX, columnDisplay.columnZ)) {
+            if (!blockSpace.containsColumn(columnDisplay.columnX, columnDisplay.columnZ)) {
                 columnDisplay.close();
                 faceDisplaysIt.remove();
             }
@@ -248,7 +248,7 @@ class WorldDisplay implements GraphicsResource
         float cameraZ = camera.z;
         float maxViewRadiusSquared = maxViewRadius * maxViewRadius;
 
-        Iterator<Long2ObjectMap.Entry<Column>> columnMapIt = world.getColumnMapFastIterator();
+        Iterator<Long2ObjectMap.Entry<Column>> columnMapIt = blockSpace.getColumnMapFastIterator();
         while (columnMapIt.hasNext()) {
             Long2ObjectMap.Entry<Column> entry = columnMapIt.next();
             long hashedPos = entry.getLongKey();
@@ -265,7 +265,7 @@ class WorldDisplay implements GraphicsResource
                 continue;
 
             ColumnDisplay existingDisplay = faceDisplays.get(column);
-            Column adjacentColumn = world.getColumn(cx + dx, cz + dz);
+            Column adjacentColumn = blockSpace.getColumn(cx + dx, cz + dz);
             long adjacentHashedPos = ColumnPos.hashPos(cx + dx, cz + dz);
 
             boolean needsUpdating = existingDisplay == null
@@ -286,7 +286,7 @@ class WorldDisplay implements GraphicsResource
             Map.Entry<Column, ColumnDisplay> entry = faceDisplaysIt.next();
             ColumnDisplay columnDisplay = entry.getValue();
 
-            if (!world.containsColumn(columnDisplay.columnX, columnDisplay.columnZ)) {
+            if (!blockSpace.containsColumn(columnDisplay.columnX, columnDisplay.columnZ)) {
                 columnDisplay.close();
                 faceDisplaysIt.remove();
             }

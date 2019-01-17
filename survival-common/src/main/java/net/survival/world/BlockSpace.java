@@ -6,11 +6,11 @@ import it.unimi.dsi.fastutil.objects.ObjectIterator;
 import net.survival.world.column.Column;
 import net.survival.world.column.ColumnPos;
 
-public class World implements BlockStorage
+public class BlockSpace implements BlockStorage
 {
     private final Long2ObjectOpenHashMap<Column> columns;
 
-    public World() {
+    public BlockSpace() {
         columns = new Long2ObjectOpenHashMap<>(1024);
     }
 

@@ -7,7 +7,7 @@ import it.unimi.dsi.fastutil.longs.LongArraySet;
 import it.unimi.dsi.fastutil.longs.LongIterator;
 import it.unimi.dsi.fastutil.longs.LongSet;
 import it.unimi.dsi.fastutil.objects.ObjectIterator;
-import net.survival.world.World;
+import net.survival.world.BlockSpace;
 import net.survival.world.gen.decoration.WorldDecorator;
 
 public class ColumnSystem
@@ -16,7 +16,7 @@ public class ColumnSystem
     private static final int DATABASE_LOAD_RATE = 4;
     private static final double SAVE_RATE = 10.0;
 
-    private final World world;
+    private final BlockSpace world;
     private final ColumnStageMask columnStageMask;
 
     private final ColumnDbPipe.ClientSide columnDbPipe;
@@ -27,7 +27,7 @@ public class ColumnSystem
     private double saveTimer;
 
     public ColumnSystem(
-            World world,
+            BlockSpace world,
             ColumnStageMask columnStageMask,
             ColumnDbPipe.ClientSide columnDbPipe,
             ColumnProvider columnGenerator,

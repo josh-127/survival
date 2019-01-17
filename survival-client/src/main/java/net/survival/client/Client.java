@@ -19,7 +19,7 @@ import net.survival.client.input.Keyboard;
 import net.survival.client.input.Mouse;
 import net.survival.client.ui.BasicUI;
 import net.survival.input.Key;
-import net.survival.world.World;
+import net.survival.world.BlockSpace;
 import net.survival.world.actor.Actor;
 import net.survival.world.actor.ActorSpace;
 import net.survival.world.actor.Message;
@@ -43,7 +43,7 @@ public class Client implements AutoCloseable
     private static final double TICKS_PER_SECOND = 60.0;
     private static final double SECONDS_PER_TICK = 1.0 / TICKS_PER_SECOND;
 
-    private final World world = new World();
+    private final BlockSpace blockSpace = new BlockSpace();
     private final ActorSpace actorSpace = new ActorSpace();
 
     private final CircularColumnStageMask columnMask = new CircularColumnStageMask(10);
@@ -58,19 +58,19 @@ public class Client implements AutoCloseable
     private final FpvCamera fpvCamera = new FpvCamera(new Vector3d(60.0, 72.0, 20.0), 0.0f, -1.0f);
 
     private final ArrayList<Message> actorMessages = new ArrayList<>();
-    private final LocalBlockInteractionAdapter blockInteraction = new LocalBlockInteractionAdapter(world);
+    private final LocalBlockInteractionAdapter blockInteraction = new LocalBlockInteractionAdapter(blockSpace);
     private final LocalKeyboardInteractionAdapter keyboardInteraction = new LocalKeyboardInteractionAdapter();
     private final LocalTickInteractionAdapter tickInteraction = new LocalTickInteractionAdapter();
     private final InteractionContext interactionContext = new InteractionContext(
             blockInteraction, keyboardInteraction, tickInteraction);
 
     private Client(ColumnDbPipe.ClientSide columnDbPipe) {
-        columnSystem = new ColumnSystem(world, columnMask, columnDbPipe, columnGenerator, worldDecorator);
+        columnSystem = new ColumnSystem(blockSpace, columnMask, columnDbPipe, columnGenerator, worldDecorator);
 
         uiServer = basicUI.getServer();
 
         compositeDisplay = new CompositeDisplay(
-                world,
+                blockSpace,
                 actorSpace,
                 GraphicsSettings.WINDOW_WIDTH,
                 GraphicsSettings.WINDOW_HEIGHT,
@@ -142,7 +142,7 @@ public class Client implements AutoCloseable
         //
         // Client Display
         //
-        Iterator<Long2ObjectMap.Entry<Column>> columnMapIt = world.getColumnMapFastIterator();
+        Iterator<Long2ObjectMap.Entry<Column>> columnMapIt = blockSpace.getColumnMapFastIterator();
         while (columnMapIt.hasNext()) {
             Long2ObjectMap.Entry<Column> entry = columnMapIt.next();
             long hashedPos = entry.getLongKey();
@@ -244,9 +244,9 @@ public class Client implements AutoCloseable
                 int pxi = (int) Math.floor(px);
                 int pyi = (int) Math.floor(py);
                 int pzi = (int) Math.floor(pz);
-                if (world.getBlockFullID(pxi, pyi, pzi) != 0) {
+                if (blockSpace.getBlockFullID(pxi, pyi, pzi) != 0) {
                     if (Mouse.isLmbPressed())
-                        world.setBlockFullID(pxi, pyi, pzi, 0);
+                        blockSpace.setBlockFullID(pxi, pyi, pzi, 0);
                     break;
                 }
             }

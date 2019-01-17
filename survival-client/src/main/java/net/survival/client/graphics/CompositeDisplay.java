@@ -7,14 +7,14 @@ import net.survival.client.graphics.opengl.GLMatrixStack;
 import net.survival.client.graphics.opengl.GLRenderContext;
 import net.survival.client.graphics.opengl.GLState;
 import net.survival.client.ui.BasicUI;
-import net.survival.world.World;
+import net.survival.world.BlockSpace;
 import net.survival.world.actor.ActorSpace;
 
 public class CompositeDisplay implements RenderContext, GraphicsResource
 {
     private final Camera camera = new Camera();
 
-    private final WorldDisplay worldDisplay;
+    private final BlockDisplay blockDisplay;
     private final ActorDisplay actorDisplay;
     private final SkyboxDisplay skyboxDisplay = new SkyboxDisplay();
     private final CloudDisplay cloudDisplay = new CloudDisplay();
@@ -30,13 +30,13 @@ public class CompositeDisplay implements RenderContext, GraphicsResource
     private Matrix4f hudProjectionMatrix = new Matrix4f();
 
     public CompositeDisplay(
-            World world,
+            BlockSpace blockSpace,
             ActorSpace actorSpace,
             int viewportWidth,
             int viewportHeight,
             BasicUI.Client uiClientPipe)
     {
-        worldDisplay = new WorldDisplay(world, camera, 512.0f);
+        blockDisplay = new BlockDisplay(blockSpace, camera, 512.0f);
         actorDisplay = new ActorDisplay(actorSpace, camera);
         this.viewportWidth = viewportWidth;
         this.viewportHeight = viewportHeight;
@@ -46,7 +46,7 @@ public class CompositeDisplay implements RenderContext, GraphicsResource
 
     @Override
     public void close() {
-        worldDisplay.close();
+        blockDisplay.close();
         uiDisplay.close();
     }
 
@@ -142,7 +142,7 @@ public class CompositeDisplay implements RenderContext, GraphicsResource
 
     @Override
     public void redrawColumn(long hashedPos) {
-        worldDisplay.redrawColumn(hashedPos);
+        blockDisplay.redrawColumn(hashedPos);
     }
 
     @Override
@@ -274,7 +274,7 @@ public class CompositeDisplay implements RenderContext, GraphicsResource
                 1.0f);
         {
             if (isVisible(VisibilityFlags.BLOCKS))
-                worldDisplay.display();
+                blockDisplay.display();
 
             if (isVisible(VisibilityFlags.ENTITIES))
                 actorDisplay.display();

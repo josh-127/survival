@@ -1,24 +1,24 @@
 package net.survival.client;
 
 import net.survival.block.Block;
-import net.survival.world.World;
+import net.survival.world.BlockSpace;
 import net.survival.world.actor.interaction.BlockInteractionAdapter;
 
 public class LocalBlockInteractionAdapter implements BlockInteractionAdapter
 {
-    private final World world;
+    private final BlockSpace blockSpace;
 
-    public LocalBlockInteractionAdapter(World world) {
-        this.world = world;
+    public LocalBlockInteractionAdapter(BlockSpace blockSpace) {
+        this.blockSpace = blockSpace;
     }
 
     @Override
     public Block getBlock(int x, int y, int z) {
-        return world.getBlockState(x, y, z);
+        return blockSpace.getBlockState(x, y, z);
     }
 
     @Override
     public void setBlock(int x, int y, int z, Block to) {
-        world.setBlockState(x, y, z, to);
+        blockSpace.setBlockState(x, y, z, to);
     }
 }
