@@ -1,8 +1,8 @@
 package net.survival.client;
 
+import net.survival.actor.interaction.KeyboardInteractionAdapter;
 import net.survival.client.input.Keyboard;
 import net.survival.input.Key;
-import net.survival.world.actor.interaction.KeyboardInteractionAdapter;
 
 public class LocalKeyboardInteractionAdapter implements KeyboardInteractionAdapter
 {

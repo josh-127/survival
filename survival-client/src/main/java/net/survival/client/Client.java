@@ -8,6 +8,22 @@ import org.joml.Vector3d;
 import org.lwjgl.glfw.GLFW;
 
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
+import net.survival.actor.Actor;
+import net.survival.actor.ActorSpace;
+import net.survival.actor.Message;
+import net.survival.actor.TickMessage;
+import net.survival.actor.interaction.InteractionContext;
+import net.survival.actor.v0_1_snapshot.NpcActor;
+import net.survival.block.BlockSpace;
+import net.survival.block.column.CircularColumnStageMask;
+import net.survival.block.column.Column;
+import net.survival.block.column.ColumnDbPipe;
+import net.survival.block.column.ColumnPos;
+import net.survival.block.column.ColumnRequest;
+import net.survival.block.column.ColumnServer;
+import net.survival.block.column.ColumnSystem;
+import net.survival.block.gen.InfiniteColumnGenerator;
+import net.survival.block.gen.decoration.WorldDecorator;
 import net.survival.client.graphics.CompositeDisplay;
 import net.survival.client.graphics.GraphicsSettings;
 import net.survival.client.graphics.VisibilityFlags;
@@ -19,22 +35,6 @@ import net.survival.client.input.Keyboard;
 import net.survival.client.input.Mouse;
 import net.survival.client.ui.BasicUI;
 import net.survival.input.Key;
-import net.survival.world.BlockSpace;
-import net.survival.world.actor.Actor;
-import net.survival.world.actor.ActorSpace;
-import net.survival.world.actor.Message;
-import net.survival.world.actor.TickMessage;
-import net.survival.world.actor.interaction.InteractionContext;
-import net.survival.world.actor.v0_1_0_snapshot.NpcActor;
-import net.survival.world.column.CircularColumnStageMask;
-import net.survival.world.column.Column;
-import net.survival.world.column.ColumnDbPipe;
-import net.survival.world.column.ColumnPos;
-import net.survival.world.column.ColumnRequest;
-import net.survival.world.column.ColumnServer;
-import net.survival.world.column.ColumnSystem;
-import net.survival.world.gen.InfiniteColumnGenerator;
-import net.survival.world.gen.decoration.WorldDecorator;
 
 public class Client implements AutoCloseable
 {

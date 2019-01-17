@@ -2,13 +2,13 @@ package net.survival.client.graphics;
 
 import org.joml.Matrix4f;
 
+import net.survival.actor.ActorSpace;
+import net.survival.block.BlockSpace;
 import net.survival.client.graphics.opengl.GLImmediateDrawCall;
 import net.survival.client.graphics.opengl.GLMatrixStack;
 import net.survival.client.graphics.opengl.GLRenderContext;
 import net.survival.client.graphics.opengl.GLState;
 import net.survival.client.ui.BasicUI;
-import net.survival.world.BlockSpace;
-import net.survival.world.actor.ActorSpace;
 
 public class CompositeDisplay implements RenderContext, GraphicsResource
 {
@@ -265,7 +265,7 @@ public class CompositeDisplay implements RenderContext, GraphicsResource
         if (isVisible(VisibilityFlags.SKYBOX))
             skyboxDisplay.display(cameraViewMatrix, cameraProjectionMatrix);
 
-        // Display world and clouds.
+        // Display blocks, entities, and clouds.
         GLState.pushFogEnabled(true);
         GLState.pushExpFog(0.00390625f,
                 0.5f * (skyboxDisplay.getBottomR() + skyboxDisplay.getTopR()),

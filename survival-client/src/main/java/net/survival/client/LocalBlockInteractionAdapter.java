@@ -1,8 +1,8 @@
 package net.survival.client;
 
-import net.survival.block.Block;
-import net.survival.world.BlockSpace;
-import net.survival.world.actor.interaction.BlockInteractionAdapter;
+import net.survival.actor.interaction.BlockInteractionAdapter;
+import net.survival.block.BlockSpace;
+import net.survival.blocktype.Block;
 
 public class LocalBlockInteractionAdapter implements BlockInteractionAdapter
 {

@@ -2,11 +2,11 @@ package net.survival.client.graphics;
 
 import org.joml.Matrix4f;
 
+import net.survival.actor.Actor;
+import net.survival.actor.ActorSpace;
 import net.survival.client.graphics.model.ModelRenderer;
 import net.survival.client.graphics.model.StaticModel;
 import net.survival.client.graphics.opengl.GLMatrixStack;
-import net.survival.world.actor.Actor;
-import net.survival.world.actor.ActorSpace;
 
 class ActorDisplay
 {

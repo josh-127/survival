@@ -1,6 +1,6 @@
 package net.survival.client.graphics.blockrenderer;
 
-import net.survival.block.BlockID;
+import net.survival.blocktype.BlockID;
 import net.survival.client.graphics.opengl.GLDisplayList;
 
 class EastCeilingStairsRenderer extends BlockRenderer

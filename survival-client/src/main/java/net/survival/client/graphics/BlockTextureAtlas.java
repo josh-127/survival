@@ -1,8 +1,8 @@
 package net.survival.client.graphics;
 
-import net.survival.block.Block;
-import net.survival.block.BlockFace;
-import net.survival.block.BlockType;
+import net.survival.blocktype.Block;
+import net.survival.blocktype.BlockFace;
+import net.survival.blocktype.BlockType;
 import net.survival.client.graphics.opengl.GLFilterMode;
 import net.survival.client.graphics.opengl.GLTexture;
 import net.survival.client.graphics.opengl.GLWrapMode;

@@ -1,10 +1,10 @@
 package net.survival.client.graphics.blockrenderer;
 
-import net.survival.block.Block;
-import net.survival.block.BlockFace;
-import net.survival.block.BlockID;
-import net.survival.block.BlockModel;
-import net.survival.block.BlockType;
+import net.survival.blocktype.Block;
+import net.survival.blocktype.BlockFace;
+import net.survival.blocktype.BlockID;
+import net.survival.blocktype.BlockModel;
+import net.survival.blocktype.BlockType;
 import net.survival.client.graphics.BlockTextureAtlas;
 import net.survival.client.graphics.opengl.GLDisplayList;
 

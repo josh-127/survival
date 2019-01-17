@@ -9,15 +9,15 @@ import org.joml.Matrix4f;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
 import it.unimi.dsi.fastutil.longs.LongSet;
-import net.survival.block.BlockFace;
+import net.survival.block.BlockSpace;
+import net.survival.block.column.Column;
+import net.survival.block.column.ColumnPos;
+import net.survival.blocktype.BlockFace;
 import net.survival.client.graphics.blockrenderer.BlockRenderer;
 import net.survival.client.graphics.opengl.GLFilterMode;
 import net.survival.client.graphics.opengl.GLMatrixStack;
 import net.survival.client.graphics.opengl.GLTexture;
 import net.survival.client.graphics.opengl.GLWrapMode;
-import net.survival.world.BlockSpace;
-import net.survival.world.column.Column;
-import net.survival.world.column.ColumnPos;
 
 class BlockDisplay implements GraphicsResource
 {

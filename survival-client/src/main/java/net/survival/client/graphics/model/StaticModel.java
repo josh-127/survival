@@ -8,7 +8,7 @@ import org.lwjgl.assimp.AIScene;
 import org.lwjgl.assimp.AIString;
 import org.lwjgl.assimp.AIVector3D;
 
-import net.survival.world.actor.Actor;
+import net.survival.actor.Actor;
 
 import static org.lwjgl.assimp.Assimp.*;
 

@@ -1,6 +1,6 @@
 package net.survival.client;
 
-import net.survival.world.actor.interaction.TickInteractionAdapter;
+import net.survival.actor.interaction.TickInteractionAdapter;
 
 public class LocalTickInteractionAdapter implements TickInteractionAdapter
 {

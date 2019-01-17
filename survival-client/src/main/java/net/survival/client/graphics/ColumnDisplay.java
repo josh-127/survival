@@ -1,11 +1,11 @@
 package net.survival.client.graphics;
 
-import net.survival.block.BlockFace;
+import net.survival.block.column.Column;
+import net.survival.blocktype.BlockFace;
 import net.survival.client.graphics.blockrenderer.BlockRenderer;
 import net.survival.client.graphics.opengl.GLDisplayList;
 import net.survival.client.graphics.opengl.GLRenderContext;
 import net.survival.client.graphics.opengl.GLTexture;
-import net.survival.world.column.Column;
 
 class ColumnDisplay implements GraphicsResource
 {
