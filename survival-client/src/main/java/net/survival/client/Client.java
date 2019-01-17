@@ -21,6 +21,7 @@ import net.survival.client.ui.BasicUI;
 import net.survival.input.Key;
 import net.survival.world.World;
 import net.survival.world.actor.Actor;
+import net.survival.world.actor.ActorSpace;
 import net.survival.world.actor.Message;
 import net.survival.world.actor.TickMessage;
 import net.survival.world.actor.interaction.InteractionContext;
@@ -43,6 +44,7 @@ public class Client implements AutoCloseable
     private static final double SECONDS_PER_TICK = 1.0 / TICKS_PER_SECOND;
 
     private final World world = new World();
+    private final ActorSpace actorSpace = new ActorSpace();
 
     private final CircularColumnStageMask columnMask = new CircularColumnStageMask(10);
     private final InfiniteColumnGenerator columnGenerator = new InfiniteColumnGenerator(22L);
@@ -69,6 +71,7 @@ public class Client implements AutoCloseable
 
         compositeDisplay = new CompositeDisplay(
                 world,
+                actorSpace,
                 GraphicsSettings.WINDOW_WIDTH,
                 GraphicsSettings.WINDOW_HEIGHT,
                 basicUI.getClient());
@@ -124,7 +127,7 @@ public class Client implements AutoCloseable
 
             for (Message message : remainingMessages) {
                 if (message.recipient == Message.ALL_ACTORS) {
-                    for (Actor actor : world.getActors()) {
+                    for (Actor actor : actorSpace.getActors()) {
                         actor.update(interactionContext, message);
                     }
                 }
@@ -254,7 +257,7 @@ public class Client implements AutoCloseable
                     fpvCamera.position.x,
                     fpvCamera.position.y,
                     fpvCamera.position.z);
-            world.addActor(npcActor);
+            actorSpace.addActor(npcActor);
         }
 
         if (Keyboard.isKeyPressed(Key._1))

@@ -1,22 +1,17 @@
 package net.survival.world;
 
-import java.util.ArrayList;
-
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectIterator;
-import net.survival.world.actor.Actor;
 import net.survival.world.column.Column;
 import net.survival.world.column.ColumnPos;
 
 public class World implements BlockStorage
 {
     private final Long2ObjectOpenHashMap<Column> columns;
-    private final ArrayList<Actor> actors;
 
     public World() {
         columns = new Long2ObjectOpenHashMap<>(1024);
-        actors = new ArrayList<>(1024);
     }
 
     public Column getColumn(int cx, int cz) {
@@ -116,14 +111,6 @@ public class World implements BlockStorage
         int localZ = ColumnPos.toLocalZ(ColumnPos.toColumnZ(z), z);
 
         return column.replaceBlockIfExists(localX, y, localZ, replacement);
-    }
-
-    public ArrayList<Actor> getActors() {
-        return actors;
-    }
-
-    public void addActor(Actor actor) {
-        actors.add(actor);
     }
 
     private Column getColumnFromGlobalPos(int x, int z, String exceptionMessage) {

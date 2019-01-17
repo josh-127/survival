@@ -8,12 +8,14 @@ import net.survival.client.graphics.opengl.GLRenderContext;
 import net.survival.client.graphics.opengl.GLState;
 import net.survival.client.ui.BasicUI;
 import net.survival.world.World;
+import net.survival.world.actor.ActorSpace;
 
 public class CompositeDisplay implements RenderContext, GraphicsResource
 {
     private final Camera camera = new Camera();
 
     private final WorldDisplay worldDisplay;
+    private final ActorDisplay actorDisplay;
     private final SkyboxDisplay skyboxDisplay = new SkyboxDisplay();
     private final CloudDisplay cloudDisplay = new CloudDisplay();
     private final UIDisplay uiDisplay;
@@ -27,8 +29,15 @@ public class CompositeDisplay implements RenderContext, GraphicsResource
     private Matrix4f cameraProjectionMatrix = new Matrix4f();
     private Matrix4f hudProjectionMatrix = new Matrix4f();
 
-    public CompositeDisplay(World world, int viewportWidth, int viewportHeight, BasicUI.Client uiClientPipe) {
+    public CompositeDisplay(
+            World world,
+            ActorSpace actorSpace,
+            int viewportWidth,
+            int viewportHeight,
+            BasicUI.Client uiClientPipe)
+    {
         worldDisplay = new WorldDisplay(world, camera, 512.0f);
+        actorDisplay = new ActorDisplay(actorSpace, camera);
         this.viewportWidth = viewportWidth;
         this.viewportHeight = viewportHeight;
 
@@ -266,6 +275,9 @@ public class CompositeDisplay implements RenderContext, GraphicsResource
         {
             if (isVisible(VisibilityFlags.BLOCKS))
                 worldDisplay.display();
+
+            if (isVisible(VisibilityFlags.ENTITIES))
+                actorDisplay.display();
 
             if (isVisible(VisibilityFlags.CLOUDS))
                 cloudDisplay.display(cameraViewMatrix, cameraProjectionMatrix, camera.x, camera.z);

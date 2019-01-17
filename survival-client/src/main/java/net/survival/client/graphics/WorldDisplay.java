@@ -1,6 +1,5 @@
 package net.survival.client.graphics;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -12,14 +11,11 @@ import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
 import it.unimi.dsi.fastutil.longs.LongSet;
 import net.survival.block.BlockFace;
 import net.survival.client.graphics.blockrenderer.BlockRenderer;
-import net.survival.client.graphics.model.ModelRenderer;
-import net.survival.client.graphics.model.StaticModel;
 import net.survival.client.graphics.opengl.GLFilterMode;
 import net.survival.client.graphics.opengl.GLMatrixStack;
 import net.survival.client.graphics.opengl.GLTexture;
 import net.survival.client.graphics.opengl.GLWrapMode;
 import net.survival.world.World;
-import net.survival.world.actor.Actor;
 import net.survival.world.column.Column;
 import net.survival.world.column.ColumnPos;
 
@@ -147,8 +143,6 @@ class WorldDisplay implements GraphicsResource
         if (culledFace != BlockFace.BACK)
             drawFaceDisplays(backFaceDisplays, BlockFace.BACK, false, cameraViewMatrix);
 
-        drawActors(cameraViewMatrix);
-
         GLMatrixStack.pop();
 
         columnsToRedraw.clear();
@@ -189,31 +183,6 @@ class WorldDisplay implements GraphicsResource
                 display.displayBlocks();
             }
         }
-    }
-
-    private void drawActors(Matrix4f viewMatrix) {
-        GLMatrixStack.push();
-        GLMatrixStack.load(viewMatrix);
-
-        ArrayList<Actor> actors = world.getActors();
-
-        for (Actor actor : actors)
-            drawActor(actor);
-
-        GLMatrixStack.pop();
-    }
-
-    private void drawActor(Actor actor) {
-        GLMatrixStack.push();
-        GLMatrixStack.translate((float) actor.getX(), (float) actor.getY(), (float) actor.getZ());
-        GLMatrixStack.rotate((float) actor.getYaw(), 0.0f, 1.0f, 0.0f);
-        GLMatrixStack.rotate((float) actor.getPitch(), 1.0f, 0.0f, 0.0f);
-        GLMatrixStack.rotate((float) actor.getRoll(), 0.0f, 0.0f, 1.0f);
-
-        StaticModel model = StaticModel.fromActor(actor);
-        ModelRenderer.displayStaticModel(model);
-
-        GLMatrixStack.pop();
     }
 
     private void updateNonCubicDisplays(HashMap<Column, ColumnDisplay> nonCubicDisplays) {
