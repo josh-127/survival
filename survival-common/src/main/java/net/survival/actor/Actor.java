@@ -1,11 +1,7 @@
 package net.survival.actor;
 
-import net.survival.actor.interaction.InteractionContext;
-
-public interface Actor
+public interface Actor extends MessageVisitor
 {
-    void update(InteractionContext ic, Message message);
-
     double getX();
     double getY();
     double getZ();

@@ -10,8 +10,7 @@ import org.lwjgl.glfw.GLFW;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import net.survival.actor.Actor;
 import net.survival.actor.ActorSpace;
-import net.survival.actor.Message;
-import net.survival.actor.TickMessage;
+import net.survival.actor.StepMessage;
 import net.survival.actor.interaction.InteractionContext;
 import net.survival.actor.v0_1_snapshot.NpcActor;
 import net.survival.block.BlockSpace;
@@ -57,7 +56,7 @@ public class Client implements AutoCloseable
     private final CompositeDisplay compositeDisplay;
     private final FpvCamera fpvCamera = new FpvCamera(new Vector3d(60.0, 72.0, 20.0), 0.0f, -1.0f);
 
-    private final ArrayList<Message> actorMessages = new ArrayList<>();
+    private final StepMessage stepMessage = new StepMessage();
     private final LocalBlockInteractionAdapter blockInteraction = new LocalBlockInteractionAdapter(blockSpace);
     private final LocalKeyboardInteractionAdapter keyboardInteraction = new LocalKeyboardInteractionAdapter();
     private final LocalTickInteractionAdapter tickInteraction = new LocalTickInteractionAdapter();
@@ -119,19 +118,9 @@ public class Client implements AutoCloseable
         // Actor System
         //
         tickInteraction.setElapsedTime(elapsedTime);
-        actorMessages.add(TickMessage.DEFAULT);
 
-        while (!actorMessages.isEmpty()) {
-            ArrayList<Message> remainingMessages = new ArrayList<>(actorMessages);
-            actorMessages.clear();
-
-            for (Message message : remainingMessages) {
-                if (message.recipient == Message.ALL_ACTORS) {
-                    for (Actor actor : actorSpace.getActors()) {
-                        actor.update(interactionContext, message);
-                    }
-                }
-            }
+        for (Actor actor : actorSpace.getActors()) {
+            stepMessage.accept(actor, interactionContext);
         }
 
         //
