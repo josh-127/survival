@@ -13,6 +13,7 @@ import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import net.survival.actor.Actor;
 import net.survival.actor.ActorSpace;
 import net.survival.actor.interaction.InteractionContext;
+import net.survival.actor.message.HurtMessage;
 import net.survival.actor.message.MoveMessage;
 import net.survival.actor.message.StepMessage;
 import net.survival.actor.v0_1_snapshot.NpcActor;
@@ -61,12 +62,14 @@ public class Client implements AutoCloseable
     private final FpvCamera fpvCamera = new FpvCamera(new Vector3d(60.0, 72.0, 20.0), 0.0f, -1.0f);
 
     private final Queue<MoveMessage> moveMessages = new LinkedList<>();
+    private final Queue<HurtMessage> hurtMessages = new LinkedList<>();
     private final LocalBlockInteractionAdapter blockInteraction = new LocalBlockInteractionAdapter(blockSpace);
     private final LocalKeyboardInteractionAdapter keyboardInteraction = new LocalKeyboardInteractionAdapter();
     private final LocalTickInteractionAdapter tickInteraction = new LocalTickInteractionAdapter();
     private final InteractionContext interactionContext = new InteractionContext(
             blockInteraction, keyboardInteraction, tickInteraction);
 
+    private int npcID = -1;
     private int playerID = -1;
     private Actor player;
 
@@ -134,6 +137,11 @@ public class Client implements AutoCloseable
         while (!moveMessages.isEmpty()) {
             MoveMessage moveMessage = moveMessages.remove();
             moveMessage.accept(actorSpace.getActor(moveMessage.getDestActorID()), interactionContext);
+        }
+
+        while (!hurtMessages.isEmpty()) {
+            HurtMessage hurtMessage = hurtMessages.remove();
+            hurtMessage.accept(actorSpace.getActor(hurtMessage.getDestActorID()), interactionContext);
         }
 
         for (Map.Entry<Integer, Actor> entry : actorSpace.iterateActorMap()) {
@@ -279,7 +287,11 @@ public class Client implements AutoCloseable
                     fpvCamera.position.x,
                     fpvCamera.position.y,
                     fpvCamera.position.z);
-            actorSpace.addActor(npcActor);
+            npcID = actorSpace.addActor(npcActor);
+        }
+
+        if (npcID != -1 && Keyboard.isKeyPressed(Key.K)) {
+            hurtMessages.add(new HurtMessage(npcID, 10.0));
         }
 
         if (Keyboard.isKeyPressed(Key._1))
