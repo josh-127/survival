@@ -3,9 +3,9 @@ package net.survival.actor.v0_1_snapshot;
 import net.survival.actor.Actor;
 import net.survival.actor.ActorModel;
 import net.survival.actor.Locomotion;
-import net.survival.actor.MoveMessage;
-import net.survival.actor.StepMessage;
 import net.survival.actor.interaction.InteractionContext;
+import net.survival.actor.message.MoveMessage;
+import net.survival.actor.message.StepMessage;
 import net.survival.util.HitBox;
 
 public class PlayerActor implements Actor

@@ -1,10 +1,10 @@
-package net.survival.actor;
+package net.survival.actor.message;
 
 import net.survival.actor.interaction.InteractionContext;
 
-public class StepMessage extends Message
+public class DrawMessage extends Message
 {
-    public StepMessage(int destActorID) {
+    public DrawMessage(int destActorID) {
         super(destActorID);
     }
 
