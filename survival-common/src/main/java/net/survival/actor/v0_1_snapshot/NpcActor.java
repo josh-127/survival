@@ -9,6 +9,7 @@ import net.survival.util.HitBox;
 public class NpcActor implements Actor
 {
     private final Locomotion locomotion;
+    private double rotation;
 
     public NpcActor(double x, double y, double z) {
         locomotion = new Locomotion(x, y, z, HitBox.DEFAULT);
@@ -16,7 +17,9 @@ public class NpcActor implements Actor
 
     @Override
     public void visit(InteractionContext ic, StepMessage message) {
+        locomotion.setMovementDirection(Math.sin(rotation), Math.cos(rotation));
         locomotion.tick(this, ic);
+        rotation += 0.5 * ic.getElapsedTime();
     }
 
     @Override
@@ -32,5 +35,10 @@ public class NpcActor implements Actor
     @Override
     public double getZ() {
         return locomotion.getZ();
+    }
+
+    @Override
+    public double getYaw() {
+        return rotation;
     }
 }
