@@ -21,6 +21,7 @@ public class Locomotion
 
     private double directionX;
     private double directionZ;
+    private double movementSpeed = 1.0;
 
     public Locomotion(double x, double y, double z, HitBox hitBox) {
         this.x = x;
@@ -46,13 +47,17 @@ public class Locomotion
         directionZ = z;
     }
 
-    public void tick(Actor actor, InteractionContext ic) {
-        double sqrSpeed = MathEx.sqrMagnitude(directionX, directionZ);
+    public void setMovementSpeed(double to) {
+        movementSpeed = to;
+    }
 
-        if (sqrSpeed > 0.0) {
-            double speed = Math.sqrt(sqrSpeed);
-            velocityX = directionX / speed;
-            velocityZ = directionZ / speed;
+    public void tick(Actor actor, InteractionContext ic) {
+        double sqrLength = MathEx.sqrMagnitude(directionX, directionZ);
+
+        if (sqrLength > 0.0) {
+            double length = Math.sqrt(sqrLength);
+            velocityX = (directionX / length) * movementSpeed;
+            velocityZ = (directionZ / length) * movementSpeed;
         }
         else {
             velocityX = 0.0;

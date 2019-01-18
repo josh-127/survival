@@ -14,6 +14,7 @@ public class PlayerActor implements Actor
 
     public PlayerActor(double x, double y, double z) {
         locomotion = new Locomotion(x, y, z, HitBox.PLAYER);
+        locomotion.setMovementSpeed(5.0);
     }
 
     @Override
