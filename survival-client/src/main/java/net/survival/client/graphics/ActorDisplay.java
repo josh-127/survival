@@ -40,7 +40,7 @@ class ActorDisplay
         GLMatrixStack.push();
         GLMatrixStack.load(viewMatrix);
 
-        Iterable<Actor> actors = actorSpace.getActors();
+        Iterable<Actor> actors = actorSpace.iterateActors();
 
         for (Actor actor : actors)
             displayActor(actor);
@@ -49,15 +49,17 @@ class ActorDisplay
     }
 
     private void displayActor(Actor actor) {
-        GLMatrixStack.push();
-        GLMatrixStack.translate((float) actor.getX(), (float) actor.getY(), (float) actor.getZ());
-        GLMatrixStack.rotate((float) actor.getYaw(), 0.0f, 1.0f, 0.0f);
-        GLMatrixStack.rotate((float) actor.getPitch(), 1.0f, 0.0f, 0.0f);
-        GLMatrixStack.rotate((float) actor.getRoll(), 0.0f, 0.0f, 1.0f);
-
-        StaticModel model = StaticModel.fromActor(actor);
-        ModelRenderer.displayStaticModel(model);
-
-        GLMatrixStack.pop();
+        if (actor.getModel() != null) {
+            GLMatrixStack.push();
+            GLMatrixStack.translate((float) actor.getX(), (float) actor.getY(), (float) actor.getZ());
+            GLMatrixStack.rotate((float) actor.getYaw(), 0.0f, 1.0f, 0.0f);
+            GLMatrixStack.rotate((float) actor.getPitch(), 1.0f, 0.0f, 0.0f);
+            GLMatrixStack.rotate((float) actor.getRoll(), 0.0f, 0.0f, 1.0f);
+    
+            StaticModel model = StaticModel.fromActor(actor);
+            ModelRenderer.displayStaticModel(model);
+    
+            GLMatrixStack.pop();
+        }
     }
 }

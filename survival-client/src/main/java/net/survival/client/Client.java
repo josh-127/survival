@@ -1,8 +1,10 @@
 package net.survival.client;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.Queue;
 
 import org.joml.Vector3d;
 import org.lwjgl.glfw.GLFW;
@@ -10,9 +12,11 @@ import org.lwjgl.glfw.GLFW;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import net.survival.actor.Actor;
 import net.survival.actor.ActorSpace;
+import net.survival.actor.MoveMessage;
 import net.survival.actor.StepMessage;
 import net.survival.actor.interaction.InteractionContext;
 import net.survival.actor.v0_1_snapshot.NpcActor;
+import net.survival.actor.v0_1_snapshot.PlayerActor;
 import net.survival.block.BlockSpace;
 import net.survival.block.column.CircularColumnStageMask;
 import net.survival.block.column.Column;
@@ -56,12 +60,15 @@ public class Client implements AutoCloseable
     private final CompositeDisplay compositeDisplay;
     private final FpvCamera fpvCamera = new FpvCamera(new Vector3d(60.0, 72.0, 20.0), 0.0f, -1.0f);
 
-    private final StepMessage stepMessage = new StepMessage();
+    private final Queue<MoveMessage> moveMessages = new LinkedList<>();
     private final LocalBlockInteractionAdapter blockInteraction = new LocalBlockInteractionAdapter(blockSpace);
     private final LocalKeyboardInteractionAdapter keyboardInteraction = new LocalKeyboardInteractionAdapter();
     private final LocalTickInteractionAdapter tickInteraction = new LocalTickInteractionAdapter();
     private final InteractionContext interactionContext = new InteractionContext(
             blockInteraction, keyboardInteraction, tickInteraction);
+
+    private int playerID = -1;
+    private Actor player;
 
     private Client(ColumnDbPipe.ClientSide columnDbPipe) {
         columnSystem = new ColumnSystem(blockSpace, columnMask, columnDbPipe, columnGenerator, worldDecorator);
@@ -102,9 +109,14 @@ public class Client implements AutoCloseable
         if (Keyboard.isKeyDown(Key.LEFT_SHIFT)) jsY = -0.5;
 
         fpvCamera.rotate(-cursorDX / 128.0, -cursorDY / 128.0);
-        fpvCamera.position.x += jsX * CAMERA_SPEED * elapsedTime;
-        fpvCamera.position.z += jsZ * CAMERA_SPEED * elapsedTime;
-        fpvCamera.position.y += jsY * 20.0 * elapsedTime;
+        if (player == null) {
+            fpvCamera.position.x += jsX * CAMERA_SPEED * elapsedTime;
+            fpvCamera.position.z += jsZ * CAMERA_SPEED * elapsedTime;
+            fpvCamera.position.y += jsY * 20.0 * elapsedTime;
+        }
+        else {
+            moveMessages.add(new MoveMessage(playerID, jsX, jsZ));
+        }
 
         //
         // Column System
@@ -119,8 +131,15 @@ public class Client implements AutoCloseable
         //
         tickInteraction.setElapsedTime(elapsedTime);
 
-        for (Actor actor : actorSpace.getActors()) {
-            stepMessage.accept(actor, interactionContext);
+        while (!moveMessages.isEmpty()) {
+            MoveMessage moveMessage = moveMessages.remove();
+            moveMessage.accept(actorSpace.getActor(moveMessage.getDestActorID()), interactionContext);
+        }
+
+        for (Map.Entry<Integer, Actor> entry : actorSpace.iterateActorMap()) {
+            int actorID = entry.getKey();
+            Actor actor = entry.getValue();
+            new StepMessage(actorID).accept(actor, interactionContext);
         }
 
         //
@@ -143,8 +162,15 @@ public class Client implements AutoCloseable
             }
         }
 
-        compositeDisplay.moveCamera(
-                (float) fpvCamera.position.x, (float) fpvCamera.position.y, (float) fpvCamera.position.z);
+        if (player == null ) {
+            compositeDisplay.moveCamera(
+                    (float) fpvCamera.position.x, (float) fpvCamera.position.y, (float) fpvCamera.position.z);
+        }
+        else {
+            compositeDisplay.moveCamera(
+                    (float) player.getX(), (float) (player.getY() + 1.0), (float) player.getZ());
+        }
+
         compositeDisplay.orientCamera((float) fpvCamera.yaw, (float) fpvCamera.pitch);
         compositeDisplay.setCameraFov((float) Math.toRadians(60.0));
         compositeDisplay.resizeCamera(GraphicsSettings.WINDOW_WIDTH, GraphicsSettings.WINDOW_HEIGHT);
@@ -241,7 +267,14 @@ public class Client implements AutoCloseable
             }
         }
 
-        if (Keyboard.isKeyPressed(Key.T)) {
+        if (player == null && Keyboard.isKeyPressed(Key.R)) {
+            player = new PlayerActor(
+                    fpvCamera.position.x,
+                    fpvCamera.position.y,
+                    fpvCamera.position.z);
+            playerID = actorSpace.addActor(player);
+        }
+        else if (Keyboard.isKeyPressed(Key.T)) {
             NpcActor npcActor = new NpcActor(
                     fpvCamera.position.x,
                     fpvCamera.position.y,

@@ -1,16 +1,27 @@
 package net.survival.actor;
 
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ActorSpace
 {
-    private final ArrayList<Actor> actors = new ArrayList<>(1024);
+    private final HashMap<Integer, Actor> actors = new HashMap<>();
+    private int nextID = 0;
 
-    public Iterable<Actor> getActors() {
-        return actors;
+    public Iterable<Map.Entry<Integer, Actor>> iterateActorMap() {
+        return actors.entrySet();
     }
 
-    public void addActor(Actor actor) {
-        actors.add(actor);
+    public Iterable<Actor> iterateActors() {
+        return actors.values();
+    }
+
+    public Actor getActor(int id) {
+        return actors.get(id);
+    }
+
+    public int addActor(Actor actor) {
+        actors.put(nextID, actor);
+        return nextID++;
     }
 }
