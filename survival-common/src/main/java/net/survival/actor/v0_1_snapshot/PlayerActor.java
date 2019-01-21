@@ -4,6 +4,7 @@ import net.survival.actor.Actor;
 import net.survival.actor.ActorModel;
 import net.survival.actor.Locomotion;
 import net.survival.actor.interaction.InteractionContext;
+import net.survival.actor.message.JumpMessage;
 import net.survival.actor.message.MoveMessage;
 import net.survival.actor.message.StepMessage;
 import net.survival.util.HitBox;
@@ -20,6 +21,11 @@ public class PlayerActor implements Actor
     @Override
     public void visit(InteractionContext ic, MoveMessage message) {
         locomotion.setMovementDirection(message.getDX(), message.getDZ());
+    }
+
+    @Override
+    public void visit(InteractionContext ic, JumpMessage message) {
+        locomotion.jump(1.0);
     }
 
     @Override

@@ -51,6 +51,10 @@ public class Locomotion
         movementSpeed = to;
     }
 
+    public void jump(double height) {
+        velocityY = Math.sqrt(2.0 * GRAVITY * height);
+    }
+
     public void tick(Actor actor, InteractionContext ic) {
         double sqrLength = MathEx.sqrMagnitude(directionX, directionZ);
 

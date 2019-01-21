@@ -14,6 +14,7 @@ import net.survival.actor.Actor;
 import net.survival.actor.ActorSpace;
 import net.survival.actor.interaction.InteractionContext;
 import net.survival.actor.message.HurtMessage;
+import net.survival.actor.message.JumpMessage;
 import net.survival.actor.message.MoveMessage;
 import net.survival.actor.message.StepMessage;
 import net.survival.actor.v0_1_snapshot.NpcActor;
@@ -62,6 +63,7 @@ public class Client implements AutoCloseable
     private final FpvCamera fpvCamera = new FpvCamera(new Vector3d(60.0, 72.0, 20.0), 0.0f, -1.0f);
 
     private final Queue<MoveMessage> moveMessages = new LinkedList<>();
+    private final Queue<JumpMessage> jumpMessages = new LinkedList<>();
     private final Queue<HurtMessage> hurtMessages = new LinkedList<>();
     private final LocalBlockInteractionAdapter blockInteraction = new LocalBlockInteractionAdapter(blockSpace);
     private final LocalKeyboardInteractionAdapter keyboardInteraction = new LocalKeyboardInteractionAdapter();
@@ -121,6 +123,10 @@ public class Client implements AutoCloseable
             moveMessages.add(new MoveMessage(playerID, jsX, jsZ));
         }
 
+        if (playerID != -1 && Keyboard.isKeyPressed(Key.SPACE)) {
+            jumpMessages.add(new JumpMessage(playerID));
+        }
+
         //
         // Column System
         //
@@ -137,6 +143,11 @@ public class Client implements AutoCloseable
         while (!moveMessages.isEmpty()) {
             MoveMessage moveMessage = moveMessages.remove();
             moveMessage.accept(actorSpace.getActor(moveMessage.getDestActorID()), interactionContext);
+        }
+
+        while (!jumpMessages.isEmpty()) {
+            JumpMessage jumpMessage = jumpMessages.remove();
+            jumpMessage.accept(actorSpace.getActor(jumpMessage.getDestActorID()), interactionContext);
         }
 
         while (!hurtMessages.isEmpty()) {

@@ -5,6 +5,7 @@ import net.survival.actor.interaction.InteractionContext;
 public interface MessageVisitor
 {
     default void visit(InteractionContext ic, MoveMessage message) {}
+    default void visit(InteractionContext ic, JumpMessage message) {}
 
     default void visit(InteractionContext ic, HurtMessage message) {}
 
