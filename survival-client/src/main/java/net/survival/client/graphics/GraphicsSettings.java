@@ -7,7 +7,7 @@ public final class GraphicsSettings
 
     static final String ASSET_ROOT_PATH = "../assets/";
     static final String BLOCKS_PATH = ASSET_ROOT_PATH;
-    static final String FONT_PATH = ASSET_ROOT_PATH + "textures/fonts/ascii.png";
+    static final String FONT_PATH = ASSET_ROOT_PATH + "textures/fonts/default.png";
 
     private GraphicsSettings() {}
 }
