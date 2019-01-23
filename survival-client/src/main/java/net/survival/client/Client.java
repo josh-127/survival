@@ -26,8 +26,8 @@ import net.survival.block.column.ColumnPos;
 import net.survival.block.column.ColumnRequest;
 import net.survival.block.column.ColumnServer;
 import net.survival.block.column.ColumnSystem;
+import net.survival.block.message.BlockMessage;
 import net.survival.block.message.BreakBlockMessage;
-import net.survival.block.message.PlaceBlockMessage;
 import net.survival.client.graphics.CompositeDisplay;
 import net.survival.client.graphics.GraphicsSettings;
 import net.survival.client.graphics.VisibilityFlags;
@@ -45,6 +45,7 @@ import net.survival.input.Key;
 import net.survival.interaction.InteractionContext;
 import net.survival.particle.message.AddParticleEmitterMessage;
 import net.survival.particle.message.BurstParticlesMessage;
+import net.survival.particle.message.ParticleMessage;
 
 public class Client implements AutoCloseable
 {
@@ -71,16 +72,15 @@ public class Client implements AutoCloseable
     private final Queue<MoveMessage> moveMessages = new LinkedList<>();
     private final Queue<JumpMessage> jumpMessages = new LinkedList<>();
     private final Queue<HurtMessage> hurtMessages = new LinkedList<>();
-    private final Queue<BreakBlockMessage> breakBlockMessages = new LinkedList<>();
-    private final Queue<PlaceBlockMessage> placeBlockMessages = new LinkedList<>();
-    private final Queue<AddParticleEmitterMessage> addParticleEmitterMessages = new LinkedList<>();
-    private final Queue<BurstParticlesMessage> burstParticlesMessages = new LinkedList<>();
+    private final Queue<BlockMessage> blockMessages = new LinkedList<>();
+    private final Queue<ParticleMessage> particleMessages = new LinkedList<>();
 
-    private final LocalBlockInteractionAdapter blockInteraction = new LocalBlockInteractionAdapter(blockSpace);
+    private final LocalBlockInteractionAdapter blockInteraction = new LocalBlockInteractionAdapter(blockSpace, blockMessages);
+    private final LocalParticleInteractionAdapter particleInteraction = new LocalParticleInteractionAdapter(particleSpace, particleMessages);
     private final LocalKeyboardInteractionAdapter keyboardInteraction = new LocalKeyboardInteractionAdapter();
     private final LocalTickInteractionAdapter tickInteraction = new LocalTickInteractionAdapter();
     private final InteractionContext interactionContext = new InteractionContext(
-            blockInteraction, keyboardInteraction, tickInteraction);
+            blockInteraction, particleInteraction, keyboardInteraction, tickInteraction);
 
     private int npcID = -1;
     private int playerID = -1;
@@ -176,27 +176,17 @@ public class Client implements AutoCloseable
         //
         // Block System
         //
-        while (!breakBlockMessages.isEmpty()) {
-            BreakBlockMessage breakBlockMessage = breakBlockMessages.remove();
-            breakBlockMessage.accept(blockSpace, interactionContext);
-        }
-
-        while (!placeBlockMessages.isEmpty()) {
-            PlaceBlockMessage placeBlockMessage = placeBlockMessages.remove();
-            placeBlockMessage.accept(blockSpace, interactionContext);
+        while (!blockMessages.isEmpty()) {
+            BlockMessage message = blockMessages.remove();
+            message.accept(blockSpace, interactionContext);
         }
 
         //
         // Particle System
         //
-        while (!addParticleEmitterMessages.isEmpty()) {
-            AddParticleEmitterMessage addParticleEmitterMessage = addParticleEmitterMessages.remove();
-            addParticleEmitterMessage.accept(particleSpace);
-        }
-
-        while (!burstParticlesMessages.isEmpty()) {
-            BurstParticlesMessage burstParticlesMessage = burstParticlesMessages.remove();
-            burstParticlesMessage.accept(particleSpace);
+        while (!particleMessages.isEmpty()) {
+            ParticleMessage message = particleMessages.remove();
+            message.accept(particleSpace);
         }
 
         particleSpace.step(elapsedTime);
@@ -320,7 +310,7 @@ public class Client implements AutoCloseable
                 int pzi = (int) Math.floor(pz);
                 if (blockSpace.getBlockFullID(pxi, pyi, pzi) != 0) {
                     if (Mouse.isLmbPressed()) {
-                        breakBlockMessages.add(new BreakBlockMessage(pxi, pyi, pzi));
+                        blockMessages.add(new BreakBlockMessage(pxi, pyi, pzi));
                     }
                     break;
                 }
@@ -342,13 +332,13 @@ public class Client implements AutoCloseable
             npcID = actorSpace.addActor(npcActor);
         }
         else if (Keyboard.isKeyPressed(Key.Y)) {
-            addParticleEmitterMessages.add(new AddParticleEmitterMessage(
+            particleMessages.add(new AddParticleEmitterMessage(
                     fpvCamera.position.x,
                     fpvCamera.position.y,
                     fpvCamera.position.z));
         }
         else if (Keyboard.isKeyPressed(Key.U)) {
-            burstParticlesMessages.add(new BurstParticlesMessage(
+            particleMessages.add(new BurstParticlesMessage(
                     fpvCamera.position.x,
                     fpvCamera.position.y,
                     fpvCamera.position.z,
