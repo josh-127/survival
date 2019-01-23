@@ -9,6 +9,10 @@ public class ClientParticleSpace implements ParticleMessageVisitor
 {
     private final ArrayList<ClientParticleEmitter> objects = new ArrayList<>();
 
+    public Iterable<ClientParticleEmitter> iterateParticleEmitters() {
+        return objects;
+    }
+
     @Override
     public void visit(AddParticleEmitterMessage message) {
         objects.add(new ClientParticleEmitter(message.getX(), message.getY(), message.getZ()));

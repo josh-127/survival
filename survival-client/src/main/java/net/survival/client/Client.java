@@ -92,6 +92,7 @@ public class Client implements AutoCloseable
         compositeDisplay = new CompositeDisplay(
                 blockSpace,
                 actorSpace,
+                particleSpace,
                 GraphicsSettings.WINDOW_WIDTH,
                 GraphicsSettings.WINDOW_HEIGHT,
                 basicUI.getClient());
@@ -341,12 +342,14 @@ public class Client implements AutoCloseable
         if (Keyboard.isKeyPressed(Key._2))
             compositeDisplay.toggleVisibilityFlags(VisibilityFlags.ENTITIES);
         if (Keyboard.isKeyPressed(Key._3))
-            compositeDisplay.toggleVisibilityFlags(VisibilityFlags.SKYBOX);
+            compositeDisplay.toggleVisibilityFlags(VisibilityFlags.PARTICLES);
         if (Keyboard.isKeyPressed(Key._4))
-            compositeDisplay.toggleVisibilityFlags(VisibilityFlags.CLOUDS);
+            compositeDisplay.toggleVisibilityFlags(VisibilityFlags.SKYBOX);
         if (Keyboard.isKeyPressed(Key._5))
-            compositeDisplay.toggleVisibilityFlags(VisibilityFlags.HUD);
+            compositeDisplay.toggleVisibilityFlags(VisibilityFlags.CLOUDS);
         if (Keyboard.isKeyPressed(Key._6))
+            compositeDisplay.toggleVisibilityFlags(VisibilityFlags.HUD);
+        if (Keyboard.isKeyPressed(Key._7))
             compositeDisplay.toggleVisibilityFlags(VisibilityFlags.DEBUG_GEOMETRY);
 
         float spx = compositeDisplay.getCloudSpeedX();

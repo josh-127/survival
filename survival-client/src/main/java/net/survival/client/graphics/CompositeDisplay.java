@@ -8,6 +8,7 @@ import net.survival.client.graphics.opengl.GLImmediateDrawCall;
 import net.survival.client.graphics.opengl.GLMatrixStack;
 import net.survival.client.graphics.opengl.GLRenderContext;
 import net.survival.client.graphics.opengl.GLState;
+import net.survival.client.particle.ClientParticleSpace;
 import net.survival.client.ui.BasicUI;
 
 public class CompositeDisplay implements RenderContext, GraphicsResource
@@ -16,6 +17,7 @@ public class CompositeDisplay implements RenderContext, GraphicsResource
 
     private final BlockDisplay blockDisplay;
     private final ActorDisplay actorDisplay;
+    private final ParticleDisplay particleDisplay;
     private final SkyboxDisplay skyboxDisplay = new SkyboxDisplay();
     private final CloudDisplay cloudDisplay = new CloudDisplay();
     private final UIDisplay uiDisplay;
@@ -32,12 +34,14 @@ public class CompositeDisplay implements RenderContext, GraphicsResource
     public CompositeDisplay(
             BlockSpace blockSpace,
             ActorSpace actorSpace,
+            ClientParticleSpace clientParticleSpace,
             int viewportWidth,
             int viewportHeight,
             BasicUI.Client uiClientPipe)
     {
         blockDisplay = new BlockDisplay(blockSpace, camera, 512.0f);
         actorDisplay = new ActorDisplay(actorSpace, camera);
+        particleDisplay = new ParticleDisplay(clientParticleSpace);
         this.viewportWidth = viewportWidth;
         this.viewportHeight = viewportHeight;
 
