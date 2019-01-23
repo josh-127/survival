@@ -199,6 +199,8 @@ public class Client implements AutoCloseable
             burstParticlesMessage.accept(particleSpace);
         }
 
+        particleSpace.step(elapsedTime);
+
         //
         // Temporary Test Code
         //
@@ -344,6 +346,14 @@ public class Client implements AutoCloseable
                     fpvCamera.position.x,
                     fpvCamera.position.y,
                     fpvCamera.position.z));
+        }
+        else if (Keyboard.isKeyPressed(Key.U)) {
+            burstParticlesMessages.add(new BurstParticlesMessage(
+                    fpvCamera.position.x,
+                    fpvCamera.position.y,
+                    fpvCamera.position.z,
+                    1.0,
+                    64));
         }
 
         if (npcID != -1 && Keyboard.isKeyPressed(Key.K)) {

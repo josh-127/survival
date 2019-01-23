@@ -6,6 +6,7 @@ import net.survival.client.graphics.opengl.GLImmediateDrawCall;
 import net.survival.client.graphics.opengl.GLMatrixStack;
 import net.survival.client.particle.ClientParticleEmitter;
 import net.survival.client.particle.ClientParticleSpace;
+import net.survival.client.particle.ParticleData;
 import net.survival.util.MathEx;
 
 class ParticleDisplay
@@ -37,14 +38,39 @@ class ParticleDisplay
     }
 
     private void displayParticles() {
+        float camUpX = 0.0f;
+        float camUpY = 1.0f;
+        float camUpZ = 0.0f;
+        float camForwardX = camera.getDirectionX();
+        float camForwardY = camera.getDirectionY();
+        float camForwardZ = camera.getDirectionZ();
+        float camRightX = MathEx.crossX(camForwardX, camForwardY, camForwardZ, camUpX, camUpY, camUpZ);
+        float camRightY = MathEx.crossY(camForwardX, camForwardY, camForwardZ, camUpX, camUpY, camUpZ);
+        float camRightZ = MathEx.crossZ(camForwardX, camForwardY, camForwardZ, camUpX, camUpY, camUpZ);
+
+        float length = MathEx.length(camRightX, camRightY, camRightZ);
+        camRightX /= length;
+        camRightY /= length;
+        camRightZ /= length;
+
+        camUpX *= 0.5f;
+        camUpY *= 0.5f;
+        camUpZ *= 0.5f;
+        camRightX *= 0.5f;
+        camRightY *= 0.5f;
+        camRightZ *= 0.5f;
+
         GLImmediateDrawCall drawCall = GLImmediateDrawCall.beginTriangles(null);
         drawCall.color(1.0f, 1.0f, 1.0f);
 
-        for (ClientParticleEmitter clientParticleEmitter : clientParticleSpace.iterateParticleEmitters()) {
-            float x = (float) clientParticleEmitter.getX();
-            float y = (float) clientParticleEmitter.getY();
-            float z = (float) clientParticleEmitter.getZ();
-            displayBillboard(drawCall, x, y, z, 1.0f);
+        ParticleData data = clientParticleSpace.getData();
+        int maxParticles = data.maxParticles;
+
+        for (int i = 0; i < maxParticles; ++i) {
+            float x = (float) data.xs[i];
+            float y = (float) data.ys[i];
+            float z = (float) data.zs[i];
+            displayBillboard(drawCall, x, y, z, camRightX, camRightY, camRightZ, camUpX, camUpY, camUpZ);
         }
 
         drawCall.end();
