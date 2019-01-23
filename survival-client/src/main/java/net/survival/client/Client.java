@@ -27,6 +27,8 @@ import net.survival.block.column.ColumnPos;
 import net.survival.block.column.ColumnRequest;
 import net.survival.block.column.ColumnServer;
 import net.survival.block.column.ColumnSystem;
+import net.survival.block.message.BreakBlockMessage;
+import net.survival.block.message.PlaceBlockMessage;
 import net.survival.client.graphics.CompositeDisplay;
 import net.survival.client.graphics.GraphicsSettings;
 import net.survival.client.graphics.VisibilityFlags;
@@ -65,6 +67,9 @@ public class Client implements AutoCloseable
     private final Queue<MoveMessage> moveMessages = new LinkedList<>();
     private final Queue<JumpMessage> jumpMessages = new LinkedList<>();
     private final Queue<HurtMessage> hurtMessages = new LinkedList<>();
+    private final Queue<BreakBlockMessage> breakBlockMessages = new LinkedList<>();
+    private final Queue<PlaceBlockMessage> placeBlockMessages = new LinkedList<>();
+
     private final LocalBlockInteractionAdapter blockInteraction = new LocalBlockInteractionAdapter(blockSpace);
     private final LocalKeyboardInteractionAdapter keyboardInteraction = new LocalKeyboardInteractionAdapter();
     private final LocalTickInteractionAdapter tickInteraction = new LocalTickInteractionAdapter();
@@ -159,6 +164,19 @@ public class Client implements AutoCloseable
             int actorID = entry.getKey();
             Actor actor = entry.getValue();
             new StepMessage(actorID).accept(actor, interactionContext);
+        }
+
+        //
+        // Block System
+        //
+        while (!breakBlockMessages.isEmpty()) {
+            BreakBlockMessage breakBlockMessage = breakBlockMessages.remove();
+            breakBlockMessage.accept(blockSpace);
+        }
+
+        while (!placeBlockMessages.isEmpty()) {
+            PlaceBlockMessage placeBlockMessage = placeBlockMessages.remove();
+            placeBlockMessage.accept(blockSpace);
         }
 
         //
@@ -279,8 +297,9 @@ public class Client implements AutoCloseable
                 int pyi = (int) Math.floor(py);
                 int pzi = (int) Math.floor(pz);
                 if (blockSpace.getBlockFullID(pxi, pyi, pzi) != 0) {
-                    if (Mouse.isLmbPressed())
-                        blockSpace.setBlockFullID(pxi, pyi, pzi, 0);
+                    if (Mouse.isLmbPressed()) {
+                        breakBlockMessages.add(new BreakBlockMessage(pxi, pyi, pzi));
+                    }
                     break;
                 }
             }
