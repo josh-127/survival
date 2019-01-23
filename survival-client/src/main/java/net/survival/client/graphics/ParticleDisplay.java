@@ -51,8 +51,6 @@ class ParticleDisplay
     }
 
     private void displayBillboard(GLImmediateDrawCall drawCall, float x, float y, float z, float size) {
-        float halfSize = size / 2.0f;
-
         float camUpX = 0.0f;
         float camUpY = 1.0f;
         float camUpZ = 0.0f;
@@ -68,6 +66,22 @@ class ParticleDisplay
         camRightY /= length;
         camRightZ /= length;
 
+        camUpX *= 0.5f;
+        camUpY *= 0.5f;
+        camUpZ *= 0.5f;
+        camRightX *= 0.5f;
+        camRightY *= 0.5f;
+        camRightZ *= 0.5f;
+
+        displayBillboard(drawCall, x, y, z, camRightX, camRightY, camRightZ, camUpX, camUpY, camUpZ);
+    }
+
+    private void displayBillboard(
+            GLImmediateDrawCall drawCall,
+            float x, float y, float z,
+            float camRightX, float camRightY, float camRightZ,
+            float camUpX, float camUpY, float camUpZ)
+    {
         float blX = x - camRightX - camUpX;
         float blY = y - camRightY - camUpY;
         float blZ = z - camRightZ - camUpZ;

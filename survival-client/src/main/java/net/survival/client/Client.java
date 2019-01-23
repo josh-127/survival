@@ -44,6 +44,7 @@ import net.survival.gen.decoration.WorldDecorator;
 import net.survival.input.Key;
 import net.survival.interaction.InteractionContext;
 import net.survival.particle.message.AddParticleEmitterMessage;
+import net.survival.particle.message.BurstParticlesMessage;
 
 public class Client implements AutoCloseable
 {
@@ -73,6 +74,7 @@ public class Client implements AutoCloseable
     private final Queue<BreakBlockMessage> breakBlockMessages = new LinkedList<>();
     private final Queue<PlaceBlockMessage> placeBlockMessages = new LinkedList<>();
     private final Queue<AddParticleEmitterMessage> addParticleEmitterMessages = new LinkedList<>();
+    private final Queue<BurstParticlesMessage> burstParticlesMessages = new LinkedList<>();
 
     private final LocalBlockInteractionAdapter blockInteraction = new LocalBlockInteractionAdapter(blockSpace);
     private final LocalKeyboardInteractionAdapter keyboardInteraction = new LocalKeyboardInteractionAdapter();
@@ -190,6 +192,11 @@ public class Client implements AutoCloseable
         while (!addParticleEmitterMessages.isEmpty()) {
             AddParticleEmitterMessage addParticleEmitterMessage = addParticleEmitterMessages.remove();
             addParticleEmitterMessage.accept(particleSpace);
+        }
+
+        while (!burstParticlesMessages.isEmpty()) {
+            BurstParticlesMessage burstParticlesMessage = burstParticlesMessages.remove();
+            burstParticlesMessage.accept(particleSpace);
         }
 
         //
