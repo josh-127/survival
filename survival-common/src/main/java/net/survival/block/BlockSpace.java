@@ -5,8 +5,11 @@ import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectIterator;
 import net.survival.block.column.Column;
 import net.survival.block.column.ColumnPos;
+import net.survival.block.message.BlockMessageVisitor;
+import net.survival.block.message.BreakBlockMessage;
+import net.survival.block.message.PlaceBlockMessage;
 
-public class BlockSpace implements BlockStorage
+public class BlockSpace implements BlockStorage, BlockMessageVisitor
 {
     private final Long2ObjectOpenHashMap<Column> columns;
 
@@ -122,5 +125,15 @@ public class BlockSpace implements BlockStorage
             throw new RuntimeException(exceptionMessage);
         
         return column;
+    }
+
+    @Override
+    public void visit(BreakBlockMessage message) {
+        setBlockFullID(message.getX(), message.getY(), message.getZ(), 0);
+    }
+
+    @Override
+    public void visit(PlaceBlockMessage message) {
+        setBlockFullID(message.getX(), message.getY(), message.getZ(), message.getFullID());
     }
 }
