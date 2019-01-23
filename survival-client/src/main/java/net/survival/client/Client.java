@@ -332,6 +332,12 @@ public class Client implements AutoCloseable
                     fpvCamera.position.z);
             npcID = actorSpace.addActor(npcActor);
         }
+        else if (Keyboard.isKeyPressed(Key.Y)) {
+            addParticleEmitterMessages.add(new AddParticleEmitterMessage(
+                    fpvCamera.position.x,
+                    fpvCamera.position.y,
+                    fpvCamera.position.z));
+        }
 
         if (npcID != -1 && Keyboard.isKeyPressed(Key.K)) {
             hurtMessages.add(new HurtMessage(npcID, 10.0));

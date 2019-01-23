@@ -41,7 +41,7 @@ public class CompositeDisplay implements RenderContext, GraphicsResource
     {
         blockDisplay = new BlockDisplay(blockSpace, camera, 512.0f);
         actorDisplay = new ActorDisplay(actorSpace, camera);
-        particleDisplay = new ParticleDisplay(clientParticleSpace);
+        particleDisplay = new ParticleDisplay(clientParticleSpace, camera);
         this.viewportWidth = viewportWidth;
         this.viewportHeight = viewportHeight;
 
@@ -282,6 +282,9 @@ public class CompositeDisplay implements RenderContext, GraphicsResource
 
             if (isVisible(VisibilityFlags.ENTITIES))
                 actorDisplay.display();
+
+            if (isVisible(VisibilityFlags.PARTICLES))
+                particleDisplay.display();
 
             if (isVisible(VisibilityFlags.CLOUDS))
                 cloudDisplay.display(cameraViewMatrix, cameraProjectionMatrix, camera.x, camera.z);
