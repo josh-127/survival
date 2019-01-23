@@ -37,11 +37,13 @@ import net.survival.client.input.GlfwKeyboardAdapter;
 import net.survival.client.input.GlfwMouseAdapter;
 import net.survival.client.input.Keyboard;
 import net.survival.client.input.Mouse;
+import net.survival.client.particle.ClientParticleSpace;
 import net.survival.client.ui.BasicUI;
 import net.survival.gen.InfiniteColumnGenerator;
 import net.survival.gen.decoration.WorldDecorator;
 import net.survival.input.Key;
 import net.survival.interaction.InteractionContext;
+import net.survival.particle.message.AddParticleEmitterMessage;
 
 public class Client implements AutoCloseable
 {
@@ -52,6 +54,7 @@ public class Client implements AutoCloseable
 
     private final BlockSpace blockSpace = new BlockSpace();
     private final ActorSpace actorSpace = new ActorSpace();
+    private final ClientParticleSpace particleSpace = new ClientParticleSpace();
 
     private final CircularColumnStageMask columnMask = new CircularColumnStageMask(10);
     private final InfiniteColumnGenerator columnGenerator = new InfiniteColumnGenerator(22L);
@@ -69,6 +72,7 @@ public class Client implements AutoCloseable
     private final Queue<HurtMessage> hurtMessages = new LinkedList<>();
     private final Queue<BreakBlockMessage> breakBlockMessages = new LinkedList<>();
     private final Queue<PlaceBlockMessage> placeBlockMessages = new LinkedList<>();
+    private final Queue<AddParticleEmitterMessage> addParticleEmitterMessages = new LinkedList<>();
 
     private final LocalBlockInteractionAdapter blockInteraction = new LocalBlockInteractionAdapter(blockSpace);
     private final LocalKeyboardInteractionAdapter keyboardInteraction = new LocalKeyboardInteractionAdapter();
@@ -177,6 +181,14 @@ public class Client implements AutoCloseable
         while (!placeBlockMessages.isEmpty()) {
             PlaceBlockMessage placeBlockMessage = placeBlockMessages.remove();
             placeBlockMessage.accept(blockSpace);
+        }
+
+        //
+        // Particle System
+        //
+        while (!addParticleEmitterMessages.isEmpty()) {
+            AddParticleEmitterMessage addParticleEmitterMessage = addParticleEmitterMessages.remove();
+            addParticleEmitterMessage.accept(particleSpace);
         }
 
         //
