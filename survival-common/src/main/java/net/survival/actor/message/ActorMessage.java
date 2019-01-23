@@ -2,11 +2,11 @@ package net.survival.actor.message;
 
 import net.survival.actor.interaction.InteractionContext;
 
-public abstract class Message
+public abstract class ActorMessage
 {
     private final int destActorID;
 
-    public Message(int destActorID) {
+    public ActorMessage(int destActorID) {
         this.destActorID = destActorID;
     }
 

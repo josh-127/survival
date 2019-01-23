@@ -2,7 +2,7 @@ package net.survival.actor.message;
 
 import net.survival.actor.interaction.InteractionContext;
 
-public class StepMessage extends Message
+public class StepMessage extends ActorMessage
 {
     public StepMessage(int destActorID) {
         super(destActorID);

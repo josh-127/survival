@@ -2,7 +2,7 @@ package net.survival.actor.message;
 
 import net.survival.actor.interaction.InteractionContext;
 
-public class DrawMessage extends Message
+public class DrawMessage extends ActorMessage
 {
     public DrawMessage(int destActorID) {
         super(destActorID);

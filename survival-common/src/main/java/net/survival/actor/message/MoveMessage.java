@@ -2,7 +2,7 @@ package net.survival.actor.message;
 
 import net.survival.actor.interaction.InteractionContext;
 
-public class MoveMessage extends Message
+public class MoveMessage extends ActorMessage
 {
     private final double dx;
     private final double dz;

@@ -2,7 +2,7 @@ package net.survival.actor.message;
 
 import net.survival.actor.interaction.InteractionContext;
 
-public class HurtMessage extends Message
+public class HurtMessage extends ActorMessage
 {
     private final double amount;
 

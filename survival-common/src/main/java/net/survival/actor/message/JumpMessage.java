@@ -2,7 +2,7 @@ package net.survival.actor.message;
 
 import net.survival.actor.interaction.InteractionContext;
 
-public class JumpMessage extends Message
+public class JumpMessage extends ActorMessage
 {
     public JumpMessage(int destActorID) {
         super(destActorID);
