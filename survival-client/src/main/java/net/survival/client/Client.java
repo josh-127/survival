@@ -27,8 +27,6 @@ import net.survival.block.column.ColumnPos;
 import net.survival.block.column.ColumnRequest;
 import net.survival.block.column.ColumnServer;
 import net.survival.block.column.ColumnSystem;
-import net.survival.block.gen.InfiniteColumnGenerator;
-import net.survival.block.gen.decoration.WorldDecorator;
 import net.survival.client.graphics.CompositeDisplay;
 import net.survival.client.graphics.GraphicsSettings;
 import net.survival.client.graphics.VisibilityFlags;
@@ -39,6 +37,8 @@ import net.survival.client.input.GlfwMouseAdapter;
 import net.survival.client.input.Keyboard;
 import net.survival.client.input.Mouse;
 import net.survival.client.ui.BasicUI;
+import net.survival.gen.InfiniteColumnGenerator;
+import net.survival.gen.decoration.WorldDecorator;
 import net.survival.input.Key;
 
 public class Client implements AutoCloseable

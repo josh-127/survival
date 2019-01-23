@@ -1,4 +1,4 @@
-package net.survival.block.gen;
+package net.survival.gen;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -10,9 +10,9 @@ import java.awt.event.KeyListener;
 import javax.swing.JComponent;
 import javax.swing.Timer;
 
-import net.survival.block.biome.BiomeType;
-import net.survival.block.gen.layer.GenLayer;
-import net.survival.block.gen.layer.GenLayerFactory;
+import net.survival.gen.biome.BiomeType;
+import net.survival.gen.layer.GenLayer;
+import net.survival.gen.layer.GenLayerFactory;
 
 public class ViewportComponent extends JComponent implements ActionListener, KeyListener
 {

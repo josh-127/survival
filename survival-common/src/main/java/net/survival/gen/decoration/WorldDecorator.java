@@ -1,4 +1,4 @@
-package net.survival.block.gen.decoration;
+package net.survival.gen.decoration;
 
 import net.survival.block.BlockSpace;
 import net.survival.block.column.Column;

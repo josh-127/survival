@@ -1,8 +1,8 @@
-package net.survival.block.gen.layer;
+package net.survival.gen.layer;
 
 import java.util.Random;
 
-import net.survival.block.biome.BiomeType;
+import net.survival.gen.biome.BiomeType;
 
 class LandGenLayer extends GenLayer
 {

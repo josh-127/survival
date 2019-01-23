@@ -1,4 +1,4 @@
-package net.survival.block.gen.decoration;
+package net.survival.gen.decoration;
 
 import java.util.Random;
 

@@ -1,12 +1,12 @@
-package net.survival.block.gen;
+package net.survival.gen;
 
-import net.survival.block.biome.BiomeType;
 import net.survival.block.column.Column;
 import net.survival.block.column.ColumnPos;
 import net.survival.block.column.ColumnProvider;
-import net.survival.block.gen.layer.GenLayer;
-import net.survival.block.gen.layer.GenLayerFactory;
 import net.survival.blocktype.BlockType;
+import net.survival.gen.biome.BiomeType;
+import net.survival.gen.layer.GenLayer;
+import net.survival.gen.layer.GenLayerFactory;
 import net.survival.util.DoubleMap2D;
 import net.survival.util.DoubleMap3D;
 import net.survival.util.ImprovedNoiseGenerator3D;

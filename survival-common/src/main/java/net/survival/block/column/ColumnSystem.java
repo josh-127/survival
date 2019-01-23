@@ -8,7 +8,7 @@ import it.unimi.dsi.fastutil.longs.LongIterator;
 import it.unimi.dsi.fastutil.longs.LongSet;
 import it.unimi.dsi.fastutil.objects.ObjectIterator;
 import net.survival.block.BlockSpace;
-import net.survival.block.gen.decoration.WorldDecorator;
+import net.survival.gen.decoration.WorldDecorator;
 
 public class ColumnSystem
 {

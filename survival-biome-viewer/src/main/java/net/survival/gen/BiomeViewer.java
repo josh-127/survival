@@ -1,4 +1,4 @@
-package net.survival.block.gen;
+package net.survival.gen;
 
 import java.awt.event.ActionEvent;
 

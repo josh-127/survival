@@ -1,4 +1,4 @@
-package net.survival.block.gen.layer;
+package net.survival.gen.layer;
 
 class BoxMagnifiedGenLayer extends GenLayer
 {
