@@ -131,6 +131,7 @@ public class BlockSpace implements BlockStorage, BlockMessageVisitor
     @Override
     public void visit(InteractionContext ic, BreakBlockMessage message) {
         setBlockFullID(message.getX(), message.getY(), message.getZ(), 0);
+        ic.burstParticles(message.getX() + 0.5, message.getY() + 0.5, message.getZ() + 0.5, 2.0, 8);
     }
 
     @Override
