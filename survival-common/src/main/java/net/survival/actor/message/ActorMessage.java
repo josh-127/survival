@@ -10,7 +10,7 @@ public abstract class ActorMessage
         this.destActorID = destActorID;
     }
 
-    public abstract void accept(MessageVisitor visitor, InteractionContext ic);
+    public abstract void accept(ActorMessageVisitor visitor, InteractionContext ic);
 
     public int getDestActorID() {
         return destActorID;

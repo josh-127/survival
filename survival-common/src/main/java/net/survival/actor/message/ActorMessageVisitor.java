@@ -2,7 +2,7 @@ package net.survival.actor.message;
 
 import net.survival.interaction.InteractionContext;
 
-public interface MessageVisitor
+public interface ActorMessageVisitor
 {
     default void visit(InteractionContext ic, MoveMessage message) {}
     default void visit(InteractionContext ic, JumpMessage message) {}

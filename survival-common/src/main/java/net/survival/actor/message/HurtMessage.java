@@ -12,7 +12,7 @@ public class HurtMessage extends ActorMessage
     }
 
     @Override
-    public void accept(MessageVisitor visitor, InteractionContext ic) {
+    public void accept(ActorMessageVisitor visitor, InteractionContext ic) {
         visitor.visit(ic, this);
     }
 
