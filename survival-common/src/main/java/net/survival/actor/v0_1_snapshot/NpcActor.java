@@ -10,8 +10,10 @@ import net.survival.util.HitBox;
 public class NpcActor implements Actor
 {
     private final Locomotion locomotion;
-    private double yaw;
     private double pitch = 0.0;
+    private double direction = 0.0;
+    private double timer = 0.0;
+    private boolean isWalking;
     private double health = 50.0;
 
     public NpcActor(double x, double y, double z) {
@@ -26,9 +28,22 @@ public class NpcActor implements Actor
     @Override
     public void visit(InteractionContext ic, StepMessage message) {
         if (health > 0.0) {
-            locomotion.setMovementDirection(Math.sin(yaw), Math.cos(yaw));
+            if (timer > 0.0) {
+                timer -= ic.getElapsedTime();
+            }
+            else {
+                timer = 1.0 + Math.random() * 5.0;
+                isWalking = !isWalking;
+                if (isWalking)
+                    direction = 2.0 * Math.PI * Math.random();
+            }
+
+            if (isWalking)
+                locomotion.setMovementDirection(Math.sin(direction), Math.cos(direction));
+            else
+                locomotion.setMovementDirection(0.0, 0.0);
+
             locomotion.tick(this, ic);
-            yaw += 0.5 * ic.getElapsedTime();
         }
         else {
             if (pitch < Math.PI / 2.0)
@@ -55,7 +70,7 @@ public class NpcActor implements Actor
 
     @Override
     public double getYaw() {
-        return yaw;
+        return direction;
     }
 
     @Override
