@@ -12,7 +12,6 @@ import org.lwjgl.glfw.GLFW;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import net.survival.actor.Actor;
 import net.survival.actor.ActorSpace;
-import net.survival.actor.interaction.InteractionContext;
 import net.survival.actor.message.HurtMessage;
 import net.survival.actor.message.JumpMessage;
 import net.survival.actor.message.MoveMessage;
@@ -42,6 +41,7 @@ import net.survival.client.ui.BasicUI;
 import net.survival.gen.InfiniteColumnGenerator;
 import net.survival.gen.decoration.WorldDecorator;
 import net.survival.input.Key;
+import net.survival.interaction.InteractionContext;
 
 public class Client implements AutoCloseable
 {

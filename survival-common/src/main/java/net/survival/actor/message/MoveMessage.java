@@ -1,6 +1,6 @@
 package net.survival.actor.message;
 
-import net.survival.actor.interaction.InteractionContext;
+import net.survival.interaction.InteractionContext;
 
 public class MoveMessage extends ActorMessage
 {

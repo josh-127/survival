@@ -2,9 +2,9 @@ package net.survival.actor.v0_1_snapshot;
 
 import net.survival.actor.Actor;
 import net.survival.actor.Locomotion;
-import net.survival.actor.interaction.InteractionContext;
 import net.survival.actor.message.HurtMessage;
 import net.survival.actor.message.StepMessage;
+import net.survival.interaction.InteractionContext;
 import net.survival.util.HitBox;
 
 public class NpcActor implements Actor

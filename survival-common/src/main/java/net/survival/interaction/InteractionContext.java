@@ -1,4 +1,4 @@
-package net.survival.actor.interaction;
+package net.survival.interaction;
 
 import net.survival.blocktype.Block;
 import net.survival.input.Key;

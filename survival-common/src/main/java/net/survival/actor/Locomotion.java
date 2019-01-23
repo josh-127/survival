@@ -1,8 +1,8 @@
 package net.survival.actor;
 
-import net.survival.actor.interaction.InteractionContext;
 import net.survival.block.column.Column;
 import net.survival.blocktype.Block;
+import net.survival.interaction.InteractionContext;
 import net.survival.util.HitBox;
 import net.survival.util.MathEx;
 
