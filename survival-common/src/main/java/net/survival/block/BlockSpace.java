@@ -8,6 +8,7 @@ import net.survival.block.column.ColumnPos;
 import net.survival.block.message.BlockMessageVisitor;
 import net.survival.block.message.BreakBlockMessage;
 import net.survival.block.message.PlaceBlockMessage;
+import net.survival.interaction.InteractionContext;
 
 public class BlockSpace implements BlockStorage, BlockMessageVisitor
 {
@@ -128,12 +129,12 @@ public class BlockSpace implements BlockStorage, BlockMessageVisitor
     }
 
     @Override
-    public void visit(BreakBlockMessage message) {
+    public void visit(InteractionContext ic, BreakBlockMessage message) {
         setBlockFullID(message.getX(), message.getY(), message.getZ(), 0);
     }
 
     @Override
-    public void visit(PlaceBlockMessage message) {
+    public void visit(InteractionContext ic, PlaceBlockMessage message) {
         setBlockFullID(message.getX(), message.getY(), message.getZ(), message.getFullID());
     }
 }

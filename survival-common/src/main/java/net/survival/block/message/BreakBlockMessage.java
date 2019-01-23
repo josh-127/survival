@@ -1,5 +1,7 @@
 package net.survival.block.message;
 
+import net.survival.interaction.InteractionContext;
+
 public class BreakBlockMessage extends BlockMessage
 {
     private final int x;
@@ -25,7 +27,7 @@ public class BreakBlockMessage extends BlockMessage
     }
 
     @Override
-    public void accept(BlockMessageVisitor visitor) {
-        visitor.visit(this);
+    public void accept(BlockMessageVisitor visitor, InteractionContext ic) {
+        visitor.visit(ic, this);
     }
 }

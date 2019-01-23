@@ -1,7 +1,9 @@
 package net.survival.block.message;
 
+import net.survival.interaction.InteractionContext;
+
 public interface BlockMessageVisitor
 {
-    void visit(BreakBlockMessage message);
-    void visit(PlaceBlockMessage message);
+    void visit(InteractionContext ic, BreakBlockMessage message);
+    void visit(InteractionContext ic, PlaceBlockMessage message);
 }

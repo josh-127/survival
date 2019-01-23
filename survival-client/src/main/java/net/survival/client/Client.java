@@ -178,12 +178,12 @@ public class Client implements AutoCloseable
         //
         while (!breakBlockMessages.isEmpty()) {
             BreakBlockMessage breakBlockMessage = breakBlockMessages.remove();
-            breakBlockMessage.accept(blockSpace);
+            breakBlockMessage.accept(blockSpace, interactionContext);
         }
 
         while (!placeBlockMessages.isEmpty()) {
             PlaceBlockMessage placeBlockMessage = placeBlockMessages.remove();
-            placeBlockMessage.accept(blockSpace);
+            placeBlockMessage.accept(blockSpace, interactionContext);
         }
 
         //
