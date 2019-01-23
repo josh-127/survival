@@ -6,6 +6,7 @@ import net.survival.client.graphics.opengl.GLImmediateDrawCall;
 import net.survival.client.graphics.opengl.GLMatrixStack;
 import net.survival.client.particle.ClientParticleEmitter;
 import net.survival.client.particle.ClientParticleSpace;
+import net.survival.util.MathEx;
 
 class ParticleDisplay
 {
@@ -51,11 +52,40 @@ class ParticleDisplay
 
     private void displayBillboard(GLImmediateDrawCall drawCall, float x, float y, float z, float size) {
         float halfSize = size / 2.0f;
-        drawCall.vertex(x - halfSize, y, z - halfSize);
-        drawCall.vertex(x + halfSize, y, z - halfSize);
-        drawCall.vertex(x + halfSize, y, z + halfSize);
-        drawCall.vertex(x + halfSize, y, z + halfSize);
-        drawCall.vertex(x - halfSize, y, z + halfSize);
-        drawCall.vertex(x - halfSize, y, z - halfSize);
+
+        float camUpX = 0.0f;
+        float camUpY = 1.0f;
+        float camUpZ = 0.0f;
+        float camForwardX = camera.getDirectionX();
+        float camForwardY = camera.getDirectionY();
+        float camForwardZ = camera.getDirectionZ();
+        float camRightX = MathEx.crossX(camForwardX, camForwardY, camForwardZ, camUpX, camUpY, camUpZ);
+        float camRightY = MathEx.crossY(camForwardX, camForwardY, camForwardZ, camUpX, camUpY, camUpZ);
+        float camRightZ = MathEx.crossZ(camForwardX, camForwardY, camForwardZ, camUpX, camUpY, camUpZ);
+
+        float length = MathEx.length(camRightX, camRightY, camRightZ);
+        camRightX /= length;
+        camRightY /= length;
+        camRightZ /= length;
+
+        float blX = x - camRightX - camUpX;
+        float blY = y - camRightY - camUpY;
+        float blZ = z - camRightZ - camUpZ;
+        float brX = x + camRightX - camUpX;
+        float brY = y + camRightY - camUpY;
+        float brZ = z + camRightZ - camUpZ;
+        float tlX = x - camRightX + camUpX;
+        float tlY = y - camRightY + camUpY;
+        float tlZ = z - camRightZ + camUpZ;
+        float trX = x + camRightX + camUpX;
+        float trY = y + camRightY + camUpY;
+        float trZ = z + camRightZ + camUpZ;
+
+        drawCall.vertex(blX, blY, blZ);
+        drawCall.vertex(brX, brY, brZ);
+        drawCall.vertex(trX, trY, trZ);
+        drawCall.vertex(trX, trY, trZ);
+        drawCall.vertex(tlX, tlY, tlZ);
+        drawCall.vertex(blX, blY, blZ);
     }
 }
