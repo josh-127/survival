@@ -18,19 +18,19 @@ public class MathEx
         return a + t * (b - a);
     }
 
-    public static double sqrMagnitude(double x, double y) {
+    public static double sqrLength(double x, double y) {
         return x * x + y * y;
     }
 
-    public static double sqrMagnitude(double x, double y, double z) {
+    public static double sqrLength(double x, double y, double z) {
         return x * x + y * y + z * z;
     }
 
-    public static double magnitude(double x, double y) {
-        return Math.sqrt(sqrMagnitude(x, y));
+    public static double length(double x, double y) {
+        return Math.sqrt(sqrLength(x, y));
     }
 
-    public static double magnitude(double x, double y, double z) {
-        return Math.sqrt(sqrMagnitude(x, y, z));
+    public static double length(double x, double y, double z) {
+        return Math.sqrt(sqrLength(x, y, z));
     }
 }

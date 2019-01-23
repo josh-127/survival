@@ -56,7 +56,7 @@ public class Locomotion
     }
 
     public void tick(Actor actor, InteractionContext ic) {
-        double sqrLength = MathEx.sqrMagnitude(directionX, directionZ);
+        double sqrLength = MathEx.sqrLength(directionX, directionZ);
 
         if (sqrLength > 0.0) {
             double length = Math.sqrt(sqrLength);

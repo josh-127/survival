@@ -43,15 +43,19 @@ class ParticleDisplay
             float x = (float) clientParticleEmitter.getX();
             float y = (float) clientParticleEmitter.getY();
             float z = (float) clientParticleEmitter.getZ();
-
-            drawCall.vertex(x - 0.5f, y, z - 0.5f);
-            drawCall.vertex(x + 0.5f, y, z - 0.5f);
-            drawCall.vertex(x + 0.5f, y, z + 0.5f);
-            drawCall.vertex(x + 0.5f, y, z + 0.5f);
-            drawCall.vertex(x - 0.5f, y, z + 0.5f);
-            drawCall.vertex(x - 0.5f, y, z - 0.5f);
+            displayBillboard(drawCall, x, y, z, 1.0f);
         }
 
         drawCall.end();
+    }
+
+    private void displayBillboard(GLImmediateDrawCall drawCall, float x, float y, float z, float size) {
+        float halfSize = size / 2.0f;
+        drawCall.vertex(x - halfSize, y, z - halfSize);
+        drawCall.vertex(x + halfSize, y, z - halfSize);
+        drawCall.vertex(x + halfSize, y, z + halfSize);
+        drawCall.vertex(x + halfSize, y, z + halfSize);
+        drawCall.vertex(x - halfSize, y, z + halfSize);
+        drawCall.vertex(x - halfSize, y, z - halfSize);
     }
 }
