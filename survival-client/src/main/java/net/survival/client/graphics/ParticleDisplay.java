@@ -53,12 +53,12 @@ class ParticleDisplay
         camRightY /= length;
         camRightZ /= length;
 
-        camUpX *= 0.5f;
-        camUpY *= 0.5f;
-        camUpZ *= 0.5f;
-        camRightX *= 0.5f;
-        camRightY *= 0.5f;
-        camRightZ *= 0.5f;
+        camUpX *= 0.25f;
+        camUpY *= 0.25f;
+        camUpZ *= 0.25f;
+        camRightX *= 0.25f;
+        camRightY *= 0.25f;
+        camRightZ *= 0.25f;
 
         GLImmediateDrawCall drawCall = GLImmediateDrawCall.beginTriangles(null);
         drawCall.color(1.0f, 1.0f, 1.0f);
