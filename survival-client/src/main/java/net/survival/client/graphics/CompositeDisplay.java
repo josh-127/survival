@@ -10,6 +10,7 @@ import net.survival.client.graphics.opengl.GLRenderContext;
 import net.survival.client.graphics.opengl.GLState;
 import net.survival.client.particle.ClientParticleSpace;
 import net.survival.client.ui.BasicUI;
+import net.survival.ui.UiDom;
 
 public class CompositeDisplay implements RenderContext, GraphicsResource
 {
@@ -21,6 +22,7 @@ public class CompositeDisplay implements RenderContext, GraphicsResource
     private final SkyboxDisplay skyboxDisplay = new SkyboxDisplay();
     private final CloudDisplay cloudDisplay = new CloudDisplay();
     private final UIDisplay uiDisplay;
+    private final NewUiDisplay newUiDisplay;
 
     private int viewportWidth;
     private int viewportHeight;
@@ -46,6 +48,7 @@ public class CompositeDisplay implements RenderContext, GraphicsResource
         this.viewportHeight = viewportHeight;
 
         uiDisplay = new UIDisplay(uiClientPipe);
+        newUiDisplay = new NewUiDisplay();
     }
 
     @Override
@@ -239,6 +242,11 @@ public class CompositeDisplay implements RenderContext, GraphicsResource
         cloudDisplay.setAlpha(to);
     }
 
+    @Override
+    public void setUiDom(UiDom to) {
+        newUiDisplay.setUiDom(to);
+    }
+
     public int getViewportWidth() {
         return viewportWidth;
     }
@@ -308,7 +316,7 @@ public class CompositeDisplay implements RenderContext, GraphicsResource
 
         GLMatrixStack.pop();
 
-        // Display HUD.
+        // Display HUD and new UI system.
         if (isVisible(VisibilityFlags.HUD)) {
             hudProjectionMatrix.identity();
             hudProjectionMatrix.ortho2D(0.0f, viewportWidth, viewportHeight, 0.0f);
@@ -317,6 +325,7 @@ public class CompositeDisplay implements RenderContext, GraphicsResource
             GLMatrixStack.push();
             GLMatrixStack.loadIdentity();
             uiDisplay.display();
+            newUiDisplay.display();
             GLMatrixStack.pop();
         }
     }
