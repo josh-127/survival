@@ -1,4 +1,4 @@
-package net.survival.client.ui;
+package net.survival.ui;
 
 import java.util.ArrayList;
 import java.util.Collections;

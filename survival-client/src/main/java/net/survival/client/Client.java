@@ -46,6 +46,7 @@ import net.survival.interaction.InteractionContext;
 import net.survival.particle.message.AddParticleEmitterMessage;
 import net.survival.particle.message.BurstParticlesMessage;
 import net.survival.particle.message.ParticleMessage;
+import net.survival.ui.UiDom;
 
 public class Client implements AutoCloseable
 {
@@ -57,6 +58,7 @@ public class Client implements AutoCloseable
     private final BlockSpace blockSpace = new BlockSpace();
     private final ActorSpace actorSpace = new ActorSpace();
     private final ClientParticleSpace particleSpace = new ClientParticleSpace();
+    private UiDom uiDom = new UiDom();
 
     private final CircularColumnStageMask columnMask = new CircularColumnStageMask(10);
     private final InfiniteColumnGenerator columnGenerator = new InfiniteColumnGenerator(22L);

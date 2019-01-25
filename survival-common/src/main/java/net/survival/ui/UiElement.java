@@ -1,4 +1,4 @@
-package net.survival.client.ui;
+package net.survival.ui;
 
 public abstract class UiElement
 {
