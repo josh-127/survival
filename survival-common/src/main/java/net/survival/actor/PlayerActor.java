@@ -1,8 +1,5 @@
-package net.survival.actor.v0_1_snapshot;
+package net.survival.actor;
 
-import net.survival.actor.Actor;
-import net.survival.actor.ActorModel;
-import net.survival.actor.Locomotion;
 import net.survival.actor.message.JumpMessage;
 import net.survival.actor.message.MoveMessage;
 import net.survival.actor.message.StepMessage;

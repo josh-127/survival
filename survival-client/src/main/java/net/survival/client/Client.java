@@ -1,6 +1,7 @@
 package net.survival.client;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
@@ -12,12 +13,12 @@ import org.lwjgl.glfw.GLFW;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import net.survival.actor.Actor;
 import net.survival.actor.ActorSpace;
+import net.survival.actor.NpcActor;
+import net.survival.actor.PlayerActor;
 import net.survival.actor.message.HurtMessage;
 import net.survival.actor.message.JumpMessage;
 import net.survival.actor.message.MoveMessage;
 import net.survival.actor.message.StepMessage;
-import net.survival.actor.v0_1_snapshot.NpcActor;
-import net.survival.actor.v0_1_snapshot.PlayerActor;
 import net.survival.block.BlockSpace;
 import net.survival.block.column.CircularColumnStageMask;
 import net.survival.block.column.Column;
@@ -46,7 +47,10 @@ import net.survival.interaction.InteractionContext;
 import net.survival.particle.message.AddParticleEmitterMessage;
 import net.survival.particle.message.BurstParticlesMessage;
 import net.survival.particle.message.ParticleMessage;
+import net.survival.ui.UiBodyElement;
 import net.survival.ui.UiDom;
+import net.survival.ui.UiElement;
+import net.survival.ui.UiTextElement;
 
 public class Client implements AutoCloseable
 {
@@ -100,6 +104,12 @@ public class Client implements AutoCloseable
                 GraphicsSettings.WINDOW_WIDTH,
                 GraphicsSettings.WINDOW_HEIGHT,
                 basicUI.getClient());
+
+        ArrayList<UiElement> elements = new ArrayList<>();
+        elements.add(new UiTextElement("Hello World!"));
+        elements.add(new UiTextElement("textures/ui/heart_container.png"));
+
+        uiDom = new UiDom(new UiBodyElement(elements));
     }
 
     @Override
@@ -192,6 +202,11 @@ public class Client implements AutoCloseable
         }
 
         particleSpace.step(elapsedTime);
+
+        //
+        // UI System
+        //
+        compositeDisplay.setUiDom(uiDom);
 
         //
         // Temporary Test Code

@@ -1,7 +1,5 @@
-package net.survival.actor.v0_1_snapshot;
+package net.survival.actor;
 
-import net.survival.actor.Actor;
-import net.survival.actor.Locomotion;
 import net.survival.actor.message.HurtMessage;
 import net.survival.actor.message.StepMessage;
 import net.survival.interaction.InteractionContext;
