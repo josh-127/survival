@@ -83,10 +83,9 @@ public class Client implements AutoCloseable
 
     private final LocalBlockInteractionAdapter blockInteraction = new LocalBlockInteractionAdapter(blockSpace, blockMessages);
     private final LocalParticleInteractionAdapter particleInteraction = new LocalParticleInteractionAdapter(particleSpace, particleMessages);
-    private final LocalKeyboardInteractionAdapter keyboardInteraction = new LocalKeyboardInteractionAdapter();
     private final LocalTickInteractionAdapter tickInteraction = new LocalTickInteractionAdapter();
     private final InteractionContext interactionContext = new InteractionContext(
-            blockInteraction, particleInteraction, keyboardInteraction, tickInteraction);
+            blockInteraction, particleInteraction, tickInteraction);
 
     private int npcID = -1;
     private int playerID = -1;
