@@ -15,6 +15,7 @@ import net.survival.actor.Actor;
 import net.survival.actor.ActorSpace;
 import net.survival.actor.NpcActor;
 import net.survival.actor.PlayerActor;
+import net.survival.actor.message.ActorMessage;
 import net.survival.actor.message.HurtMessage;
 import net.survival.actor.message.JumpMessage;
 import net.survival.actor.message.MoveMessage;
@@ -43,7 +44,6 @@ import net.survival.client.ui.BasicUI;
 import net.survival.gen.InfiniteColumnGenerator;
 import net.survival.gen.decoration.WorldDecorator;
 import net.survival.input.Key;
-import net.survival.interaction.InteractionContext;
 import net.survival.particle.message.AddParticleEmitterMessage;
 import net.survival.particle.message.BurstParticlesMessage;
 import net.survival.particle.message.ParticleMessage;
@@ -75,17 +75,17 @@ public class Client implements AutoCloseable
     private final CompositeDisplay compositeDisplay;
     private final FpvCamera fpvCamera = new FpvCamera(new Vector3d(60.0, 72.0, 20.0), 0.0f, -1.0f);
 
-    private final Queue<MoveMessage> moveMessages = new LinkedList<>();
-    private final Queue<JumpMessage> jumpMessages = new LinkedList<>();
-    private final Queue<HurtMessage> hurtMessages = new LinkedList<>();
+    private final Queue<ActorMessage> actorMessages = new LinkedList<>();
     private final Queue<BlockMessage> blockMessages = new LinkedList<>();
     private final Queue<ParticleMessage> particleMessages = new LinkedList<>();
 
-    private final LocalBlockInteractionAdapter blockInteraction = new LocalBlockInteractionAdapter(blockSpace, blockMessages);
-    private final LocalParticleInteractionAdapter particleInteraction = new LocalParticleInteractionAdapter(particleSpace, particleMessages);
-    private final LocalTickInteractionAdapter tickInteraction = new LocalTickInteractionAdapter();
-    private final InteractionContext interactionContext = new InteractionContext(
-            blockInteraction, particleInteraction, tickInteraction);
+    private final LocalInteractionContext interactionContext = new LocalInteractionContext(
+            actorSpace,
+            blockSpace,
+            particleSpace,
+            actorMessages,
+            blockMessages,
+            particleMessages);
 
     private int npcID = -1;
     private int playerID = -1;
@@ -143,11 +143,11 @@ public class Client implements AutoCloseable
             fpvCamera.position.y += jsY * 20.0 * elapsedTime;
         }
         else {
-            moveMessages.add(new MoveMessage(playerID, jsX, jsZ));
+            actorMessages.add(new MoveMessage(playerID, jsX, jsZ));
         }
 
         if (playerID != -1 && Keyboard.isKeyPressed(Key.SPACE)) {
-            jumpMessages.add(new JumpMessage(playerID));
+            actorMessages.add(new JumpMessage(playerID));
         }
 
         //
@@ -161,21 +161,11 @@ public class Client implements AutoCloseable
         //
         // Actor System
         //
-        tickInteraction.setElapsedTime(elapsedTime);
+        interactionContext.setElapsedTime(elapsedTime);
 
-        while (!moveMessages.isEmpty()) {
-            MoveMessage moveMessage = moveMessages.remove();
-            moveMessage.accept(actorSpace.getActor(moveMessage.getDestActorID()), interactionContext);
-        }
-
-        while (!jumpMessages.isEmpty()) {
-            JumpMessage jumpMessage = jumpMessages.remove();
-            jumpMessage.accept(actorSpace.getActor(jumpMessage.getDestActorID()), interactionContext);
-        }
-
-        while (!hurtMessages.isEmpty()) {
-            HurtMessage hurtMessage = hurtMessages.remove();
-            hurtMessage.accept(actorSpace.getActor(hurtMessage.getDestActorID()), interactionContext);
+        while (!actorMessages.isEmpty()) {
+            ActorMessage message = actorMessages.remove();
+            message.accept(actorSpace.getActor(message.getDestActorID()), interactionContext);
         }
 
         for (Map.Entry<Integer, Actor> entry : actorSpace.iterateActorMap()) {
@@ -363,7 +353,7 @@ public class Client implements AutoCloseable
         }
 
         if (npcID != -1 && Keyboard.isKeyPressed(Key.K)) {
-            hurtMessages.add(new HurtMessage(npcID, 10.0));
+            actorMessages.add(new HurtMessage(npcID, 10.0));
         }
 
         if (Keyboard.isKeyPressed(Key._1))

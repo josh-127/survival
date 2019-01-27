@@ -1,40 +1,34 @@
 package net.survival.interaction;
 
+import net.survival.actor.message.ActorMessage;
+import net.survival.block.message.BlockMessage;
+import net.survival.block.message.BreakBlockMessage;
+import net.survival.block.message.PlaceBlockMessage;
 import net.survival.blocktype.Block;
+import net.survival.particle.message.BurstParticlesMessage;
+import net.survival.particle.message.ParticleMessage;
 
-public class InteractionContext
+public interface InteractionContext
 {
-    private final BlockInteractionAdapter blocks;
-    private final ParticleInteractionAdapter particles;
-    private final TickInteractionAdapter tick;
+    double getElapsedTime();
 
-    public InteractionContext(
-            BlockInteractionAdapter blocks,
-            ParticleInteractionAdapter particles,
-            TickInteractionAdapter tick)
-    {
-        this.blocks = blocks;
-        this.particles = particles;
-        this.tick = tick;
+    Block getBlock(int x, int y, int z);
+
+    void postMessage(ActorMessage message);
+
+    void postMessage(BlockMessage message);
+    
+    default void breakBlock(int x, int y, int z) {
+        postMessage(new BreakBlockMessage(x, y, z));
+    }
+    
+    default void placeBlock(int x, int y, int z, int fullID) {
+        postMessage(new PlaceBlockMessage(x, y, z, fullID));
     }
 
-    public double getElapsedTime() {
-        return tick.getElapsedTime();
-    }
+    void postMessage(ParticleMessage message);
 
-    public Block getBlock(int x, int y, int z) {
-        return blocks.getBlock(x, y, z);
-    }
-
-    public void breakBlock(int x, int y, int z) {
-        blocks.breakBlock(x, y, z);
-    }
-
-    public void placeBlock(int x, int y, int z, int fullID) {
-        blocks.placeBlock(x, y, z, fullID);
-    }
-
-    public void burstParticles(double x, double y, double z, double strength, int quantity) {
-        particles.burstParticles(x, y, z, strength, quantity);
+    default void burstParticles(double x, double y, double z, double strength, int quantity) {
+        postMessage(new BurstParticlesMessage(x, y, z, strength, quantity));
     }
 }
