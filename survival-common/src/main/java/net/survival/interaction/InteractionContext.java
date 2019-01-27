@@ -17,11 +17,11 @@ public interface InteractionContext
     void postMessage(ActorMessage message);
 
     void postMessage(BlockMessage message);
-    
+
     default void breakBlock(int x, int y, int z) {
         postMessage(new BreakBlockMessage(x, y, z));
     }
-    
+
     default void placeBlock(int x, int y, int z, int fullID) {
         postMessage(new PlaceBlockMessage(x, y, z, fullID));
     }
