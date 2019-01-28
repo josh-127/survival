@@ -36,10 +36,22 @@ public class NpcActor implements Actor
                     direction = 2.0 * Math.PI * Math.random();
             }
 
-            if (isWalking)
-                locomotion.setMovementDirection(Math.sin(direction), Math.cos(direction));
-            else
+            if (isWalking) {
+                final var DISTANCE = 1.4;
+                var x = locomotion.getX();
+                var y = locomotion.getY();
+                var z = locomotion.getZ();
+                var dx = Math.sin(direction);
+                var dz = Math.cos(direction);
+                if (ic.raycastBlock(x, y, z, dx * DISTANCE, -0.25, dz * DISTANCE) != null) {
+                    locomotion.jump(1.1);
+                }
+
+                locomotion.setMovementDirection(dx, dz);
+            }
+            else {
                 locomotion.setMovementDirection(0.0, 0.0);
+            }
 
             locomotion.tick(this, ic);
         }
