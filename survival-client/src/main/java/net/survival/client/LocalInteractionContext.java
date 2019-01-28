@@ -59,7 +59,7 @@ class LocalInteractionContext implements InteractionContext
         var targetY = y + dy;
         var targetZ = z + dz;
 
-        for (var t = 0.0; t <= 1.0; t += 0.01) {
+        for (var t = 0.0; t <= 1.0; t += 0.05) {
             var bx = (int) Math.floor(MathEx.lerp(x, targetX, t));
             var by = (int) Math.floor(MathEx.lerp(y, targetY, t));
             var bz = (int) Math.floor(MathEx.lerp(z, targetZ, t));
