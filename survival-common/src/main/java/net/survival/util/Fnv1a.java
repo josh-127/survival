@@ -1,3 +1,4 @@
+
 package net.survival.util;
 
 public class Fnv1a
@@ -8,14 +9,14 @@ public class Fnv1a
     private Fnv1a() {}
 
     public static int hash(int a) {
-        int result = OFFSET_BASIS;
+        var result = OFFSET_BASIS;
         result ^= a;
         result *= PRIME;
         return result;
     }
 
     public static int hash(int a, int b) {
-        int result = OFFSET_BASIS;
+        var result = OFFSET_BASIS;
         result ^= a;
         result *= PRIME;
         result ^= b;
@@ -24,7 +25,7 @@ public class Fnv1a
     }
 
     public static int hash(int a, int b, int c) {
-        int result = OFFSET_BASIS;
+        var result = OFFSET_BASIS;
         result ^= a;
         result *= PRIME;
         result ^= b;
@@ -35,7 +36,7 @@ public class Fnv1a
     }
 
     public static int hash(int a, int b, int c, int d) {
-        int result = OFFSET_BASIS;
+        var result = OFFSET_BASIS;
         result ^= a;
         result *= PRIME;
         result ^= b;

@@ -27,31 +27,31 @@ public class ImprovedNoiseGenerator3D
     }
 
     public void generate(DoubleMap3D map, double offsetX, double offsetY, double offsetZ) {
-        for (int y = 0; y < map.lengthY; ++y) {
-            for (int z = 0; z < map.lengthZ; ++z) {
-                for (int x = 0; x < map.lengthX; ++x)
+        for (var y = 0; y < map.lengthY; ++y) {
+            for (var z = 0; z < map.lengthZ; ++z) {
+                for (var x = 0; x < map.lengthX; ++x)
                     map.setPoint(x, y, z, 0.0);
             }
         }
 
-        double octaveScale = 1.0;
+        var octaveScale = 1.0;
 
-        for (int o = 0; o < octaveCount; ++o) {
-            double octaveScaleX = scaleX * octaveScale;
-            double octaveScaleY = scaleY * octaveScale;
-            double octaveScaleZ = scaleZ * octaveScale;
-            double invOctaveScale = 1.0 / octaveScale;
+        for (var o = 0; o < octaveCount; ++o) {
+            var octaveScaleX = scaleX * octaveScale;
+            var octaveScaleY = scaleY * octaveScale;
+            var octaveScaleZ = scaleZ * octaveScale;
+            var invOctaveScale = 1.0 / octaveScale;
 
-            for (int y = 0; y < map.lengthY; ++y) {
-                double noisePosY = (offsetY + y) * octaveScaleY;
+            for (var y = 0; y < map.lengthY; ++y) {
+                var noisePosY = (offsetY + y) * octaveScaleY;
 
-                for (int z = 0; z < map.lengthZ; ++z) {
-                    double noisePosZ = (offsetZ + z) * octaveScaleZ;
+                for (var z = 0; z < map.lengthZ; ++z) {
+                    var noisePosZ = (offsetZ + z) * octaveScaleZ;
 
-                    for (int x = 0; x < map.lengthX; ++x) {
-                        double noisePosX = (offsetX + x) * octaveScaleX;
-                        double prevOctave = map.sampleNearest(x, y, z);
-                        double currentOctave = valueAt(noisePosX, noisePosY, noisePosZ)
+                    for (var x = 0; x < map.lengthX; ++x) {
+                        var noisePosX = (offsetX + x) * octaveScaleX;
+                        var prevOctave = map.sampleNearest(x, y, z);
+                        var currentOctave = valueAt(noisePosX, noisePosY, noisePosZ)
                                 * invOctaveScale;
 
                         map.setPoint(x, y, z, prevOctave + currentOctave);
@@ -63,10 +63,10 @@ public class ImprovedNoiseGenerator3D
         }
 
         if (octaveCount > 1) {
-            double clamper = 1.0 / (2.0 - 1.0 / octaveScale);
-            for (int y = 0; y < map.lengthY; ++y) {
-                for (int z = 0; z < map.lengthZ; ++z) {
-                    for (int x = 0; x < map.lengthX; ++x)
+            var clamper = 1.0 / (2.0 - 1.0 / octaveScale);
+            for (var y = 0; y < map.lengthY; ++y) {
+                for (var z = 0; z < map.lengthZ; ++z) {
+                    for (var x = 0; x < map.lengthX; ++x)
                         map.setPoint(x, y, z, map.sampleNearest(x, y, z) * clamper);
                 }
             }
@@ -74,45 +74,45 @@ public class ImprovedNoiseGenerator3D
     }
 
     private double valueAt(double x, double y, double z) {
-        double floorX = Math.floor(x);
-        double floorY = Math.floor(y);
-        double floorZ = Math.floor(z);
-        int indexX = ((int) floorX) & 255;
-        int indexY = ((int) floorY) & 255;
-        int indexZ = ((int) floorZ) & 255;
+        var floorX = Math.floor(x);
+        var floorY = Math.floor(y);
+        var floorZ = Math.floor(z);
+        var indexX = ((int) floorX) & 255;
+        var indexY = ((int) floorY) & 255;
+        var indexZ = ((int) floorZ) & 255;
 
-        int permY     = permutations[indexY];
-        int permY_Z   = permutations[permY + indexZ];
-        int permY_NZ  = permutations[permY + indexZ + 1];
-        int permNY    = permutations[indexY + 1];
-        int permNY_Z  = permutations[permNY + indexZ];
-        int permNY_NZ = permutations[permNY + indexZ + 1];
+        var permY     = permutations[indexY];
+        var permY_Z   = permutations[permY + indexZ];
+        var permY_NZ  = permutations[permY + indexZ + 1];
+        var permNY    = permutations[indexY + 1];
+        var permNY_Z  = permutations[permNY + indexZ];
+        var permNY_NZ = permutations[permNY + indexZ + 1];
 
-        int hashBBL = permutations[permY_Z   + indexX    ];
-        int hashBBR = permutations[permY_Z   + indexX + 1];
-        int hashBFL = permutations[permY_NZ  + indexX    ];
-        int hashBFR = permutations[permY_NZ  + indexX + 1];
-        int hashTBL = permutations[permNY_Z  + indexX    ];
-        int hashTBR = permutations[permNY_Z  + indexX + 1];
-        int hashTFL = permutations[permNY_NZ + indexX    ];
-        int hashTFR = permutations[permNY_NZ + indexX + 1];
+        var hashBBL = permutations[permY_Z   + indexX    ];
+        var hashBBR = permutations[permY_Z   + indexX + 1];
+        var hashBFL = permutations[permY_NZ  + indexX    ];
+        var hashBFR = permutations[permY_NZ  + indexX + 1];
+        var hashTBL = permutations[permNY_Z  + indexX    ];
+        var hashTBR = permutations[permNY_Z  + indexX + 1];
+        var hashTFL = permutations[permNY_NZ + indexX    ];
+        var hashTFR = permutations[permNY_NZ + indexX + 1];
 
-        double fracX = x - floorX;
-        double fracY = y - floorY;
-        double fracZ = z - floorZ;
+        var fracX = x - floorX;
+        var fracY = y - floorY;
+        var fracZ = z - floorZ;
 
-        double dotBBL = dotProductOfGradientAndDistance(hashBBL, fracX,       fracY,       fracZ      );
-        double dotBBR = dotProductOfGradientAndDistance(hashBBR, fracX - 1.0, fracY,       fracZ      );
-        double dotBFL = dotProductOfGradientAndDistance(hashBFL, fracX,       fracY,       fracZ - 1.0);
-        double dotBFR = dotProductOfGradientAndDistance(hashBFR, fracX - 1.0, fracY,       fracZ - 1.0);
-        double dotTBL = dotProductOfGradientAndDistance(hashTBL, fracX,       fracY - 1.0, fracZ      );
-        double dotTBR = dotProductOfGradientAndDistance(hashTBR, fracX - 1.0, fracY - 1.0, fracZ      );
-        double dotTFL = dotProductOfGradientAndDistance(hashTFL, fracX,       fracY - 1.0, fracZ - 1.0);
-        double dotTFR = dotProductOfGradientAndDistance(hashTFR, fracX - 1.0, fracY - 1.0, fracZ - 1.0);
+        var dotBBL = dotProductOfGradientAndDistance(hashBBL, fracX,       fracY,       fracZ      );
+        var dotBBR = dotProductOfGradientAndDistance(hashBBR, fracX - 1.0, fracY,       fracZ      );
+        var dotBFL = dotProductOfGradientAndDistance(hashBFL, fracX,       fracY,       fracZ - 1.0);
+        var dotBFR = dotProductOfGradientAndDistance(hashBFR, fracX - 1.0, fracY,       fracZ - 1.0);
+        var dotTBL = dotProductOfGradientAndDistance(hashTBL, fracX,       fracY - 1.0, fracZ      );
+        var dotTBR = dotProductOfGradientAndDistance(hashTBR, fracX - 1.0, fracY - 1.0, fracZ      );
+        var dotTFL = dotProductOfGradientAndDistance(hashTFL, fracX,       fracY - 1.0, fracZ - 1.0);
+        var dotTFR = dotProductOfGradientAndDistance(hashTFR, fracX - 1.0, fracY - 1.0, fracZ - 1.0);
 
-        double fadeX = fade(fracX);
-        double fadeY = fade(fracY);
-        double fadeZ = fade(fracZ);
+        var fadeX = fade(fracX);
+        var fadeY = fade(fracY);
+        var fadeZ = fade(fracZ);
 
         return
             lerp(

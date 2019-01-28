@@ -23,25 +23,25 @@ public class ImprovedNoiseGenerator2D
     }
 
     public void generate(DoubleMap2D map, double offsetX, double offsetZ) {
-        for (int z = 0; z < map.lengthZ; ++z) {
-            for (int x = 0; x < map.lengthX; ++x)
+        for (var z = 0; z < map.lengthZ; ++z) {
+            for (var x = 0; x < map.lengthX; ++x)
                 map.setPoint(x, z, 0.0);
         }
 
-        double octaveScale = 1.0;
+        var octaveScale = 1.0;
 
-        for (int o = 0; o < octaveCount; ++o) {
-            double octaveScaleX = scaleX * octaveScale;
-            double octaveScaleZ = scaleZ * octaveScale;
-            double invOctaveScale = 1.0 / octaveScale;
+        for (var o = 0; o < octaveCount; ++o) {
+            var octaveScaleX = scaleX * octaveScale;
+            var octaveScaleZ = scaleZ * octaveScale;
+            var invOctaveScale = 1.0 / octaveScale;
 
-            for (int z = 0; z < map.lengthZ; ++z) {
-                double noisePosZ = (offsetZ + z) * octaveScaleZ;
+            for (var z = 0; z < map.lengthZ; ++z) {
+                var noisePosZ = (offsetZ + z) * octaveScaleZ;
 
-                for (int x = 0; x < map.lengthX; ++x) {
-                    double noisePosX = (offsetX + x) * octaveScaleX;
-                    double prevOctave = map.sampleNearest(x, z);
-                    double currentOctave = valueAt(noisePosX, noisePosZ) * invOctaveScale;
+                for (var x = 0; x < map.lengthX; ++x) {
+                    var noisePosX = (offsetX + x) * octaveScaleX;
+                    var prevOctave = map.sampleNearest(x, z);
+                    var currentOctave = valueAt(noisePosX, noisePosZ) * invOctaveScale;
 
                     map.setPoint(x, z, prevOctave + currentOctave);
                 }
@@ -51,35 +51,35 @@ public class ImprovedNoiseGenerator2D
         }
 
         if (octaveCount > 1) {
-            double clamper = 1.0 / (2.0 - 1.0 / octaveScale);
-            for (int z = 0; z < map.lengthZ; ++z) {
-                for (int x = 0; x < map.lengthX; ++x)
+            var clamper = 1.0 / (2.0 - 1.0 / octaveScale);
+            for (var z = 0; z < map.lengthZ; ++z) {
+                for (var x = 0; x < map.lengthX; ++x)
                     map.setPoint(x, z, map.sampleNearest(x, z) * clamper);
             }
         }
     }
 
     private double valueAt(double x, double z) {
-        double floorX = Math.floor(x);
-        double floorZ = Math.floor(z);
-        int indexX = ((int) floorX) & 255;
-        int indexZ = ((int) floorZ) & 255;
+        var floorX = Math.floor(x);
+        var floorZ = Math.floor(z);
+        var indexX = ((int) floorX) & 255;
+        var indexZ = ((int) floorZ) & 255;
 
-        int hashTL = permutations[permutations[indexZ] + indexX];
-        int hashTR = permutations[permutations[indexZ] + indexX + 1];
-        int hashBL = permutations[permutations[indexZ + 1] + indexX];
-        int hashBR = permutations[permutations[indexZ + 1] + indexX + 1];
+        var hashTL = permutations[permutations[indexZ] + indexX];
+        var hashTR = permutations[permutations[indexZ] + indexX + 1];
+        var hashBL = permutations[permutations[indexZ + 1] + indexX];
+        var hashBR = permutations[permutations[indexZ + 1] + indexX + 1];
 
-        double fracX = x - floorX;
-        double fracZ = z - floorZ;
+        var fracX = x - floorX;
+        var fracZ = z - floorZ;
 
-        double dotTL = dotProductOfGradientAndDistance(hashTL, fracX, fracZ);
-        double dotTR = dotProductOfGradientAndDistance(hashTR, fracX - 1.0, fracZ);
-        double dotBL = dotProductOfGradientAndDistance(hashBL, fracX, fracZ - 1.0);
-        double dotBR = dotProductOfGradientAndDistance(hashBR, fracX - 1.0, fracZ - 1.0);
+        var dotTL = dotProductOfGradientAndDistance(hashTL, fracX, fracZ);
+        var dotTR = dotProductOfGradientAndDistance(hashTR, fracX - 1.0, fracZ);
+        var dotBL = dotProductOfGradientAndDistance(hashBL, fracX, fracZ - 1.0);
+        var dotBR = dotProductOfGradientAndDistance(hashBR, fracX - 1.0, fracZ - 1.0);
 
-        double fadeX = fade(fracX);
-        double fadeZ = fade(fracZ);
+        var fadeX = fade(fracX);
+        var fadeZ = fade(fracZ);
 
         return lerp(lerp(dotTL, dotTR, fadeX), lerp(dotBL, dotBR, fadeX), fadeZ);
     }

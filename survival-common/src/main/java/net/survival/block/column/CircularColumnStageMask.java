@@ -28,13 +28,13 @@ public class CircularColumnStageMask implements ColumnStageMask
     private void forceSetCenter(int offsetCX, int offsetCZ) {
         columnPositions.clear();
 
-        int radiusSquared = radius * radius;
+        var radiusSquared = radius * radius;
 
-        for (int z = -radius; z < radius; ++z) {
-            for (int x = -radius; x < radius; ++x) {
+        for (var z = -radius; z < radius; ++z) {
+            for (var x = -radius; x < radius; ++x) {
                 if (squareDistance(x, z) <= radiusSquared) {
-                    int cx = offsetCX + x;
-                    int cz = offsetCZ + z;
+                    var cx = offsetCX + x;
+                    var cz = offsetCZ + z;
                     columnPositions.add(ColumnPos.hashPos(cx, cz));
                 }
             }

@@ -8,46 +8,46 @@ public class DoubleNoise
     private DoubleNoise() {}
 
     public static double white(double x, long seed) {
-        int xi = (int) Math.floor(x);
-        int intValue = IntNoise.white(xi, seed);
+        var xi = (int) Math.floor(x);
+        var intValue = IntNoise.white(xi, seed);
         return (double) intValue / Integer.MAX_VALUE;
     }
 
     public static double white2D(double x, double y, long seed) {
-        int xi = (int) Math.floor(x);
-        int yi = (int) Math.floor(y);
-        int intValue = IntNoise.white2D(xi, yi, seed);
+        var xi = (int) Math.floor(x);
+        var yi = (int) Math.floor(y);
+        var intValue = IntNoise.white2D(xi, yi, seed);
         return (double) intValue / Integer.MAX_VALUE;
     }
 
     public static double white3D(double x, double y, double z, long seed) {
-        int xi = (int) Math.floor(x);
-        int yi = (int) Math.floor(y);
-        int zi = (int) Math.floor(z);
-        int intValue = IntNoise.white3D(xi, yi, zi, seed);
+        var xi = (int) Math.floor(x);
+        var yi = (int) Math.floor(y);
+        var zi = (int) Math.floor(z);
+        var intValue = IntNoise.white3D(xi, yi, zi, seed);
         return (double) intValue / Integer.MAX_VALUE;
     }
 
     public static double linear(double x, long seed) {
-        double a = white(floor(x), seed);
-        double b = white(ceil(x), seed);
-        double t = x - Math.floor(x);
+        var a = white(floor(x), seed);
+        var b = white(ceil(x), seed);
+        var t = x - Math.floor(x);
         return lerp(a, b, t);
     }
 
     public static double linear2D(double x, double y, long seed) {
-        double xt = x - floor(x);
-        double yt = y - floor(y);
+        var xt = x - floor(x);
+        var yt = y - floor(y);
 
-        double tl = white2D(floor(x), floor(y), seed);
-        double tr = white2D(ceil(x), floor(y), seed);
-        double bl = white2D(floor(x), ceil(y), seed);
-        double br = white2D(ceil(x), ceil(y), seed);
+        var tl = white2D(floor(x), floor(y), seed);
+        var tr = white2D(ceil(x), floor(y), seed);
+        var bl = white2D(floor(x), ceil(y), seed);
+        var br = white2D(ceil(x), ceil(y), seed);
 
-        double top = lerp(tl, tr, xt);
-        double bottom = lerp(bl, br, xt);
+        var top = lerp(tl, tr, xt);
+        var bottom = lerp(bl, br, xt);
 
-        double value = lerp(top, bottom, yt);
+        var value = lerp(top, bottom, yt);
         return value;
     }
 
@@ -57,160 +57,160 @@ public class DoubleNoise
         // *FL: front-left (-x, +z)
         // *FR: front-right (+x, +z)
 
-        double xf = floor(x);
-        double yf = floor(y);
-        double zf = floor(z);
-        double xt = x - xf;
-        double yt = y - yf;
-        double zt = z - zf;
+        var xf = floor(x);
+        var yf = floor(y);
+        var zf = floor(z);
+        var xt = x - xf;
+        var yt = y - yf;
+        var zt = z - zf;
 
-        double bottomBL = white3D(xf, yf, zf, seed);
-        double bottomBR = white3D(xf + 1.0, yf, zf, seed);
-        double bottomFL = white3D(xf, yf, zf + 1.0, seed);
-        double bottomFR = white3D(xf + 1.0, yf, zf + 1.0, seed);
+        var bottomBL = white3D(xf, yf, zf, seed);
+        var bottomBR = white3D(xf + 1.0, yf, zf, seed);
+        var bottomFL = white3D(xf, yf, zf + 1.0, seed);
+        var bottomFR = white3D(xf + 1.0, yf, zf + 1.0, seed);
 
-        double topBL = white3D(xf, yf + 1.0, zf, seed);
-        double topBR = white3D(xf + 1.0, yf + 1.0, zf, seed);
-        double topFL = white3D(xf, yf + 1.0, zf + 1.0, seed);
-        double topFR = white3D(xf + 1.0, yf + 1.0, zf + 1.0, seed);
+        var topBL = white3D(xf, yf + 1.0, zf, seed);
+        var topBR = white3D(xf + 1.0, yf + 1.0, zf, seed);
+        var topFL = white3D(xf, yf + 1.0, zf + 1.0, seed);
+        var topFR = white3D(xf + 1.0, yf + 1.0, zf + 1.0, seed);
 
-        double bottomB = lerp(bottomBL, bottomBR, xt);
-        double bottomF = lerp(bottomFL, bottomFR, xt);
-        double bottom = lerp(bottomB, bottomF, zt);
+        var bottomB = lerp(bottomBL, bottomBR, xt);
+        var bottomF = lerp(bottomFL, bottomFR, xt);
+        var bottom = lerp(bottomB, bottomF, zt);
 
-        double topB = lerp(topBL, topBR, xt);
-        double topF = lerp(topFL, topFR, xt);
-        double top = lerp(topB, topF, zt);
+        var topB = lerp(topBL, topBR, xt);
+        var topF = lerp(topFL, topFR, xt);
+        var top = lerp(topB, topF, zt);
 
-        double value = lerp(bottom, top, yt);
+        var value = lerp(bottom, top, yt);
         return value;
     }
 
     public static double perlinOctave2D(double x, double y, long seed) {
-        double xf = floor(x);
-        double yf = floor(y);
-        double xt = x - xf;
-        double yt = y - yf;
+        var xf = floor(x);
+        var yf = floor(y);
+        var xt = x - xf;
+        var yt = y - yf;
 
-        double tlGradX = white2D(xf, yf, seed);
-        double tlGradY = white2D(xf, yf, seed + 1L);
-        double trGradX = white2D(xf + 1.0, yf, seed);
-        double trGradY = white2D(xf + 1.0, yf, seed + 1L);
-        double blGradX = white2D(xf, yf + 1.0, seed);
-        double blGradY = white2D(xf, yf + 1.0, seed + 1L);
-        double brGradX = white2D(xf + 1.0, yf + 1.0, seed);
-        double brGradY = white2D(xf + 1.0, yf + 1.0, seed + 1L);
+        var tlGradX = white2D(xf, yf, seed);
+        var tlGradY = white2D(xf, yf, seed + 1L);
+        var trGradX = white2D(xf + 1.0, yf, seed);
+        var trGradY = white2D(xf + 1.0, yf, seed + 1L);
+        var blGradX = white2D(xf, yf + 1.0, seed);
+        var blGradY = white2D(xf, yf + 1.0, seed + 1L);
+        var brGradX = white2D(xf + 1.0, yf + 1.0, seed);
+        var brGradY = white2D(xf + 1.0, yf + 1.0, seed + 1L);
 
-        double tlDistX = xt;
-        double tlDistY = yt;
-        double trDistX = -(1.0 - xt);
-        double trDistY = yt;
-        double blDistX = xt;
-        double blDistY = -(1.0 - yt);
-        double brDistX = -(1.0 - xt);
-        double brDistY = -(1.0 - yt);
+        var tlDistX = xt;
+        var tlDistY = yt;
+        var trDistX = -(1.0 - xt);
+        var trDistY = yt;
+        var blDistX = xt;
+        var blDistY = -(1.0 - yt);
+        var brDistX = -(1.0 - xt);
+        var brDistY = -(1.0 - yt);
 
-        double tlDotProduct = (tlGradX * tlDistX) + (tlGradY * tlDistY);
-        double trDotProduct = (trGradX * trDistX) + (trGradY * trDistY);
-        double blDotProduct = (blGradX * blDistX) + (blGradY * blDistY);
-        double brDotProduct = (brGradX * brDistX) + (brGradY * brDistY);
+        var tlDotProduct = (tlGradX * tlDistX) + (tlGradY * tlDistY);
+        var trDotProduct = (trGradX * trDistX) + (trGradY * trDistY);
+        var blDotProduct = (blGradX * blDistX) + (blGradY * blDistY);
+        var brDotProduct = (brGradX * brDistX) + (brGradY * brDistY);
 
-        double interpX = perlinFade(xt);
-        double interpY = perlinFade(yt);
+        var interpX = perlinFade(xt);
+        var interpY = perlinFade(yt);
 
-        double top = lerp(tlDotProduct, trDotProduct, interpX);
-        double bottom = lerp(blDotProduct, brDotProduct, interpX);
+        var top = lerp(tlDotProduct, trDotProduct, interpX);
+        var bottom = lerp(blDotProduct, brDotProduct, interpX);
 
-        double value = lerp(top, bottom, interpY);
+        var value = lerp(top, bottom, interpY);
         return value;
     }
 
     public static double perlinOctave3D(double x, double y, double z, long seed) {
-        double xf = floor(x);
-        double yf = floor(y);
-        double zf = floor(z);
-        double ceilX = xf + 1.0;
-        double ceilY = yf + 1.0;
-        double ceilZ = zf + 1.0;
-        double xt = x - xf;
-        double yt = y - yf;
-        double zt = z - zf;
+        var xf = floor(x);
+        var yf = floor(y);
+        var zf = floor(z);
+        var ceilX = xf + 1.0;
+        var ceilY = yf + 1.0;
+        var ceilZ = zf + 1.0;
+        var xt = x - xf;
+        var yt = y - yf;
+        var zt = z - zf;
 
-        long seed1 = seed + 1L;
-        long seed2 = seed + 2L;
+        var seed1 = seed + 1L;
+        var seed2 = seed + 2L;
 
         // b**: -Y, t**: +Y
         // *b*: -Z, *f*: +Z
         // **l: -X, **r: +X
-        double bblGradX = white3D(xf, yf, zf, seed);
-        double bblGradY = white3D(xf, yf, zf, seed1);
-        double bblGradZ = white3D(xf, yf, zf, seed2);
-        double bbrGradX = white3D(ceilX, yf, zf, seed);
-        double bbrGradY = white3D(ceilX, yf, zf, seed1);
-        double bbrGradZ = white3D(ceilX, yf, zf, seed2);
-        double bflGradX = white3D(xf, yf, ceilZ, seed);
-        double bflGradY = white3D(xf, yf, ceilZ, seed1);
-        double bflGradZ = white3D(xf, yf, ceilZ, seed2);
-        double bfrGradX = white3D(ceilX, yf, ceilZ, seed);
-        double bfrGradY = white3D(ceilX, yf, ceilZ, seed1);
-        double bfrGradZ = white3D(ceilX, yf, ceilZ, seed2);
-        double tblGradX = white3D(xf, ceilY, zf, seed);
-        double tblGradY = white3D(xf, ceilY, zf, seed1);
-        double tblGradZ = white3D(xf, ceilY, zf, seed2);
-        double tbrGradX = white3D(ceilX, ceilY, zf, seed);
-        double tbrGradY = white3D(ceilX, ceilY, zf, seed1);
-        double tbrGradZ = white3D(ceilX, ceilY, zf, seed2);
-        double tflGradX = white3D(xf, ceilY, ceilZ, seed);
-        double tflGradY = white3D(xf, ceilY, ceilZ, seed1);
-        double tflGradZ = white3D(xf, ceilY, ceilZ, seed2);
-        double tfrGradX = white3D(ceilX, ceilY, ceilZ, seed);
-        double tfrGradY = white3D(ceilX, ceilY, ceilZ, seed1);
-        double tfrGradZ = white3D(ceilX, ceilY, ceilZ, seed2);
+        var bblGradX = white3D(xf, yf, zf, seed);
+        var bblGradY = white3D(xf, yf, zf, seed1);
+        var bblGradZ = white3D(xf, yf, zf, seed2);
+        var bbrGradX = white3D(ceilX, yf, zf, seed);
+        var bbrGradY = white3D(ceilX, yf, zf, seed1);
+        var bbrGradZ = white3D(ceilX, yf, zf, seed2);
+        var bflGradX = white3D(xf, yf, ceilZ, seed);
+        var bflGradY = white3D(xf, yf, ceilZ, seed1);
+        var bflGradZ = white3D(xf, yf, ceilZ, seed2);
+        var bfrGradX = white3D(ceilX, yf, ceilZ, seed);
+        var bfrGradY = white3D(ceilX, yf, ceilZ, seed1);
+        var bfrGradZ = white3D(ceilX, yf, ceilZ, seed2);
+        var tblGradX = white3D(xf, ceilY, zf, seed);
+        var tblGradY = white3D(xf, ceilY, zf, seed1);
+        var tblGradZ = white3D(xf, ceilY, zf, seed2);
+        var tbrGradX = white3D(ceilX, ceilY, zf, seed);
+        var tbrGradY = white3D(ceilX, ceilY, zf, seed1);
+        var tbrGradZ = white3D(ceilX, ceilY, zf, seed2);
+        var tflGradX = white3D(xf, ceilY, ceilZ, seed);
+        var tflGradY = white3D(xf, ceilY, ceilZ, seed1);
+        var tflGradZ = white3D(xf, ceilY, ceilZ, seed2);
+        var tfrGradX = white3D(ceilX, ceilY, ceilZ, seed);
+        var tfrGradY = white3D(ceilX, ceilY, ceilZ, seed1);
+        var tfrGradZ = white3D(ceilX, ceilY, ceilZ, seed2);
 
-        double topDistY = yt - 1.0;
-        double bottomDistY = yt;
-        double leftDistX = xt;
-        double rightDistX = xt - 1.0;
-        double backDistZ = zt;
-        double frontDistZ = zt - 1.0;
+        var topDistY = yt - 1.0;
+        var bottomDistY = yt;
+        var leftDistX = xt;
+        var rightDistX = xt - 1.0;
+        var backDistZ = zt;
+        var frontDistZ = zt - 1.0;
 
-        double bblDotProduct = (bblGradX * leftDistX) + (bblGradY * bottomDistY)
+        var bblDotProduct = (bblGradX * leftDistX) + (bblGradY * bottomDistY)
                 + (bblGradZ * backDistZ);
-        double bbrDotProduct = (bbrGradX * rightDistX) + (bbrGradY * bottomDistY)
+        var bbrDotProduct = (bbrGradX * rightDistX) + (bbrGradY * bottomDistY)
                 + (bbrGradZ * backDistZ);
-        double bflDotProduct = (bflGradX * leftDistX) + (bflGradY * bottomDistY)
+        var bflDotProduct = (bflGradX * leftDistX) + (bflGradY * bottomDistY)
                 + (bflGradZ * frontDistZ);
-        double bfrDotProduct = (bfrGradX * rightDistX) + (bfrGradY * bottomDistY)
+        var bfrDotProduct = (bfrGradX * rightDistX) + (bfrGradY * bottomDistY)
                 + (bfrGradZ * frontDistZ);
-        double tblDotProduct = (tblGradX * leftDistX) + (tblGradY * topDistY)
+        var tblDotProduct = (tblGradX * leftDistX) + (tblGradY * topDistY)
                 + (tblGradZ * backDistZ);
-        double tbrDotProduct = (tbrGradX * rightDistX) + (tbrGradY * topDistY)
+        var tbrDotProduct = (tbrGradX * rightDistX) + (tbrGradY * topDistY)
                 + (tbrGradZ * backDistZ);
-        double tflDotProduct = (tflGradX * leftDistX) + (tflGradY * topDistY)
+        var tflDotProduct = (tflGradX * leftDistX) + (tflGradY * topDistY)
                 + (tflGradZ * frontDistZ);
-        double tfrDotProduct = (tfrGradX * rightDistX) + (tfrGradY * topDistY)
+        var tfrDotProduct = (tfrGradX * rightDistX) + (tfrGradY * topDistY)
                 + (tfrGradZ * frontDistZ);
 
-        double interpX = perlinFade(xt);
-        double interpY = perlinFade(yt);
-        double interpZ = perlinFade(zt);
+        var interpX = perlinFade(xt);
+        var interpY = perlinFade(yt);
+        var interpZ = perlinFade(zt);
 
-        double bottomBack = lerp(bblDotProduct, bbrDotProduct, interpX);
-        double bottomFront = lerp(bflDotProduct, bfrDotProduct, interpX);
-        double bottom = lerp(bottomBack, bottomFront, interpZ);
-        double topBack = lerp(tblDotProduct, tbrDotProduct, interpX);
-        double topFront = lerp(tflDotProduct, tfrDotProduct, interpX);
-        double top = lerp(topBack, topFront, interpZ);
+        var bottomBack = lerp(bblDotProduct, bbrDotProduct, interpX);
+        var bottomFront = lerp(bflDotProduct, bfrDotProduct, interpX);
+        var bottom = lerp(bottomBack, bottomFront, interpZ);
+        var topBack = lerp(tblDotProduct, tbrDotProduct, interpX);
+        var topFront = lerp(tflDotProduct, tfrDotProduct, interpX);
+        var top = lerp(topBack, topFront, interpZ);
 
-        double value = lerp(bottom, top, interpY);
+        var value = lerp(bottom, top, interpY);
         return value;
     }
 
     public static double perlin2D(double x, double y, int octaveCount, long seed) {
-        double value = 0.0;
-        double scale = 1.0;
+        var value = 0.0;
+        var scale = 1.0;
 
-        for (int i = 0; i < octaveCount; ++i) {
+        for (var i = 0; i < octaveCount; ++i) {
             value += perlinOctave2D(x * scale, y * scale, seed) / scale;
             scale *= 2.0;
         }
@@ -220,10 +220,10 @@ public class DoubleNoise
     }
 
     public static double perlin3D(double x, double y, double z, int octaveCount, long seed) {
-        double value = 0.0;
-        double scale = 1.0;
+        var value = 0.0;
+        var scale = 1.0;
 
-        for (int i = 0; i < octaveCount; ++i) {
+        for (var i = 0; i < octaveCount; ++i) {
             value += perlinOctave3D(x * scale, y * scale, z * scale, seed) / scale;
             scale *= 2.0;
         }

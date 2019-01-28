@@ -23,7 +23,7 @@ public class Chunk implements BlockStorage
     }
 
     public Chunk makeCopy() {
-        int[] copyOfBlockIDs = Arrays.copyOf(blockIDs, VOLUME);
+        var copyOfBlockIDs = Arrays.copyOf(blockIDs, VOLUME);
         return new Chunk(copyOfBlockIDs);
     }
 

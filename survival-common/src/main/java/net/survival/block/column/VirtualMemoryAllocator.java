@@ -25,12 +25,12 @@ class VirtualMemoryAllocator
         if (length >= VirtualAllocationUnit.MAX_LENGTH)
             throw new IllegalArgumentException("Precondition is not met: length < MAX_LENGTH.");
 
-        for (int i = 0; i < implicitFreeList.size(); ++i) {
-            VirtualAllocationUnit vau = implicitFreeList.get(i);
+        for (var i = 0; i < implicitFreeList.size(); ++i) {
+            var vau = implicitFreeList.get(i);
 
             if (!vau.allocated) {
                 if (length < vau.length) {
-                    VirtualAllocationUnit newVau = new VirtualAllocationUnit(vau.address, length, true);
+                    var newVau = new VirtualAllocationUnit(vau.address, length, true);
 
                     vau.address += length;
                     vau.length -= length;
@@ -49,17 +49,17 @@ class VirtualMemoryAllocator
     }
 
     public void freeMemory(long address) {
-        for (int i = 0; i < implicitFreeList.size(); ++i) {
-            VirtualAllocationUnit vau = implicitFreeList.get(i);
+        for (var i = 0; i < implicitFreeList.size(); ++i) {
+            var vau = implicitFreeList.get(i);
 
             if (vau.allocated && vau.address == address) {
                 vau.allocated = false;
 
-                int nextIndex = i + 1;
-                int previousIndex = i - 1;
+                var nextIndex = i + 1;
+                var previousIndex = i - 1;
 
                 if (nextIndex < implicitFreeList.size()) {
-                    VirtualAllocationUnit nextVau = implicitFreeList.get(nextIndex);
+                    var nextVau = implicitFreeList.get(nextIndex);
 
                     if (!nextVau.allocated) {
                         vau.length += nextVau.length;
@@ -68,7 +68,7 @@ class VirtualMemoryAllocator
                 }
 
                 if (previousIndex >= 0) {
-                    VirtualAllocationUnit previousVau = implicitFreeList.get(previousIndex);
+                    var previousVau = implicitFreeList.get(previousIndex);
 
                     if (!previousVau.allocated) {
                         vau.address -= previousVau.length;
@@ -90,8 +90,8 @@ class VirtualMemoryAllocator
     public void writeTo(ByteBuffer buffer) {
         buffer.putInt(implicitFreeList.size());
 
-        for (int i = 0; i < implicitFreeList.size(); ++i) {
-            VirtualAllocationUnit vau = implicitFreeList.get(i);
+        for (var i = 0; i < implicitFreeList.size(); ++i) {
+            var vau = implicitFreeList.get(i);
             vau.writeTo(buffer);
         }
     }
@@ -99,9 +99,9 @@ class VirtualMemoryAllocator
     public void readFrom(ByteBuffer buffer) {
         implicitFreeList.clear();
 
-        int vauCount = buffer.getInt();
-        for (int i = 0; i < vauCount; ++i) {
-            VirtualAllocationUnit vau = new VirtualAllocationUnit();
+        var vauCount = buffer.getInt();
+        for (var i = 0; i < vauCount; ++i) {
+            var vau = new VirtualAllocationUnit();
             vau.readFrom(buffer);
             implicitFreeList.add(vau);
         }
@@ -116,8 +116,8 @@ class VirtualMemoryAllocator
     }
 
     public long size() {
-        int index = implicitFreeList.size() - 1;
-        VirtualAllocationUnit lastVau = implicitFreeList.get(index);
+        var index = implicitFreeList.size() - 1;
+        var lastVau = implicitFreeList.get(index);
 
         while (index >= 0 && !lastVau.allocated)
             lastVau = implicitFreeList.get(index--);

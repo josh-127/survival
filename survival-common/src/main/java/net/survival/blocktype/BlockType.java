@@ -75,8 +75,8 @@ public final class BlockType
     }
 
     public static Block byFullID(int fullID) {
-        short typeID = (short) ((fullID & 0xFFFF0000) >>> 16);
-        short encodedState = (short) (fullID & 0xFFFF);
+        var typeID = (short) ((fullID & 0xFFFF0000) >>> 16);
+        var encodedState = (short) (fullID & 0xFFFF);
         return blocks[typeID].withState(encodedState);
     }
 

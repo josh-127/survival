@@ -64,12 +64,12 @@ public class InfiniteColumnGenerator implements ColumnProvider
 
     @Override
     public Column provideColumn(long hashedPos) {
-        int cx = ColumnPos.columnXFromHashedPos(hashedPos);
-        int cz = ColumnPos.columnZFromHashedPos(hashedPos);
-        int offsetX = cx * (NMAP_XLENGTH - 1);
-        int offsetZ = cz * (NMAP_ZLENGTH - 1);
-        int globalX = ColumnPos.toGlobalX(cx, 0);
-        int globalZ = ColumnPos.toGlobalZ(cz, 0);
+        var cx = ColumnPos.columnXFromHashedPos(hashedPos);
+        var cz = ColumnPos.columnZFromHashedPos(hashedPos);
+        var offsetX = cx * (NMAP_XLENGTH - 1);
+        var offsetZ = cz * (NMAP_ZLENGTH - 1);
+        var globalX = ColumnPos.toGlobalX(cx, 0);
+        var globalZ = ColumnPos.toGlobalZ(cz, 0);
 
         mainNoiseGenerator.generate(densityMap, offsetX, 0.0, offsetZ);
         biomeLayer.generate(globalX, globalZ);
@@ -82,18 +82,18 @@ public class InfiniteColumnGenerator implements ColumnProvider
     }
 
     private void replaceBlocks(int cx, int cz, Column column) {
-        for (int z = 0; z < Column.ZLENGTH; ++z) {
-            for (int x = 0; x < Column.XLENGTH; ++x)
+        for (var z = 0; z < Column.ZLENGTH; ++z) {
+            for (var x = 0; x < Column.XLENGTH; ++x)
                 column.setBlockFullID(x, 0, z, bedrockID);
         }
 
-        for (int z = 0; z < Column.ZLENGTH; ++z) {
-            for (int x = 0; x < Column.XLENGTH; ++x) {
-                BiomeType biome = BiomeType.byID(biomeLayer.sampleNearest(x, z));
-                int state = 0;
-                int counter = 3;
+        for (var z = 0; z < Column.ZLENGTH; ++z) {
+            for (var x = 0; x < Column.XLENGTH; ++x) {
+                var biome = BiomeType.byID(biomeLayer.sampleNearest(x, z));
+                var state = 0;
+                var counter = 3;
 
-                for (int y = Column.YLENGTH - 1; y >= 1; --y) {
+                for (var y = Column.YLENGTH - 1; y >= 1; --y) {
                     if (column.getBlockFullID(x, y, z) != tempSolidID) {
                         state = 0;
                         counter = 3;
@@ -131,20 +131,20 @@ public class InfiniteColumnGenerator implements ColumnProvider
     private void generateBase(Column column) {
         generateElevationMaps(minElevationMap, elevationRangeMap, column, biomeLayer);
 
-        for (int y = 0; y < Column.YLENGTH; ++y) {
-            double noiseMapY = (double) y / NBLOCK_YLENGTH;
+        for (var y = 0; y < Column.YLENGTH; ++y) {
+            var noiseMapY = (double) y / NBLOCK_YLENGTH;
 
-            for (int z = 0; z < Column.ZLENGTH; ++z) {
-                double noiseMapZ = (double) z / NBLOCK_ZLENGTH;
+            for (var z = 0; z < Column.ZLENGTH; ++z) {
+                var noiseMapZ = (double) z / NBLOCK_ZLENGTH;
 
-                for (int x = 0; x < Column.XLENGTH; ++x) {
-                    double noiseMapX = (double) x / NBLOCK_XLENGTH;
+                for (var x = 0; x < Column.XLENGTH; ++x) {
+                    var noiseMapX = (double) x / NBLOCK_XLENGTH;
 
-                    double density = densityMap.sampleLinear(noiseMapX, noiseMapY, noiseMapZ);
+                    var density = densityMap.sampleLinear(noiseMapX, noiseMapY, noiseMapZ);
 
-                    double minElevation = minElevationMap.sampleNearest(x, z);
-                    double elevationRange = elevationRangeMap.sampleNearest(x, z);
-                    double threshold = (y - minElevation) / elevationRange;
+                    var minElevation = minElevationMap.sampleNearest(x, z);
+                    var elevationRange = elevationRangeMap.sampleNearest(x, z);
+                    var threshold = (y - minElevation) / elevationRange;
 
                     if (density >= threshold)
                         column.setBlockFullID(x, y, z, tempSolidID);
@@ -158,15 +158,14 @@ public class InfiniteColumnGenerator implements ColumnProvider
     private void generateElevationMaps(DoubleMap2D minElevationMap, DoubleMap2D elevationRangeMap,
             Column column, GenLayer genLayer)
     {
-        for (int z = 0; z < Column.ZLENGTH; ++z) {
-            for (int x = 0; x < Column.XLENGTH; ++x) {
-                double avgMinElevation = 0.0;
-                double avgMaxElevation = 0.0;
+        for (var z = 0; z < Column.ZLENGTH; ++z) {
+            for (var x = 0; x < Column.XLENGTH; ++x) {
+                var avgMinElevation = 0.0;
+                var avgMaxElevation = 0.0;
 
-                for (int subZ = 0; subZ < BIOME_TRANSITION_ZLENGTH; ++subZ) {
-                    for (int subX = 0; subX < BIOME_TRANSITION_XLENGTH; ++subX) {
-                        BiomeType biome = BiomeType
-                                .byID(genLayer.sampleNearest(x + subX, z + subZ));
+                for (var subZ = 0; subZ < BIOME_TRANSITION_ZLENGTH; ++subZ) {
+                    for (var subX = 0; subX < BIOME_TRANSITION_XLENGTH; ++subX) {
+                        var biome = BiomeType.byID(genLayer.sampleNearest(x + subX, z + subZ));
                         avgMinElevation += biome.getMinElevation();
                         avgMaxElevation += biome.getMaxElevation();
                     }

@@ -34,22 +34,22 @@ public class DoubleMap2D implements DoubleSampler2D
 
     @Override
     public double sampleLinear(double x, double z) {
-        double floorX   = Math.floor(x);
-        double floorZ   = Math.floor(z);
-        int leftPos     = (int) floorX;
-        int rightPos    = leftPos + 1;
-        int topPos      = (int) floorZ;
-        int bottomPos   = topPos + 1;
-        int topIndex    = topPos * lengthX;
-        int bottomIndex = bottomPos * lengthX;
+        var floorX      = Math.floor(x);
+        var floorZ      = Math.floor(z);
+        var leftPos     = (int) floorX;
+        var rightPos    = leftPos + 1;
+        var topPos      = (int) floorZ;
+        var bottomPos   = topPos + 1;
+        var topIndex    = topPos * lengthX;
+        var bottomIndex = bottomPos * lengthX;
 
-        double tl = map[leftPos  + topIndex];
-        double tr = map[rightPos + topIndex];
-        double bl = map[leftPos  + bottomIndex];
-        double br = map[rightPos + bottomIndex];
+        var tl = map[leftPos  + topIndex];
+        var tr = map[rightPos + topIndex];
+        var bl = map[leftPos  + bottomIndex];
+        var br = map[rightPos + bottomIndex];
 
-        double fracX = x - floorX;
-        double fracZ = z - floorZ;
+        var fracX = x - floorX;
+        var fracZ = z - floorZ;
 
         return lerp(lerp(tl, tr, fracX), lerp(bl, br, fracX), fracZ);
     }

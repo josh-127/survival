@@ -27,7 +27,7 @@ public interface BlockStorage
     }
 
     default int getTopLevel(int x, int z) {
-        int topLevel = Column.YLENGTH - 1;
+        var topLevel = Column.YLENGTH - 1;
 
         while (topLevel >= 0 && getBlockFullID(x, topLevel, z) == 0)
             --topLevel;

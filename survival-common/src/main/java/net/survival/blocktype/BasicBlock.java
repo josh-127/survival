@@ -137,7 +137,7 @@ public class BasicBlock extends Block
         }
 
         public Builder withTextureOnAllFaces(String as) {
-            for (int i = 0; i < textures.length; ++i)
+            for (var i = 0; i < textures.length; ++i)
                 textures[i] = as;
             return this;
         }

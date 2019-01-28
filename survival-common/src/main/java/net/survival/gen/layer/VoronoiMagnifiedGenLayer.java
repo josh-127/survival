@@ -24,53 +24,53 @@ class VoronoiMagnifiedGenLayer extends GenLayer
     public void generate(int offsetX, int offsetZ) {
         source.generate(offsetX, offsetZ);
 
-        for (int z = 0; z < source.lengthZ; ++z) {
-            for (int x = 0; x < source.lengthX; ++x) {
-                int pointIndex = x + z * source.lengthX;
-                int indexX = pointIndex * 2;
-                int indexZ = indexX + 1;
+        for (var z = 0; z < source.lengthZ; ++z) {
+            for (var x = 0; x < source.lengthX; ++x) {
+                var pointIndex = x + z * source.lengthX;
+                var indexX = pointIndex * 2;
+                var indexZ = indexX + 1;
                 random = rngFromPosition(random, offsetX + x, offsetZ + z);
                 pointOffsets[indexX] = random.nextInt(cellSize) - (cellSize / 2);
                 pointOffsets[indexZ] = random.nextInt(cellSize) - (cellSize / 2);
             }
         }
 
-        for (int z = 0; z < lengthZ; ++z) {
-            int sourceZ = z / cellSize;
-            int pointIndexZ = sourceZ * source.lengthX;
+        for (var z = 0; z < lengthZ; ++z) {
+            var sourceZ = z / cellSize;
+            var pointIndexZ = sourceZ * source.lengthX;
 
-            for (int x = 0; x < lengthX; ++x) {
-                int sourceX = x / cellSize;
-                int pointIndexX = sourceX;
+            for (var x = 0; x < lengthX; ++x) {
+                var sourceX = x / cellSize;
+                var pointIndexX = sourceX;
 
-                int pointIndexTL = pointIndexX + pointIndexZ;
-                int pointIndexTR = pointIndexTL + 1;
-                int pointIndexBL = pointIndexTL + source.lengthX;
-                int pointIndexBR = pointIndexBL + 1;
+                var pointIndexTL = pointIndexX + pointIndexZ;
+                var pointIndexTR = pointIndexTL + 1;
+                var pointIndexBL = pointIndexTL + source.lengthX;
+                var pointIndexBR = pointIndexBL + 1;
 
-                int baseL = (x / cellSize) * cellSize;
-                int baseT = (z / cellSize) * cellSize;
-                int baseR = ((x / cellSize) + 1) * cellSize;
-                int baseB = ((z / cellSize) + 1) * cellSize;
+                var baseL = (x / cellSize) * cellSize;
+                var baseT = (z / cellSize) * cellSize;
+                var baseR = ((x / cellSize) + 1) * cellSize;
+                var baseB = ((z / cellSize) + 1) * cellSize;
 
-                int pointTLX = baseL + pointOffsets[pointIndexTL * 2];
-                int pointTLZ = baseT + pointOffsets[pointIndexTL * 2 + 1];
-                int pointTRX = baseR + pointOffsets[pointIndexTR * 2];
-                int pointTRZ = baseT + pointOffsets[pointIndexTR * 2 + 1];
-                int pointBLX = baseL + pointOffsets[pointIndexBL * 2];
-                int pointBLZ = baseB + pointOffsets[pointIndexBL * 2 + 1];
-                int pointBRX = baseR + pointOffsets[pointIndexBR * 2];
-                int pointBRZ = baseB + pointOffsets[pointIndexBR * 2 + 1];
+                var pointTLX = baseL + pointOffsets[pointIndexTL * 2];
+                var pointTLZ = baseT + pointOffsets[pointIndexTL * 2 + 1];
+                var pointTRX = baseR + pointOffsets[pointIndexTR * 2];
+                var pointTRZ = baseT + pointOffsets[pointIndexTR * 2 + 1];
+                var pointBLX = baseL + pointOffsets[pointIndexBL * 2];
+                var pointBLZ = baseB + pointOffsets[pointIndexBL * 2 + 1];
+                var pointBRX = baseR + pointOffsets[pointIndexBR * 2];
+                var pointBRZ = baseB + pointOffsets[pointIndexBR * 2 + 1];
 
-                int manhattanDistTL = Math.abs(pointTLX - x) + Math.abs(pointTLZ - z);
-                int manhattanDistTR = Math.abs(pointTRX - x) + Math.abs(pointTRZ - z);
-                int manhattanDistBL = Math.abs(pointBLX - x) + Math.abs(pointBLZ - z);
-                int manhattanDistBR = Math.abs(pointBRX - x) + Math.abs(pointBRZ - z);
+                var manhattanDistTL = Math.abs(pointTLX - x) + Math.abs(pointTLZ - z);
+                var manhattanDistTR = Math.abs(pointTRX - x) + Math.abs(pointTRZ - z);
+                var manhattanDistBL = Math.abs(pointBLX - x) + Math.abs(pointBLZ - z);
+                var manhattanDistBR = Math.abs(pointBRX - x) + Math.abs(pointBRZ - z);
 
                 // TODO: Rewrite this terrible ugly code.
-                int minDist = manhattanDistTL;
-                int chosenSampleX = sourceX;
-                int chosenSampleZ = sourceZ;
+                var minDist = manhattanDistTL;
+                var chosenSampleX = sourceX;
+                var chosenSampleZ = sourceZ;
                 if (manhattanDistTR < manhattanDistTL) {
                     minDist = manhattanDistTR;
                     chosenSampleX = sourceX + 1;

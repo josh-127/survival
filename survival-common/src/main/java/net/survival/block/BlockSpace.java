@@ -68,60 +68,60 @@ public class BlockSpace implements BlockStorage, BlockMessageVisitor
 
     @Override
     public int getBlockFullID(int x, int y, int z) {
-        int cx = ColumnPos.toColumnX(x);
-        int cz = ColumnPos.toColumnZ(z);
+        var cx = ColumnPos.toColumnX(x);
+        var cz = ColumnPos.toColumnZ(z);
 
-        Column column = columns.get(ColumnPos.hashPos(cx, cz));
+        var column = columns.get(ColumnPos.hashPos(cx, cz));
         if (column == null)
             throw new RuntimeException("Cannot query a block in an unloaded column.");
 
-        int localX = ColumnPos.toLocalX(cx, x);
-        int localZ = ColumnPos.toLocalZ(cz, z);
+        var localX = ColumnPos.toLocalX(cx, x);
+        var localZ = ColumnPos.toLocalZ(cz, z);
 
         return column.getBlockFullID(localX, y, localZ);
     }
 
     @Override
     public void setBlockFullID(int x, int y, int z, int to) {
-        Column column = getColumnFromGlobalPos(x, z, "Cannot place/replace a block in an unloaded column.");
-        int localX = ColumnPos.toLocalX(ColumnPos.toColumnX(x), x);
-        int localZ = ColumnPos.toLocalZ(ColumnPos.toColumnZ(z), z);
+        var column = getColumnFromGlobalPos(x, z, "Cannot place/replace a block in an unloaded column.");
+        var localX = ColumnPos.toLocalX(ColumnPos.toColumnX(x), x);
+        var localZ = ColumnPos.toLocalZ(ColumnPos.toColumnZ(z), z);
 
         column.setBlockFullID(localX, y, localZ, to);
     }
 
     @Override
     public int getTopLevel(int x, int z) {
-        Column column = getColumnFromGlobalPos(x, z, "Cannot query a block in an unloaded column.");
-        int localX = ColumnPos.toLocalX(ColumnPos.toColumnX(x), x);
-        int localZ = ColumnPos.toLocalZ(ColumnPos.toColumnZ(z), z);
+        var column = getColumnFromGlobalPos(x, z, "Cannot query a block in an unloaded column.");
+        var localX = ColumnPos.toLocalX(ColumnPos.toColumnX(x), x);
+        var localZ = ColumnPos.toLocalZ(ColumnPos.toColumnZ(z), z);
 
         return column.getTopLevel(localX, localZ);
     }
 
     @Override
     public boolean placeBlockIfEmpty(int x, int y, int z, short to) {
-        Column column = getColumnFromGlobalPos(x, z, "Cannot place a block in an unloaded column.");
-        int localX = ColumnPos.toLocalX(ColumnPos.toColumnX(x), x);
-        int localZ = ColumnPos.toLocalZ(ColumnPos.toColumnZ(z), z);
+        var column = getColumnFromGlobalPos(x, z, "Cannot place a block in an unloaded column.");
+        var localX = ColumnPos.toLocalX(ColumnPos.toColumnX(x), x);
+        var localZ = ColumnPos.toLocalZ(ColumnPos.toColumnZ(z), z);
 
         return column.placeBlockIfEmpty(localX, y, localZ, to);
     }
 
     @Override
     public boolean replaceBlockIfExists(int x, int y, int z, short replacement) {
-        Column column = getColumnFromGlobalPos(x, z, "Cannot replace a block in an unloaded column.");
-        int localX = ColumnPos.toLocalX(ColumnPos.toColumnX(x), x);
-        int localZ = ColumnPos.toLocalZ(ColumnPos.toColumnZ(z), z);
+        var column = getColumnFromGlobalPos(x, z, "Cannot replace a block in an unloaded column.");
+        var localX = ColumnPos.toLocalX(ColumnPos.toColumnX(x), x);
+        var localZ = ColumnPos.toLocalZ(ColumnPos.toColumnZ(z), z);
 
         return column.replaceBlockIfExists(localX, y, localZ, replacement);
     }
 
     private Column getColumnFromGlobalPos(int x, int z, String exceptionMessage) {
-        int cx = ColumnPos.toColumnX(x);
-        int cz = ColumnPos.toColumnZ(z);
+        var cx = ColumnPos.toColumnX(x);
+        var cz = ColumnPos.toColumnZ(z);
 
-        Column column = columns.get(ColumnPos.hashPos(cx, cz));
+        var column = columns.get(ColumnPos.hashPos(cx, cz));
         if (column == null)
             throw new RuntimeException(exceptionMessage);
         

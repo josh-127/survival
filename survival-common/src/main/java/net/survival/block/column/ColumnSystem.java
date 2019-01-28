@@ -1,12 +1,8 @@
 package net.survival.block.column;
 
-import java.util.Iterator;
-
-import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.LongArraySet;
 import it.unimi.dsi.fastutil.longs.LongIterator;
 import it.unimi.dsi.fastutil.longs.LongSet;
-import it.unimi.dsi.fastutil.objects.ObjectIterator;
 import net.survival.block.BlockSpace;
 import net.survival.gen.decoration.WorldDecorator;
 
@@ -55,18 +51,18 @@ public class ColumnSystem
             saveTimer = SAVE_RATE;
         }
 
-        LongSet missingColumns = getMissingColumnPosSet();
+        var missingColumns = getMissingColumnPosSet();
         loadMissingColumnsFromDb(missingColumns);
         generateColumns(missingColumns.iterator());
     }
 
     private LongSet getMissingColumnPosSet() {
-        LongSet missingColumns = columnStageMask.getColumnPositions();
+        var missingColumns = columnStageMask.getColumnPositions();
 
-        ObjectIterator<Long2ObjectMap.Entry<Column>> iterator = blockSpace.getColumnMapFastIterator();
+        var iterator = blockSpace.getColumnMapFastIterator();
         while (iterator.hasNext()) {
-            Long2ObjectMap.Entry<Column> entry = iterator.next();
-            long hashedPos = entry.getLongKey();
+            var entry = iterator.next();
+            var hashedPos = entry.getLongKey();
 
             if (missingColumns.contains(hashedPos))
                 missingColumns.remove(hashedPos);
@@ -77,23 +73,23 @@ public class ColumnSystem
 
     private void saveColumns() {
         // Save all loaded columns.
-        ObjectIterator<Long2ObjectMap.Entry<Column>> iterator = blockSpace.getColumnMapFastIterator();
+        var iterator = blockSpace.getColumnMapFastIterator();
         while (iterator.hasNext()) {
-            Long2ObjectMap.Entry<Column> entry = iterator.next();
-            long hashedPos = entry.getLongKey();
-            Column column = entry.getValue();
+            var entry = iterator.next();
+            var hashedPos = entry.getLongKey();
+            var column = entry.getValue();
 
             columnDbPipe.request(ColumnRequest.createPostRequest(hashedPos, column));
         }
     }
 
     private void maskOutColumns() {
-        ObjectIterator<Long2ObjectMap.Entry<Column>> iterator = blockSpace.getColumnMapFastIterator();
-        LongSet mask = columnStageMask.getColumnPositions();
+        var iterator = blockSpace.getColumnMapFastIterator();
+        var mask = columnStageMask.getColumnPositions();
 
         while (iterator.hasNext()) {
-            Long2ObjectMap.Entry<Column> entry = iterator.next();
-            long hashedPos = entry.getLongKey();
+            var entry = iterator.next();
+            var hashedPos = entry.getLongKey();
 
             if (!mask.contains(hashedPos))
                 iterator.remove();
@@ -101,10 +97,10 @@ public class ColumnSystem
     }
 
     private void loadMissingColumnsFromDb(LongSet missingColumns) {
-        LongIterator iterator = missingColumns.iterator();
+        var iterator = missingColumns.iterator();
 
-        for (int i = 0; iterator.hasNext() && i < DATABASE_LOAD_RATE; ++i) {
-            long hashedPos = iterator.nextLong();
+        for (var i = 0; iterator.hasNext() && i < DATABASE_LOAD_RATE; ++i) {
+            var hashedPos = iterator.nextLong();
 
             if (!loadingColumns.contains(hashedPos)) {
                 loadingColumns.add(hashedPos);
@@ -115,12 +111,12 @@ public class ColumnSystem
         missingColumns.clear();
 
         for (
-                ColumnResponse response = columnDbPipe.pollResponse();
+                var response = columnDbPipe.pollResponse();
                 response != null;
                 response = columnDbPipe.pollResponse())
         {
-            long hashedPos = response.columnPos;
-            Column column = response.column;
+            var hashedPos = response.columnPos;
+            var column = response.column;
 
             loadingColumns.remove(hashedPos);
 
@@ -132,24 +128,24 @@ public class ColumnSystem
     }
 
     private void generateColumns(LongIterator missingColumns) {
-        for (int i = 0; i < GENERATOR_LOAD_RATE && missingColumns.hasNext(); ++i) {
-            long hashedPos = missingColumns.nextLong();
-            Column generatedColumn = columnGenerator.provideColumn(hashedPos);
+        for (var i = 0; i < GENERATOR_LOAD_RATE && missingColumns.hasNext(); ++i) {
+            var hashedPos = missingColumns.nextLong();
+            var generatedColumn = columnGenerator.provideColumn(hashedPos);
             blockSpace.addColumn(hashedPos, generatedColumn);
             missingColumns.remove();
         }
 
-        Iterator<Long2ObjectMap.Entry<Column>> columnMapIt = blockSpace.getColumnMapFastIterator();
+        var columnMapIt = blockSpace.getColumnMapFastIterator();
         while (columnMapIt.hasNext()) {
-            Long2ObjectMap.Entry<Column> entry = columnMapIt.next();
-            long hashedPos = entry.getLongKey();
-            int cx = ColumnPos.columnXFromHashedPos(hashedPos);
-            int cz = ColumnPos.columnZFromHashedPos(hashedPos);
-            Column column = entry.getValue();
+            var entry = columnMapIt.next();
+            var hashedPos = entry.getLongKey();
+            var cx = ColumnPos.columnXFromHashedPos(hashedPos);
+            var cz = ColumnPos.columnZFromHashedPos(hashedPos);
+            var column = entry.getValue();
 
-            boolean isFullySurrounded = true;
-            for (int z = -1; z <= 1 && isFullySurrounded; ++z) {
-                for (int x = -1; x <= 1 && isFullySurrounded; ++x) {
+            var isFullySurrounded = true;
+            for (var z = -1; z <= 1 && isFullySurrounded; ++z) {
+                for (var x = -1; x <= 1 && isFullySurrounded; ++x) {
                     if (blockSpace.getColumn(cx + x, cz + z) == null)
                         isFullySurrounded = false;
                 }

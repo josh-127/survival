@@ -21,25 +21,25 @@ class FuzzyMagnifiedGenLayer extends GenLayer
         super.generate(offsetX, offsetZ);
 
         // TODO: Remove code duplication.
-        int coarseOffsetX = offsetX >= 0 ? offsetX / 2 : (offsetX - 1) / 2;
-        int coarseOffsetZ = offsetZ >= 0 ? offsetZ / 2 : (offsetZ - 1) / 2;
+        var coarseOffsetX = offsetX >= 0 ? offsetX / 2 : (offsetX - 1) / 2;
+        var coarseOffsetZ = offsetZ >= 0 ? offsetZ / 2 : (offsetZ - 1) / 2;
 
         source.generate(coarseOffsetX, coarseOffsetZ);
 
-        byte[] srcMap = source.getMap();
+        var srcMap = source.getMap();
 
-        for (int z = 0; z < lengthZ / 2; ++z) {
-            for (int x = 0; x < lengthX / 2; ++x) {
+        for (var z = 0; z < lengthZ / 2; ++z) {
+            for (var x = 0; x < lengthX / 2; ++x) {
                 random = rngFromPosition(random, coarseOffsetX + x, coarseOffsetZ + z);
 
-                int srcTL = x + z * source.lengthX;
-                int srcTR = srcTL + 1;
-                int srcBL = srcTL + source.lengthX;
-                int srcBR = srcBL + 1;
-                int dstTL = (x * 2) + (z * 2) * lengthX;
-                int dstTR = dstTL + 1;
-                int dstBL = dstTL + lengthX;
-                int dstBR = dstBL + 1;
+                var srcTL = x + z * source.lengthX;
+                var srcTR = srcTL + 1;
+                var srcBL = srcTL + source.lengthX;
+                var srcBR = srcBL + 1;
+                var dstTL = (x * 2) + (z * 2) * lengthX;
+                var dstTR = dstTL + 1;
+                var dstBL = dstTL + lengthX;
+                var dstBR = dstBL + 1;
 
                 map[dstTL] = srcMap[srcTL];
                 map[dstTR] = random.nextInt(2) == 0 ? srcMap[srcTL] : srcMap[srcTR];
@@ -56,18 +56,18 @@ class FuzzyMagnifiedGenLayer extends GenLayer
         }
 
         if (offsetX - coarseOffsetX * 2 != 0) {
-            for (int z = 0; z < lengthZ; ++z) {
-                for (int x = 1; x < lengthX; ++x)
+            for (var z = 0; z < lengthZ; ++z) {
+                for (var x = 1; x < lengthX; ++x)
                     map[(x - 1) + z * lengthX] = map[x + z * lengthX];
             }
 
-            for (int z = 0; z < lengthZ / 2; ++z) {
+            for (var z = 0; z < lengthZ / 2; ++z) {
                 random = rngFromPosition(random, coarseOffsetX + lengthX / 2, coarseOffsetZ + z);
 
-                int srcTL = (lengthX / 2) + z * source.lengthX;
-                int srcBL = srcTL + source.lengthX;
-                int dstTL = (lengthX - 1) + (z * 2) * lengthX;
-                int dstBL = dstTL + lengthX;
+                var srcTL = (lengthX / 2) + z * source.lengthX;
+                var srcBL = srcTL + source.lengthX;
+                var dstTL = (lengthX - 1) + (z * 2) * lengthX;
+                var dstBL = dstTL + lengthX;
 
                 map[dstTL] = srcMap[srcTL];
                 random.nextInt();
@@ -76,18 +76,18 @@ class FuzzyMagnifiedGenLayer extends GenLayer
         }
 
         if (offsetZ - coarseOffsetZ * 2 != 0) {
-            for (int z = 1; z < lengthZ; ++z) {
-                for (int x = 0; x < lengthX; ++x)
+            for (var z = 1; z < lengthZ; ++z) {
+                for (var x = 0; x < lengthX; ++x)
                     map[x + (z - 1) * lengthX] = map[x + z * lengthZ];
             }
 
-            for (int x = 0; x < lengthX / 2; ++x) {
+            for (var x = 0; x < lengthX / 2; ++x) {
                 random = rngFromPosition(random, coarseOffsetX + x, coarseOffsetZ + lengthZ / 2);
 
-                int srcTL = x + (lengthZ / 2) * source.lengthX;
-                int srcTR = srcTL + 1;
-                int dstTL = (x * 2) + (lengthZ - 1) * lengthX;
-                int dstTR = dstTL + 1;
+                var srcTL = x + (lengthZ / 2) * source.lengthX;
+                var srcTR = srcTL + 1;
+                var dstTL = (x * 2) + (lengthZ - 1) * lengthX;
+                var dstTR = dstTL + 1;
 
                 map[dstTL] = srcMap[srcTL];
                 map[dstTR] = random.nextInt(2) == 0 ? srcMap[srcTL] : srcMap[srcTR];

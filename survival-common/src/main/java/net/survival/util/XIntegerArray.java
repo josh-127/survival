@@ -20,13 +20,13 @@ public class XIntegerArray
     public long get(int index) {
         assert index >= 0 && index < length;
 
-        int bitIndex = index * bitsPerElement;
-        int coarseIndex = bitIndex / 64;
-        int fineIndex = bitIndex % 64;
+        var bitIndex = index * bitsPerElement;
+        var coarseIndex = bitIndex / 64;
+        var fineIndex = bitIndex % 64;
 
-        long value = underlyingArray[coarseIndex] >>> fineIndex;
+        var value = underlyingArray[coarseIndex] >>> fineIndex;
 
-        int nextCoarseIndex = (bitIndex + bitsPerElement - 1) / 64;
+        var nextCoarseIndex = (bitIndex + bitsPerElement - 1) / 64;
         if (coarseIndex != nextCoarseIndex) {
             value |= underlyingArray[nextCoarseIndex] << (64 - fineIndex);
         }
@@ -39,18 +39,18 @@ public class XIntegerArray
         assert index >= 0 && index < length;
         assert (value & ~elementMask) == 0;
 
-        int bitIndex = index * bitsPerElement;
-        int coarseIndex = bitIndex / 64;
-        int fineIndex = bitIndex % 64;
+        var bitIndex = index * bitsPerElement;
+        var coarseIndex = bitIndex / 64;
+        var fineIndex = bitIndex % 64;
 
-        long positionalMask = elementMask << fineIndex;
+        var positionalMask = elementMask << fineIndex;
         underlyingArray[coarseIndex] &= ~positionalMask;
         underlyingArray[coarseIndex] |= (value << fineIndex);
 
-        int nextCoarseIndex = (bitIndex + bitsPerElement - 1) / 64;
+        var nextCoarseIndex = (bitIndex + bitsPerElement - 1) / 64;
         if (coarseIndex != nextCoarseIndex) {
-            int bitsBeforeCutoff = 64 - fineIndex;
-            long remainingMask = (1L << (bitsPerElement - bitsBeforeCutoff)) - 1L;
+            var bitsBeforeCutoff = 64 - fineIndex;
+            var remainingMask = (1L << (bitsPerElement - bitsBeforeCutoff)) - 1L;
             underlyingArray[nextCoarseIndex] &= ~remainingMask;
             underlyingArray[nextCoarseIndex] |= value & (remainingMask << bitsBeforeCutoff);
         }

@@ -25,10 +25,10 @@ class AdditionalLandGenLayer extends GenLayer
         source.generate(offsetX, offsetZ);
         System.arraycopy(source.getMap(), 0, map, 0, map.length);
 
-        for (int z = 0; z < lengthZ; ++z) {
-            for (int x = 0; x < lengthX; ++x) {
+        for (var z = 0; z < lengthZ; ++z) {
+            for (var x = 0; x < lengthX; ++x) {
                 random = rngFromPosition(random, offsetX + x, offsetZ + z);
-                int dstIndex = x + z * lengthX;
+                var dstIndex = x + z * lengthX;
                 if (map[dstIndex] == 0 && random.nextInt(12) == 0)
                     map[dstIndex] = (byte) (random.nextInt(BiomeType.getCachedValues().length - 1) + 1);
             }

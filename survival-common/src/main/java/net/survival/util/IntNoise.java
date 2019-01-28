@@ -6,9 +6,9 @@ public class IntNoise
 
     public static int white(int x, long seed) {
         // Based off of MurmurHash
-        long hash = seed;
+        var hash = seed;
 
-        long k = rol15((int) x * 0xCC9E2D51L) * 0x1B873593L;
+        var k = rol15((int) x * 0xCC9E2D51L) * 0x1B873593L;
         hash = rol13(hash ^ k) * 5L + 0xE6546B64L;
 
         hash ^= 4L;
@@ -23,9 +23,9 @@ public class IntNoise
 
     public static int white2D(int x, int y, long seed) {
         // Based off of MurmurHash
-        long hash = seed;
+        var hash = seed;
 
-        long k = rol15((int) x * 0xCC9E2D51L) * 0x1B873593L;
+        var k = rol15((int) x * 0xCC9E2D51L) * 0x1B873593L;
         hash = rol13(hash ^ k) * 5L + 0xE6546B64L;
 
         k = rol15((int) y * 0xCC9E2D51L) * 0x1B873593L;
@@ -43,9 +43,9 @@ public class IntNoise
 
     public static int white3D(int x, int y, int z, long seed) {
         // Based off of MurmurHash
-        long hash = seed;
+        var hash = seed;
 
-        long k = rol15((int) x * 0xCC9E2D51L) * 0x1B873593L;
+        var k = rol15((int) x * 0xCC9E2D51L) * 0x1B873593L;
         hash = rol13(hash ^ k) * 5L + 0xE6546B64L;
 
         k = rol15((int) y * 0xCC9E2D51L) * 0x1B873593L;

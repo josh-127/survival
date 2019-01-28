@@ -2,9 +2,7 @@ package net.survival.block.column;
 
 import java.nio.ByteBuffer;
 
-import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
-import it.unimi.dsi.fastutil.objects.ObjectIterator;
 
 class ColumnDirectory
 {
@@ -36,13 +34,12 @@ class ColumnDirectory
     public void writeTo(ByteBuffer buffer) {
         buffer.putInt(entries.size());
 
-        ObjectIterator<Long2ObjectMap.Entry<VirtualAllocationUnit>> iterator =
-                entries.long2ObjectEntrySet().fastIterator();
+        var iterator = entries.long2ObjectEntrySet().fastIterator();
 
         while (iterator.hasNext()) {
-            Long2ObjectMap.Entry<VirtualAllocationUnit> entry = iterator.next();
-            long hashedPos = entry.getLongKey();
-            VirtualAllocationUnit dataVau = entry.getValue();
+            var entry = iterator.next();
+            var hashedPos = entry.getLongKey();
+            var dataVau = entry.getValue();
 
             buffer.putLong(hashedPos);
             dataVau.writeTo(buffer);
@@ -52,10 +49,10 @@ class ColumnDirectory
     public void readFrom(ByteBuffer buffer) {
         entries.clear();
 
-        int size = buffer.getInt();
-        for (int i = 0; i < size; ++i) {
-            long hashedPos = buffer.getLong();
-            VirtualAllocationUnit dataVau = new VirtualAllocationUnit();
+        var size = buffer.getInt();
+        for (var i = 0; i < size; ++i) {
+            var hashedPos = buffer.getLong();
+            var dataVau = new VirtualAllocationUnit();
             dataVau.readFrom(buffer);
 
             entries.put(hashedPos, dataVau);

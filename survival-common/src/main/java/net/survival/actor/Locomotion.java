@@ -1,7 +1,6 @@
 package net.survival.actor;
 
 import net.survival.block.column.Column;
-import net.survival.blocktype.Block;
 import net.survival.interaction.InteractionContext;
 import net.survival.util.HitBox;
 import net.survival.util.MathEx;
@@ -56,10 +55,10 @@ public class Locomotion
     }
 
     public void tick(Actor actor, InteractionContext ic) {
-        double sqrLength = MathEx.sqrLength(directionX, directionZ);
+        var sqrLength = MathEx.sqrLength(directionX, directionZ);
 
         if (sqrLength > 0.0) {
-            double length = Math.sqrt(sqrLength);
+            var length = Math.sqrt(sqrLength);
             velocityX = (directionX / length) * movementSpeed;
             velocityZ = (directionZ / length) * movementSpeed;
         }
@@ -109,24 +108,24 @@ public class Locomotion
         if (velocityY >= 0.0)
             return false;
 
-        int startX = (int) Math.floor(x - hitBox.radiusX);
-        int endX = (int) Math.floor(x + hitBox.radiusX);
-        int startZ = (int) Math.floor(z - hitBox.radiusZ);
-        int endZ = (int) Math.floor(z + hitBox.radiusZ);
+        var startX = (int) Math.floor(x - hitBox.radiusX);
+        var endX = (int) Math.floor(x + hitBox.radiusX);
+        var startZ = (int) Math.floor(z - hitBox.radiusZ);
+        var endZ = (int) Math.floor(z + hitBox.radiusZ);
 
-        int floorY = (int) Math.floor(y - hitBox.radiusY);
+        var floorY = (int) Math.floor(y - hitBox.radiusY);
 
         if (floorY < 0 || floorY + 1 >= Column.YLENGTH)
             return false;
 
-        for (int blockZ = startZ; blockZ <= endZ; ++blockZ) {
-            for (int blockX = startX; blockX <= endX; ++blockX) {
-                Block aboveFloorBlock = ic.getBlock(blockX, floorY + 1, blockZ);
+        for (var blockZ = startZ; blockZ <= endZ; ++blockZ) {
+            for (var blockX = startX; blockX <= endX; ++blockX) {
+                var aboveFloorBlock = ic.getBlock(blockX, floorY + 1, blockZ);
 
                 if (aboveFloorBlock.isSolid())
                     continue;
 
-                Block floorBlock = ic.getBlock(blockX, floorY, blockZ);
+                var floorBlock = ic.getBlock(blockX, floorY, blockZ);
 
                 if (floorBlock.isSolid()
                         && getDominantAxis(blockX, floorY, blockZ) == 1
@@ -146,24 +145,24 @@ public class Locomotion
         if (velocityY <= 0.0)
             return false;
 
-        int startX = (int) Math.floor(x - hitBox.radiusX);
-        int endX = (int) Math.floor(x + hitBox.radiusX);
-        int startZ = (int) Math.floor(z - hitBox.radiusZ);
-        int endZ = (int) Math.floor(z + hitBox.radiusZ);
+        var startX = (int) Math.floor(x - hitBox.radiusX);
+        var endX = (int) Math.floor(x + hitBox.radiusX);
+        var startZ = (int) Math.floor(z - hitBox.radiusZ);
+        var endZ = (int) Math.floor(z + hitBox.radiusZ);
 
-        int ceilingY = (int) Math.floor(y + hitBox.radiusY);
+        var ceilingY = (int) Math.floor(y + hitBox.radiusY);
 
         if (ceilingY - 1 < 0 || ceilingY >= Column.YLENGTH)
             return false;
 
-        for (int blockZ = startZ; blockZ <= endZ; ++blockZ) {
-            for (int blockX = startX; blockX <= endX; ++blockX) {
-                Block belowCeilingBlock = ic.getBlock(blockX, ceilingY - 1, blockZ);
+        for (var blockZ = startZ; blockZ <= endZ; ++blockZ) {
+            for (var blockX = startX; blockX <= endX; ++blockX) {
+                var belowCeilingBlock = ic.getBlock(blockX, ceilingY - 1, blockZ);
 
                 if (belowCeilingBlock.isSolid())
                     continue;
 
-                Block ceilingBlock = ic.getBlock(blockX, ceilingY, blockZ);
+                var ceilingBlock = ic.getBlock(blockX, ceilingY, blockZ);
 
                 if (ceilingBlock.isSolid()
                         && getDominantAxis(blockX, ceilingY, blockZ) == 1
@@ -180,25 +179,25 @@ public class Locomotion
     }
 
     private boolean handleLeftWallCollision(InteractionContext ic) {
-        int startY = (int) Math.floor(y - hitBox.radiusY);
-        int endY = (int) Math.floor(y + hitBox.radiusY);
+        var startY = (int) Math.floor(y - hitBox.radiusY);
+        var endY = (int) Math.floor(y + hitBox.radiusY);
 
         if (startY < 0 || endY >= Column.YLENGTH)
             return false;
 
-        int startZ = (int) Math.floor(z - hitBox.radiusZ);
-        int endZ = (int) Math.floor(z + hitBox.radiusZ);
+        var startZ = (int) Math.floor(z - hitBox.radiusZ);
+        var endZ = (int) Math.floor(z + hitBox.radiusZ);
 
-        int wallX = (int) Math.floor(x + hitBox.radiusX);
+        var wallX = (int) Math.floor(x + hitBox.radiusX);
 
-        for (int blockY = startY; blockY <= endY; ++blockY) {
-            for (int blockZ = startZ; blockZ <= endZ; ++blockZ) {
-                Block adjacentBlock = ic.getBlock(wallX - 1, blockY, blockZ);
+        for (var blockY = startY; blockY <= endY; ++blockY) {
+            for (var blockZ = startZ; blockZ <= endZ; ++blockZ) {
+                var adjacentBlock = ic.getBlock(wallX - 1, blockY, blockZ);
 
                 if (adjacentBlock.isSolid())
                     continue;
 
-                Block wallBlock = ic.getBlock(wallX, blockY, blockZ);
+                var wallBlock = ic.getBlock(wallX, blockY, blockZ);
 
                 if (wallBlock.isSolid()
                         && getDominantAxis(wallX, blockY, blockZ) == 0
@@ -215,25 +214,25 @@ public class Locomotion
     }
 
     private boolean handleRightWallCollision(InteractionContext ic) {
-        int startY = (int) Math.floor(y - hitBox.radiusY);
-        int endY = (int) Math.floor(y + hitBox.radiusY);
+        var startY = (int) Math.floor(y - hitBox.radiusY);
+        var endY = (int) Math.floor(y + hitBox.radiusY);
 
         if (startY < 0 || endY >= Column.YLENGTH)
             return false;
 
-        int startZ = (int) Math.floor(z - hitBox.radiusZ);
-        int endZ = (int) Math.floor(z + hitBox.radiusZ);
+        var startZ = (int) Math.floor(z - hitBox.radiusZ);
+        var endZ = (int) Math.floor(z + hitBox.radiusZ);
 
-        int wallX = (int) Math.floor(x - hitBox.radiusX);
+        var wallX = (int) Math.floor(x - hitBox.radiusX);
 
-        for (int blockY = startY; blockY <= endY; ++blockY) {
-            for (int blockZ = startZ; blockZ <= endZ; ++blockZ) {
-                Block adjacentBlock = ic.getBlock(wallX + 1, blockY, blockZ);
+        for (var blockY = startY; blockY <= endY; ++blockY) {
+            for (var blockZ = startZ; blockZ <= endZ; ++blockZ) {
+                var adjacentBlock = ic.getBlock(wallX + 1, blockY, blockZ);
 
                 if (adjacentBlock.isSolid())
                     continue;
 
-                Block wallBlock = ic.getBlock(wallX, blockY, blockZ);
+                var wallBlock = ic.getBlock(wallX, blockY, blockZ);
 
                 if (wallBlock.isSolid()
                         && getDominantAxis(wallX, blockY, blockZ) == 0
@@ -250,25 +249,25 @@ public class Locomotion
     }
 
     private boolean handleFrontWallCollision(InteractionContext ic) {
-        int startY = (int) Math.floor(y - hitBox.radiusY);
-        int endY = (int) Math.floor(y + hitBox.radiusY);
+        var startY = (int) Math.floor(y - hitBox.radiusY);
+        var endY = (int) Math.floor(y + hitBox.radiusY);
 
         if (startY < 0 || endY >= Column.YLENGTH)
             return false;
 
-        int startX = (int) Math.floor(x - hitBox.radiusX);
-        int endX = (int) Math.floor(x + hitBox.radiusX);
+        var startX = (int) Math.floor(x - hitBox.radiusX);
+        var endX = (int) Math.floor(x + hitBox.radiusX);
 
-        int wallZ = (int) Math.floor(z - hitBox.radiusZ);
+        var wallZ = (int) Math.floor(z - hitBox.radiusZ);
 
-        for (int blockY = startY; blockY <= endY; ++blockY) {
-            for (int blockX = startX; blockX <= endX; ++blockX) {
-                Block adjacentBlock = ic.getBlock(blockX, blockY, wallZ + 1);
+        for (var blockY = startY; blockY <= endY; ++blockY) {
+            for (var blockX = startX; blockX <= endX; ++blockX) {
+                var adjacentBlock = ic.getBlock(blockX, blockY, wallZ + 1);
 
                 if (adjacentBlock.isSolid())
                     continue;
 
-                Block wallBlock = ic.getBlock(blockX, blockY, wallZ);
+                var wallBlock = ic.getBlock(blockX, blockY, wallZ);
 
                 if (wallBlock.isSolid()
                         && getDominantAxis(blockX, blockY, wallZ) == 2
@@ -285,25 +284,25 @@ public class Locomotion
     }
 
     private boolean handleBackWallCollision(InteractionContext ic) {
-        int startY = (int) Math.floor(y - hitBox.radiusY);
-        int endY = (int) Math.floor(y + hitBox.radiusY);
+        var startY = (int) Math.floor(y - hitBox.radiusY);
+        var endY = (int) Math.floor(y + hitBox.radiusY);
 
         if (startY < 0 || endY >= Column.YLENGTH)
             return false;
 
-        int startX = (int) Math.floor(x - hitBox.radiusX);
-        int endX = (int) Math.floor(x + hitBox.radiusX);
+        var startX = (int) Math.floor(x - hitBox.radiusX);
+        var endX = (int) Math.floor(x + hitBox.radiusX);
 
-        int wallZ = (int) Math.floor(z + hitBox.radiusZ);
+        var wallZ = (int) Math.floor(z + hitBox.radiusZ);
 
-        for (int blockY = startY; blockY <= endY; ++blockY) {
-            for (int blockX = startX; blockX <= endX; ++blockX) {
-                Block adjacentBlock = ic.getBlock(blockX, blockY, wallZ - 1);
+        for (var blockY = startY; blockY <= endY; ++blockY) {
+            for (var blockX = startX; blockX <= endX; ++blockX) {
+                var adjacentBlock = ic.getBlock(blockX, blockY, wallZ - 1);
 
                 if (adjacentBlock.isSolid())
                     continue;
 
-                Block wallBlock = ic.getBlock(blockX, blockY, wallZ);
+                var wallBlock = ic.getBlock(blockX, blockY, wallZ);
 
                 if (wallBlock.isSolid()
                         && getDominantAxis(blockX, blockY, wallZ) == 2
@@ -427,10 +426,10 @@ public class Locomotion
     private double getBlockCenterZ(int blockZ) { return blockZ + 0.5; }
 
     private int getDominantAxis(int blockX, int blockY, int blockZ) {
-        double distanceY = Math.abs(y - getBlockCenterY(blockY));
-        double distanceX = Math.abs(x - getBlockCenterX(blockX));
-        double distanceZ = Math.abs(z - getBlockCenterZ(blockZ));
-        double maxDistance = Math.max(Math.max(distanceY, distanceX), distanceZ);
+        var distanceY = Math.abs(y - getBlockCenterY(blockY));
+        var distanceX = Math.abs(x - getBlockCenterX(blockX));
+        var distanceZ = Math.abs(z - getBlockCenterZ(blockZ));
+        var maxDistance = Math.max(Math.max(distanceY, distanceX), distanceZ);
 
         if (maxDistance == distanceX) return 0;
         if (maxDistance == distanceY) return 1;

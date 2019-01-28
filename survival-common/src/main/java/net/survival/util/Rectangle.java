@@ -55,8 +55,8 @@ public class Rectangle
 
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = 1;
+        final var prime = 31;
+        var result = 1;
         long temp;
         temp = Double.doubleToLongBits(bottom);
         result = prime * result + (int) (temp ^ (temp >>> 32));

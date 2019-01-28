@@ -40,34 +40,34 @@ public class DoubleMap3D implements DoubleSampler3D
 
     @Override
     public double sampleLinear(double x, double y, double z) {
-        int baseArea = getBaseArea();
+        var baseArea = getBaseArea();
 
-        double floorX   = Math.floor(x);
-        double floorY   = Math.floor(y);
-        double floorZ   = Math.floor(z);
-        int left        = (int) floorX;
-        int bottom      = (int) floorY;
-        int back        = (int) floorZ;
-        int right       = left + 1;
-        int top         = bottom + 1;
-        int front       = back + 1;
-        int backIndex   = back * lengthX;
-        int frontIndex  = front * lengthX;
-        int bottomIndex = bottom * baseArea;
-        int topIndex    = top * baseArea;
+        var floorX      = Math.floor(x);
+        var floorY      = Math.floor(y);
+        var floorZ      = Math.floor(z);
+        var left        = (int) floorX;
+        var bottom      = (int) floorY;
+        var back        = (int) floorZ;
+        var right       = left + 1;
+        var top         = bottom + 1;
+        var front       = back + 1;
+        var backIndex   = back * lengthX;
+        var frontIndex  = front * lengthX;
+        var bottomIndex = bottom * baseArea;
+        var topIndex    = top * baseArea;
 
-        double bbl = map[left  + backIndex  + bottomIndex];
-        double bbr = map[right + backIndex  + bottomIndex];
-        double bfl = map[left  + frontIndex + bottomIndex];
-        double bfr = map[right + frontIndex + bottomIndex];
-        double tbl = map[left  + backIndex  + topIndex];
-        double tbr = map[right + backIndex  + topIndex];
-        double tfl = map[left  + frontIndex + topIndex];
-        double tfr = map[right + frontIndex + topIndex];
+        var bbl = map[left  + backIndex  + bottomIndex];
+        var bbr = map[right + backIndex  + bottomIndex];
+        var bfl = map[left  + frontIndex + bottomIndex];
+        var bfr = map[right + frontIndex + bottomIndex];
+        var tbl = map[left  + backIndex  + topIndex];
+        var tbr = map[right + backIndex  + topIndex];
+        var tfl = map[left  + frontIndex + topIndex];
+        var tfr = map[right + frontIndex + topIndex];
 
-        double fracX = x - floorX;
-        double fracY = y - floorY;
-        double fracZ = z - floorZ;
+        var fracX = x - floorX;
+        var fracY = y - floorY;
+        var fracZ = z - floorZ;
 
         return
             lerp(

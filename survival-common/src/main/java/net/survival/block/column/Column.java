@@ -27,8 +27,8 @@ public class Column implements BlockStorage
     }
 
     public Column makeCopy() {
-        Chunk[] copyOfChunks = new Chunk[HEIGHT];
-        for (int i = 0; i < HEIGHT; ++i) {
+        var copyOfChunks = new Chunk[HEIGHT];
+        for (var i = 0; i < HEIGHT; ++i) {
             if (chunks[i] != null)
                 copyOfChunks[i] = chunks[i].makeCopy();
         }
@@ -48,7 +48,7 @@ public class Column implements BlockStorage
     }
 
     public int getHeight() {
-        int topIndex = HEIGHT - 1;
+        var topIndex = HEIGHT - 1;
         while (topIndex >= 0 && chunks[topIndex] == null)
             --topIndex;
 
@@ -57,7 +57,7 @@ public class Column implements BlockStorage
 
     @Override
     public int getBlockFullID(int x, int y, int z) {
-        int index = y / Chunk.YLENGTH;
+        var index = y / Chunk.YLENGTH;
 
         if (chunks[index] == null)
             return 0;
@@ -67,7 +67,7 @@ public class Column implements BlockStorage
 
     @Override
     public void setBlockFullID(int x, int y, int z, int to) {
-        int index = y / Chunk.YLENGTH;
+        var index = y / Chunk.YLENGTH;
 
         if (chunks[index] == null) {
             chunks[index] = new Chunk();

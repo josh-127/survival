@@ -16,10 +16,10 @@ class LandGenLayer extends GenLayer
     public void generate(int offsetX, int offsetZ) {
         super.generate(offsetX, offsetZ);
 
-        for (int z = 0; z < lengthZ; ++z) {
-            for (int x = 0; x < lengthX; ++x) {
+        for (var z = 0; z < lengthZ; ++z) {
+            for (var x = 0; x < lengthX; ++x) {
                 random = rngFromPosition(random, offsetX + x, offsetZ + z);
-                int dstIndex = x + z * lengthX;
+                var dstIndex = x + z * lengthX;
                 if (random.nextInt(2) == 0)
                     map[dstIndex] = (byte) (random.nextInt(BiomeType.getCachedValues().length - 1) + 1);
                 else
