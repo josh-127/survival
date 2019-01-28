@@ -14,6 +14,8 @@ public interface InteractionContext
 
     Block getBlock(int x, int y, int z);
 
+    Block raycastBlock(double x, double y, double z, double dx, double dy, double dz);
+
     void postMessage(ActorMessage message);
 
     void postMessage(BlockMessage message);

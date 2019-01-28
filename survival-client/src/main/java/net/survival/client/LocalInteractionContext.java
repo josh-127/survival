@@ -10,6 +10,7 @@ import net.survival.blocktype.Block;
 import net.survival.client.particle.ClientParticleSpace;
 import net.survival.interaction.InteractionContext;
 import net.survival.particle.message.ParticleMessage;
+import net.survival.util.MathEx;
 
 class LocalInteractionContext implements InteractionContext
 {
@@ -50,6 +51,26 @@ class LocalInteractionContext implements InteractionContext
     @Override
     public Block getBlock(int x, int y, int z) {
         return blockSpace.getBlockState(x, y, z);
+    }
+
+    @Override
+    public Block raycastBlock(double x, double y, double z, double dx, double dy, double dz) {
+        var targetX = x + dx;
+        var targetY = y + dy;
+        var targetZ = z + dz;
+
+        for (var t = 0.0; t <= 1.0; t += 0.01) {
+            var bx = (int) Math.floor(MathEx.lerp(x, targetX, t));
+            var by = (int) Math.floor(MathEx.lerp(y, targetY, t));
+            var bz = (int) Math.floor(MathEx.lerp(z, targetZ, t));
+            var block = getBlock(bx, by, bz);
+
+            if (block.isSolid()) {
+                return block;
+            }
+        }
+
+        return null;
     }
 
     @Override
