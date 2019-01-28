@@ -40,9 +40,9 @@ class ActorDisplay
         GLMatrixStack.push();
         GLMatrixStack.load(viewMatrix);
 
-        Iterable<Actor> actors = actorSpace.iterateActors();
+        var actors = actorSpace.iterateActors();
 
-        for (Actor actor : actors)
+        for (var actor : actors)
             displayActor(actor);
 
         GLMatrixStack.pop();
@@ -56,7 +56,7 @@ class ActorDisplay
             GLMatrixStack.rotate((float) actor.getPitch(), 1.0f, 0.0f, 0.0f);
             GLMatrixStack.rotate((float) actor.getRoll(), 0.0f, 0.0f, 1.0f);
     
-            StaticModel model = StaticModel.fromActor(actor);
+            var model = StaticModel.fromActor(actor);
             ModelRenderer.displayStaticModel(model);
     
             GLMatrixStack.pop();

@@ -1,6 +1,5 @@
 package net.survival.client.graphics.blockrenderer;
 
-import net.survival.blocktype.Block;
 import net.survival.blocktype.BlockFace;
 import net.survival.blocktype.BlockID;
 import net.survival.blocktype.BlockModel;
@@ -30,7 +29,7 @@ public abstract class BlockRenderer
     protected static final boolean[] blockToBlockingBackTable = new boolean[BlockType.getAllBlocks().length];
 
     static {
-        for (int i = 0; i < blockRenderers.length; ++i)
+        for (var i = 0; i < blockRenderers.length; ++i)
             blockRenderers[i] = defaultBlockRenderer;
 
         blockRenderers[BlockModel.INVISIBLE.id] = new InvisibleBlockRenderer();
@@ -50,38 +49,38 @@ public abstract class BlockRenderer
         blockRenderers[BlockModel.PRESSURE_PLATE_OFF.id] = new PressurePlateRenderer(0.0625f);
         blockRenderers[BlockModel.PRESSURE_PLATE_ON.id] = new PressurePlateRenderer(0.03125f);
 
-        for (int i = 0; i < blockToBlockingTopTable.length; ++i) {
-            Block block = BlockType.getAllBlocks()[i];
+        for (var i = 0; i < blockToBlockingTopTable.length; ++i) {
+            var block = BlockType.getAllBlocks()[i];
             if (block != null)
                 blockToBlockingTopTable[i] = block.getModel().isBlockingTop();
         }
 
-        for (int i = 0; i < blockToBlockingBottomTable.length; ++i) {
-            Block block = BlockType.getAllBlocks()[i];
+        for (var i = 0; i < blockToBlockingBottomTable.length; ++i) {
+            var block = BlockType.getAllBlocks()[i];
             if (block != null)
                 blockToBlockingBottomTable[i] = block.getModel().isBlockingBottom();
         }
 
-        for (int i = 0; i < blockToBlockingLeftTable.length; ++i) {
-            Block block = BlockType.getAllBlocks()[i];
+        for (var i = 0; i < blockToBlockingLeftTable.length; ++i) {
+            var block = BlockType.getAllBlocks()[i];
             if (block != null)
                 blockToBlockingLeftTable[i] = block.getModel().isBlockingLeft();
         }
 
-        for (int i = 0; i < blockToBlockingRightTable.length; ++i) {
-            Block block = BlockType.getAllBlocks()[i];
+        for (var i = 0; i < blockToBlockingRightTable.length; ++i) {
+            var block = BlockType.getAllBlocks()[i];
             if (block != null)
                 blockToBlockingRightTable[i] = block.getModel().isBlockingRight();
         }
 
-        for (int i = 0; i < blockToBlockingFrontTable.length; ++i) {
-            Block block = BlockType.getAllBlocks()[i];
+        for (var i = 0; i < blockToBlockingFrontTable.length; ++i) {
+            var block = BlockType.getAllBlocks()[i];
             if (block != null)
                 blockToBlockingFrontTable[i] = block.getModel().isBlockingFront();
         }
 
-        for (int i = 0; i < blockToBlockingBackTable.length; ++i) {
-            Block block = BlockType.getAllBlocks()[i];
+        for (var i = 0; i < blockToBlockingBackTable.length; ++i) {
+            var block = BlockType.getAllBlocks()[i];
             if (block != null)
                 blockToBlockingBackTable[i] = block.getModel().isBlockingBack();
         }

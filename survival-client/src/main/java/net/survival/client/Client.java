@@ -2,15 +2,12 @@ package net.survival.client;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.Map;
 import java.util.Queue;
 
 import org.joml.Vector3d;
 import org.lwjgl.glfw.GLFW;
 
-import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import net.survival.actor.Actor;
 import net.survival.actor.ActorSpace;
 import net.survival.actor.NpcActor;
@@ -22,7 +19,6 @@ import net.survival.actor.message.MoveMessage;
 import net.survival.actor.message.StepMessage;
 import net.survival.block.BlockSpace;
 import net.survival.block.column.CircularColumnStageMask;
-import net.survival.block.column.Column;
 import net.survival.block.column.ColumnDbPipe;
 import net.survival.block.column.ColumnPos;
 import net.survival.block.column.ColumnRequest;
@@ -121,14 +117,14 @@ public class Client implements AutoCloseable
         //
         // Camera
         //
-        final double CAMERA_SPEED = 20.0;
-        final double PI = Math.PI;
-        double cursorDX = Mouse.getDeltaX();
-        double cursorDY = Mouse.getDeltaY();
-        double jsX = 0.0;
-        double jsZ = 0.0;
-        double jsY = 0.0;
-        double camYaw = fpvCamera.yaw;
+        final var CAMERA_SPEED = 20.0;
+        final var PI = Math.PI;
+        var cursorDX = Mouse.getDeltaX();
+        var cursorDY = Mouse.getDeltaY();
+        var jsX = 0.0;
+        var jsZ = 0.0;
+        var jsY = 0.0;
+        var camYaw = fpvCamera.yaw;
         if (Keyboard.isKeyDown(Key.W)) { jsX += Math.sin(camYaw); jsZ -= Math.cos(camYaw); }
         if (Keyboard.isKeyDown(Key.S)) { jsX += Math.sin(camYaw + PI); jsZ -= Math.cos(camYaw + PI); }
         if (Keyboard.isKeyDown(Key.A)) { jsX += Math.sin(camYaw - PI / 2.0); jsZ -= Math.cos(camYaw - PI / 2.0); }
@@ -153,8 +149,8 @@ public class Client implements AutoCloseable
         //
         // Column System
         //
-        int cx = ColumnPos.toColumnX((int) Math.floor(fpvCamera.position.x));
-        int cz = ColumnPos.toColumnZ((int) Math.floor(fpvCamera.position.z));
+        var cx = ColumnPos.toColumnX((int) Math.floor(fpvCamera.position.x));
+        var cz = ColumnPos.toColumnZ((int) Math.floor(fpvCamera.position.z));
         columnMask.setCenter(cx, cz);
         columnSystem.update(elapsedTime);
 
@@ -168,9 +164,9 @@ public class Client implements AutoCloseable
             message.accept(actorSpace.getActor(message.getDestActorID()), interactionContext);
         }
 
-        for (Map.Entry<Integer, Actor> entry : actorSpace.iterateActorMap()) {
-            int actorID = entry.getKey();
-            Actor actor = entry.getValue();
+        for (var entry : actorSpace.iterateActorMap()) {
+            var actorID = entry.getKey();
+            var actor = entry.getValue();
             new StepMessage(actorID).accept(actor, interactionContext);
         }
 
@@ -178,7 +174,7 @@ public class Client implements AutoCloseable
         // Block System
         //
         while (!blockMessages.isEmpty()) {
-            BlockMessage message = blockMessages.remove();
+            var message = blockMessages.remove();
             message.accept(blockSpace, interactionContext);
         }
 
@@ -186,7 +182,7 @@ public class Client implements AutoCloseable
         // Particle System
         //
         while (!particleMessages.isEmpty()) {
-            ParticleMessage message = particleMessages.remove();
+            var message = particleMessages.remove();
             message.accept(particleSpace);
         }
 
@@ -205,11 +201,11 @@ public class Client implements AutoCloseable
         //
         // Client Display
         //
-        Iterator<Long2ObjectMap.Entry<Column>> columnMapIt = blockSpace.getColumnMapFastIterator();
+        var columnMapIt = blockSpace.getColumnMapFastIterator();
         while (columnMapIt.hasNext()) {
-            Long2ObjectMap.Entry<Column> entry = columnMapIt.next();
-            long hashedPos = entry.getLongKey();
-            Column column = entry.getValue();
+            var entry = columnMapIt.next();
+            var hashedPos = entry.getLongKey();
+            var column = entry.getValue();
 
             if (column.isBlocksModified()) {
                 column.clearModificationFlags();
@@ -238,34 +234,34 @@ public class Client implements AutoCloseable
     }
 
     public static void main(String[] args) throws InterruptedException {
-        ColumnDbPipe columnDbPipe = new ColumnDbPipe();
-        ColumnServer columnServer = new ColumnServer(
+        var columnDbPipe = new ColumnDbPipe();
+        var columnServer = new ColumnServer(
                 new File(System.getProperty("user.dir") + "/../.world/columns"),
                 columnDbPipe.getServerSide());
 
-        Thread columnServerThread = new Thread(columnServer);
+        var columnServerThread = new Thread(columnServer);
         columnServerThread.start();
 
-        GLDisplay display = new GLDisplay(GraphicsSettings.WINDOW_WIDTH,
+        var display = new GLDisplay(GraphicsSettings.WINDOW_WIDTH,
                 GraphicsSettings.WINDOW_HEIGHT, WINDOW_TITLE);
-        GlfwKeyboardAdapter keyboardAdapter = new GlfwKeyboardAdapter();
-        GlfwMouseAdapter mouseAdapter = new GlfwMouseAdapter(display.getUnderlyingGlfwWindow());
+        var keyboardAdapter = new GlfwKeyboardAdapter();
+        var mouseAdapter = new GlfwMouseAdapter(display.getUnderlyingGlfwWindow());
         GLFW.glfwSetKeyCallback(display.getUnderlyingGlfwWindow(), keyboardAdapter);
         GLFW.glfwSetCursorPosCallback(display.getUnderlyingGlfwWindow(), mouseAdapter);
         GLRenderContext.init();
 
-        Client program = new Client(columnDbPipe.getClientSide());
+        var program = new Client(columnDbPipe.getClientSide());
 
-        final double MILLIS_PER_TICK = SECONDS_PER_TICK * 1000.0;
-        long now = System.currentTimeMillis();
-        long prevTime = now;
-        double unprocessedTicks = 0.0;
+        final var MILLIS_PER_TICK = SECONDS_PER_TICK * 1000.0;
+        var now = System.currentTimeMillis();
+        var prevTime = now;
+        var unprocessedTicks = 0.0;
 
-        int frameCounter = 0;
-        long frameRateTimer = System.currentTimeMillis();
-        int frameRate = 0;
+        var frameCounter = 0;
+        var frameRateTimer = System.currentTimeMillis();
+        var frameRate = 0;
 
-        for (boolean running = true; running; running = Keyboard.isKeyUp(Key.ESCAPE)
+        for (var running = true; running; running = Keyboard.isKeyUp(Key.ESCAPE)
                 && !display.shouldClose())
         {
             now = System.currentTimeMillis();
@@ -303,17 +299,17 @@ public class Client implements AutoCloseable
 
     private void temporaryTestCode() {
         if (Mouse.isLmbPressed() || Mouse.isRmbPressed()) {
-            double px = fpvCamera.position.x;
-            double py = fpvCamera.position.y;
-            double pz = fpvCamera.position.z;
-            final double DELTA = 0.0078125;
-            for (double zz = 0.0; zz < 7.0; zz += DELTA) {
+            var px = fpvCamera.position.x;
+            var py = fpvCamera.position.y;
+            var pz = fpvCamera.position.z;
+            final var DELTA = 0.0078125;
+            for (var zz = 0.0; zz < 7.0; zz += DELTA) {
                 px += DELTA * Math.sin(fpvCamera.yaw) * Math.cos(fpvCamera.pitch);
                 py += DELTA * Math.sin(fpvCamera.pitch);
                 pz -= DELTA * Math.cos(fpvCamera.yaw) * Math.cos(fpvCamera.pitch);
-                int pxi = (int) Math.floor(px);
-                int pyi = (int) Math.floor(py);
-                int pzi = (int) Math.floor(pz);
+                var pxi = (int) Math.floor(px);
+                var pyi = (int) Math.floor(py);
+                var pzi = (int) Math.floor(pz);
                 if (blockSpace.getBlockFullID(pxi, pyi, pzi) != 0) {
                     if (Mouse.isLmbPressed()) {
                         blockMessages.add(new BreakBlockMessage(pxi, pyi, pzi));
@@ -331,7 +327,7 @@ public class Client implements AutoCloseable
             playerID = actorSpace.addActor(player);
         }
         else if (Keyboard.isKeyPressed(Key.T)) {
-            NpcActor npcActor = new NpcActor(
+            var npcActor = new NpcActor(
                     fpvCamera.position.x,
                     fpvCamera.position.y,
                     fpvCamera.position.z);
@@ -371,8 +367,8 @@ public class Client implements AutoCloseable
         if (Keyboard.isKeyPressed(Key._7))
             compositeDisplay.toggleVisibilityFlags(VisibilityFlags.DEBUG_GEOMETRY);
 
-        float spx = compositeDisplay.getCloudSpeedX();
-        float spz = compositeDisplay.getCloudSpeedZ();
+        var spx = compositeDisplay.getCloudSpeedX();
+        var spz = compositeDisplay.getCloudSpeedZ();
         if (Keyboard.isKeyDown(Key.UP)) {
             spx += 5.0f;
             compositeDisplay.setCloudSpeed(spx, spz);

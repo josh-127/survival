@@ -16,12 +16,12 @@ public class ModelRenderer
     private ModelRenderer() {}
 
     public static void displayStaticModel(StaticModel model) {
-        for (int i = 0; i < model.meshes.length; ++i) {
-            StaticModel.Mesh mesh = model.meshes[i];
+        for (var i = 0; i < model.meshes.length; ++i) {
+            var mesh = model.meshes[i];
 
-            GLTexture texture = textureCache.get(mesh.texturePath);
+            var texture = textureCache.get(mesh.texturePath);
             if (texture == null) {
-                Bitmap bitmap = Bitmap.fromFile(mesh.texturePath);
+                var bitmap = Bitmap.fromFile(mesh.texturePath);
                 texture = new GLTexture();
                 texture.beginBind()
                         .setMinFilter(GLFilterMode.NEAREST_MIPMAP_NEAREST)
@@ -34,7 +34,7 @@ public class ModelRenderer
                 textureCache.put(mesh.texturePath, texture);
             }
 
-            GLImmediateDrawCall drawCall = GLImmediateDrawCall.beginTriangles(texture);
+            var drawCall = GLImmediateDrawCall.beginTriangles(texture);
             drawCall.color(1.0f, 1.0f, 1.0f);
             makeStaticMeshDrawCall(drawCall, mesh);
             drawCall.end();
@@ -44,16 +44,16 @@ public class ModelRenderer
     private static void makeStaticMeshDrawCall(GLImmediateDrawCall drawCall,
             StaticModel.Mesh mesh)
     {
-        for (int j = 0; j < mesh.vertexCount; ++j) {
-            int baseIndex = j * 8;
-            float x = mesh.vertices[baseIndex];
-            float y = mesh.vertices[baseIndex + 1];
-            float z = mesh.vertices[baseIndex + 2];
-            float normalX = mesh.vertices[baseIndex + 3];
-            float normalY = mesh.vertices[baseIndex + 4];
-            float normalZ = mesh.vertices[baseIndex + 5];
-            float texCoordU = mesh.vertices[baseIndex + 6];
-            float texCoordV = mesh.vertices[baseIndex + 7];
+        for (var j = 0; j < mesh.vertexCount; ++j) {
+            var baseIndex = j * 8;
+            var x = mesh.vertices[baseIndex];
+            var y = mesh.vertices[baseIndex + 1];
+            var z = mesh.vertices[baseIndex + 2];
+            var normalX = mesh.vertices[baseIndex + 3];
+            var normalY = mesh.vertices[baseIndex + 4];
+            var normalZ = mesh.vertices[baseIndex + 5];
+            var texCoordU = mesh.vertices[baseIndex + 6];
+            var texCoordV = mesh.vertices[baseIndex + 7];
 
             drawCall.texCoord(texCoordU, texCoordV);
             drawCall.normal(normalX, normalY, normalZ);

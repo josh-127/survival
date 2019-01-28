@@ -22,14 +22,14 @@ class PressurePlateRenderer extends BlockRenderer
         if (blockToBlockingBottomTable[BlockID.typeIDFromFullID(adjacentBlockID)])
             return;
 
-        float left = x + PADDING;
-        float right = x + 1.0f - PADDING;
-        float back = z + PADDING;
-        float front = z + 1.0f - PADDING;
-        float u1 = topFaceTextures.getTexCoordU1(blockID);
-        float u2 = topFaceTextures.getTexCoordU2(blockID);
-        float v1 = topFaceTextures.getTexCoordV1(blockID);
-        float v2 = topFaceTextures.getTexCoordV2(blockID);
+        var left = x + PADDING;
+        var right = x + 1.0f - PADDING;
+        var back = z + PADDING;
+        var front = z + 1.0f - PADDING;
+        var u1 = topFaceTextures.getTexCoordU1(blockID);
+        var u2 = topFaceTextures.getTexCoordU2(blockID);
+        var v1 = topFaceTextures.getTexCoordV1(blockID);
+        var v2 = topFaceTextures.getTexCoordV2(blockID);
         builder.setTexCoord(u1, v1); builder.pushVertex(left,  y + height, front);
         builder.setTexCoord(u2, v1); builder.pushVertex(right, y + height, front);
         builder.setTexCoord(u2, v2); builder.pushVertex(right, y + height, back );
@@ -45,14 +45,14 @@ class PressurePlateRenderer extends BlockRenderer
         if (blockToBlockingTopTable[BlockID.typeIDFromFullID(adjacentBlockID)])
             return;
 
-        float left = x + PADDING;
-        float right = x + 1.0f - PADDING;
-        float back = z + PADDING;
-        float front = z + 1.0f - PADDING;
-        float u1 = bottomFaceTextures.getTexCoordU1(blockID);
-        float u2 = bottomFaceTextures.getTexCoordU2(blockID);
-        float v1 = bottomFaceTextures.getTexCoordV1(blockID);
-        float v2 = bottomFaceTextures.getTexCoordV2(blockID);
+        var left = x + PADDING;
+        var right = x + 1.0f - PADDING;
+        var back = z + PADDING;
+        var front = z + 1.0f - PADDING;
+        var u1 = bottomFaceTextures.getTexCoordU1(blockID);
+        var u2 = bottomFaceTextures.getTexCoordU2(blockID);
+        var v1 = bottomFaceTextures.getTexCoordV1(blockID);
+        var v2 = bottomFaceTextures.getTexCoordV2(blockID);
         builder.setTexCoord(u1, v1); builder.pushVertex(left,  y, back );
         builder.setTexCoord(u2, v1); builder.pushVertex(right, y, back );
         builder.setTexCoord(u2, v2); builder.pushVertex(right, y, front);
@@ -68,13 +68,13 @@ class PressurePlateRenderer extends BlockRenderer
         if (blockToBlockingRightTable[BlockID.typeIDFromFullID(adjacentBlockID)])
             return;
 
-        float left = x + PADDING;
-        float back = z + PADDING;
-        float front = z + 1.0f - PADDING;
-        float u1 = leftFaceTextures.getTexCoordU1(blockID);
-        float u2 = leftFaceTextures.getTexCoordU2(blockID);
-        float v1 = leftFaceTextures.getTexCoordV1(blockID);
-        float v2 = leftFaceTextures.getTexCoordV2(blockID);
+        var left = x + PADDING;
+        var back = z + PADDING;
+        var front = z + 1.0f - PADDING;
+        var u1 = leftFaceTextures.getTexCoordU1(blockID);
+        var u2 = leftFaceTextures.getTexCoordU2(blockID);
+        var v1 = leftFaceTextures.getTexCoordV1(blockID);
+        var v2 = leftFaceTextures.getTexCoordV2(blockID);
         builder.setTexCoord(u1, v1); builder.pushVertex(left, y,          back );
         builder.setTexCoord(u2, v1); builder.pushVertex(left, y,          front);
         builder.setTexCoord(u2, v2); builder.pushVertex(left, y + height, front);
@@ -90,13 +90,13 @@ class PressurePlateRenderer extends BlockRenderer
         if (blockToBlockingLeftTable[BlockID.typeIDFromFullID(adjacentBlockID)])
             return;
 
-        float right = x + 1.0f - PADDING;
-        float back = z + PADDING;
-        float front = z + 1.0f - PADDING;
-        float u1 = rightFaceTextures.getTexCoordU1(blockID);
-        float u2 = rightFaceTextures.getTexCoordU2(blockID);
-        float v1 = rightFaceTextures.getTexCoordV1(blockID);
-        float v2 = rightFaceTextures.getTexCoordV2(blockID);
+        var right = x + 1.0f - PADDING;
+        var back = z + PADDING;
+        var front = z + 1.0f - PADDING;
+        var u1 = rightFaceTextures.getTexCoordU1(blockID);
+        var u2 = rightFaceTextures.getTexCoordU2(blockID);
+        var v1 = rightFaceTextures.getTexCoordV1(blockID);
+        var v2 = rightFaceTextures.getTexCoordV2(blockID);
         builder.setTexCoord(u1, v1); builder.pushVertex(right, y,          front);
         builder.setTexCoord(u2, v1); builder.pushVertex(right, y,          back );
         builder.setTexCoord(u2, v2); builder.pushVertex(right, y + height, back );
@@ -112,13 +112,13 @@ class PressurePlateRenderer extends BlockRenderer
         if (blockToBlockingBackTable[BlockID.typeIDFromFullID(adjacentBlockID)])
             return;
 
-        float left = x + PADDING;
-        float right = x + 1.0f - PADDING;
-        float front = z + 1.0f - PADDING;
-        float u1 = frontFaceTextures.getTexCoordU1(blockID);
-        float u2 = frontFaceTextures.getTexCoordU2(blockID);
-        float v1 = frontFaceTextures.getTexCoordV1(blockID);
-        float v2 = frontFaceTextures.getTexCoordV2(blockID);
+        var left = x + PADDING;
+        var right = x + 1.0f - PADDING;
+        var front = z + 1.0f - PADDING;
+        var u1 = frontFaceTextures.getTexCoordU1(blockID);
+        var u2 = frontFaceTextures.getTexCoordU2(blockID);
+        var v1 = frontFaceTextures.getTexCoordV1(blockID);
+        var v2 = frontFaceTextures.getTexCoordV2(blockID);
         builder.setTexCoord(u1, v1); builder.pushVertex(left,  y,          front);
         builder.setTexCoord(u2, v1); builder.pushVertex(right, y,          front);
         builder.setTexCoord(u2, v2); builder.pushVertex(right, y + height, front);
@@ -134,13 +134,13 @@ class PressurePlateRenderer extends BlockRenderer
         if (blockToBlockingFrontTable[BlockID.typeIDFromFullID(adjacentBlockID)])
             return;
 
-        float left = x + PADDING;
-        float right = x + 1.0f - PADDING;
-        float back = z + PADDING;
-        float u1 = backFaceTextures.getTexCoordU1(blockID);
-        float u2 = backFaceTextures.getTexCoordU2(blockID);
-        float v1 = backFaceTextures.getTexCoordV1(blockID);
-        float v2 = backFaceTextures.getTexCoordV2(blockID);
+        var left = x + PADDING;
+        var right = x + 1.0f - PADDING;
+        var back = z + PADDING;
+        var u1 = backFaceTextures.getTexCoordU1(blockID);
+        var u2 = backFaceTextures.getTexCoordU2(blockID);
+        var v1 = backFaceTextures.getTexCoordV1(blockID);
+        var v2 = backFaceTextures.getTexCoordV2(blockID);
         builder.setTexCoord(u1, v1); builder.pushVertex(right, y,          back);
         builder.setTexCoord(u2, v1); builder.pushVertex(left,  y,          back);
         builder.setTexCoord(u2, v2); builder.pushVertex(left,  y + height, back);

@@ -24,7 +24,7 @@ public class UIDisplay implements GraphicsResource
     }
 
     public void display() {
-        for (ControlDisplayDesc desc : uiClientPipe) {
+        for (var desc : uiClientPipe) {
             if (desc.type == ControlDisplayDesc.TYPE_BUTTON) {
                 rectanglesToDisplay.add(new RectangleElement(
                         desc.hovered,
@@ -42,13 +42,13 @@ public class UIDisplay implements GraphicsResource
             }
         }
 
-        for (TextElement textElement : textToDisplay)
+        for (var textElement : textToDisplay)
             displayText(textElement);
         textToDisplay.clear();
 
-        GLImmediateDrawCall drawCall = GLImmediateDrawCall.beginTriangles(null);
+        var drawCall = GLImmediateDrawCall.beginTriangles(null);
 
-        for (RectangleElement rectangleElement : rectanglesToDisplay)
+        for (var rectangleElement : rectanglesToDisplay)
             displayRectangle(drawCall, rectangleElement);
         rectanglesToDisplay.clear();
 

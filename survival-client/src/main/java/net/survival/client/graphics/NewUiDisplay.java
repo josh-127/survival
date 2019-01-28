@@ -2,7 +2,6 @@ package net.survival.client.graphics;
 
 import net.survival.ui.UiBodyElement;
 import net.survival.ui.UiDom;
-import net.survival.ui.UiElement;
 import net.survival.ui.UiElementVoidVisitor;
 import net.survival.ui.UiImageElement;
 import net.survival.ui.UiTextElement;
@@ -22,7 +21,7 @@ class NewUiDisplay implements UiElementVoidVisitor
 
     @Override
     public void visit(UiBodyElement element) {
-        for (UiElement child : element.getChildren()) {
+        for (var child : element.getChildren()) {
             child.accept(this);
         }
     }

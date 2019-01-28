@@ -16,8 +16,8 @@ class FpvCamera
     }
     
     public void moveXZ(double angle, double speed) {
-        double dx = Math.sin(yaw + angle) * speed;
-        double dz = -Math.cos(yaw + angle) * speed;
+        var dx = Math.sin(yaw + angle) * speed;
+        var dz = -Math.cos(yaw + angle) * speed;
         position.x += dx;
         position.z += dz;
     }

@@ -96,18 +96,18 @@ class CloudDisplay
     }
 
     private void rebuildVertexArray() {
-        Random random = new Random(mapSeed);
+        var random = new Random(mapSeed);
 
-        int index = 0;
-        float[] positions = new float[scale * scale * 12];
+        var index = 0;
+        var positions = new float[scale * scale * 12];
 
-        for (int z = 0; z < scale; ++z) {
-            for (int x = 0; x < scale; ++x) {
+        for (var z = 0; z < scale; ++z) {
+            for (var x = 0; x < scale; ++x) {
                 if (random.nextDouble() >= density)
                     continue;
 
-                float posX = x * scale;
-                float posZ = z * scale;
+                var posX = x * scale;
+                var posZ = z * scale;
                 positions[index++] = posX;
                 positions[index++] = posZ;
                 positions[index++] = posX + scale;
@@ -155,8 +155,8 @@ class CloudDisplay
         offsetX += x;
         offsetZ += z;
 
-        for (int i = -4; i <= 2; ++i) {
-            for (int j = -3; j <= 2; ++j) {
+        for (var i = -4; i <= 2; ++i) {
+            for (var j = -3; j <= 2; ++j) {
                 displayPart(
                         viewMatrix,
                         projectionMatrix,
@@ -179,10 +179,10 @@ class CloudDisplay
         GLState.pushBlendEnabled(true);
         GLState.pushBlendFunction(GLBlendFactor.SRC_ALPHA, GLBlendFactor.ONE_MINUS_SRC_ALPHA);
 
-        GLImmediateDrawCall drawCall = GLImmediateDrawCall.beginTriangles(null);
+        var drawCall = GLImmediateDrawCall.beginTriangles(null);
         drawCall.color(1.0f, 1.0f, 1.0f, alpha);
 
-        for (int i = 0; i < vertexPositions.length; i += 2) {
+        for (var i = 0; i < vertexPositions.length; i += 2) {
             drawCall.vertex(offsetX + vertexPositions[i], elevation, offsetZ + vertexPositions[i + 1]);
         }
 

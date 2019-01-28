@@ -4,9 +4,7 @@ import org.joml.Matrix4f;
 
 import net.survival.client.graphics.opengl.GLImmediateDrawCall;
 import net.survival.client.graphics.opengl.GLMatrixStack;
-import net.survival.client.particle.ClientParticleEmitter;
 import net.survival.client.particle.ClientParticleSpace;
-import net.survival.client.particle.ParticleData;
 import net.survival.util.MathEx;
 
 class ParticleDisplay
@@ -38,17 +36,17 @@ class ParticleDisplay
     }
 
     private void displayParticles() {
-        float camUpX = 0.0f;
-        float camUpY = 1.0f;
-        float camUpZ = 0.0f;
-        float camForwardX = camera.getDirectionX();
-        float camForwardY = camera.getDirectionY();
-        float camForwardZ = camera.getDirectionZ();
-        float camRightX = MathEx.crossX(camForwardX, camForwardY, camForwardZ, camUpX, camUpY, camUpZ);
-        float camRightY = MathEx.crossY(camForwardX, camForwardY, camForwardZ, camUpX, camUpY, camUpZ);
-        float camRightZ = MathEx.crossZ(camForwardX, camForwardY, camForwardZ, camUpX, camUpY, camUpZ);
+        var camUpX = 0.0f;
+        var camUpY = 1.0f;
+        var camUpZ = 0.0f;
+        var camForwardX = camera.getDirectionX();
+        var camForwardY = camera.getDirectionY();
+        var camForwardZ = camera.getDirectionZ();
+        var camRightX = MathEx.crossX(camForwardX, camForwardY, camForwardZ, camUpX, camUpY, camUpZ);
+        var camRightY = MathEx.crossY(camForwardX, camForwardY, camForwardZ, camUpX, camUpY, camUpZ);
+        var camRightZ = MathEx.crossZ(camForwardX, camForwardY, camForwardZ, camUpX, camUpY, camUpZ);
 
-        float length = MathEx.length(camRightX, camRightY, camRightZ);
+        var length = MathEx.length(camRightX, camRightY, camRightZ);
         camRightX /= length;
         camRightY /= length;
         camRightZ /= length;
@@ -60,16 +58,16 @@ class ParticleDisplay
         camRightY *= 0.25f;
         camRightZ *= 0.25f;
 
-        GLImmediateDrawCall drawCall = GLImmediateDrawCall.beginTriangles(null);
+        var drawCall = GLImmediateDrawCall.beginTriangles(null);
         drawCall.color(1.0f, 1.0f, 1.0f);
 
-        ParticleData data = clientParticleSpace.getData();
-        int maxParticles = data.maxParticles;
+        var data = clientParticleSpace.getData();
+        var maxParticles = data.maxParticles;
 
-        for (int i = 0; i < maxParticles; ++i) {
-            float x = (float) data.xs[i];
-            float y = (float) data.ys[i];
-            float z = (float) data.zs[i];
+        for (var i = 0; i < maxParticles; ++i) {
+            var x = (float) data.xs[i];
+            var y = (float) data.ys[i];
+            var z = (float) data.zs[i];
             displayBillboard(drawCall, x, y, z, camRightX, camRightY, camRightZ, camUpX, camUpY, camUpZ);
         }
 
@@ -77,17 +75,17 @@ class ParticleDisplay
     }
 
     private void displayBillboard(GLImmediateDrawCall drawCall, float x, float y, float z, float size) {
-        float camUpX = 0.0f;
-        float camUpY = 1.0f;
-        float camUpZ = 0.0f;
-        float camForwardX = camera.getDirectionX();
-        float camForwardY = camera.getDirectionY();
-        float camForwardZ = camera.getDirectionZ();
-        float camRightX = MathEx.crossX(camForwardX, camForwardY, camForwardZ, camUpX, camUpY, camUpZ);
-        float camRightY = MathEx.crossY(camForwardX, camForwardY, camForwardZ, camUpX, camUpY, camUpZ);
-        float camRightZ = MathEx.crossZ(camForwardX, camForwardY, camForwardZ, camUpX, camUpY, camUpZ);
+        var camUpX = 0.0f;
+        var camUpY = 1.0f;
+        var camUpZ = 0.0f;
+        var camForwardX = camera.getDirectionX();
+        var camForwardY = camera.getDirectionY();
+        var camForwardZ = camera.getDirectionZ();
+        var camRightX = MathEx.crossX(camForwardX, camForwardY, camForwardZ, camUpX, camUpY, camUpZ);
+        var camRightY = MathEx.crossY(camForwardX, camForwardY, camForwardZ, camUpX, camUpY, camUpZ);
+        var camRightZ = MathEx.crossZ(camForwardX, camForwardY, camForwardZ, camUpX, camUpY, camUpZ);
 
-        float length = MathEx.length(camRightX, camRightY, camRightZ);
+        var length = MathEx.length(camRightX, camRightY, camRightZ);
         camRightX /= length;
         camRightY /= length;
         camRightZ /= length;
@@ -108,18 +106,18 @@ class ParticleDisplay
             float camRightX, float camRightY, float camRightZ,
             float camUpX, float camUpY, float camUpZ)
     {
-        float blX = x - camRightX - camUpX;
-        float blY = y - camRightY - camUpY;
-        float blZ = z - camRightZ - camUpZ;
-        float brX = x + camRightX - camUpX;
-        float brY = y + camRightY - camUpY;
-        float brZ = z + camRightZ - camUpZ;
-        float tlX = x - camRightX + camUpX;
-        float tlY = y - camRightY + camUpY;
-        float tlZ = z - camRightZ + camUpZ;
-        float trX = x + camRightX + camUpX;
-        float trY = y + camRightY + camUpY;
-        float trZ = z + camRightZ + camUpZ;
+        var blX = x - camRightX - camUpX;
+        var blY = y - camRightY - camUpY;
+        var blZ = z - camRightZ - camUpZ;
+        var brX = x + camRightX - camUpX;
+        var brY = y + camRightY - camUpY;
+        var brZ = z + camRightZ - camUpZ;
+        var tlX = x - camRightX + camUpX;
+        var tlY = y - camRightY + camUpY;
+        var tlZ = z - camRightZ + camUpZ;
+        var trX = x + camRightX + camUpX;
+        var trY = y + camRightY + camUpY;
+        var trZ = z + camRightZ + camUpZ;
 
         drawCall.vertex(blX, blY, blZ);
         drawCall.vertex(brX, brY, brZ);

@@ -2,7 +2,6 @@ package net.survival.client.graphics.opengl;
 
 import static org.lwjgl.glfw.GLFW.*;
 
-import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 
 import net.survival.client.graphics.GraphicsResource;
@@ -28,13 +27,13 @@ public class GLDisplay implements GraphicsResource
         window = glfwCreateWindow(width, height, title, 0, 0);
         glfwMakeContextCurrent(window);
 
-        long monitor = glfwGetPrimaryMonitor();
-        GLFWVidMode vidMode = glfwGetVideoMode(monitor);
-        int monitorWidth = vidMode.width();
-        int monitorHeight = vidMode.height();
+        var monitor = glfwGetPrimaryMonitor();
+        var vidMode = glfwGetVideoMode(monitor);
+        var monitorWidth = vidMode.width();
+        var monitorHeight = vidMode.height();
 
-        int windowX = (monitorWidth - width) / 2;
-        int windowY = (monitorHeight - height) / 2;
+        var windowX = (monitorWidth - width) / 2;
+        var windowY = (monitorHeight - height) / 2;
         glfwSetWindowPos(window, windowX, windowY);
 
         glfwShowWindow(window);

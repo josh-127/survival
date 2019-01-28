@@ -1,12 +1,9 @@
 package net.survival.client.graphics.model;
 
-import org.lwjgl.PointerBuffer;
-import org.lwjgl.assimp.AIFace;
 import org.lwjgl.assimp.AIMaterial;
 import org.lwjgl.assimp.AIMesh;
 import org.lwjgl.assimp.AIScene;
 import org.lwjgl.assimp.AIString;
-import org.lwjgl.assimp.AIVector3D;
 
 import net.survival.actor.Actor;
 
@@ -52,19 +49,19 @@ public class StaticModel
     }
 
     public static StaticModel fromFile(String filePath) {
-        File file = new File(filePath);
-        String absoluteFilePath = file.getAbsolutePath();
+        var file = new File(filePath);
+        var absoluteFilePath = file.getAbsolutePath();
 
-        try (AIScene scene = aiImportFile(absoluteFilePath, aiProcess_FlipUVs
+        try (var scene = aiImportFile(absoluteFilePath, aiProcess_FlipUVs
                 | aiProcess_PreTransformVertices | aiProcess_SortByPType | aiProcess_Triangulate))
         {
-            AIMesh[] aiMeshes = getMeshes(scene);
-            AIMaterial[] aiMaterials = getMaterials(scene);
+            var aiMeshes = getMeshes(scene);
+            var aiMaterials = getMaterials(scene);
 
-            StaticModel model = new StaticModel(aiMeshes.length, absoluteFilePath);
-            for (int i = 0; i < model.meshes.length; ++i) {
-                AIMesh aiMesh = aiMeshes[i];
-                AIMaterial aiMaterial = aiMaterials[aiMesh.mMaterialIndex()];
+            var model = new StaticModel(aiMeshes.length, absoluteFilePath);
+            for (var i = 0; i < model.meshes.length; ++i) {
+                var aiMesh = aiMeshes[i];
+                var aiMaterial = aiMaterials[aiMesh.mMaterialIndex()];
                 model.meshes[i] = Mesh.fromAssimpMeshAndMaterial(aiMesh, aiMaterial,
                         absoluteFilePath);
             }
@@ -74,20 +71,20 @@ public class StaticModel
     }
 
     private static AIMesh[] getMeshes(AIScene scene) {
-        PointerBuffer meshPtrs = scene.mMeshes();
-        AIMesh[] meshes = new AIMesh[scene.mNumMeshes()];
+        var meshPtrs = scene.mMeshes();
+        var meshes = new AIMesh[scene.mNumMeshes()];
 
-        for (int i = 0; i < meshes.length; ++i)
+        for (var i = 0; i < meshes.length; ++i)
             meshes[i] = AIMesh.create(meshPtrs.get());
 
         return meshes;
     }
 
     private static AIMaterial[] getMaterials(AIScene scene) {
-        PointerBuffer materialPtrs = scene.mMaterials();
-        AIMaterial[] materials = new AIMaterial[scene.mNumMaterials()];
+        var materialPtrs = scene.mMaterials();
+        var materials = new AIMaterial[scene.mNumMaterials()];
 
-        for (int i = 0; i < materials.length; ++i)
+        for (var i = 0; i < materials.length; ++i)
             materials[i] = AIMaterial.create(materialPtrs.get());
 
         return materials;
@@ -108,19 +105,19 @@ public class StaticModel
         public static Mesh fromAssimpMeshAndMaterial(AIMesh aiMesh, AIMaterial aiMaterial,
                 String modelFilePath)
         {
-            int totalVertices = getTotalIndexedVertices(aiMesh);
-            String texturePath = getTexturePath(aiMaterial, modelFilePath);
-            Mesh mesh = new Mesh(totalVertices, texturePath);
+            var totalVertices = getTotalIndexedVertices(aiMesh);
+            var texturePath = getTexturePath(aiMaterial, modelFilePath);
+            var mesh = new Mesh(totalVertices, texturePath);
             importVertices(aiMesh, mesh);
             return mesh;
         }
 
         private static int getTotalIndexedVertices(AIMesh mesh) {
-            int total = 0;
+            var total = 0;
 
-            AIFace.Buffer faces = mesh.mFaces();
+            var faces = mesh.mFaces();
             while (faces.hasRemaining()) {
-                AIFace face = faces.get();
+                var face = faces.get();
                 total += face.mNumIndices();
             }
 
@@ -128,28 +125,28 @@ public class StaticModel
         }
 
         private static String getTexturePath(AIMaterial material, String modelFilePath) {
-            AIString aiTexturePath = AIString.calloc();
+            var aiTexturePath = AIString.calloc();
             aiGetMaterialTexture(material, aiTextureType_DIFFUSE, 0, aiTexturePath,
                     (IntBuffer) null, null, null, null, null, null);
-            String texturePath = aiTexturePath.dataString();
+            var texturePath = aiTexturePath.dataString();
             aiTexturePath.close();
             texturePath = Paths.get(new File(modelFilePath).getParent(), texturePath).toString();
             return texturePath;
         }
 
         private static void importVertices(AIMesh src, Mesh dest) {
-            int destIndex = 0;
-            AIFace.Buffer faces = src.mFaces();
+            var destIndex = 0;
+            var faces = src.mFaces();
 
             while (faces.hasRemaining()) {
-                AIFace face = faces.get();
-                IntBuffer indices = face.mIndices();
+                var face = faces.get();
+                var indices = face.mIndices();
 
                 while (indices.hasRemaining()) {
-                    int srcIndex = indices.get();
-                    AIVector3D position = src.mVertices().get(srcIndex);
-                    AIVector3D normal = src.mNormals().get(srcIndex);
-                    AIVector3D texCoord = src.mTextureCoords(0).get(srcIndex);
+                    var srcIndex = indices.get();
+                    var position = src.mVertices().get(srcIndex);
+                    var normal = src.mNormals().get(srcIndex);
+                    var texCoord = src.mTextureCoords(0).get(srcIndex);
 
                     dest.vertices[destIndex++] = position.x();
                     dest.vertices[destIndex++] = position.y();

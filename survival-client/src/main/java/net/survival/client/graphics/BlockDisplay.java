@@ -1,12 +1,9 @@
 package net.survival.client.graphics;
 
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 
 import org.joml.Matrix4f;
 
-import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
 import it.unimi.dsi.fastutil.longs.LongSet;
 import net.survival.block.BlockSpace;
@@ -51,7 +48,7 @@ class BlockDisplay implements GraphicsResource
         frontFaceDisplays = new HashMap<>();
         backFaceDisplays = new HashMap<>();
 
-        Bitmap overlayBitmap = Bitmap.fromFile("../assets/textures/overlays/low_contrast.png");
+        var overlayBitmap = Bitmap.fromFile("../assets/textures/overlays/low_contrast.png");
         overlayTexture = new GLTexture();
         overlayTexture.beginBind().setMinFilter(GLFilterMode.LINEAR_MIPMAP_LINEAR)
                 .setMagFilter(GLFilterMode.LINEAR).setWrapS(GLWrapMode.REPEAT)
@@ -102,8 +99,8 @@ class BlockDisplay implements GraphicsResource
         cameraProjectionMatrix.identity();
         camera.getProjectionMatrix(cameraProjectionMatrix);
 
-        int dominantAxis = camera.getDominantAxis();
-        BlockFace culledFace = null;
+        var dominantAxis = camera.getDominantAxis();
+        var culledFace = (BlockFace) null;
 
         if (dominantAxis == 0) {
             if (camera.getDirectionX() < 0.0f)
@@ -149,14 +146,14 @@ class BlockDisplay implements GraphicsResource
     }
 
     private void drawNonCubicDisplays(HashMap<Column, ColumnDisplay> displays, Matrix4f viewMatrix) {
-        for (Map.Entry<Column, ColumnDisplay> entry : displays.entrySet()) {
-            ColumnDisplay display = entry.getValue();
+        for (var entry : displays.entrySet()) {
+            var display = entry.getValue();
 
             if (display.isEmpty())
                 continue;
 
-            float globalX = ColumnPos.toGlobalX(display.columnX, 0);
-            float globalZ = ColumnPos.toGlobalZ(display.columnZ, 0);
+            var globalX = ColumnPos.toGlobalX(display.columnX, 0);
+            var globalZ = ColumnPos.toGlobalZ(display.columnZ, 0);
 
             modelViewMatrix.set(viewMatrix).translate(globalX, 0.0f, globalZ);
             GLMatrixStack.load(modelViewMatrix);
@@ -169,14 +166,14 @@ class BlockDisplay implements GraphicsResource
     {
         // Block Faces
         if (!drawOverlay) {
-            for (Map.Entry<Column, ColumnDisplay> entry : faceDisplays.entrySet()) {
-                ColumnDisplay display = entry.getValue();
+            for (var entry : faceDisplays.entrySet()) {
+                var display = entry.getValue();
 
                 if (display.isEmpty())
                     continue;
 
-                float globalX = ColumnPos.toGlobalX(display.columnX, 0);
-                float globalZ = ColumnPos.toGlobalZ(display.columnZ, 0);
+                var globalX = ColumnPos.toGlobalX(display.columnX, 0);
+                var globalZ = ColumnPos.toGlobalZ(display.columnZ, 0);
 
                 modelViewMatrix.set(viewMatrix).translate(globalX, 0.0f, globalZ);
                 GLMatrixStack.load(modelViewMatrix);
@@ -186,28 +183,28 @@ class BlockDisplay implements GraphicsResource
     }
 
     private void updateNonCubicDisplays(HashMap<Column, ColumnDisplay> nonCubicDisplays) {
-        float cameraX = camera.x;
-        float cameraZ = camera.z;
-        float maxViewRadiusSquared = maxViewRadius * maxViewRadius;
+        var cameraX = camera.x;
+        var cameraZ = camera.z;
+        var maxViewRadiusSquared = maxViewRadius * maxViewRadius;
 
-        Iterator<Long2ObjectMap.Entry<Column>> columnMapIt = blockSpace.getColumnMapFastIterator();
+        var columnMapIt = blockSpace.getColumnMapFastIterator();
         while (columnMapIt.hasNext()) {
-            Long2ObjectMap.Entry<Column> entry = columnMapIt.next();
-            long hashedPos = entry.getLongKey();
-            Column column = entry.getValue();
+            var entry = columnMapIt.next();
+            var hashedPos = entry.getLongKey();
+            var column = entry.getValue();
 
-            int cx = ColumnPos.columnXFromHashedPos(hashedPos);
-            int cz = ColumnPos.columnZFromHashedPos(hashedPos);
+            var cx = ColumnPos.columnXFromHashedPos(hashedPos);
+            var cz = ColumnPos.columnZFromHashedPos(hashedPos);
 
-            float relativeX = ColumnPos.toGlobalX(cx, Column.XLENGTH / 2) - cameraX;
-            float relativeZ = ColumnPos.toGlobalZ(cz, Column.ZLENGTH / 2) - cameraZ;
-            float squareDistance = (relativeX * relativeX) + (relativeZ * relativeZ);
+            var relativeX = ColumnPos.toGlobalX(cx, Column.XLENGTH / 2) - cameraX;
+            var relativeZ = ColumnPos.toGlobalZ(cz, Column.ZLENGTH / 2) - cameraZ;
+            var squareDistance = (relativeX * relativeX) + (relativeZ * relativeZ);
 
             if (squareDistance >= maxViewRadiusSquared)
                 continue;
 
-            ColumnDisplay existingDisplay = nonCubicDisplays.get(column);
-            boolean needsUpdating = existingDisplay == null || columnsToRedraw.contains(hashedPos);
+            var existingDisplay = nonCubicDisplays.get(column);
+            var needsUpdating = existingDisplay == null || columnsToRedraw.contains(hashedPos);
 
             if (needsUpdating) {
                 if (existingDisplay != null)
@@ -217,10 +214,10 @@ class BlockDisplay implements GraphicsResource
             }
         }
 
-        Iterator<Map.Entry<Column, ColumnDisplay>> faceDisplaysIt = nonCubicDisplays.entrySet().iterator();
+        var faceDisplaysIt = nonCubicDisplays.entrySet().iterator();
         while (faceDisplaysIt.hasNext()) {
-            Map.Entry<Column, ColumnDisplay> entry = faceDisplaysIt.next();
-            ColumnDisplay columnDisplay = entry.getValue();
+            var entry = faceDisplaysIt.next();
+            var columnDisplay = entry.getValue();
 
             if (!blockSpace.containsColumn(columnDisplay.columnX, columnDisplay.columnZ)) {
                 columnDisplay.close();
@@ -231,8 +228,8 @@ class BlockDisplay implements GraphicsResource
 
     private void updateFaceDisplays(HashMap<Column, ColumnDisplay> faceDisplays, BlockFace blockFace)
     {
-        int dx = 0;
-        int dz = 0;
+        var dx = 0;
+        var dz = 0;
 
         if (blockFace != null) {
             switch (blockFace) {
@@ -244,31 +241,31 @@ class BlockDisplay implements GraphicsResource
             }
         }
 
-        float cameraX = camera.x;
-        float cameraZ = camera.z;
-        float maxViewRadiusSquared = maxViewRadius * maxViewRadius;
+        var cameraX = camera.x;
+        var cameraZ = camera.z;
+        var maxViewRadiusSquared = maxViewRadius * maxViewRadius;
 
-        Iterator<Long2ObjectMap.Entry<Column>> columnMapIt = blockSpace.getColumnMapFastIterator();
+        var columnMapIt = blockSpace.getColumnMapFastIterator();
         while (columnMapIt.hasNext()) {
-            Long2ObjectMap.Entry<Column> entry = columnMapIt.next();
-            long hashedPos = entry.getLongKey();
-            Column column = entry.getValue();
+            var entry = columnMapIt.next();
+            var hashedPos = entry.getLongKey();
+            var column = entry.getValue();
 
-            int cx = ColumnPos.columnXFromHashedPos(hashedPos);
-            int cz = ColumnPos.columnZFromHashedPos(hashedPos);
+            var cx = ColumnPos.columnXFromHashedPos(hashedPos);
+            var cz = ColumnPos.columnZFromHashedPos(hashedPos);
 
-            float relativeX = ColumnPos.toGlobalX(cx, Column.XLENGTH / 2) - cameraX;
-            float relativeZ = ColumnPos.toGlobalZ(cz, Column.ZLENGTH / 2) - cameraZ;
-            float squareDistance = (relativeX * relativeX) + (relativeZ * relativeZ);
+            var relativeX = ColumnPos.toGlobalX(cx, Column.XLENGTH / 2) - cameraX;
+            var relativeZ = ColumnPos.toGlobalZ(cz, Column.ZLENGTH / 2) - cameraZ;
+            var squareDistance = (relativeX * relativeX) + (relativeZ * relativeZ);
 
             if (squareDistance >= maxViewRadiusSquared)
                 continue;
 
-            ColumnDisplay existingDisplay = faceDisplays.get(column);
-            Column adjacentColumn = blockSpace.getColumn(cx + dx, cz + dz);
-            long adjacentHashedPos = ColumnPos.hashPos(cx + dx, cz + dz);
+            var existingDisplay = faceDisplays.get(column);
+            var adjacentColumn = blockSpace.getColumn(cx + dx, cz + dz);
+            var adjacentHashedPos = ColumnPos.hashPos(cx + dx, cz + dz);
 
-            boolean needsUpdating = existingDisplay == null
+            var needsUpdating = existingDisplay == null
                     || (existingDisplay.adjacentColumn == null && adjacentColumn != null)
                     || columnsToRedraw.contains(hashedPos)
                     || columnsToRedraw.contains(adjacentHashedPos);
@@ -281,10 +278,10 @@ class BlockDisplay implements GraphicsResource
             }
         }
 
-        Iterator<Map.Entry<Column, ColumnDisplay>> faceDisplaysIt = faceDisplays.entrySet().iterator();
+        var faceDisplaysIt = faceDisplays.entrySet().iterator();
         while (faceDisplaysIt.hasNext()) {
-            Map.Entry<Column, ColumnDisplay> entry = faceDisplaysIt.next();
-            ColumnDisplay columnDisplay = entry.getValue();
+            var entry = faceDisplaysIt.next();
+            var columnDisplay = entry.getValue();
 
             if (!blockSpace.containsColumn(columnDisplay.columnX, columnDisplay.columnZ)) {
                 columnDisplay.close();

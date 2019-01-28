@@ -18,10 +18,10 @@ class FarmlandRenderer extends BlockRenderer
         if (blockToBlockingBottomTable[BlockID.typeIDFromFullID(adjacentBlockID)])
             return;
 
-        float u1 = topFaceTextures.getTexCoordU1(blockID);
-        float u2 = topFaceTextures.getTexCoordU2(blockID);
-        float v1 = topFaceTextures.getTexCoordV1(blockID);
-        float v2 = topFaceTextures.getTexCoordV2(blockID);
+        var u1 = topFaceTextures.getTexCoordU1(blockID);
+        var u2 = topFaceTextures.getTexCoordU2(blockID);
+        var v1 = topFaceTextures.getTexCoordV1(blockID);
+        var v2 = topFaceTextures.getTexCoordV2(blockID);
         builder.setTexCoord(u1, v1); builder.pushVertex(x,        y + HEIGHT, z + 1.0f);
         builder.setTexCoord(u2, v1); builder.pushVertex(x + 1.0f, y + HEIGHT, z + 1.0f);
         builder.setTexCoord(u2, v2); builder.pushVertex(x + 1.0f, y + HEIGHT, z       );
@@ -37,10 +37,10 @@ class FarmlandRenderer extends BlockRenderer
         if (blockToBlockingTopTable[BlockID.typeIDFromFullID(adjacentBlockID)])
             return;
 
-        float u1 = bottomFaceTextures.getTexCoordU1(blockID);
-        float u2 = bottomFaceTextures.getTexCoordU2(blockID);
-        float v1 = bottomFaceTextures.getTexCoordV1(blockID);
-        float v2 = bottomFaceTextures.getTexCoordV2(blockID);
+        var u1 = bottomFaceTextures.getTexCoordU1(blockID);
+        var u2 = bottomFaceTextures.getTexCoordU2(blockID);
+        var v1 = bottomFaceTextures.getTexCoordV1(blockID);
+        var v2 = bottomFaceTextures.getTexCoordV2(blockID);
         builder.setTexCoord(u1, v1); builder.pushVertex(x,        y, z       );
         builder.setTexCoord(u2, v1); builder.pushVertex(x + 1.0f, y, z       );
         builder.setTexCoord(u2, v2); builder.pushVertex(x + 1.0f, y, z + 1.0f);
@@ -56,10 +56,10 @@ class FarmlandRenderer extends BlockRenderer
         if (blockToBlockingRightTable[BlockID.typeIDFromFullID(adjacentBlockID)])
             return;
 
-        float u1 = leftFaceTextures.getTexCoordU1(blockID);
-        float u2 = leftFaceTextures.getTexCoordU2(blockID);
-        float v1 = leftFaceTextures.getTexCoordV1(blockID);
-        float v2 = leftFaceTextures.getTexCoordV2(blockID);
+        var u1 = leftFaceTextures.getTexCoordU1(blockID);
+        var u2 = leftFaceTextures.getTexCoordU2(blockID);
+        var v1 = leftFaceTextures.getTexCoordV1(blockID);
+        var v2 = leftFaceTextures.getTexCoordV2(blockID);
         builder.setTexCoord(u1, v1); builder.pushVertex(x, y,          z       );
         builder.setTexCoord(u2, v1); builder.pushVertex(x, y,          z + 1.0f);
         builder.setTexCoord(u2, v2); builder.pushVertex(x, y + HEIGHT, z + 1.0f);
@@ -75,10 +75,10 @@ class FarmlandRenderer extends BlockRenderer
         if (blockToBlockingLeftTable[BlockID.typeIDFromFullID(adjacentBlockID)])
             return;
 
-        float u1 = rightFaceTextures.getTexCoordU1(blockID);
-        float u2 = rightFaceTextures.getTexCoordU2(blockID);
-        float v1 = rightFaceTextures.getTexCoordV1(blockID);
-        float v2 = rightFaceTextures.getTexCoordV2(blockID);
+        var u1 = rightFaceTextures.getTexCoordU1(blockID);
+        var u2 = rightFaceTextures.getTexCoordU2(blockID);
+        var v1 = rightFaceTextures.getTexCoordV1(blockID);
+        var v2 = rightFaceTextures.getTexCoordV2(blockID);
         builder.setTexCoord(u1, v1); builder.pushVertex(x + 1.0f, y,          z + 1.0f);
         builder.setTexCoord(u2, v1); builder.pushVertex(x + 1.0f, y,          z       );
         builder.setTexCoord(u2, v2); builder.pushVertex(x + 1.0f, y + HEIGHT, z       );
@@ -94,10 +94,10 @@ class FarmlandRenderer extends BlockRenderer
         if (blockToBlockingBackTable[BlockID.typeIDFromFullID(adjacentBlockID)])
             return;
 
-        float u1 = frontFaceTextures.getTexCoordU1(blockID);
-        float u2 = frontFaceTextures.getTexCoordU2(blockID);
-        float v1 = frontFaceTextures.getTexCoordV1(blockID);
-        float v2 = frontFaceTextures.getTexCoordV2(blockID);
+        var u1 = frontFaceTextures.getTexCoordU1(blockID);
+        var u2 = frontFaceTextures.getTexCoordU2(blockID);
+        var v1 = frontFaceTextures.getTexCoordV1(blockID);
+        var v2 = frontFaceTextures.getTexCoordV2(blockID);
         builder.setTexCoord(u1, v1); builder.pushVertex(x,        y,          z + 1.0f);
         builder.setTexCoord(u2, v1); builder.pushVertex(x + 1.0f, y,          z + 1.0f);
         builder.setTexCoord(u2, v2); builder.pushVertex(x + 1.0f, y + HEIGHT, z + 1.0f);
@@ -113,10 +113,10 @@ class FarmlandRenderer extends BlockRenderer
         if (blockToBlockingFrontTable[BlockID.typeIDFromFullID(adjacentBlockID)])
             return;
 
-        float u1 = backFaceTextures.getTexCoordU1(blockID);
-        float u2 = backFaceTextures.getTexCoordU2(blockID);
-        float v1 = backFaceTextures.getTexCoordV1(blockID);
-        float v2 = backFaceTextures.getTexCoordV2(blockID);
+        var u1 = backFaceTextures.getTexCoordU1(blockID);
+        var u2 = backFaceTextures.getTexCoordU2(blockID);
+        var v1 = backFaceTextures.getTexCoordV1(blockID);
+        var v2 = backFaceTextures.getTexCoordV2(blockID);
         builder.setTexCoord(u1, v1); builder.pushVertex(x + 1.0f, y,          z);
         builder.setTexCoord(u2, v1); builder.pushVertex(x,        y,          z);
         builder.setTexCoord(u2, v2); builder.pushVertex(x,        y + HEIGHT, z);

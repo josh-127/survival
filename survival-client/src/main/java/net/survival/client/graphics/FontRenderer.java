@@ -16,20 +16,19 @@ class FontRenderer implements GraphicsResource
     }
 
     public void drawText(String text, float x, float y, float z, float scaleX, float scaleY) {
-        float cursorX = x;
-        float fontWidth = fontTextureAtlas.fontWidth * scaleX;
-        float fontHeight = fontTextureAtlas.fontHeight * scaleY;
+        var cursorX = x;
+        var fontWidth = fontTextureAtlas.fontWidth * scaleX;
+        var fontHeight = fontTextureAtlas.fontHeight * scaleY;
 
-        GLImmediateDrawCall drawCall = GLImmediateDrawCall
-                .beginTriangles(fontTextureAtlas.characters);
+        var drawCall = GLImmediateDrawCall.beginTriangles(fontTextureAtlas.characters);
         drawCall.color(1.0f, 1.0f, 1.0f);
 
-        for (int i = 0; i < text.length(); ++i) {
-            char c = text.charAt(i);
-            float u1 = fontTextureAtlas.getTexCoordU1(c);
-            float v1 = fontTextureAtlas.getTexCoordV1(c);
-            float u2 = fontTextureAtlas.getTexCoordU2(c);
-            float v2 = fontTextureAtlas.getTexCoordV2(c);
+        for (var i = 0; i < text.length(); ++i) {
+            var c = text.charAt(i);
+            var u1 = fontTextureAtlas.getTexCoordU1(c);
+            var v1 = fontTextureAtlas.getTexCoordV1(c);
+            var u2 = fontTextureAtlas.getTexCoordU2(c);
+            var v2 = fontTextureAtlas.getTexCoordV2(c);
 
             drawCall.texturedVertex(cursorX,             y + fontHeight, z, u1, v2);
             drawCall.texturedVertex(cursorX + fontWidth, y + fontHeight, z, u2, v2);

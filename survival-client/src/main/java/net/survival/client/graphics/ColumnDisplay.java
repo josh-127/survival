@@ -48,7 +48,7 @@ class ColumnDisplay implements GraphicsResource
         if (blockFace == null)
             return createNonCubicFaces(cx, cz, column);
 
-        GLDisplayList.Builder builder = new GLDisplayList.Builder();
+        var builder = new GLDisplayList.Builder();
 
         switch (blockFace) {
         case TOP:
@@ -118,22 +118,22 @@ class ColumnDisplay implements GraphicsResource
     private static GLDisplayList createTopFaces(Column column, GLDisplayList.Builder builder) {
         builder.setColor(TOP_FACE_SHADE, TOP_FACE_SHADE, TOP_FACE_SHADE);
 
-        for (int i = 0; i < Column.VOLUME - Column.BASE_AREA; ++i) {
-            int x = i % Column.XLENGTH;
-            int z = (i / Column.XLENGTH) % Column.ZLENGTH;
-            int y = i / Column.BASE_AREA;
+        for (var i = 0; i < Column.VOLUME - Column.BASE_AREA; ++i) {
+            var x = i % Column.XLENGTH;
+            var z = (i / Column.XLENGTH) % Column.ZLENGTH;
+            var y = i / Column.BASE_AREA;
 
-            int blockID = column.getBlockFullID(x, y, z);
-            int adjacentBlockID = column.getBlockFullID(x, y + 1, z);
+            var blockID = column.getBlockFullID(x, y, z);
+            var adjacentBlockID = column.getBlockFullID(x, y + 1, z);
 
             BlockRenderer.byFullID(blockID).pushTopFaces(
                     x, y, z, blockID, adjacentBlockID, builder);
         }
 
-        for (int i = Column.VOLUME - Column.BASE_AREA; i < Column.VOLUME; ++i) {
-            int x = i % Column.XLENGTH;
-            int z = (i / Column.XLENGTH) % Column.ZLENGTH;
-            int y = i / Column.BASE_AREA;
+        for (var i = Column.VOLUME - Column.BASE_AREA; i < Column.VOLUME; ++i) {
+            var x = i % Column.XLENGTH;
+            var z = (i / Column.XLENGTH) % Column.ZLENGTH;
+            var y = i / Column.BASE_AREA;
 
             int blockID = column.getBlockFullID(x, y, z);
 
@@ -147,13 +147,13 @@ class ColumnDisplay implements GraphicsResource
     private static GLDisplayList createBottomFaces(Column column, GLDisplayList.Builder builder) {
         builder.setColor(BOTTOM_FACE_SHADE, BOTTOM_FACE_SHADE, BOTTOM_FACE_SHADE);
 
-        for (int i = Column.BASE_AREA; i < Column.VOLUME; ++i) {
-            int x = i % Column.XLENGTH;
-            int z = (i / Column.XLENGTH) % Column.ZLENGTH;
-            int y = i / Column.BASE_AREA;
+        for (var i = Column.BASE_AREA; i < Column.VOLUME; ++i) {
+            var x = i % Column.XLENGTH;
+            var z = (i / Column.XLENGTH) % Column.ZLENGTH;
+            var y = i / Column.BASE_AREA;
 
-            int blockID = column.getBlockFullID(x, y, z);
-            int adjacentBlockID = column.getBlockFullID(x, y - 1, z);
+            var blockID = column.getBlockFullID(x, y, z);
+            var adjacentBlockID = column.getBlockFullID(x, y - 1, z);
 
             BlockRenderer.byFullID(blockID).pushBottomFaces(
                     x, y, z, blockID, adjacentBlockID, builder);
@@ -165,15 +165,15 @@ class ColumnDisplay implements GraphicsResource
     private static GLDisplayList createLeftFaces(Column column, Column adjacentColumn, GLDisplayList.Builder builder) {
         builder.setColor(LEFT_FACE_SHADE, LEFT_FACE_SHADE, LEFT_FACE_SHADE);
 
-        for (int y = 0; y < Column.YLENGTH; ++y) {
-            int indexY = y * Column.BASE_AREA;
+        for (var y = 0; y < Column.YLENGTH; ++y) {
+            var indexY = y * Column.BASE_AREA;
 
-            for (int z = 0; z < Column.ZLENGTH; ++z) {
-                int indexYZ = indexY + (z * Column.XLENGTH);
+            for (var z = 0; z < Column.ZLENGTH; ++z) {
+                var indexYZ = indexY + (z * Column.XLENGTH);
 
-                for (int x = 1; x < Column.XLENGTH; ++x) {
-                    int blockID = column.getBlockFullID(x, y, z);
-                    int adjacentBlockID = column.getBlockFullID(x - 1, y, z);
+                for (var x = 1; x < Column.XLENGTH; ++x) {
+                    var blockID = column.getBlockFullID(x, y, z);
+                    var adjacentBlockID = column.getBlockFullID(x - 1, y, z);
 
                     BlockRenderer.byFullID(blockID).pushLeftFaces(
                             x, y, z, blockID, adjacentBlockID, builder);
@@ -182,14 +182,14 @@ class ColumnDisplay implements GraphicsResource
         }
 
         if (adjacentColumn != null) {
-            for (int y = 0; y < Column.YLENGTH; ++y) {
-                int indexY = y * Column.BASE_AREA;
+            for (var y = 0; y < Column.YLENGTH; ++y) {
+                var indexY = y * Column.BASE_AREA;
 
-                for (int z = 0; z < Column.ZLENGTH; ++z) {
-                    int indexYZ = indexY + (z * Column.XLENGTH);
+                for (var z = 0; z < Column.ZLENGTH; ++z) {
+                    var indexYZ = indexY + (z * Column.XLENGTH);
 
-                    int blockID = column.getBlockFullID(0, y, z);
-                    int adjacentBlockID = adjacentColumn.getBlockFullID(Column.XLENGTH - 1, y, z);
+                    var blockID = column.getBlockFullID(0, y, z);
+                    var adjacentBlockID = adjacentColumn.getBlockFullID(Column.XLENGTH - 1, y, z);
 
                     BlockRenderer.byFullID(blockID).pushLeftFaces(
                             0, y, z, blockID, adjacentBlockID, builder);
@@ -203,15 +203,15 @@ class ColumnDisplay implements GraphicsResource
     private static GLDisplayList createRightFaces(Column column, Column adjacentColumn, GLDisplayList.Builder builder) {
         builder.setColor(RIGHT_FACE_SHADE, RIGHT_FACE_SHADE, RIGHT_FACE_SHADE);
 
-        for (int y = 0; y < Column.YLENGTH; ++y) {
-            int indexY = y * Column.BASE_AREA;
+        for (var y = 0; y < Column.YLENGTH; ++y) {
+            var indexY = y * Column.BASE_AREA;
 
-            for (int z = 0; z < Column.ZLENGTH; ++z) {
-                int indexYZ = indexY + (z * Column.XLENGTH);
+            for (var z = 0; z < Column.ZLENGTH; ++z) {
+                var indexYZ = indexY + (z * Column.XLENGTH);
 
-                for (int x = 0; x < Column.XLENGTH - 1; ++x) {
-                    int blockID = column.getBlockFullID(x, y, z);
-                    int adjacentBlockID = column.getBlockFullID(x + 1, y, z);
+                for (var x = 0; x < Column.XLENGTH - 1; ++x) {
+                    var blockID = column.getBlockFullID(x, y, z);
+                    var adjacentBlockID = column.getBlockFullID(x + 1, y, z);
 
                     BlockRenderer.byFullID(blockID).pushRightFaces(
                             x, y, z, blockID, adjacentBlockID, builder);
@@ -220,14 +220,14 @@ class ColumnDisplay implements GraphicsResource
         }
 
         if (adjacentColumn != null) {
-            for (int y = 0; y < Column.YLENGTH; ++y) {
-                int indexY = y * Column.BASE_AREA;
+            for (var y = 0; y < Column.YLENGTH; ++y) {
+                var indexY = y * Column.BASE_AREA;
 
-                for (int z = 0; z < Column.ZLENGTH; ++z) {
-                    int indexYZ = indexY + (z * Column.XLENGTH);
+                for (var z = 0; z < Column.ZLENGTH; ++z) {
+                    var indexYZ = indexY + (z * Column.XLENGTH);
 
-                    int blockID = column.getBlockFullID(Column.XLENGTH - 1, y, z);
-                    int adjacentBlockID = adjacentColumn.getBlockFullID(0, y, z);
+                    var blockID = column.getBlockFullID(Column.XLENGTH - 1, y, z);
+                    var adjacentBlockID = adjacentColumn.getBlockFullID(0, y, z);
 
                     BlockRenderer.byFullID(blockID).pushRightFaces(
                             Column.XLENGTH - 1, y, z, blockID, adjacentBlockID, builder);
@@ -241,17 +241,17 @@ class ColumnDisplay implements GraphicsResource
     private static GLDisplayList createFrontFaces(Column column, Column adjacentColumn, GLDisplayList.Builder builder) {
         builder.setColor(FRONT_FACE_SHADE, FRONT_FACE_SHADE, FRONT_FACE_SHADE);
 
-        for (int y = 0; y < Column.YLENGTH; ++y) {
-            int indexY = y * Column.BASE_AREA;
+        for (var y = 0; y < Column.YLENGTH; ++y) {
+            var indexY = y * Column.BASE_AREA;
 
-            for (int z = 0; z < Column.ZLENGTH - 1; ++z) {
-                int indexYZ = indexY + (z * Column.XLENGTH);
+            for (var z = 0; z < Column.ZLENGTH - 1; ++z) {
+                var indexYZ = indexY + (z * Column.XLENGTH);
 
-                for (int x = 0; x < Column.XLENGTH; ++x) {
-                    int indexYZX = indexYZ + x;
+                for (var x = 0; x < Column.XLENGTH; ++x) {
+                    var indexYZX = indexYZ + x;
 
-                    int blockID = column.getBlockFullID(x, y, z);
-                    int adjacentBlockID = column.getBlockFullID(x, y, z + 1);
+                    var blockID = column.getBlockFullID(x, y, z);
+                    var adjacentBlockID = column.getBlockFullID(x, y, z + 1);
 
                     BlockRenderer.byFullID(blockID).pushFrontFaces(
                             x, y, z, blockID, adjacentBlockID, builder);
@@ -260,15 +260,15 @@ class ColumnDisplay implements GraphicsResource
         }
 
         if (adjacentColumn != null) {
-            int indexZ = Column.BASE_AREA - Column.XLENGTH;
+            var indexZ = Column.BASE_AREA - Column.XLENGTH;
 
-            for (int y = 0; y < Column.YLENGTH; ++y) {
-                int indexY = y * Column.BASE_AREA;
-                int indexYZ = indexZ + indexY;
+            for (var y = 0; y < Column.YLENGTH; ++y) {
+                var indexY = y * Column.BASE_AREA;
+                var indexYZ = indexZ + indexY;
 
-                for (int x = 0; x < Column.XLENGTH; ++x) {
-                    int blockID = column.getBlockFullID(x, y, Column.ZLENGTH - 1);
-                    int adjacentBlockID = adjacentColumn.getBlockFullID(x, y, 0);
+                for (var x = 0; x < Column.XLENGTH; ++x) {
+                    var blockID = column.getBlockFullID(x, y, Column.ZLENGTH - 1);
+                    var adjacentBlockID = adjacentColumn.getBlockFullID(x, y, 0);
 
                     BlockRenderer.byFullID(blockID).pushFrontFaces(
                             x, y, Column.ZLENGTH - 1, blockID, adjacentBlockID, builder);
@@ -282,17 +282,17 @@ class ColumnDisplay implements GraphicsResource
     private static GLDisplayList createBackFaces(Column column, Column adjacentColumn, GLDisplayList.Builder builder) {
         builder.setColor(BACK_FACE_SHADE, BACK_FACE_SHADE, BACK_FACE_SHADE);
 
-        for (int y = 0; y < Column.YLENGTH; ++y) {
-            int indexY = y * Column.BASE_AREA;
+        for (var y = 0; y < Column.YLENGTH; ++y) {
+            var indexY = y * Column.BASE_AREA;
 
-            for (int z = 1; z < Column.ZLENGTH; ++z) {
-                int indexYZ = indexY + (z * Column.XLENGTH);
+            for (var z = 1; z < Column.ZLENGTH; ++z) {
+                var indexYZ = indexY + (z * Column.XLENGTH);
 
-                for (int x = 0; x < Column.XLENGTH; ++x) {
-                    int indexYZX = indexYZ + x;
+                for (var x = 0; x < Column.XLENGTH; ++x) {
+                    var indexYZX = indexYZ + x;
 
-                    int blockID = column.getBlockFullID(x, y, z);
-                    int adjacentBlockID = column.getBlockFullID(x, y, z - 1);
+                    var blockID = column.getBlockFullID(x, y, z);
+                    var adjacentBlockID = column.getBlockFullID(x, y, z - 1);
 
                     BlockRenderer.byFullID(blockID).pushBackFaces(
                             x, y, z, blockID, adjacentBlockID, builder);
@@ -301,13 +301,13 @@ class ColumnDisplay implements GraphicsResource
         }
 
         if (adjacentColumn != null) {
-            for (int y = 0; y < Column.YLENGTH; ++y) {
-                int indexY = y * Column.BASE_AREA;
-                int adjacentIndexYZ = indexY + Column.BASE_AREA - Column.XLENGTH;
+            for (var y = 0; y < Column.YLENGTH; ++y) {
+                var indexY = y * Column.BASE_AREA;
+                var adjacentIndexYZ = indexY + Column.BASE_AREA - Column.XLENGTH;
 
-                for (int x = 0; x < Column.XLENGTH; ++x) {
-                    int blockID = column.getBlockFullID(x, y, 0);
-                    int adjacentBlockID = adjacentColumn.getBlockFullID(x, y, Column.ZLENGTH - 1);
+                for (var x = 0; x < Column.XLENGTH; ++x) {
+                    var blockID = column.getBlockFullID(x, y, 0);
+                    var adjacentBlockID = adjacentColumn.getBlockFullID(x, y, Column.ZLENGTH - 1);
 
                     BlockRenderer.byFullID(blockID).pushBackFaces(
                             x, y, 0, blockID, adjacentBlockID, builder);
@@ -319,17 +319,17 @@ class ColumnDisplay implements GraphicsResource
     }
 
     private static ColumnDisplay createNonCubicFaces(int cx, int cz, Column column) {
-        GLDisplayList.Builder builder = new GLDisplayList.Builder();
-        GLTexture texture = BlockRenderer.topFaceTextures.blockTextures;
-        boolean shouldCreateDisplayList = false;
+        var builder = new GLDisplayList.Builder();
+        var texture = BlockRenderer.topFaceTextures.blockTextures;
+        var shouldCreateDisplayList = false;
 
         builder.setColor(NON_CUBIC_SHADE, NON_CUBIC_SHADE, NON_CUBIC_SHADE);
 
-        for (int i = 0; i < Column.VOLUME; ++i) {
-            int x = i % Column.XLENGTH;
-            int z = (i / Column.XLENGTH) % Column.ZLENGTH;
-            int y = i / Column.BASE_AREA;
-            int blockID = column.getBlockFullID(x, y, z);
+        for (var i = 0; i < Column.VOLUME; ++i) {
+            var x = i % Column.XLENGTH;
+            var z = (i / Column.XLENGTH) % Column.ZLENGTH;
+            var y = i / Column.BASE_AREA;
+            var blockID = column.getBlockFullID(x, y, z);
 
             if (!BlockRenderer.byFullID(blockID).nonCubic)
                 continue;
@@ -338,7 +338,7 @@ class ColumnDisplay implements GraphicsResource
             shouldCreateDisplayList = true;
         }
 
-        GLDisplayList displayList = null;
+        var displayList = (GLDisplayList) null;
 
         if (shouldCreateDisplayList)
             displayList = builder.build();

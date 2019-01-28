@@ -305,14 +305,14 @@ public class GLState
         blueArgStack.pop();
         alphaArgStack.pop();
 
-        GLFogMode mode = fogModeStack.peek();
-        float density = densityArgStack.peek();
-        float start = startArgStack.peek();
-        float end = endArgStack.peek();
-        float r = redArgStack.peek();
-        float g = greenArgStack.peek();
-        float b = blueArgStack.peek();
-        float a = alphaArgStack.peek();
+        var mode = fogModeStack.peek();
+        var density = densityArgStack.peek();
+        var start = startArgStack.peek();
+        var end = endArgStack.peek();
+        var r = redArgStack.peek();
+        var g = greenArgStack.peek();
+        var b = blueArgStack.peek();
+        var a = alphaArgStack.peek();
         setFogParams(mode, density, start, end, r, g, b, a);
     }
 
@@ -423,12 +423,12 @@ public class GLState
         scissorPositionStack.popLong();
         scissorSizeStack.popLong();
 
-        long position = scissorPositionStack.topLong();
-        long size = scissorPositionStack.topLong();
-        int x = firstValueFromIntPair(position);
-        int y = secondValueFromIntPair(position);
-        int width = firstValueFromIntPair(size);
-        int height = secondValueFromIntPair(size);
+        var position = scissorPositionStack.topLong();
+        var size = scissorPositionStack.topLong();
+        var x = firstValueFromIntPair(position);
+        var y = secondValueFromIntPair(position);
+        var width = firstValueFromIntPair(size);
+        var height = secondValueFromIntPair(size);
         setScissor(x, y, width, height);
     }
 
@@ -471,12 +471,12 @@ public class GLState
         viewportPositionStack.popLong();
         viewportSizeStack.popLong();
 
-        long position = viewportPositionStack.topLong();
-        long size = viewportPositionStack.topLong();
-        int x = firstValueFromIntPair(position);
-        int y = secondValueFromIntPair(position);
-        int width = firstValueFromIntPair(size);
-        int height = secondValueFromIntPair(size);
+        var position = viewportPositionStack.topLong();
+        var size = viewportPositionStack.topLong();
+        var x = firstValueFromIntPair(position);
+        var y = secondValueFromIntPair(position);
+        var width = firstValueFromIntPair(size);
+        var height = secondValueFromIntPair(size);
         setViewport(x, y, width, height);
     }
 

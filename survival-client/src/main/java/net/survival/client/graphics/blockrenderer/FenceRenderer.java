@@ -15,15 +15,15 @@ class FenceRenderer extends BlockRenderer
     public void pushTopFaces(int x, int y, int z, int blockID, int adjacentBlockID,
             GLDisplayList.Builder builder)
     {
-        float u1 = topFaceTextures.getTexCoordU1(blockID);
-        float u2 = topFaceTextures.getTexCoordU2(blockID);
-        float v1 = topFaceTextures.getTexCoordV1(blockID);
-        float v2 = topFaceTextures.getTexCoordV2(blockID);
+        var u1 = topFaceTextures.getTexCoordU1(blockID);
+        var u2 = topFaceTextures.getTexCoordU2(blockID);
+        var v1 = topFaceTextures.getTexCoordV1(blockID);
+        var v2 = topFaceTextures.getTexCoordV2(blockID);
 
-        float left  = x        + PADDING;
-        float right = x + 1.0f - PADDING;
-        float back  = z        + PADDING;
-        float front = z + 1.0f - PADDING;
+        var left  = x        + PADDING;
+        var right = x + 1.0f - PADDING;
+        var back  = z        + PADDING;
+        var front = z + 1.0f - PADDING;
 
         builder.setTexCoord(u1, v1); builder.pushVertex(left,  y + 1.0f, front);
         builder.setTexCoord(u2, v1); builder.pushVertex(right, y + 1.0f, front);
@@ -37,15 +37,15 @@ class FenceRenderer extends BlockRenderer
     public void pushBottomFaces(int x, int y, int z, int blockID, int adjacentBlockID,
             GLDisplayList.Builder builder)
     {
-        float u1 = topFaceTextures.getTexCoordU1(blockID);
-        float u2 = topFaceTextures.getTexCoordU2(blockID);
-        float v1 = topFaceTextures.getTexCoordV1(blockID);
-        float v2 = topFaceTextures.getTexCoordV2(blockID);
+        var u1 = topFaceTextures.getTexCoordU1(blockID);
+        var u2 = topFaceTextures.getTexCoordU2(blockID);
+        var v1 = topFaceTextures.getTexCoordV1(blockID);
+        var v2 = topFaceTextures.getTexCoordV2(blockID);
 
-        float left  = x        + PADDING;
-        float right = x + 1.0f - PADDING;
-        float back  = z        + PADDING;
-        float front = z + 1.0f - PADDING;
+        var left  = x        + PADDING;
+        var right = x + 1.0f - PADDING;
+        var back  = z        + PADDING;
+        var front = z + 1.0f - PADDING;
 
         builder.setTexCoord(u1, v1); builder.pushVertex(left,  y, back );
         builder.setTexCoord(u2, v1); builder.pushVertex(right, y, back );
@@ -59,14 +59,14 @@ class FenceRenderer extends BlockRenderer
     public void pushLeftFaces(int x, int y, int z, int blockID, int adjacentBlockID,
             GLDisplayList.Builder builder)
     {
-        float u1 = topFaceTextures.getTexCoordU1(blockID);
-        float u2 = topFaceTextures.getTexCoordU2(blockID);
-        float v1 = topFaceTextures.getTexCoordV1(blockID);
-        float v2 = topFaceTextures.getTexCoordV2(blockID);
+        var u1 = topFaceTextures.getTexCoordU1(blockID);
+        var u2 = topFaceTextures.getTexCoordU2(blockID);
+        var v1 = topFaceTextures.getTexCoordV1(blockID);
+        var v2 = topFaceTextures.getTexCoordV2(blockID);
 
-        float left  = x        + PADDING;
-        float back  = z        + PADDING;
-        float front = z + 1.0f - PADDING;
+        var left  = x        + PADDING;
+        var back  = z        + PADDING;
+        var front = z + 1.0f - PADDING;
 
         builder.setTexCoord(u1, v1); builder.pushVertex(left, y,        back );
         builder.setTexCoord(u2, v1); builder.pushVertex(left, y,        front);
@@ -80,14 +80,14 @@ class FenceRenderer extends BlockRenderer
     public void pushRightFaces(int x, int y, int z, int blockID, int adjacentBlockID,
             GLDisplayList.Builder builder)
     {
-        float u1 = topFaceTextures.getTexCoordU1(blockID);
-        float u2 = topFaceTextures.getTexCoordU2(blockID);
-        float v1 = topFaceTextures.getTexCoordV1(blockID);
-        float v2 = topFaceTextures.getTexCoordV2(blockID);
+        var u1 = topFaceTextures.getTexCoordU1(blockID);
+        var u2 = topFaceTextures.getTexCoordU2(blockID);
+        var v1 = topFaceTextures.getTexCoordV1(blockID);
+        var v2 = topFaceTextures.getTexCoordV2(blockID);
 
-        float right = x + 1.0f - PADDING;
-        float back  = z        + PADDING;
-        float front = z + 1.0f - PADDING;
+        var right = x + 1.0f - PADDING;
+        var back  = z        + PADDING;
+        var front = z + 1.0f - PADDING;
 
         builder.setTexCoord(u1, v1); builder.pushVertex(right, y,        front);
         builder.setTexCoord(u2, v1); builder.pushVertex(right, y,        back );
@@ -101,14 +101,14 @@ class FenceRenderer extends BlockRenderer
     public void pushFrontFaces(int x, int y, int z, int blockID, int adjacentBlockID,
             GLDisplayList.Builder builder)
     {
-        float u1 = topFaceTextures.getTexCoordU1(blockID);
-        float u2 = topFaceTextures.getTexCoordU2(blockID);
-        float v1 = topFaceTextures.getTexCoordV1(blockID);
-        float v2 = topFaceTextures.getTexCoordV2(blockID);
+        var u1 = topFaceTextures.getTexCoordU1(blockID);
+        var u2 = topFaceTextures.getTexCoordU2(blockID);
+        var v1 = topFaceTextures.getTexCoordV1(blockID);
+        var v2 = topFaceTextures.getTexCoordV2(blockID);
 
-        float left  = x        + PADDING;
-        float right = x + 1.0f - PADDING;
-        float front = z + 1.0f - PADDING;
+        var left  = x        + PADDING;
+        var right = x + 1.0f - PADDING;
+        var front = z + 1.0f - PADDING;
 
         builder.setTexCoord(u1, v1); builder.pushVertex(left,  y,        front);
         builder.setTexCoord(u2, v1); builder.pushVertex(right, y,        front);
@@ -122,14 +122,14 @@ class FenceRenderer extends BlockRenderer
     public void pushBackFaces(int x, int y, int z, int blockID, int adjacentBlockID,
             GLDisplayList.Builder builder)
     {
-        float u1 = topFaceTextures.getTexCoordU1(blockID);
-        float u2 = topFaceTextures.getTexCoordU2(blockID);
-        float v1 = topFaceTextures.getTexCoordV1(blockID);
-        float v2 = topFaceTextures.getTexCoordV2(blockID);
+        var u1 = topFaceTextures.getTexCoordU1(blockID);
+        var u2 = topFaceTextures.getTexCoordU2(blockID);
+        var v1 = topFaceTextures.getTexCoordV1(blockID);
+        var v2 = topFaceTextures.getTexCoordV2(blockID);
 
-        float left  = x        + PADDING;
-        float right = x + 1.0f - PADDING;
-        float back  = z        + PADDING;
+        var left  = x        + PADDING;
+        var right = x + 1.0f - PADDING;
+        var back  = z        + PADDING;
 
         builder.setTexCoord(u1, v1); builder.pushVertex(right, y,        back);
         builder.setTexCoord(u2, v1); builder.pushVertex(left,  y,        back);

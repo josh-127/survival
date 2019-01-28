@@ -2,8 +2,6 @@ package net.survival.client.graphics;
 
 import static org.lwjgl.stb.STBImage.*;
 
-import java.nio.ByteBuffer;
-
 public class Bitmap
 {
     private int width;
@@ -27,14 +25,14 @@ public class Bitmap
     private static final int[] stbi_load_comp = new int[1];
 
     public static Bitmap fromFile(String filePath) {
-        ByteBuffer data = stbi_load(filePath, stbi_load_w, stbi_load_h, stbi_load_comp, 4);
+        var data = stbi_load(filePath, stbi_load_w, stbi_load_h, stbi_load_comp, 4);
         // TODO: Change this terrible ugly hack.
         if (data == null) {
             throw new RuntimeException(filePath);
         }
-        int width = stbi_load_w[0];
-        int height = stbi_load_h[0];
-        int[] pixels = new int[width * height];
+        var width = stbi_load_w[0];
+        var height = stbi_load_h[0];
+        var pixels = new int[width * height];
         data.asIntBuffer().get(pixels);
         stbi_image_free(data);
 
@@ -68,17 +66,17 @@ public class Bitmap
     public static void blit(Bitmap src, int srcX, int srcY, int srcW, int srcH, Bitmap dst,
             int dstX, int dstY)
     {
-        for (int y = srcY; y < srcY + srcH; ++y) {
-            int blitY = dstY + y;
+        for (var y = srcY; y < srcY + srcH; ++y) {
+            var blitY = dstY + y;
             if (blitY < 0 || blitY >= dst.height)
                 continue;
 
-            for (int x = srcX; x < srcX + srcW; ++x) {
-                int blitX = dstX + x;
+            for (var x = srcX; x < srcX + srcW; ++x) {
+                var blitX = dstX + x;
                 if (blitX < 0 || blitX >= dst.width)
                     continue;
 
-                int srcPixel = src.getPixel(x, y);
+                var srcPixel = src.getPixel(x, y);
                 dst.setPixel(blitX, blitY, srcPixel);
             }
         }

@@ -46,10 +46,10 @@ class Camera
     }
 
     public int getDominantAxis() {
-        float lx = Math.abs(getDirectionX());
-        float ly = Math.abs(getDirectionY());
-        float lz = Math.abs(getDirectionZ());
-        float maxValue = Math.max(Math.max(lx, ly), lz);
+        var lx = Math.abs(getDirectionX());
+        var ly = Math.abs(getDirectionY());
+        var lz = Math.abs(getDirectionZ());
+        var maxValue = Math.max(Math.max(lx, ly), lz);
 
         if (maxValue == lx) return 0;
         if (maxValue == ly) return 1;

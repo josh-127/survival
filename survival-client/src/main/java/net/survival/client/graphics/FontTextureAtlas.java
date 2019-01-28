@@ -13,7 +13,7 @@ class FontTextureAtlas implements GraphicsResource
     public final int fontHeight;
 
     public FontTextureAtlas() {
-        Bitmap bitmap = Bitmap.fromFile(GraphicsSettings.FONT_PATH);
+        var bitmap = Bitmap.fromFile(GraphicsSettings.FONT_PATH);
         characters = new GLTexture();
 
         characters.beginBind()

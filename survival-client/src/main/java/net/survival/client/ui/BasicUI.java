@@ -31,13 +31,13 @@ public class BasicUI
                 int right,
                 int bottom)
         {
-            boolean hovered =
+            var hovered =
                     Mouse.getX() >= left &&
                     Mouse.getX() < right &&
                     Mouse.getY() >= top &&
                     Mouse.getY() < bottom;
 
-            boolean held = hovered && Mouse.isLmbDown();
+            var held = hovered && Mouse.isLmbDown();
 
             controlsToDisplay.add(ControlDisplayDesc.createButton(
                     hovered, held, left, top, right, bottom, text, fontSize));
