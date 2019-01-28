@@ -38,8 +38,8 @@ public class BiomeViewer extends JFrame
     }
 
     private void createGeneratorMenu() {
-        JFrame parent = this;
-        JMenu menu = new JMenu("Generator");
+        var parent = this;
+        var menu = new JMenu("Generator");
         getJMenuBar().add(menu);
 
         menu.add(new JMenuItem(new AbstractAction("Set Seed") {
@@ -51,9 +51,9 @@ public class BiomeViewer extends JFrame
                         JOptionPane.WARNING_MESSAGE);
 
                 /*
-                String inputString = null;
-                boolean isValidValue = false;
-                long seed = 0L;
+                var inputString = (String) null;
+                var isValidValue = false;
+                var seed = 0L;
                 
                 while (!isValidValue) {
                     inputString = JOptionPane.showInputDialog(parent, "Enter a seed:", "Set Seed", JOptionPane.PLAIN_MESSAGE);

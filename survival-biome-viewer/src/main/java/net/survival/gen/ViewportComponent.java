@@ -35,7 +35,7 @@ public class ViewportComponent extends JComponent implements ActionListener, Key
 
         setBackground(Color.BLACK);
 
-        Timer timer = new Timer(67, this);
+        var timer = new Timer(67, this);
         timer.setRepeats(true);
         timer.start();
     }
@@ -44,21 +44,21 @@ public class ViewportComponent extends JComponent implements ActionListener, Key
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        final int VIEWPORT_WIDTH = map.lengthX;
-        final int VIEWPORT_HEIGHT = map.lengthZ;
-        final int VIEWPORT_X = (getWidth() - VIEWPORT_WIDTH) / 2;
-        final int VIEWPORT_Z = (getHeight() - VIEWPORT_HEIGHT) / 2;
+        final var VIEWPORT_WIDTH = map.lengthX;
+        final var VIEWPORT_HEIGHT = map.lengthZ;
+        final var VIEWPORT_X = (getWidth() - VIEWPORT_WIDTH) / 2;
+        final var VIEWPORT_Z = (getHeight() - VIEWPORT_HEIGHT) / 2;
 
         g.setColor(Color.BLACK);
         g.fillRect(0, 0, getWidth(), getHeight());
 
-        for (int z = 0; z < VIEWPORT_HEIGHT; ++z) {
-            for (int x = 0; x < VIEWPORT_WIDTH; ++x) {
-                int biomeID = map.sampleNearest(x, z);
-                int biomeColor = BiomeType.byID(biomeID).getBiomeViewerColor();
-                int red = (biomeColor & 0xFF0000) >>> 16;
-                int green = (biomeColor & 0xFF00) >>> 8;
-                int blue = biomeColor & 0xFF;
+        for (var z = 0; z < VIEWPORT_HEIGHT; ++z) {
+            for (var x = 0; x < VIEWPORT_WIDTH; ++x) {
+                var biomeID = map.sampleNearest(x, z);
+                var biomeColor = BiomeType.byID(biomeID).getBiomeViewerColor();
+                var red = (biomeColor & 0xFF0000) >>> 16;
+                var green = (biomeColor & 0xFF00) >>> 8;
+                var blue = biomeColor & 0xFF;
                 g.setColor(new Color(red, green, blue));
                 g.fillRect(VIEWPORT_X + x, VIEWPORT_Z + z, 1, 1);
             }
