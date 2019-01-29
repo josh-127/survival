@@ -68,7 +68,7 @@ public class Client implements AutoCloseable
     private Client(ColumnDbPipe.ClientSide columnDbPipe) {
         columnSystem = new ColumnSystem(blockSpace, columnMask, columnDbPipe);
 
-        playerID = actorSpace.addActor(new PlayerActor(60.0, 72.0, 20.0));
+        playerID = actorSpace.addActor(new PlayerActor(60.0, 96.0, 20.0));
         player = actorSpace.getActor(playerID);
 
         compositeDisplay = new CompositeDisplay(
