@@ -331,20 +331,6 @@ public class Client implements AutoCloseable
         if (Keyboard.isKeyPressed(Key._7)) compositeDisplay.toggleVisibilityFlags(VisibilityFlags.DEBUG_GEOMETRY);
 
         //
-        // Cloud Movement
-        //
-        var spx = compositeDisplay.getCloudSpeedX();
-        var spz = compositeDisplay.getCloudSpeedZ();
-        if (Keyboard.isKeyDown(Key.UP)) {
-            spx += 5.0f;
-            compositeDisplay.setCloudSpeed(spx, spz);
-        }
-        else if (Keyboard.isKeyDown(Key.DOWN)) {
-            spx -= 5.0f;
-            compositeDisplay.setCloudSpeed(spx, spz);
-        }
-
-        //
         // Mouse Control
         //
         if (Keyboard.isKeyPressed(Key.TAB)) {
