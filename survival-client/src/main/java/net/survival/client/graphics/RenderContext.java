@@ -1,7 +1,6 @@
 package net.survival.client.graphics;
 
 import net.survival.block.column.ColumnPos;
-import net.survival.ui.UiDom;
 
 public interface RenderContext
 {
@@ -67,6 +66,4 @@ public interface RenderContext
 
     float getCloudAlpha();
     void setCloudAlpha(float to);
-
-    void setUiDom(UiDom to);
 }

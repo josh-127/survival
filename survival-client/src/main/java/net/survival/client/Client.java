@@ -1,7 +1,6 @@
 package net.survival.client;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -39,10 +38,6 @@ import net.survival.gen.decoration.WorldDecorator;
 import net.survival.input.Key;
 import net.survival.particle.message.BurstParticlesMessage;
 import net.survival.particle.message.ParticleMessage;
-import net.survival.ui.UiBodyElement;
-import net.survival.ui.UiDom;
-import net.survival.ui.UiElement;
-import net.survival.ui.UiTextElement;
 
 public class Client implements AutoCloseable
 {
@@ -54,7 +49,6 @@ public class Client implements AutoCloseable
     private final BlockSpace blockSpace = new BlockSpace();
     private final ActorSpace actorSpace = new ActorSpace();
     private final ClientParticleSpace particleSpace = new ClientParticleSpace();
-    private UiDom uiDom = new UiDom();
 
     private final CircularColumnStageMask columnMask = new CircularColumnStageMask(10);
     private final InfiniteColumnGenerator columnGenerator = new InfiniteColumnGenerator(22L);
@@ -91,12 +85,6 @@ public class Client implements AutoCloseable
                 particleSpace,
                 GraphicsSettings.WINDOW_WIDTH,
                 GraphicsSettings.WINDOW_HEIGHT);
-
-        ArrayList<UiElement> elements = new ArrayList<>();
-        elements.add(new UiTextElement("Hello World!"));
-        elements.add(new UiTextElement("textures/ui/heart_container.png"));
-
-        uiDom = new UiDom(new UiBodyElement(elements));
     }
 
     @Override
@@ -166,11 +154,6 @@ public class Client implements AutoCloseable
         }
 
         particleSpace.step(elapsedTime);
-
-        //
-        // UI System
-        //
-        compositeDisplay.setUiDom(uiDom);
 
         //
         // Temporary Test Code

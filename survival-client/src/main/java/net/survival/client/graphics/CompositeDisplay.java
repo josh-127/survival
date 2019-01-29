@@ -9,7 +9,6 @@ import net.survival.client.graphics.opengl.GLMatrixStack;
 import net.survival.client.graphics.opengl.GLRenderContext;
 import net.survival.client.graphics.opengl.GLState;
 import net.survival.client.particle.ClientParticleSpace;
-import net.survival.ui.UiDom;
 
 public class CompositeDisplay implements RenderContext, GraphicsResource
 {
@@ -20,7 +19,6 @@ public class CompositeDisplay implements RenderContext, GraphicsResource
     private final ParticleDisplay particleDisplay;
     private final SkyboxDisplay skyboxDisplay = new SkyboxDisplay();
     private final CloudDisplay cloudDisplay = new CloudDisplay();
-    private final NewUiDisplay newUiDisplay;
 
     private int viewportWidth;
     private int viewportHeight;
@@ -43,8 +41,6 @@ public class CompositeDisplay implements RenderContext, GraphicsResource
         particleDisplay = new ParticleDisplay(clientParticleSpace, camera);
         this.viewportWidth = viewportWidth;
         this.viewportHeight = viewportHeight;
-
-        newUiDisplay = new NewUiDisplay();
     }
 
     @Override
@@ -237,11 +233,6 @@ public class CompositeDisplay implements RenderContext, GraphicsResource
         cloudDisplay.setAlpha(to);
     }
 
-    @Override
-    public void setUiDom(UiDom to) {
-        newUiDisplay.setUiDom(to);
-    }
-
     public int getViewportWidth() {
         return viewportWidth;
     }
@@ -319,7 +310,6 @@ public class CompositeDisplay implements RenderContext, GraphicsResource
 
             GLMatrixStack.push();
             GLMatrixStack.loadIdentity();
-            newUiDisplay.display();
             GLMatrixStack.pop();
         }
     }
