@@ -4,7 +4,7 @@ public enum HitBox
 {
     DEFAULT(1.0, 1.0, 1.0),
     PLAYER(0.4375, 0.9, 0.4375),
-    NPC(0.5, 0.9, 0.8);
+    NPC(0.5, 1.2, 0.5);
 
     public final double radiusX;
     public final double radiusY;

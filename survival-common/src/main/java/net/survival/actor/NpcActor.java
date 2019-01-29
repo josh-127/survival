@@ -15,7 +15,7 @@ public class NpcActor implements Actor
     private double health = 50.0;
 
     public NpcActor(double x, double y, double z) {
-        locomotion = new Locomotion(x, y, z, HitBox.DEFAULT);
+        locomotion = new Locomotion(x, y, z, HitBox.NPC);
     }
 
     @Override
