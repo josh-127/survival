@@ -14,30 +14,30 @@ public class ColumnSystem
 
     private final BlockSpace blockSpace;
     private final ColumnStageMask columnStageMask;
-
-    private final ColumnDbPipe.ClientSide columnDbPipe;
+    private final ColumnDbPipe.ClientSide columnPipe;
 
     private final HashSet<Long> loadingColumns = new HashSet<>();
     private double saveTimer = SAVE_RATE;
 
-    public ColumnSystem(
-            BlockSpace blockSpace,
-            ColumnStageMask columnStageMask,
-            ColumnDbPipe.ClientSide columnDbPipe)
-    {
+    public ColumnSystem(BlockSpace blockSpace, ColumnStageMask columnStageMask, ColumnDbPipe.ClientSide columnPipe) {
         this.blockSpace = blockSpace;
         this.columnStageMask = columnStageMask;
-        this.columnDbPipe = columnDbPipe;
+        this.columnPipe = columnPipe;
     }
 
     public void saveAllColumns() {
-        saveColumns();
+        for (var entry : blockSpace.iterateColumnMap()) {
+            var hashedPos = entry.getKey();
+            var column = entry.getValue();
+
+            columnPipe.request(ColumnRequest.createPostRequest(hashedPos, column));
+        }
     }
 
     public void update(double elapsedTime) {
         saveTimer -= elapsedTime;
         if (saveTimer <= 0.0) {
-            saveColumns();
+            saveAllColumns();
             maskOutColumns();
             saveTimer = SAVE_RATE;
         }
@@ -47,16 +47,6 @@ public class ColumnSystem
                 .collect(Collectors.toSet());
 
         loadMissingColumnsFromDb(missingColumns);
-    }
-
-    private void saveColumns() {
-        // Save all loaded columns.
-        for (var entry : blockSpace.iterateColumnMap()) {
-            var hashedPos = entry.getKey();
-            var column = entry.getValue();
-
-            columnDbPipe.request(ColumnRequest.createPostRequest(hashedPos, column));
-        }
     }
 
     private void maskOutColumns() {
@@ -76,17 +66,11 @@ public class ColumnSystem
 
             if (!loadingColumns.contains(hashedPos)) {
                 loadingColumns.add(hashedPos);
-                columnDbPipe.request(ColumnRequest.createGetRequest(hashedPos));
+                columnPipe.request(ColumnRequest.createGetRequest(hashedPos));
             }
         }
 
-        missingColumns.clear();
-
-        for (
-                var response = columnDbPipe.pollResponse();
-                response != null;
-                response = columnDbPipe.pollResponse())
-        {
+        for (var response = columnPipe.pollResponse(); response != null; response = columnPipe.pollResponse()) {
             var hashedPos = response.columnPos;
             var column = response.column;
 
@@ -94,8 +78,6 @@ public class ColumnSystem
 
             if (column != null)
                 blockSpace.addColumn(hashedPos, column);
-            else
-                missingColumns.add(hashedPos);
         }
     }
 }
