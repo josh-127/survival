@@ -9,7 +9,6 @@ import net.survival.block.BlockSpace;
 
 public class ColumnSystem
 {
-    private static final int DATABASE_LOAD_RATE = 4;
     private static final double SAVE_RATE = 10.0;
 
     private final BlockSpace blockSpace;
@@ -59,15 +58,13 @@ public class ColumnSystem
     }
 
     private void loadMissingColumnsFromDb(Set<Long> missingColumns) {
-        var iterator = missingColumns.iterator();
+        var columnsToRequest = missingColumns.stream()
+                .filter(e -> !loadingColumns.contains(e))
+                .collect(Collectors.toSet());
 
-        for (var i = 0; iterator.hasNext() && i < DATABASE_LOAD_RATE; ++i) {
-            var hashedPos = iterator.next();
-
-            if (!loadingColumns.contains(hashedPos)) {
-                loadingColumns.add(hashedPos);
-                columnPipe.request(ColumnRequest.createGetRequest(hashedPos));
-            }
+        for (var hashedPos : columnsToRequest) {
+            loadingColumns.add(hashedPos);
+            columnPipe.request(ColumnRequest.createGetRequest(hashedPos));
         }
 
         for (var response = columnPipe.pollResponse(); response != null; response = columnPipe.pollResponse()) {
@@ -75,9 +72,7 @@ public class ColumnSystem
             var column = response.column;
 
             loadingColumns.remove(hashedPos);
-
-            if (column != null)
-                blockSpace.addColumn(hashedPos, column);
+            blockSpace.addColumn(hashedPos, column);
         }
     }
 }
