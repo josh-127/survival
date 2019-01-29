@@ -55,6 +55,9 @@ public class Locomotion
     }
 
     public void tick(Actor actor, InteractionContext ic) {
+        if (!ic.isInStagedColumn(x, y, z))
+            return;
+
         var sqrLength = MathEx.sqrLength(directionX, directionZ);
 
         if (sqrLength > 0.0) {

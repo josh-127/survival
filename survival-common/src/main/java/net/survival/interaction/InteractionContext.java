@@ -16,6 +16,9 @@ public interface InteractionContext
 
     Block raycastBlock(double x, double y, double z, double dx, double dy, double dz);
 
+    boolean isInStagedColumn(int x, int y, int z);
+    boolean isInStagedColumn(double x, double y, double z);
+
     void postMessage(ActorMessage message);
 
     void postMessage(BlockMessage message);

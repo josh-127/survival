@@ -5,6 +5,7 @@ import java.util.Queue;
 import net.survival.actor.ActorSpace;
 import net.survival.actor.message.ActorMessage;
 import net.survival.block.BlockSpace;
+import net.survival.block.column.ColumnPos;
 import net.survival.block.message.BlockMessage;
 import net.survival.blocktype.Block;
 import net.survival.client.particle.ClientParticleSpace;
@@ -71,6 +72,16 @@ class LocalInteractionContext implements InteractionContext
         }
 
         return null;
+    }
+
+    @Override
+    public boolean isInStagedColumn(int x, int y, int z) {
+        return blockSpace.containsColumn(ColumnPos.toColumnX(x), ColumnPos.toColumnZ(z));
+    }
+
+    @Override
+    public boolean isInStagedColumn(double x, double y, double z) {
+        return isInStagedColumn((int) Math.floor(x), (int) Math.floor(y), (int) Math.floor(z));
     }
 
     @Override
