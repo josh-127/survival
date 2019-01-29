@@ -20,9 +20,11 @@ import net.survival.block.column.ColumnDbPipe;
 import net.survival.block.column.ColumnPos;
 import net.survival.block.column.ColumnRequest;
 import net.survival.block.column.ColumnServer;
-import net.survival.block.column.ColumnSystem;
 import net.survival.block.message.BlockMessage;
 import net.survival.block.message.BreakBlockMessage;
+import net.survival.block.message.CheckInColumnsMessage;
+import net.survival.block.message.CheckOutColumnsMessage;
+import net.survival.block.message.ColumnResponseMessage;
 import net.survival.client.graphics.CompositeDisplay;
 import net.survival.client.graphics.GraphicsSettings;
 import net.survival.client.graphics.VisibilityFlags;
@@ -45,12 +47,13 @@ public class Client implements AutoCloseable
     private static final double TICKS_PER_SECOND = 60.0;
     private static final double SECONDS_PER_TICK = 1.0 / TICKS_PER_SECOND;
 
-    private final BlockSpace blockSpace = new BlockSpace();
+    private final ColumnDbPipe.ClientSide columnPipe;
+
+    private final BlockSpace blockSpace;
     private final ActorSpace actorSpace = new ActorSpace();
     private final ClientParticleSpace particleSpace = new ClientParticleSpace();
 
     private final CircularColumnStageMask columnMask = new CircularColumnStageMask(10);
-    private final ColumnSystem columnSystem;
 
     private final CompositeDisplay compositeDisplay;
     private final FpvCamera fpvCamera = new FpvCamera(0.0f, -1.0f);
@@ -59,14 +62,21 @@ public class Client implements AutoCloseable
     private final Queue<BlockMessage> blockMessages = new LinkedList<>();
     private final Queue<ParticleMessage> particleMessages = new LinkedList<>();
 
-    private final LocalInteractionContext interactionContext = new LocalInteractionContext(
-            actorSpace, blockSpace, particleSpace, actorMessages, blockMessages, particleMessages);
+    private final LocalInteractionContext interactionContext;
 
     private final int playerID;
     private final Actor player;
 
-    private Client(ColumnDbPipe.ClientSide columnDbPipe) {
-        columnSystem = new ColumnSystem(blockSpace, columnMask, columnDbPipe);
+    private static final double SAVE_INTERVAL = 10.0;
+    private double saveTimer = SAVE_INTERVAL;
+
+    private Client(ColumnDbPipe.ClientSide columnPipe) {
+        this.columnPipe = columnPipe;
+
+        blockSpace = new BlockSpace(columnPipe);
+
+        interactionContext = new LocalInteractionContext(
+                actorSpace, blockSpace, particleSpace, actorMessages, blockMessages, particleMessages);
 
         playerID = actorSpace.addActor(new PlayerActor(60.0, 96.0, 20.0));
         player = actorSpace.getActor(playerID);
@@ -78,7 +88,7 @@ public class Client implements AutoCloseable
     @Override
     public void close() throws RuntimeException {
         compositeDisplay.close();
-        columnSystem.saveAllColumns();
+        new CheckInColumnsMessage().accept(blockSpace, interactionContext);
     }
 
     public void tick(double elapsedTime) {
@@ -99,7 +109,18 @@ public class Client implements AutoCloseable
         var cx = ColumnPos.toColumnX((int) Math.floor(player.getX()));
         var cz = ColumnPos.toColumnZ((int) Math.floor(player.getZ()));
         columnMask.setCenter(cx, cz);
-        columnSystem.update(elapsedTime);
+
+        saveTimer -= elapsedTime;
+        if (saveTimer <= 0.0) {
+            saveTimer = SAVE_INTERVAL;
+            blockMessages.add(new CheckInColumnsMessage());
+        }
+
+        blockMessages.add(new CheckOutColumnsMessage(columnMask.getColumnPositions()));
+
+        for (var r = columnPipe.pollResponse(); r != null; r = columnPipe.pollResponse()) {
+            blockMessages.add(new ColumnResponseMessage(r));
+        }
 
         // Actor System
         interactionContext.setElapsedTime(elapsedTime);

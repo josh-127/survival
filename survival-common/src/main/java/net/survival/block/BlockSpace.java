@@ -1,18 +1,33 @@
 package net.survival.block;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import net.survival.block.column.Column;
+import net.survival.block.column.ColumnDbPipe;
 import net.survival.block.column.ColumnPos;
+import net.survival.block.column.ColumnRequest;
 import net.survival.block.message.BlockMessageVisitor;
 import net.survival.block.message.BreakBlockMessage;
+import net.survival.block.message.CheckOutColumnsMessage;
+import net.survival.block.message.ColumnResponseMessage;
 import net.survival.block.message.PlaceBlockMessage;
+import net.survival.block.message.CheckInColumnsMessage;
 import net.survival.interaction.InteractionContext;
 
 public class BlockSpace implements BlockStorage, BlockMessageVisitor
 {
     private Map<Long, Column> columns = new HashMap<>();
+    private Set<Long> loadingColumns = new HashSet<>();
+
+    private final ColumnDbPipe.ClientSide columnPipe;
+
+    public BlockSpace(ColumnDbPipe.ClientSide columnPipe) {
+        this.columnPipe = columnPipe;
+    }
 
     public Map<Long, Column> getColumnMap() { return columns; }
     public void setColumnMap(Map<Long, Column> to) { columns = to; }
@@ -75,5 +90,34 @@ public class BlockSpace implements BlockStorage, BlockMessageVisitor
     @Override
     public void visit(InteractionContext ic, PlaceBlockMessage message) {
         setBlockFullID(message.getX(), message.getY(), message.getZ(), message.getFullID());
+    }
+    
+    @Override
+    public void visit(InteractionContext ic, CheckInColumnsMessage message) {
+        for (var entry : columns.entrySet()) {
+            var hashedPos = entry.getKey();
+            var column = entry.getValue();
+            columnPipe.request(ColumnRequest.createPostRequest(hashedPos, column));
+        }
+    }
+
+    @Override
+    public void visit(InteractionContext ic, CheckOutColumnsMessage message) {
+        var missingColumns = message.getColumnPositions().stream()
+                .filter(e -> !columns.containsKey(e))
+                .filter(e -> !loadingColumns.contains(e))
+                .collect(Collectors.toSet());
+
+        for (var hashedPos : missingColumns) {
+            loadingColumns.add(hashedPos);
+            columnPipe.request(ColumnRequest.createGetRequest(hashedPos));
+        }
+    }
+
+    @Override
+    public void visit(InteractionContext ic, ColumnResponseMessage message) {
+        var response = message.getColumnResponse();
+        loadingColumns.remove(response.columnPos);
+        columns.put(response.columnPos, response.column);
     }
 }
