@@ -12,59 +12,23 @@ import net.survival.interaction.InteractionContext;
 
 public class BlockSpace implements BlockStorage, BlockMessageVisitor
 {
-    private final Long2ObjectOpenHashMap<Column> columns;
+    private final Long2ObjectOpenHashMap<Column> columns = new Long2ObjectOpenHashMap<>(1024);
 
-    public BlockSpace() {
-        columns = new Long2ObjectOpenHashMap<>(1024);
-    }
+    public Column getColumn(int cx, int cz) { return columns.get(ColumnPos.hashPos(cx, cz)); }
+    public Column getColumn(long hashedPos) { return columns.get(hashedPos); }
 
-    public Column getColumn(int cx, int cz) {
-        return columns.get(ColumnPos.hashPos(cx, cz));
-    }
+    public boolean containsColumn(int cx, int cz) { return columns.containsKey(ColumnPos.hashPos(cx, cz)); }
+    public boolean containsColumn(long hashedPos) { return columns.containsKey(hashedPos); }
 
-    public Column getColumn(long hashedPos) {
-        return columns.get(hashedPos);
-    }
+    public Iterable<Long2ObjectMap.Entry<Column>> iterateColumnMap() { return columns.long2ObjectEntrySet(); }
+    public ObjectIterator<Long2ObjectMap.Entry<Column>> getColumnMapIterator() { return columns.long2ObjectEntrySet().iterator(); }
+    public ObjectIterator<Long2ObjectMap.Entry<Column>> getColumnMapFastIterator() { return columns.long2ObjectEntrySet().fastIterator(); }
+    public Iterable<Column> iterateColumns() { return columns.values(); }
 
-    public boolean containsColumn(int cx, int cz) {
-        return columns.containsKey(ColumnPos.hashPos(cx, cz));
-    }
-
-    public boolean containsColumn(long hashedPos) {
-        return columns.containsKey(hashedPos);
-    }
-
-    public Iterable<Long2ObjectMap.Entry<Column>> iterateColumnMap() {
-        return columns.long2ObjectEntrySet();
-    }
-
-    public ObjectIterator<Long2ObjectMap.Entry<Column>> getColumnMapIterator() {
-        return columns.long2ObjectEntrySet().iterator();
-    }
-
-    public ObjectIterator<Long2ObjectMap.Entry<Column>> getColumnMapFastIterator() {
-        return columns.long2ObjectEntrySet().fastIterator();
-    }
-
-    public Iterable<Column> iterateColumns() {
-        return columns.values();
-    }
-
-    public void addColumn(int cx, int cz, Column column) {
-        columns.put(ColumnPos.hashPos(cx, cz), column);
-    }
-
-    public void addColumn(long hashedPos, Column column) {
-        columns.put(hashedPos, column);
-    }
-
-    public void removeColumn(int cx, int cz) {
-        columns.remove(ColumnPos.hashPos(cx, cz));
-    }
-
-    public void removeColumn(long hashedPos) {
-        columns.remove(hashedPos);
-    }
+    public void addColumn(int cx, int cz, Column column) { columns.put(ColumnPos.hashPos(cx, cz), column); }
+    public void addColumn(long hashedPos, Column column) { columns.put(hashedPos, column); }
+    public void removeColumn(int cx, int cz) { columns.remove(ColumnPos.hashPos(cx, cz)); }
+    public void removeColumn(long hashedPos) { columns.remove(hashedPos); }
 
     @Override
     public int getBlockFullID(int x, int y, int z) {
@@ -88,33 +52,6 @@ public class BlockSpace implements BlockStorage, BlockMessageVisitor
         var localZ = ColumnPos.toLocalZ(ColumnPos.toColumnZ(z), z);
 
         column.setBlockFullID(localX, y, localZ, to);
-    }
-
-    @Override
-    public int getTopLevel(int x, int z) {
-        var column = getColumnFromGlobalPos(x, z, "Cannot query a block in an unloaded column.");
-        var localX = ColumnPos.toLocalX(ColumnPos.toColumnX(x), x);
-        var localZ = ColumnPos.toLocalZ(ColumnPos.toColumnZ(z), z);
-
-        return column.getTopLevel(localX, localZ);
-    }
-
-    @Override
-    public boolean placeBlockIfEmpty(int x, int y, int z, short to) {
-        var column = getColumnFromGlobalPos(x, z, "Cannot place a block in an unloaded column.");
-        var localX = ColumnPos.toLocalX(ColumnPos.toColumnX(x), x);
-        var localZ = ColumnPos.toLocalZ(ColumnPos.toColumnZ(z), z);
-
-        return column.placeBlockIfEmpty(localX, y, localZ, to);
-    }
-
-    @Override
-    public boolean replaceBlockIfExists(int x, int y, int z, short replacement) {
-        var column = getColumnFromGlobalPos(x, z, "Cannot replace a block in an unloaded column.");
-        var localX = ColumnPos.toLocalX(ColumnPos.toColumnX(x), x);
-        var localZ = ColumnPos.toLocalZ(ColumnPos.toColumnZ(z), z);
-
-        return column.replaceBlockIfExists(localX, y, localZ, replacement);
     }
 
     private Column getColumnFromGlobalPos(int x, int z, String exceptionMessage) {
