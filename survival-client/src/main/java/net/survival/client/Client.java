@@ -61,12 +61,7 @@ public class Client implements AutoCloseable
     private final Queue<ParticleMessage> particleMessages = new LinkedList<>();
 
     private final LocalInteractionContext interactionContext = new LocalInteractionContext(
-            actorSpace,
-            blockSpace,
-            particleSpace,
-            actorMessages,
-            blockMessages,
-            particleMessages);
+            actorSpace, blockSpace, particleSpace, actorMessages, blockMessages, particleMessages);
 
     private final int playerID;
     private final Actor player;
@@ -78,11 +73,7 @@ public class Client implements AutoCloseable
         player = actorSpace.getActor(playerID);
 
         compositeDisplay = new CompositeDisplay(
-                blockSpace,
-                actorSpace,
-                particleSpace,
-                GraphicsSettings.WINDOW_WIDTH,
-                GraphicsSettings.WINDOW_HEIGHT);
+                blockSpace, actorSpace, particleSpace, GraphicsSettings.WINDOW_WIDTH, GraphicsSettings.WINDOW_HEIGHT);
     }
 
     @Override
