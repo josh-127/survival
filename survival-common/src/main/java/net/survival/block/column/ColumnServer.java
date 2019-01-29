@@ -15,13 +15,16 @@ public class ColumnServer implements Runnable
     private final VirtualMemoryAllocator allocator = new VirtualMemoryAllocator();
     private final ColumnDirectory directory = new ColumnDirectory();
 
+    private final ColumnProvider columnGenerator;
+
     private final AtomicBoolean running = new AtomicBoolean(true);
     private final ColumnDbPipe.ServerSide columnPipe;
     private FileChannel fileChannel;
 
-    public ColumnServer(File file, ColumnDbPipe.ServerSide columnPipe) {
+    public ColumnServer(File file, ColumnDbPipe.ServerSide columnPipe, ColumnProvider columnGenerator) {
         this.file = file;
         this.columnPipe = columnPipe;
+        this.columnGenerator = columnGenerator;
     }
 
     @Override
@@ -66,8 +69,9 @@ public class ColumnServer implements Runnable
 
     private Column loadColumn(long columnPos) throws IOException {
         var existingVau = directory.get(columnPos);
-        if (existingVau == null)
-            return null;
+        if (existingVau == null) {
+            return columnGenerator.provideColumn(columnPos);
+        }
 
         var compressedData = ByteBuffer.allocateDirect((int) existingVau.length);
 

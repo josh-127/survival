@@ -1,7 +1,6 @@
 package net.survival.block.column;
 
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -10,7 +9,6 @@ import net.survival.block.BlockSpace;
 
 public class ColumnSystem
 {
-    private static final int GENERATOR_LOAD_RATE = 2;
     private static final int DATABASE_LOAD_RATE = 4;
     private static final double SAVE_RATE = 10.0;
 
@@ -18,7 +16,6 @@ public class ColumnSystem
     private final ColumnStageMask columnStageMask;
 
     private final ColumnDbPipe.ClientSide columnDbPipe;
-    private final ColumnProvider columnGenerator;
 
     private final HashSet<Long> loadingColumns = new HashSet<>();
     private double saveTimer = SAVE_RATE;
@@ -26,13 +23,11 @@ public class ColumnSystem
     public ColumnSystem(
             BlockSpace blockSpace,
             ColumnStageMask columnStageMask,
-            ColumnDbPipe.ClientSide columnDbPipe,
-            ColumnProvider columnGenerator)
+            ColumnDbPipe.ClientSide columnDbPipe)
     {
         this.blockSpace = blockSpace;
         this.columnStageMask = columnStageMask;
         this.columnDbPipe = columnDbPipe;
-        this.columnGenerator = columnGenerator;
     }
 
     public void saveAllColumns() {
@@ -52,7 +47,6 @@ public class ColumnSystem
                 .collect(Collectors.toSet());
 
         loadMissingColumnsFromDb(missingColumns);
-        generateColumns(missingColumns.iterator());
     }
 
     private void saveColumns() {
@@ -102,15 +96,6 @@ public class ColumnSystem
                 blockSpace.addColumn(hashedPos, column);
             else
                 missingColumns.add(hashedPos);
-        }
-    }
-
-    private void generateColumns(Iterator<Long> missingColumns) {
-        for (var i = 0; i < GENERATOR_LOAD_RATE && missingColumns.hasNext(); ++i) {
-            var hashedPos = missingColumns.next();
-            var generatedColumn = columnGenerator.provideColumn(hashedPos);
-            blockSpace.addColumn(hashedPos, generatedColumn);
-            missingColumns.remove();
         }
     }
 }

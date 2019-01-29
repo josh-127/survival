@@ -50,7 +50,6 @@ public class Client implements AutoCloseable
     private final ClientParticleSpace particleSpace = new ClientParticleSpace();
 
     private final CircularColumnStageMask columnMask = new CircularColumnStageMask(10);
-    private final InfiniteColumnGenerator columnGenerator = new InfiniteColumnGenerator(22L);
     private final ColumnSystem columnSystem;
 
     private final CompositeDisplay compositeDisplay;
@@ -67,7 +66,7 @@ public class Client implements AutoCloseable
     private final Actor player;
 
     private Client(ColumnDbPipe.ClientSide columnDbPipe) {
-        columnSystem = new ColumnSystem(blockSpace, columnMask, columnDbPipe, columnGenerator);
+        columnSystem = new ColumnSystem(blockSpace, columnMask, columnDbPipe);
 
         playerID = actorSpace.addActor(new PlayerActor(60.0, 72.0, 20.0));
         player = actorSpace.getActor(playerID);
@@ -150,9 +149,13 @@ public class Client implements AutoCloseable
     }
 
     public static void main(String[] args) throws InterruptedException {
+        var columnGenerator = new InfiniteColumnGenerator(22L);
+
         var columnDbPipe = new ColumnDbPipe();
         var columnServer = new ColumnServer(
-                new File(System.getProperty("user.dir") + "/../.world/columns"), columnDbPipe.getServerSide());
+                new File(System.getProperty("user.dir") + "/../.world/columns"),
+                columnDbPipe.getServerSide(),
+                columnGenerator);
 
         var columnServerThread = new Thread(columnServer);
         columnServerThread.start();
