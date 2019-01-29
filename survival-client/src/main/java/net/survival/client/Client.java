@@ -94,15 +94,10 @@ public class Client implements AutoCloseable
     }
 
     public void tick(double elapsedTime) {
-        //
         // Camera
-        //
         final var PI = Math.PI;
-        var cursorDX = Mouse.getDeltaX();
-        var cursorDY = Mouse.getDeltaY();
-        var jsX = 0.0;
-        var jsZ = 0.0;
-        var camYaw = fpvCamera.yaw;
+        var cursorDX = Mouse.getDeltaX(); var cursorDY = Mouse.getDeltaY();
+        var jsX = 0.0; var jsZ = 0.0; var camYaw = fpvCamera.yaw;
         if (Keyboard.isKeyDown(Key.W)) { jsX += Math.sin(camYaw); jsZ -= Math.cos(camYaw); }
         if (Keyboard.isKeyDown(Key.S)) { jsX += Math.sin(camYaw + PI); jsZ -= Math.cos(camYaw + PI); }
         if (Keyboard.isKeyDown(Key.A)) { jsX += Math.sin(camYaw - PI / 2.0); jsZ -= Math.cos(camYaw - PI / 2.0); }
@@ -110,20 +105,15 @@ public class Client implements AutoCloseable
 
         fpvCamera.rotate(-cursorDX / 128.0, -cursorDY / 128.0);
         actorMessages.add(new MoveMessage(playerID, jsX, jsZ));
-        if (Keyboard.isKeyPressed(Key.SPACE))
-            actorMessages.add(new JumpMessage(playerID));
+        if (Keyboard.isKeyPressed(Key.SPACE)) actorMessages.add(new JumpMessage(playerID));
 
-        //
         // Column System
-        //
         var cx = ColumnPos.toColumnX((int) Math.floor(player.getX()));
         var cz = ColumnPos.toColumnZ((int) Math.floor(player.getZ()));
         columnMask.setCenter(cx, cz);
         columnSystem.update(elapsedTime);
 
-        //
         // Actor System
-        //
         interactionContext.setElapsedTime(elapsedTime);
 
         while (!actorMessages.isEmpty()) {
@@ -137,32 +127,17 @@ public class Client implements AutoCloseable
             new StepMessage(actorID).accept(actor, interactionContext);
         }
 
-        //
         // Block System
-        //
-        while (!blockMessages.isEmpty()) {
-            var message = blockMessages.remove();
-            message.accept(blockSpace, interactionContext);
-        }
+        while (!blockMessages.isEmpty()) blockMessages.remove().accept(blockSpace, interactionContext);
 
-        //
         // Particle System
-        //
-        while (!particleMessages.isEmpty()) {
-            var message = particleMessages.remove();
-            message.accept(particleSpace);
-        }
-
+        while (!particleMessages.isEmpty()) particleMessages.remove().accept(particleSpace);
         particleSpace.step(elapsedTime);
 
-        //
         // Temporary Test Code
-        //
         temporaryTestCode();
 
-        //
         // Client Display
-        //
         var columnMapIt = blockSpace.getColumnMapFastIterator();
         while (columnMapIt.hasNext()) {
             var entry = columnMapIt.next();
@@ -190,14 +165,12 @@ public class Client implements AutoCloseable
     public static void main(String[] args) throws InterruptedException {
         var columnDbPipe = new ColumnDbPipe();
         var columnServer = new ColumnServer(
-                new File(System.getProperty("user.dir") + "/../.world/columns"),
-                columnDbPipe.getServerSide());
+                new File(System.getProperty("user.dir") + "/../.world/columns"), columnDbPipe.getServerSide());
 
         var columnServerThread = new Thread(columnServer);
         columnServerThread.start();
 
-        var display = new GLDisplay(GraphicsSettings.WINDOW_WIDTH,
-                GraphicsSettings.WINDOW_HEIGHT, WINDOW_TITLE);
+        var display = new GLDisplay(GraphicsSettings.WINDOW_WIDTH, GraphicsSettings.WINDOW_HEIGHT, WINDOW_TITLE);
         var keyboardAdapter = new GlfwKeyboardAdapter();
         var mouseAdapter = new GlfwMouseAdapter(display.getUnderlyingGlfwWindow());
         GLFW.glfwSetKeyCallback(display.getUnderlyingGlfwWindow(), keyboardAdapter);
@@ -253,44 +226,26 @@ public class Client implements AutoCloseable
 
     private void temporaryTestCode() {
         if (Mouse.isLmbPressed() || Mouse.isRmbPressed()) {
-            var px = player.getX();
-            var py = player.getY() + 1.0;
-            var pz = player.getZ();
+            var px = player.getX(); var py = player.getY() + 1.0; var pz = player.getZ();
             final var DELTA = 0.0078125;
             for (var zz = 0.0; zz < 7.0; zz += DELTA) {
                 px += DELTA * Math.sin(fpvCamera.yaw) * Math.cos(fpvCamera.pitch);
                 py += DELTA * Math.sin(fpvCamera.pitch);
                 pz -= DELTA * Math.cos(fpvCamera.yaw) * Math.cos(fpvCamera.pitch);
-                var pxi = (int) Math.floor(px);
-                var pyi = (int) Math.floor(py);
-                var pzi = (int) Math.floor(pz);
+                var pxi = (int) Math.floor(px); var pyi = (int) Math.floor(py); var pzi = (int) Math.floor(pz);
                 if (blockSpace.getBlockFullID(pxi, pyi, pzi) != 0) {
-                    if (Mouse.isLmbPressed()) {
-                        blockMessages.add(new BreakBlockMessage(pxi, pyi, pzi));
-                    }
+                    if (Mouse.isLmbPressed()) blockMessages.add(new BreakBlockMessage(pxi, pyi, pzi));
                     break;
                 }
             }
         }
 
-        if (Keyboard.isKeyPressed(Key.T)) {
-            actorSpace.addActor(new NpcActor(
-                    player.getX(),
-                    player.getY(),
-                    player.getZ()));
-        }
-        else if (Keyboard.isKeyPressed(Key.Y)) {
-            particleMessages.add(new BurstParticlesMessage(
-                    player.getX(),
-                    player.getY(),
-                    player.getZ(),
-                    1.0,
-                    64));
-        }
+        if (Keyboard.isKeyPressed(Key.T))
+            actorSpace.addActor(new NpcActor(player.getX(), player.getY(), player.getZ()));
+        else if (Keyboard.isKeyPressed(Key.Y))
+            particleMessages.add(new BurstParticlesMessage(player.getX(), player.getY(), player.getZ(), 1.0, 64));
 
-        //
         // Visibility Flags
-        //
         if (Keyboard.isKeyPressed(Key._1)) compositeDisplay.toggleVisibilityFlags(VisibilityFlags.BLOCKS);
         if (Keyboard.isKeyPressed(Key._2)) compositeDisplay.toggleVisibilityFlags(VisibilityFlags.ENTITIES);
         if (Keyboard.isKeyPressed(Key._3)) compositeDisplay.toggleVisibilityFlags(VisibilityFlags.PARTICLES);
@@ -299,14 +254,10 @@ public class Client implements AutoCloseable
         if (Keyboard.isKeyPressed(Key._6)) compositeDisplay.toggleVisibilityFlags(VisibilityFlags.HUD);
         if (Keyboard.isKeyPressed(Key._7)) compositeDisplay.toggleVisibilityFlags(VisibilityFlags.DEBUG_GEOMETRY);
 
-        //
         // Mouse Control
-        //
         if (Keyboard.isKeyPressed(Key.TAB)) {
-            if (Mouse.getMode() == Mouse.MODE_NORMAL)
-                Mouse.setMode(Mouse.MODE_CENTERED);
-            else
-                Mouse.setMode(Mouse.MODE_NORMAL);
+            if (Mouse.getMode() == Mouse.MODE_NORMAL) Mouse.setMode(Mouse.MODE_CENTERED);
+            else                                      Mouse.setMode(Mouse.MODE_NORMAL);
         }
     }
 }
