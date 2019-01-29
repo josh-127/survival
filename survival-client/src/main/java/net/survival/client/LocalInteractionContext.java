@@ -8,6 +8,7 @@ import net.survival.block.BlockSpace;
 import net.survival.block.column.ColumnPos;
 import net.survival.block.message.BlockMessage;
 import net.survival.blocktype.Block;
+import net.survival.blocktype.BlockType;
 import net.survival.client.particle.ClientParticleSpace;
 import net.survival.interaction.InteractionContext;
 import net.survival.particle.message.ParticleMessage;
@@ -51,7 +52,7 @@ class LocalInteractionContext implements InteractionContext
 
     @Override
     public Block getBlock(int x, int y, int z) {
-        return blockSpace.getBlockState(x, y, z);
+        return BlockType.byFullID(blockSpace.getBlockFullID(x, y, z));
     }
 
     @Override

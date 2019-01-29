@@ -1,8 +1,6 @@
 package net.survival.block.column;
 
-import net.survival.block.BlockStorage;
-
-public class Column implements BlockStorage
+public class Column
 {
     public static final int HEIGHT = 8;
     public static final int XLENGTH = Chunk.XLENGTH;
@@ -54,7 +52,6 @@ public class Column implements BlockStorage
         return topIndex + 1;
     }
 
-    @Override
     public int getBlockFullID(int x, int y, int z) {
         var index = y / Chunk.YLENGTH;
 
@@ -64,7 +61,6 @@ public class Column implements BlockStorage
         return chunks[index].getBlockFullID(x, y % Chunk.YLENGTH, z);
     }
 
-    @Override
     public void setBlockFullID(int x, int y, int z, int to) {
         var index = y / Chunk.YLENGTH;
 

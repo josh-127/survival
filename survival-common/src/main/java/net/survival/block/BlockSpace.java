@@ -18,7 +18,7 @@ import net.survival.block.message.PlaceBlockMessage;
 import net.survival.block.message.CheckInColumnsMessage;
 import net.survival.interaction.InteractionContext;
 
-public class BlockSpace implements BlockStorage, BlockMessageVisitor
+public class BlockSpace implements BlockMessageVisitor
 {
     private Map<Long, Column> columns = new HashMap<>();
     private Set<Long> loadingColumns = new HashSet<>();
@@ -46,7 +46,6 @@ public class BlockSpace implements BlockStorage, BlockMessageVisitor
     public void removeColumn(int cx, int cz) { columns.remove(ColumnPos.hashPos(cx, cz)); }
     public void removeColumn(long hashedPos) { columns.remove(hashedPos); }
 
-    @Override
     public int getBlockFullID(int x, int y, int z) {
         var cx = ColumnPos.toColumnX(x);
         var cz = ColumnPos.toColumnZ(z);
@@ -61,7 +60,6 @@ public class BlockSpace implements BlockStorage, BlockMessageVisitor
         return column.getBlockFullID(localX, y, localZ);
     }
 
-    @Override
     public void setBlockFullID(int x, int y, int z, int to) {
         var column = getColumnFromGlobalPos(x, z, "Cannot place/replace a block in an unloaded column.");
         var localX = ColumnPos.toLocalX(ColumnPos.toColumnX(x), x);
