@@ -187,10 +187,10 @@ class BlockDisplay implements GraphicsResource
         var cameraZ = camera.z;
         var maxViewRadiusSquared = maxViewRadius * maxViewRadius;
 
-        var columnMapIt = blockSpace.getColumnMapFastIterator();
+        var columnMapIt = blockSpace.iterateColumnMap().iterator();
         while (columnMapIt.hasNext()) {
             var entry = columnMapIt.next();
-            var hashedPos = entry.getLongKey();
+            var hashedPos = (long) entry.getKey();
             var column = entry.getValue();
 
             var cx = ColumnPos.columnXFromHashedPos(hashedPos);
@@ -245,10 +245,10 @@ class BlockDisplay implements GraphicsResource
         var cameraZ = camera.z;
         var maxViewRadiusSquared = maxViewRadius * maxViewRadius;
 
-        var columnMapIt = blockSpace.getColumnMapFastIterator();
+        var columnMapIt = blockSpace.iterateColumnMap().iterator();
         while (columnMapIt.hasNext()) {
             var entry = columnMapIt.next();
-            var hashedPos = entry.getLongKey();
+            var hashedPos = (long) entry.getKey();
             var column = entry.getValue();
 
             var cx = ColumnPos.columnXFromHashedPos(hashedPos);

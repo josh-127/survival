@@ -1,9 +1,11 @@
 package net.survival.block.column;
 
-import it.unimi.dsi.fastutil.longs.LongArraySet;
-import it.unimi.dsi.fastutil.longs.LongIterator;
-import it.unimi.dsi.fastutil.longs.LongOpenHashBigSet;
-import it.unimi.dsi.fastutil.longs.LongSet;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import net.survival.block.BlockSpace;
 
 public class ColumnSystem
@@ -18,8 +20,8 @@ public class ColumnSystem
     private final ColumnDbPipe.ClientSide columnDbPipe;
     private final ColumnProvider columnGenerator;
 
-    private final LongArraySet loadingColumns;
-    private double saveTimer;
+    private final HashSet<Long> loadingColumns = new HashSet<>();
+    private double saveTimer = SAVE_RATE;
 
     public ColumnSystem(
             BlockSpace blockSpace,
@@ -31,9 +33,6 @@ public class ColumnSystem
         this.columnStageMask = columnStageMask;
         this.columnDbPipe = columnDbPipe;
         this.columnGenerator = columnGenerator;
-
-        loadingColumns = new LongArraySet();
-        saveTimer = SAVE_RATE;
     }
 
     public void saveAllColumns() {
@@ -48,20 +47,18 @@ public class ColumnSystem
             saveTimer = SAVE_RATE;
         }
 
-        var missingColumnsStream = columnStageMask.getColumnPositions().stream()
-                .filter(e -> !blockSpace.containsColumn(e));
+        var missingColumns = columnStageMask.getColumnPositions().stream()
+                .filter(e -> !blockSpace.containsColumn(e))
+                .collect(Collectors.toSet());
 
-        var missingColumns = new LongOpenHashBigSet(missingColumnsStream.iterator());
         loadMissingColumnsFromDb(missingColumns);
         generateColumns(missingColumns.iterator());
     }
 
     private void saveColumns() {
         // Save all loaded columns.
-        var iterator = blockSpace.getColumnMapFastIterator();
-        while (iterator.hasNext()) {
-            var entry = iterator.next();
-            var hashedPos = entry.getLongKey();
+        for (var entry : blockSpace.iterateColumnMap()) {
+            var hashedPos = entry.getKey();
             var column = entry.getValue();
 
             columnDbPipe.request(ColumnRequest.createPostRequest(hashedPos, column));
@@ -69,23 +66,19 @@ public class ColumnSystem
     }
 
     private void maskOutColumns() {
-        var iterator = blockSpace.getColumnMapFastIterator();
         var mask = columnStageMask.getColumnPositions();
+        var newColumnMap = blockSpace.getColumnMap().entrySet().stream()
+                .filter(e -> mask.contains(e.getKey()))
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
-        while (iterator.hasNext()) {
-            var entry = iterator.next();
-            var hashedPos = entry.getLongKey();
-
-            if (!mask.contains(hashedPos))
-                iterator.remove();
-        }
+        blockSpace.setColumnMap(newColumnMap);
     }
 
-    private void loadMissingColumnsFromDb(LongSet missingColumns) {
+    private void loadMissingColumnsFromDb(Set<Long> missingColumns) {
         var iterator = missingColumns.iterator();
 
         for (var i = 0; iterator.hasNext() && i < DATABASE_LOAD_RATE; ++i) {
-            var hashedPos = iterator.nextLong();
+            var hashedPos = iterator.next();
 
             if (!loadingColumns.contains(hashedPos)) {
                 loadingColumns.add(hashedPos);
@@ -112,9 +105,9 @@ public class ColumnSystem
         }
     }
 
-    private void generateColumns(LongIterator missingColumns) {
+    private void generateColumns(Iterator<Long> missingColumns) {
         for (var i = 0; i < GENERATOR_LOAD_RATE && missingColumns.hasNext(); ++i) {
-            var hashedPos = missingColumns.nextLong();
+            var hashedPos = missingColumns.next();
             var generatedColumn = columnGenerator.provideColumn(hashedPos);
             blockSpace.addColumn(hashedPos, generatedColumn);
             missingColumns.remove();

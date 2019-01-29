@@ -1,8 +1,8 @@
 package net.survival.block.column;
 
-import it.unimi.dsi.fastutil.longs.LongSet;
+import java.util.Set;
 
 public interface ColumnStageMask
 {
-    LongSet getColumnPositions();
+    Set<Long> getColumnPositions();
 }

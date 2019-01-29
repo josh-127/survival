@@ -1,18 +1,18 @@
 package net.survival.block.column;
 
-import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
-import it.unimi.dsi.fastutil.longs.LongSet;
+import java.util.HashSet;
+import java.util.Set;
 
 public class CircularColumnStageMask implements ColumnStageMask
 {
-    private final LongSet columnPositions;
+    private final HashSet<Long> columnPositions;
     private final int radius;
 
     private int prevOffsetCX;
     private int prevOffsetCZ;
 
     public CircularColumnStageMask(int radius) {
-        columnPositions = new LongOpenHashSet(radius * radius);
+        columnPositions = new HashSet<>(radius * radius);
         this.radius = radius;
 
         forceSetCenter(0, 0);
@@ -42,8 +42,8 @@ public class CircularColumnStageMask implements ColumnStageMask
     }
 
     @Override
-    public LongSet getColumnPositions() {
-        return new LongOpenHashSet(columnPositions);
+    public Set<Long> getColumnPositions() {
+        return new HashSet<>(columnPositions);
     }
 
     private int squareDistance(int x, int z) {

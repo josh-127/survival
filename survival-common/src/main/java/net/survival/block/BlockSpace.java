@@ -1,8 +1,8 @@
 package net.survival.block;
 
-import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
-import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
-import it.unimi.dsi.fastutil.objects.ObjectIterator;
+import java.util.HashMap;
+import java.util.Map;
+
 import net.survival.block.column.Column;
 import net.survival.block.column.ColumnPos;
 import net.survival.block.message.BlockMessageVisitor;
@@ -12,7 +12,10 @@ import net.survival.interaction.InteractionContext;
 
 public class BlockSpace implements BlockStorage, BlockMessageVisitor
 {
-    private final Long2ObjectOpenHashMap<Column> columns = new Long2ObjectOpenHashMap<>(1024);
+    private Map<Long, Column> columns = new HashMap<>();
+
+    public Map<Long, Column> getColumnMap() { return columns; }
+    public void setColumnMap(Map<Long, Column> to) { columns = to; }
 
     public Column getColumn(int cx, int cz) { return columns.get(ColumnPos.hashPos(cx, cz)); }
     public Column getColumn(long hashedPos) { return columns.get(hashedPos); }
@@ -20,9 +23,7 @@ public class BlockSpace implements BlockStorage, BlockMessageVisitor
     public boolean containsColumn(int cx, int cz) { return columns.containsKey(ColumnPos.hashPos(cx, cz)); }
     public boolean containsColumn(long hashedPos) { return columns.containsKey(hashedPos); }
 
-    public Iterable<Long2ObjectMap.Entry<Column>> iterateColumnMap() { return columns.long2ObjectEntrySet(); }
-    public ObjectIterator<Long2ObjectMap.Entry<Column>> getColumnMapIterator() { return columns.long2ObjectEntrySet().iterator(); }
-    public ObjectIterator<Long2ObjectMap.Entry<Column>> getColumnMapFastIterator() { return columns.long2ObjectEntrySet().fastIterator(); }
+    public Iterable<Map.Entry<Long, Column>> iterateColumnMap() { return columns.entrySet(); }
     public Iterable<Column> iterateColumns() { return columns.values(); }
 
     public void addColumn(int cx, int cz, Column column) { columns.put(ColumnPos.hashPos(cx, cz), column); }

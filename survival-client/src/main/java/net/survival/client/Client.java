@@ -127,10 +127,8 @@ public class Client implements AutoCloseable
         temporaryTestCode();
 
         // Client Display
-        var columnMapIt = blockSpace.getColumnMapFastIterator();
-        while (columnMapIt.hasNext()) {
-            var entry = columnMapIt.next();
-            var hashedPos = entry.getLongKey();
+        for (var entry : blockSpace.iterateColumnMap()) {
+            var hashedPos = entry.getKey();
             var column = entry.getValue();
 
             if (column.isBlocksModified()) {
