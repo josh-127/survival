@@ -38,7 +38,6 @@ import net.survival.client.ui.BasicUI;
 import net.survival.gen.InfiniteColumnGenerator;
 import net.survival.gen.decoration.WorldDecorator;
 import net.survival.input.Key;
-import net.survival.particle.message.AddParticleEmitterMessage;
 import net.survival.particle.message.BurstParticlesMessage;
 import net.survival.particle.message.ParticleMessage;
 import net.survival.ui.UiBodyElement;
@@ -305,12 +304,6 @@ public class Client implements AutoCloseable
                     player.getZ()));
         }
         else if (Keyboard.isKeyPressed(Key.Y)) {
-            particleMessages.add(new AddParticleEmitterMessage(
-                    player.getX(),
-                    player.getY(),
-                    player.getZ()));
-        }
-        else if (Keyboard.isKeyPressed(Key.U)) {
             particleMessages.add(new BurstParticlesMessage(
                     player.getX(),
                     player.getY(),
