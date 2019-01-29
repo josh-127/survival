@@ -5,7 +5,6 @@ import it.unimi.dsi.fastutil.longs.LongIterator;
 import it.unimi.dsi.fastutil.longs.LongOpenHashBigSet;
 import it.unimi.dsi.fastutil.longs.LongSet;
 import net.survival.block.BlockSpace;
-import net.survival.gen.decoration.WorldDecorator;
 
 public class ColumnSystem
 {
@@ -18,7 +17,6 @@ public class ColumnSystem
 
     private final ColumnDbPipe.ClientSide columnDbPipe;
     private final ColumnProvider columnGenerator;
-    private final WorldDecorator worldDecorator;
 
     private final LongArraySet loadingColumns;
     private double saveTimer;
@@ -27,14 +25,12 @@ public class ColumnSystem
             BlockSpace blockSpace,
             ColumnStageMask columnStageMask,
             ColumnDbPipe.ClientSide columnDbPipe,
-            ColumnProvider columnGenerator,
-            WorldDecorator worldDecorator)
+            ColumnProvider columnGenerator)
     {
         this.blockSpace = blockSpace;
         this.columnStageMask = columnStageMask;
         this.columnDbPipe = columnDbPipe;
         this.columnGenerator = columnGenerator;
-        this.worldDecorator = worldDecorator;
 
         loadingColumns = new LongArraySet();
         saveTimer = SAVE_RATE;
@@ -122,28 +118,6 @@ public class ColumnSystem
             var generatedColumn = columnGenerator.provideColumn(hashedPos);
             blockSpace.addColumn(hashedPos, generatedColumn);
             missingColumns.remove();
-        }
-
-        var columnMapIt = blockSpace.getColumnMapFastIterator();
-        while (columnMapIt.hasNext()) {
-            var entry = columnMapIt.next();
-            var hashedPos = entry.getLongKey();
-            var cx = ColumnPos.columnXFromHashedPos(hashedPos);
-            var cz = ColumnPos.columnZFromHashedPos(hashedPos);
-            var column = entry.getValue();
-
-            var isFullySurrounded = true;
-            for (var z = -1; z <= 1 && isFullySurrounded; ++z) {
-                for (var x = -1; x <= 1 && isFullySurrounded; ++x) {
-                    if (blockSpace.getColumn(cx + x, cz + z) == null)
-                        isFullySurrounded = false;
-                }
-            }
-
-            if (!column.isDecorated() && isFullySurrounded) {
-                worldDecorator.decorate(cx, cz, column, blockSpace);
-                column.markDecorated();
-            }
         }
     }
 }

@@ -16,7 +16,6 @@ public class Column implements BlockStorage
     private final Chunk[] chunks;
 
     private int modified;
-    private boolean decorated;
 
     public Column() {
         chunks = new Chunk[HEIGHT];
@@ -95,13 +94,5 @@ public class Column implements BlockStorage
 
     public void setModificationFlags(int to) {
         modified = to;
-    }
-
-    public boolean isDecorated() {
-        return decorated;
-    }
-
-    public void markDecorated() {
-        decorated = true;
     }
 }

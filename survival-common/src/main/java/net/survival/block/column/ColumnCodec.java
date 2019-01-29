@@ -10,9 +10,6 @@ class ColumnCodec
         var compressedDataLength = Column.VOLUME * 4 + COLUMN_HEADER_SIZE;
         var compressedData = ByteBuffer.allocate(compressedDataLength);
 
-        var flags = (byte) (column.isDecorated() ? 1 : 0);
-        compressedData.put(flags);
-
         var enabledChunks = (byte) 0;
         for (var i = 0; i < Column.HEIGHT; ++i) {
             if (column.getChunk(i) != null)
@@ -38,10 +35,6 @@ class ColumnCodec
 
     public static Column decompressColumn(ByteBuffer compressedData) {
         var column = new Column();
-
-        var flags = compressedData.get();
-        if ((flags & 1) != 0)
-            column.markDecorated();
 
         var enabledChunks = compressedData.get();
 

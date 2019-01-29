@@ -34,7 +34,6 @@ import net.survival.client.input.Keyboard;
 import net.survival.client.input.Mouse;
 import net.survival.client.particle.ClientParticleSpace;
 import net.survival.gen.InfiniteColumnGenerator;
-import net.survival.gen.decoration.WorldDecorator;
 import net.survival.input.Key;
 import net.survival.particle.message.BurstParticlesMessage;
 import net.survival.particle.message.ParticleMessage;
@@ -52,7 +51,6 @@ public class Client implements AutoCloseable
 
     private final CircularColumnStageMask columnMask = new CircularColumnStageMask(10);
     private final InfiniteColumnGenerator columnGenerator = new InfiniteColumnGenerator(22L);
-    private final WorldDecorator worldDecorator = WorldDecorator.createDefault();
     private final ColumnSystem columnSystem;
 
     private final CompositeDisplay compositeDisplay;
@@ -74,7 +72,7 @@ public class Client implements AutoCloseable
     private final Actor player;
 
     private Client(ColumnDbPipe.ClientSide columnDbPipe) {
-        columnSystem = new ColumnSystem(blockSpace, columnMask, columnDbPipe, columnGenerator, worldDecorator);
+        columnSystem = new ColumnSystem(blockSpace, columnMask, columnDbPipe, columnGenerator);
 
         playerID = actorSpace.addActor(new PlayerActor(60.0, 72.0, 20.0));
         player = actorSpace.getActor(playerID);
