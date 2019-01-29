@@ -9,7 +9,6 @@ import net.survival.client.graphics.opengl.GLMatrixStack;
 import net.survival.client.graphics.opengl.GLRenderContext;
 import net.survival.client.graphics.opengl.GLState;
 import net.survival.client.particle.ClientParticleSpace;
-import net.survival.client.ui.BasicUI;
 import net.survival.ui.UiDom;
 
 public class CompositeDisplay implements RenderContext, GraphicsResource
@@ -21,7 +20,6 @@ public class CompositeDisplay implements RenderContext, GraphicsResource
     private final ParticleDisplay particleDisplay;
     private final SkyboxDisplay skyboxDisplay = new SkyboxDisplay();
     private final CloudDisplay cloudDisplay = new CloudDisplay();
-    private final UIDisplay uiDisplay;
     private final NewUiDisplay newUiDisplay;
 
     private int viewportWidth;
@@ -38,8 +36,7 @@ public class CompositeDisplay implements RenderContext, GraphicsResource
             ActorSpace actorSpace,
             ClientParticleSpace clientParticleSpace,
             int viewportWidth,
-            int viewportHeight,
-            BasicUI.Client uiClientPipe)
+            int viewportHeight)
     {
         blockDisplay = new BlockDisplay(blockSpace, camera, 512.0f);
         actorDisplay = new ActorDisplay(actorSpace, camera);
@@ -47,14 +44,12 @@ public class CompositeDisplay implements RenderContext, GraphicsResource
         this.viewportWidth = viewportWidth;
         this.viewportHeight = viewportHeight;
 
-        uiDisplay = new UIDisplay(uiClientPipe);
         newUiDisplay = new NewUiDisplay();
     }
 
     @Override
     public void close() {
         blockDisplay.close();
-        uiDisplay.close();
     }
 
     @Override
@@ -324,7 +319,6 @@ public class CompositeDisplay implements RenderContext, GraphicsResource
 
             GLMatrixStack.push();
             GLMatrixStack.loadIdentity();
-            uiDisplay.display();
             newUiDisplay.display();
             GLMatrixStack.pop();
         }

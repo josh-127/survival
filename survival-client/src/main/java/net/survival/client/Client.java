@@ -34,7 +34,6 @@ import net.survival.client.input.GlfwMouseAdapter;
 import net.survival.client.input.Keyboard;
 import net.survival.client.input.Mouse;
 import net.survival.client.particle.ClientParticleSpace;
-import net.survival.client.ui.BasicUI;
 import net.survival.gen.InfiniteColumnGenerator;
 import net.survival.gen.decoration.WorldDecorator;
 import net.survival.input.Key;
@@ -62,9 +61,6 @@ public class Client implements AutoCloseable
     private final WorldDecorator worldDecorator = WorldDecorator.createDefault();
     private final ColumnSystem columnSystem;
 
-    private final BasicUI basicUI = new BasicUI();
-    private final BasicUI.Server uiServer;
-
     private final CompositeDisplay compositeDisplay;
     private final FpvCamera fpvCamera = new FpvCamera(0.0f, -1.0f);
 
@@ -89,15 +85,12 @@ public class Client implements AutoCloseable
         playerID = actorSpace.addActor(new PlayerActor(60.0, 72.0, 20.0));
         player = actorSpace.getActor(playerID);
 
-        uiServer = basicUI.getServer();
-
         compositeDisplay = new CompositeDisplay(
                 blockSpace,
                 actorSpace,
                 particleSpace,
                 GraphicsSettings.WINDOW_WIDTH,
-                GraphicsSettings.WINDOW_HEIGHT,
-                basicUI.getClient());
+                GraphicsSettings.WINDOW_HEIGHT);
 
         ArrayList<UiElement> elements = new ArrayList<>();
         elements.add(new UiTextElement("Hello World!"));
@@ -331,13 +324,6 @@ public class Client implements AutoCloseable
                 Mouse.setMode(Mouse.MODE_CENTERED);
             else
                 Mouse.setMode(Mouse.MODE_NORMAL);
-        }
-
-        //
-        // Old UI System
-        //
-        if (uiServer.button("Change Clouds", 3.0, 0, 48, 320, 32 + 48)) {
-            compositeDisplay.setCloudSeed(compositeDisplay.getCloudSeed() + 1L);
         }
     }
 }
