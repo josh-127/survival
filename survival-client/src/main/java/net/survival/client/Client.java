@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
 
-import org.joml.Vector3d;
 import org.lwjgl.glfw.GLFW;
 
 import net.survival.actor.Actor;
@@ -68,7 +67,7 @@ public class Client implements AutoCloseable
     private final BasicUI.Server uiServer;
 
     private final CompositeDisplay compositeDisplay;
-    private final FpvCamera fpvCamera = new FpvCamera(new Vector3d(60.0, 72.0, 20.0), 0.0f, -1.0f);
+    private final FpvCamera fpvCamera = new FpvCamera(0.0f, -1.0f);
 
     private final Queue<ActorMessage> actorMessages = new LinkedList<>();
     private final Queue<BlockMessage> blockMessages = new LinkedList<>();
@@ -137,8 +136,8 @@ public class Client implements AutoCloseable
         //
         // Column System
         //
-        var cx = ColumnPos.toColumnX((int) Math.floor(fpvCamera.position.x));
-        var cz = ColumnPos.toColumnZ((int) Math.floor(fpvCamera.position.z));
+        var cx = ColumnPos.toColumnX((int) Math.floor(player.getX()));
+        var cz = ColumnPos.toColumnZ((int) Math.floor(player.getZ()));
         columnMask.setCenter(cx, cz);
         columnSystem.update(elapsedTime);
 
@@ -279,9 +278,9 @@ public class Client implements AutoCloseable
 
     private void temporaryTestCode() {
         if (Mouse.isLmbPressed() || Mouse.isRmbPressed()) {
-            var px = fpvCamera.position.x;
-            var py = fpvCamera.position.y;
-            var pz = fpvCamera.position.z;
+            var px = player.getX();
+            var py = player.getY() + 1.0;
+            var pz = player.getZ();
             final var DELTA = 0.0078125;
             for (var zz = 0.0; zz < 7.0; zz += DELTA) {
                 px += DELTA * Math.sin(fpvCamera.yaw) * Math.cos(fpvCamera.pitch);
@@ -300,23 +299,22 @@ public class Client implements AutoCloseable
         }
 
         if (Keyboard.isKeyPressed(Key.T)) {
-            var npcActor = new NpcActor(
-                    fpvCamera.position.x,
-                    fpvCamera.position.y,
-                    fpvCamera.position.z);
-            actorSpace.addActor(npcActor);
+            actorSpace.addActor(new NpcActor(
+                    player.getX(),
+                    player.getY(),
+                    player.getZ()));
         }
         else if (Keyboard.isKeyPressed(Key.Y)) {
             particleMessages.add(new AddParticleEmitterMessage(
-                    fpvCamera.position.x,
-                    fpvCamera.position.y,
-                    fpvCamera.position.z));
+                    player.getX(),
+                    player.getY(),
+                    player.getZ()));
         }
         else if (Keyboard.isKeyPressed(Key.U)) {
             particleMessages.add(new BurstParticlesMessage(
-                    fpvCamera.position.x,
-                    fpvCamera.position.y,
-                    fpvCamera.position.z,
+                    player.getX(),
+                    player.getY(),
+                    player.getZ(),
                     1.0,
                     64));
         }

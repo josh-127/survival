@@ -1,29 +1,13 @@
 package net.survival.client;
 
-import org.joml.Matrix4f;
-import org.joml.Vector3d;
-
 class FpvCamera
 {
-    public Vector3d position;
     public double yaw;
     public double pitch;
     
-    public FpvCamera(Vector3d position, double yaw, double pitch) {
-        this.position = position;
+    public FpvCamera(double yaw, double pitch) {
         this.yaw = yaw;
         this.pitch = pitch;
-    }
-    
-    public void moveXZ(double angle, double speed) {
-        var dx = Math.sin(yaw + angle) * speed;
-        var dz = -Math.cos(yaw + angle) * speed;
-        position.x += dx;
-        position.z += dz;
-    }
-    
-    public void moveY(double delta) {
-        position.y += delta;
     }
     
     public void rotate(double dYaw, double dPitch) {
@@ -39,16 +23,5 @@ class FpvCamera
             pitch = -Math.PI / 2.03125;
         else if (pitch > Math.PI / 2.03125)
             pitch = Math.PI / 2.03125;
-    }
-    
-    public void getViewMatrix(Matrix4f destination)
-    {
-        destination.lookAt(
-                (float) position.x, (float) position.y, (float) position.z,
-                (float) (position.x + (Math.sin(yaw) * Math.cos(pitch))),
-                (float) (position.y + Math.sin(pitch)),
-                (float) (position.z - (Math.cos(yaw) * Math.cos(pitch))),
-                0.0f, 1.0f, 0.0f
-                );
     }
 }
