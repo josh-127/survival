@@ -2,6 +2,7 @@ package net.survival.block.column;
 
 import it.unimi.dsi.fastutil.longs.LongArraySet;
 import it.unimi.dsi.fastutil.longs.LongIterator;
+import it.unimi.dsi.fastutil.longs.LongOpenHashBigSet;
 import it.unimi.dsi.fastutil.longs.LongSet;
 import net.survival.block.BlockSpace;
 import net.survival.gen.decoration.WorldDecorator;
@@ -51,24 +52,12 @@ public class ColumnSystem
             saveTimer = SAVE_RATE;
         }
 
-        var missingColumns = getMissingColumnPosSet();
+        var missingColumnsStream = columnStageMask.getColumnPositions().stream()
+                .filter(e -> !blockSpace.containsColumn(e));
+
+        var missingColumns = new LongOpenHashBigSet(missingColumnsStream.iterator());
         loadMissingColumnsFromDb(missingColumns);
         generateColumns(missingColumns.iterator());
-    }
-
-    private LongSet getMissingColumnPosSet() {
-        var missingColumns = columnStageMask.getColumnPositions();
-
-        var iterator = blockSpace.getColumnMapFastIterator();
-        while (iterator.hasNext()) {
-            var entry = iterator.next();
-            var hashedPos = entry.getLongKey();
-
-            if (missingColumns.contains(hashedPos))
-                missingColumns.remove(hashedPos);
-        }
-
-        return missingColumns;
     }
 
     private void saveColumns() {
