@@ -74,32 +74,6 @@ class ParticleDisplay
         drawCall.end();
     }
 
-    private void displayBillboard(GLImmediateDrawCall drawCall, float x, float y, float z, float size) {
-        var camUpX = 0.0f;
-        var camUpY = 1.0f;
-        var camUpZ = 0.0f;
-        var camForwardX = camera.getDirectionX();
-        var camForwardY = camera.getDirectionY();
-        var camForwardZ = camera.getDirectionZ();
-        var camRightX = MathEx.crossX(camForwardX, camForwardY, camForwardZ, camUpX, camUpY, camUpZ);
-        var camRightY = MathEx.crossY(camForwardX, camForwardY, camForwardZ, camUpX, camUpY, camUpZ);
-        var camRightZ = MathEx.crossZ(camForwardX, camForwardY, camForwardZ, camUpX, camUpY, camUpZ);
-
-        var length = MathEx.length(camRightX, camRightY, camRightZ);
-        camRightX /= length;
-        camRightY /= length;
-        camRightZ /= length;
-
-        camUpX *= 0.5f;
-        camUpY *= 0.5f;
-        camUpZ *= 0.5f;
-        camRightX *= 0.5f;
-        camRightY *= 0.5f;
-        camRightZ *= 0.5f;
-
-        displayBillboard(drawCall, x, y, z, camRightX, camRightY, camRightZ, camUpX, camUpY, camUpZ);
-    }
-
     private void displayBillboard(
             GLImmediateDrawCall drawCall,
             float x, float y, float z,

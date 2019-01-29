@@ -166,11 +166,7 @@ class ColumnDisplay implements GraphicsResource
         builder.setColor(LEFT_FACE_SHADE, LEFT_FACE_SHADE, LEFT_FACE_SHADE);
 
         for (var y = 0; y < Column.YLENGTH; ++y) {
-            var indexY = y * Column.BASE_AREA;
-
             for (var z = 0; z < Column.ZLENGTH; ++z) {
-                var indexYZ = indexY + (z * Column.XLENGTH);
-
                 for (var x = 1; x < Column.XLENGTH; ++x) {
                     var blockID = column.getBlockFullID(x, y, z);
                     var adjacentBlockID = column.getBlockFullID(x - 1, y, z);
@@ -183,11 +179,7 @@ class ColumnDisplay implements GraphicsResource
 
         if (adjacentColumn != null) {
             for (var y = 0; y < Column.YLENGTH; ++y) {
-                var indexY = y * Column.BASE_AREA;
-
                 for (var z = 0; z < Column.ZLENGTH; ++z) {
-                    var indexYZ = indexY + (z * Column.XLENGTH);
-
                     var blockID = column.getBlockFullID(0, y, z);
                     var adjacentBlockID = adjacentColumn.getBlockFullID(Column.XLENGTH - 1, y, z);
 
@@ -204,11 +196,7 @@ class ColumnDisplay implements GraphicsResource
         builder.setColor(RIGHT_FACE_SHADE, RIGHT_FACE_SHADE, RIGHT_FACE_SHADE);
 
         for (var y = 0; y < Column.YLENGTH; ++y) {
-            var indexY = y * Column.BASE_AREA;
-
             for (var z = 0; z < Column.ZLENGTH; ++z) {
-                var indexYZ = indexY + (z * Column.XLENGTH);
-
                 for (var x = 0; x < Column.XLENGTH - 1; ++x) {
                     var blockID = column.getBlockFullID(x, y, z);
                     var adjacentBlockID = column.getBlockFullID(x + 1, y, z);
@@ -221,11 +209,7 @@ class ColumnDisplay implements GraphicsResource
 
         if (adjacentColumn != null) {
             for (var y = 0; y < Column.YLENGTH; ++y) {
-                var indexY = y * Column.BASE_AREA;
-
                 for (var z = 0; z < Column.ZLENGTH; ++z) {
-                    var indexYZ = indexY + (z * Column.XLENGTH);
-
                     var blockID = column.getBlockFullID(Column.XLENGTH - 1, y, z);
                     var adjacentBlockID = adjacentColumn.getBlockFullID(0, y, z);
 
@@ -242,14 +226,8 @@ class ColumnDisplay implements GraphicsResource
         builder.setColor(FRONT_FACE_SHADE, FRONT_FACE_SHADE, FRONT_FACE_SHADE);
 
         for (var y = 0; y < Column.YLENGTH; ++y) {
-            var indexY = y * Column.BASE_AREA;
-
             for (var z = 0; z < Column.ZLENGTH - 1; ++z) {
-                var indexYZ = indexY + (z * Column.XLENGTH);
-
                 for (var x = 0; x < Column.XLENGTH; ++x) {
-                    var indexYZX = indexYZ + x;
-
                     var blockID = column.getBlockFullID(x, y, z);
                     var adjacentBlockID = column.getBlockFullID(x, y, z + 1);
 
@@ -260,12 +238,7 @@ class ColumnDisplay implements GraphicsResource
         }
 
         if (adjacentColumn != null) {
-            var indexZ = Column.BASE_AREA - Column.XLENGTH;
-
             for (var y = 0; y < Column.YLENGTH; ++y) {
-                var indexY = y * Column.BASE_AREA;
-                var indexYZ = indexZ + indexY;
-
                 for (var x = 0; x < Column.XLENGTH; ++x) {
                     var blockID = column.getBlockFullID(x, y, Column.ZLENGTH - 1);
                     var adjacentBlockID = adjacentColumn.getBlockFullID(x, y, 0);
@@ -283,14 +256,8 @@ class ColumnDisplay implements GraphicsResource
         builder.setColor(BACK_FACE_SHADE, BACK_FACE_SHADE, BACK_FACE_SHADE);
 
         for (var y = 0; y < Column.YLENGTH; ++y) {
-            var indexY = y * Column.BASE_AREA;
-
             for (var z = 1; z < Column.ZLENGTH; ++z) {
-                var indexYZ = indexY + (z * Column.XLENGTH);
-
                 for (var x = 0; x < Column.XLENGTH; ++x) {
-                    var indexYZX = indexYZ + x;
-
                     var blockID = column.getBlockFullID(x, y, z);
                     var adjacentBlockID = column.getBlockFullID(x, y, z - 1);
 
@@ -302,9 +269,6 @@ class ColumnDisplay implements GraphicsResource
 
         if (adjacentColumn != null) {
             for (var y = 0; y < Column.YLENGTH; ++y) {
-                var indexY = y * Column.BASE_AREA;
-                var adjacentIndexYZ = indexY + Column.BASE_AREA - Column.XLENGTH;
-
                 for (var x = 0; x < Column.XLENGTH; ++x) {
                     var blockID = column.getBlockFullID(x, y, 0);
                     var adjacentBlockID = adjacentColumn.getBlockFullID(x, y, Column.ZLENGTH - 1);
@@ -338,6 +302,7 @@ class ColumnDisplay implements GraphicsResource
             shouldCreateDisplayList = true;
         }
 
+        @SuppressWarnings("resource")
         var displayList = (GLDisplayList) null;
 
         if (shouldCreateDisplayList)
