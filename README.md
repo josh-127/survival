@@ -13,13 +13,10 @@ Keyboard and mouse controls are hard-coded for now.
 |-------------------|----------------------------|
 | W, A, S, D        | Move horizontally          |
 | Space             | Jump                       |
-| R                 | Spawn player               |
 | T                 | Spawn human                |
-| Y                 | Spawn particle emitter     |
-| U                 | Spawn particles            |
+| Y                 | Spawn particle s           |
 | Mouse movement    | Look around                |
 | Left mouse button | Break block                |
-| Tab               | Toggle cursor mode         |
 | 1                 | Toggle block visibility    |
 | 2                 | Toggle entity visibility   |
 | 3                 | Toggle particle visibility |
