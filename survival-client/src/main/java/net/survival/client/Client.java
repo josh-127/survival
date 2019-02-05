@@ -25,6 +25,7 @@ import net.survival.block.message.BreakBlockMessage;
 import net.survival.block.message.CheckInColumnsMessage;
 import net.survival.block.message.CheckOutColumnsMessage;
 import net.survival.block.message.ColumnResponseMessage;
+import net.survival.block.message.MaskColumnsMessage;
 import net.survival.client.graphics.CompositeDisplay;
 import net.survival.client.graphics.GraphicsSettings;
 import net.survival.client.graphics.VisibilityFlags;
@@ -114,6 +115,7 @@ public class Client implements AutoCloseable
         if (saveTimer <= 0.0) {
             saveTimer = SAVE_INTERVAL;
             blockMessages.add(new CheckInColumnsMessage());
+            blockMessages.add(new MaskColumnsMessage(columnMask));
         }
 
         blockMessages.add(new CheckOutColumnsMessage(columnMask.getColumnPositions()));

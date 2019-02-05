@@ -14,6 +14,7 @@ import net.survival.block.message.BlockMessageVisitor;
 import net.survival.block.message.BreakBlockMessage;
 import net.survival.block.message.CheckOutColumnsMessage;
 import net.survival.block.message.ColumnResponseMessage;
+import net.survival.block.message.MaskColumnsMessage;
 import net.survival.block.message.PlaceBlockMessage;
 import net.survival.block.message.CheckInColumnsMessage;
 import net.survival.interaction.InteractionContext;
@@ -117,5 +118,14 @@ public class BlockSpace implements BlockMessageVisitor
         var response = message.getColumnResponse();
         loadingColumns.remove(response.columnPos);
         columns.put(response.columnPos, response.column);
+    }
+
+    @Override
+    public void visit(InteractionContext ic, MaskColumnsMessage message) {
+        var columnPositions = message.getMask().getColumnPositions();
+
+        columns = columns.entrySet().stream()
+                .filter(e -> columnPositions.contains(e.getKey()))
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 }
