@@ -11,6 +11,7 @@ import net.survival.blocktype.Block;
 import net.survival.blocktype.BlockType;
 import net.survival.client.particle.ClientParticleSpace;
 import net.survival.interaction.InteractionContext;
+import net.survival.interaction.Message;
 import net.survival.particle.message.ParticleMessage;
 import net.survival.util.MathEx;
 
@@ -19,9 +20,7 @@ class LocalInteractionContext implements InteractionContext
     private final ActorSpace actorSpace;
     private final BlockSpace blockSpace;
     private final ClientParticleSpace particleSpace;
-    private final Queue<ActorMessage> actorMessages;
-    private final Queue<BlockMessage> blockMessages;
-    private final Queue<ParticleMessage> particleMessages;
+    private final Queue<Message> messageQueue;
 
     private double elapsedTime;
 
@@ -29,16 +28,12 @@ class LocalInteractionContext implements InteractionContext
             ActorSpace actorSpace,
             BlockSpace blockSpace,
             ClientParticleSpace particleSpace,
-            Queue<ActorMessage> actorMessages,
-            Queue<BlockMessage> blockMessages,
-            Queue<ParticleMessage> particleMessages)
+            Queue<Message> messageQueue)
     {
         this.actorSpace = actorSpace;
         this.blockSpace = blockSpace;
         this.particleSpace = particleSpace;
-        this.actorMessages = actorMessages;
-        this.blockMessages = blockMessages;
-        this.particleMessages = particleMessages;
+        this.messageQueue = messageQueue;
     }
 
     @Override
@@ -87,16 +82,16 @@ class LocalInteractionContext implements InteractionContext
 
     @Override
     public void postMessage(ActorMessage message) {
-        actorMessages.add(message);
+        messageQueue.add(message);
     }
 
     @Override
     public void postMessage(BlockMessage message) {
-        blockMessages.add(message);
+        messageQueue.add(message);
     }
 
     @Override
     public void postMessage(ParticleMessage message) {
-        particleMessages.add(message);
+        messageQueue.add(message);
     }
 }

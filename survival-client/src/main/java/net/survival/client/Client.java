@@ -38,6 +38,9 @@ import net.survival.client.input.Mouse;
 import net.survival.client.particle.ClientParticleSpace;
 import net.survival.gen.InfiniteColumnGenerator;
 import net.survival.input.Key;
+import net.survival.interaction.InteractionContext;
+import net.survival.interaction.Message;
+import net.survival.interaction.MessageVisitor;
 import net.survival.particle.message.BurstParticlesMessage;
 import net.survival.particle.message.ParticleMessage;
 
@@ -59,9 +62,7 @@ public class Client implements AutoCloseable
     private final CompositeDisplay compositeDisplay;
     private final FpvCamera fpvCamera = new FpvCamera(0.0f, -1.0f);
 
-    private final Queue<ActorMessage> actorMessages = new LinkedList<>();
-    private final Queue<BlockMessage> blockMessages = new LinkedList<>();
-    private final Queue<ParticleMessage> particleMessages = new LinkedList<>();
+    private final Queue<Message> messageQueue = new LinkedList<Message>();
 
     private final LocalInteractionContext interactionContext;
 
@@ -77,7 +78,7 @@ public class Client implements AutoCloseable
         blockSpace = new BlockSpace(columnPipe);
 
         interactionContext = new LocalInteractionContext(
-                actorSpace, blockSpace, particleSpace, actorMessages, blockMessages, particleMessages);
+                actorSpace, blockSpace, particleSpace, messageQueue);
 
         playerID = actorSpace.addActor(new PlayerActor(60.0, 96.0, 20.0));
         player = actorSpace.getActor(playerID);
@@ -103,10 +104,10 @@ public class Client implements AutoCloseable
         if (Keyboard.isKeyDown(Key.D)) { jsX += Math.sin(camYaw + PI / 2.0); jsZ -= Math.cos(camYaw + PI / 2.0); }
 
         fpvCamera.rotate(-cursorDX / 128.0, -cursorDY / 128.0);
-        actorMessages.add(new MoveMessage(playerID, jsX, jsZ));
-        if (Keyboard.isKeyPressed(Key.SPACE)) actorMessages.add(new JumpMessage(playerID));
+        messageQueue.add(new MoveMessage(playerID, jsX, jsZ));
+        if (Keyboard.isKeyPressed(Key.SPACE)) messageQueue.add(new JumpMessage(playerID));
 
-        // Column System
+        // Loading/Saving Columns
         var cx = ColumnPos.toColumnX((int) Math.floor(player.getX()));
         var cz = ColumnPos.toColumnZ((int) Math.floor(player.getZ()));
         columnMask.setCenter(cx, cz);
@@ -114,35 +115,49 @@ public class Client implements AutoCloseable
         saveTimer -= elapsedTime;
         if (saveTimer <= 0.0) {
             saveTimer = SAVE_INTERVAL;
-            blockMessages.add(new CheckInColumnsMessage());
-            blockMessages.add(new MaskColumnsMessage(columnMask));
+            messageQueue.add(new CheckInColumnsMessage());
+            messageQueue.add(new MaskColumnsMessage(columnMask));
         }
 
-        blockMessages.add(new CheckOutColumnsMessage(columnMask.getColumnPositions()));
+        messageQueue.add(new CheckOutColumnsMessage(columnMask.getColumnPositions()));
 
         for (var r = columnPipe.pollResponse(); r != null; r = columnPipe.pollResponse()) {
-            blockMessages.add(new ColumnResponseMessage(r));
+            messageQueue.add(new ColumnResponseMessage(r));
         }
 
-        // Actor System
+        // Application-Wide Message Dispatcher
         interactionContext.setElapsedTime(elapsedTime);
 
-        while (!actorMessages.isEmpty()) {
-            ActorMessage message = actorMessages.remove();
-            message.accept(actorSpace.getActor(message.getDestActorID()), interactionContext);
+        while (!messageQueue.isEmpty()) {
+            var m = messageQueue.remove();
+
+            m.accept(new MessageVisitor() {
+                @Override
+                public void visit(InteractionContext ic, ActorMessage message) {
+                    var actorID = message.getDestActorID();
+                    var actor = actorSpace.getActor(actorID);
+                    message.accept(actor, interactionContext);
+                }
+                
+                @Override
+                public void visit(InteractionContext ic, BlockMessage message) {
+                    message.accept(blockSpace, interactionContext);
+                }
+                
+                @Override
+                public void visit(InteractionContext ic, ParticleMessage message) {
+                    message.accept(particleSpace);
+                }
+            }, interactionContext);
         }
 
+        // Misc. Code
         for (var entry : actorSpace.iterateActorMap()) {
             var actorID = entry.getKey();
             var actor = entry.getValue();
             new StepMessage(actorID).accept(actor, interactionContext);
         }
 
-        // Block System
-        while (!blockMessages.isEmpty()) blockMessages.remove().accept(blockSpace, interactionContext);
-
-        // Particle System
-        while (!particleMessages.isEmpty()) particleMessages.remove().accept(particleSpace);
         particleSpace.step(elapsedTime);
 
         // Temporary Test Code
@@ -247,7 +262,7 @@ public class Client implements AutoCloseable
                 pz -= DELTA * Math.cos(fpvCamera.yaw) * Math.cos(fpvCamera.pitch);
                 var pxi = (int) Math.floor(px); var pyi = (int) Math.floor(py); var pzi = (int) Math.floor(pz);
                 if (blockSpace.getBlockFullID(pxi, pyi, pzi) != 0) {
-                    if (Mouse.isLmbPressed()) blockMessages.add(new BreakBlockMessage(pxi, pyi, pzi));
+                    if (Mouse.isLmbPressed()) messageQueue.add(new BreakBlockMessage(pxi, pyi, pzi));
                     break;
                 }
             }
@@ -256,7 +271,7 @@ public class Client implements AutoCloseable
         if (Keyboard.isKeyPressed(Key.T))
             actorSpace.addActor(new NpcActor(player.getX(), player.getY(), player.getZ()));
         else if (Keyboard.isKeyPressed(Key.Y))
-            particleMessages.add(new BurstParticlesMessage(player.getX(), player.getY(), player.getZ(), 1.0, 64));
+            messageQueue.add(new BurstParticlesMessage(player.getX(), player.getY(), player.getZ(), 1.0, 64));
 
         // Visibility Flags
         if (Keyboard.isKeyPressed(Key._1)) compositeDisplay.toggleVisibilityFlags(VisibilityFlags.BLOCKS);
