@@ -1,6 +1,6 @@
 package net.survival.client.graphics;
 
-import net.survival.block.column.Column;
+import net.survival.block.Column;
 import net.survival.blocktype.BlockFace;
 import net.survival.client.graphics.blockrenderer.BlockRenderer;
 import net.survival.client.graphics.opengl.GLDisplayList;

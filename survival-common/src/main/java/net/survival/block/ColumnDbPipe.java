@@ -1,4 +1,4 @@
-package net.survival.block.column;
+package net.survival.block;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.LinkedBlockingQueue;

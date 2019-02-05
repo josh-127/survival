@@ -3,7 +3,7 @@ package net.survival.client;
 import net.survival.actor.ActorSpace;
 import net.survival.actor.message.ActorMessage;
 import net.survival.block.BlockSpace;
-import net.survival.block.column.ColumnPos;
+import net.survival.block.ColumnPos;
 import net.survival.block.message.BlockMessage;
 import net.survival.blocktype.Block;
 import net.survival.blocktype.BlockType;

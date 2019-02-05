@@ -1,6 +1,6 @@
 package net.survival.block.message;
 
-import net.survival.block.column.ColumnStageMask;
+import net.survival.block.ColumnStageMask;
 import net.survival.interaction.InteractionContext;
 import net.survival.interaction.MessagePriority;
 

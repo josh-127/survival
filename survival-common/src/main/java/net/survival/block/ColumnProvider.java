@@ -1,4 +1,4 @@
-package net.survival.block.column;
+package net.survival.block;
 
 public interface ColumnProvider
 {

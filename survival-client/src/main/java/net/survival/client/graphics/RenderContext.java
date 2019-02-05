@@ -1,6 +1,6 @@
 package net.survival.client.graphics;
 
-import net.survival.block.column.ColumnPos;
+import net.survival.block.ColumnPos;
 
 public interface RenderContext
 {

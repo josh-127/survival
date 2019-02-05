@@ -1,6 +1,6 @@
 package net.survival.block.message;
 
-import net.survival.block.column.ColumnResponse;
+import net.survival.block.ColumnResponse;
 import net.survival.interaction.InteractionContext;
 import net.survival.interaction.MessagePriority;
 

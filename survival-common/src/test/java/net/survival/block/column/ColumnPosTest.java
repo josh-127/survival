@@ -7,7 +7,7 @@ import org.junit.runner.RunWith;
 
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
-import net.survival.block.column.ColumnPos;
+import net.survival.block.ColumnPos;
 
 @RunWith(JUnitParamsRunner.class)
 public class ColumnPosTest

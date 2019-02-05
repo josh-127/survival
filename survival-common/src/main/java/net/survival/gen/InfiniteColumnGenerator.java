@@ -1,8 +1,8 @@
 package net.survival.gen;
 
-import net.survival.block.column.Column;
-import net.survival.block.column.ColumnPos;
-import net.survival.block.column.ColumnProvider;
+import net.survival.block.Column;
+import net.survival.block.ColumnPos;
+import net.survival.block.ColumnProvider;
 import net.survival.blocktype.BlockType;
 import net.survival.gen.biome.BiomeType;
 import net.survival.gen.layer.GenLayer;

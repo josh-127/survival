@@ -1,4 +1,4 @@
-package net.survival.block.column;
+package net.survival.block;
 
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
