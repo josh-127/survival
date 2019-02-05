@@ -1,7 +1,5 @@
 package net.survival.client;
 
-import java.util.Queue;
-
 import net.survival.actor.ActorSpace;
 import net.survival.actor.message.ActorMessage;
 import net.survival.block.BlockSpace;
@@ -11,7 +9,7 @@ import net.survival.blocktype.Block;
 import net.survival.blocktype.BlockType;
 import net.survival.client.particle.ClientParticleSpace;
 import net.survival.interaction.InteractionContext;
-import net.survival.interaction.Message;
+import net.survival.interaction.MessageQueue;
 import net.survival.particle.message.ParticleMessage;
 import net.survival.util.MathEx;
 
@@ -20,7 +18,7 @@ class LocalInteractionContext implements InteractionContext
     private final ActorSpace actorSpace;
     private final BlockSpace blockSpace;
     private final ClientParticleSpace particleSpace;
-    private final Queue<Message> messageQueue;
+    private final MessageQueue messageQueue;
 
     private double elapsedTime;
 
@@ -28,7 +26,7 @@ class LocalInteractionContext implements InteractionContext
             ActorSpace actorSpace,
             BlockSpace blockSpace,
             ClientParticleSpace particleSpace,
-            Queue<Message> messageQueue)
+            MessageQueue messageQueue)
     {
         this.actorSpace = actorSpace;
         this.blockSpace = blockSpace;
@@ -82,16 +80,16 @@ class LocalInteractionContext implements InteractionContext
 
     @Override
     public void postMessage(ActorMessage message) {
-        messageQueue.add(message);
+        messageQueue.enqueueMessage(message);
     }
 
     @Override
     public void postMessage(BlockMessage message) {
-        messageQueue.add(message);
+        messageQueue.enqueueMessage(message);
     }
 
     @Override
     public void postMessage(ParticleMessage message) {
-        messageQueue.add(message);
+        messageQueue.enqueueMessage(message);
     }
 }

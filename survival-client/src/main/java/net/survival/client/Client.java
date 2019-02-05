@@ -1,8 +1,6 @@
 package net.survival.client;
 
 import java.io.File;
-import java.util.LinkedList;
-import java.util.Queue;
 
 import org.lwjgl.glfw.GLFW;
 
@@ -39,7 +37,7 @@ import net.survival.client.particle.ClientParticleSpace;
 import net.survival.gen.InfiniteColumnGenerator;
 import net.survival.input.Key;
 import net.survival.interaction.InteractionContext;
-import net.survival.interaction.Message;
+import net.survival.interaction.MessageQueue;
 import net.survival.interaction.MessageVisitor;
 import net.survival.particle.message.BurstParticlesMessage;
 import net.survival.particle.message.ParticleMessage;
@@ -62,7 +60,7 @@ public class Client implements AutoCloseable
     private final CompositeDisplay compositeDisplay;
     private final FpvCamera fpvCamera = new FpvCamera(0.0f, -1.0f);
 
-    private final Queue<Message> messageQueue = new LinkedList<Message>();
+    private final MessageQueue messageQueue = new MessageQueue();
 
     private final LocalInteractionContext interactionContext;
 
@@ -104,8 +102,8 @@ public class Client implements AutoCloseable
         if (Keyboard.isKeyDown(Key.D)) { jsX += Math.sin(camYaw + PI / 2.0); jsZ -= Math.cos(camYaw + PI / 2.0); }
 
         fpvCamera.rotate(-cursorDX / 128.0, -cursorDY / 128.0);
-        messageQueue.add(new MoveMessage(playerID, jsX, jsZ));
-        if (Keyboard.isKeyPressed(Key.SPACE)) messageQueue.add(new JumpMessage(playerID));
+        messageQueue.enqueueMessage(new MoveMessage(playerID, jsX, jsZ));
+        if (Keyboard.isKeyPressed(Key.SPACE)) messageQueue.enqueueMessage(new JumpMessage(playerID));
 
         // Loading/Saving Columns
         var cx = ColumnPos.toColumnX((int) Math.floor(player.getX()));
@@ -115,21 +113,27 @@ public class Client implements AutoCloseable
         saveTimer -= elapsedTime;
         if (saveTimer <= 0.0) {
             saveTimer = SAVE_INTERVAL;
-            messageQueue.add(new CheckInColumnsMessage());
-            messageQueue.add(new MaskColumnsMessage(columnMask));
+            messageQueue.enqueueMessage(new CheckInColumnsMessage());
+            messageQueue.enqueueMessage(new MaskColumnsMessage(columnMask));
         }
 
-        messageQueue.add(new CheckOutColumnsMessage(columnMask.getColumnPositions()));
+        messageQueue.enqueueMessage(new CheckOutColumnsMessage(columnMask.getColumnPositions()));
 
         for (var r = columnPipe.pollResponse(); r != null; r = columnPipe.pollResponse()) {
-            messageQueue.add(new ColumnResponseMessage(r));
+            messageQueue.enqueueMessage(new ColumnResponseMessage(r));
+        }
+
+        // Misc. Setup
+        interactionContext.setElapsedTime(elapsedTime);
+        for (var entry : actorSpace.iterateActorMap()) {
+            var actorID = entry.getKey();
+            var actor = entry.getValue();
+            messageQueue.enqueueMessage(new StepMessage(actorID));
         }
 
         // Application-Wide Message Dispatcher
-        interactionContext.setElapsedTime(elapsedTime);
-
         while (!messageQueue.isEmpty()) {
-            var m = messageQueue.remove();
+            var m = messageQueue.dequeueMessage();
 
             m.accept(new MessageVisitor() {
                 @Override
@@ -151,13 +155,9 @@ public class Client implements AutoCloseable
             }, interactionContext);
         }
 
-        // Misc. Code
-        for (var entry : actorSpace.iterateActorMap()) {
-            var actorID = entry.getKey();
-            var actor = entry.getValue();
-            new StepMessage(actorID).accept(actor, interactionContext);
-        }
+        messageQueue.nextFrame();
 
+        // Misc. Code
         particleSpace.step(elapsedTime);
 
         // Temporary Test Code
@@ -262,7 +262,7 @@ public class Client implements AutoCloseable
                 pz -= DELTA * Math.cos(fpvCamera.yaw) * Math.cos(fpvCamera.pitch);
                 var pxi = (int) Math.floor(px); var pyi = (int) Math.floor(py); var pzi = (int) Math.floor(pz);
                 if (blockSpace.getBlockFullID(pxi, pyi, pzi) != 0) {
-                    if (Mouse.isLmbPressed()) messageQueue.add(new BreakBlockMessage(pxi, pyi, pzi));
+                    if (Mouse.isLmbPressed()) messageQueue.enqueueMessage(new BreakBlockMessage(pxi, pyi, pzi));
                     break;
                 }
             }
@@ -271,7 +271,7 @@ public class Client implements AutoCloseable
         if (Keyboard.isKeyPressed(Key.T))
             actorSpace.addActor(new NpcActor(player.getX(), player.getY(), player.getZ()));
         else if (Keyboard.isKeyPressed(Key.Y))
-            messageQueue.add(new BurstParticlesMessage(player.getX(), player.getY(), player.getZ(), 1.0, 64));
+            messageQueue.enqueueMessage(new BurstParticlesMessage(player.getX(), player.getY(), player.getZ(), 1.0, 64));
 
         // Visibility Flags
         if (Keyboard.isKeyPressed(Key._1)) compositeDisplay.toggleVisibilityFlags(VisibilityFlags.BLOCKS);
