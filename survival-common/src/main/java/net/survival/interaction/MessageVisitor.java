@@ -6,7 +6,7 @@ import net.survival.particle.message.ParticleMessage;
 
 public interface MessageVisitor
 {
-    void visit(ActorMessage message);
-    void visit(BlockMessage message);
-    void visit(ParticleMessage message);
+    void visit(InteractionContext ic, ActorMessage message);
+    void visit(InteractionContext ic, BlockMessage message);
+    void visit(InteractionContext ic, ParticleMessage message);
 }
