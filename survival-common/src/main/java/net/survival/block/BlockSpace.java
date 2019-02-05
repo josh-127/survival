@@ -61,7 +61,7 @@ public class BlockSpace implements BlockMessageVisitor
         return column.getBlockFullID(localX, y, localZ);
     }
 
-    public void setBlockFullID(int x, int y, int z, int to) {
+    private void setBlockFullID(int x, int y, int z, int to) {
         var column = getColumnFromGlobalPos(x, z, "Cannot place/replace a block in an unloaded column.");
         var localX = ColumnPos.toLocalX(ColumnPos.toColumnX(x), x);
         var localZ = ColumnPos.toLocalZ(ColumnPos.toColumnZ(z), z);
