@@ -2,6 +2,7 @@ package net.survival.block.message;
 
 import net.survival.block.column.ColumnResponse;
 import net.survival.interaction.InteractionContext;
+import net.survival.interaction.MessagePriority;
 
 public class ColumnResponseMessage extends BlockMessage
 {
@@ -14,6 +15,11 @@ public class ColumnResponseMessage extends BlockMessage
     @Override
     public void accept(BlockMessageVisitor visitor, InteractionContext ic) {
         visitor.visit(ic, this);
+    }
+    
+    @Override
+    public int getPriority() {
+        return MessagePriority.RESERVED_STEP;
     }
 
     public ColumnResponse getColumnResponse() {

@@ -1,6 +1,7 @@
 package net.survival.block.message;
 
 import net.survival.interaction.InteractionContext;
+import net.survival.interaction.MessagePriority;
 
 public class BreakBlockMessage extends BlockMessage
 {
@@ -29,5 +30,10 @@ public class BreakBlockMessage extends BlockMessage
     @Override
     public void accept(BlockMessageVisitor visitor, InteractionContext ic) {
         visitor.visit(ic, this);
+    }
+
+    @Override
+    public int getPriority() {
+        return MessagePriority.GAMEPLAY_POST_STEP;
     }
 }

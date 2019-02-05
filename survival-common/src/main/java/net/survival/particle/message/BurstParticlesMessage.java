@@ -1,5 +1,7 @@
 package net.survival.particle.message;
 
+import net.survival.interaction.MessagePriority;
+
 public class BurstParticlesMessage extends ParticleMessage
 {
     private final double x;
@@ -39,5 +41,10 @@ public class BurstParticlesMessage extends ParticleMessage
 
     public int getQuantity() {
         return quantity;
+    }
+
+    @Override
+    public int getPriority() {
+        return MessagePriority.GAMEPLAY_POST_STEP;
     }
 }
