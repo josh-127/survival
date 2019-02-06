@@ -7,6 +7,8 @@ import net.survival.block.message.PlaceBlockMessage;
 import net.survival.blocktype.Block;
 import net.survival.particle.message.BurstParticlesMessage;
 import net.survival.particle.message.ParticleMessage;
+import net.survival.render.message.DrawModelMessage;
+import net.survival.render.message.RenderMessage;
 
 public interface InteractionContext
 {
@@ -36,4 +38,6 @@ public interface InteractionContext
     default void burstParticles(double x, double y, double z, double strength, int quantity) {
         postMessage(new BurstParticlesMessage(x, y, z, strength, quantity));
     }
+
+    void postMessage(RenderMessage message);
 }

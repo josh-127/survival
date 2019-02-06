@@ -11,6 +11,7 @@ import net.survival.client.particle.ClientParticleSpace;
 import net.survival.interaction.InteractionContext;
 import net.survival.interaction.MessageQueue;
 import net.survival.particle.message.ParticleMessage;
+import net.survival.render.message.RenderMessage;
 import net.survival.util.MathEx;
 
 class LocalInteractionContext implements InteractionContext
@@ -90,6 +91,11 @@ class LocalInteractionContext implements InteractionContext
 
     @Override
     public void postMessage(ParticleMessage message) {
+        messageQueue.enqueueMessage(message);
+    }
+
+    @Override
+    public void postMessage(RenderMessage message) {
         messageQueue.enqueueMessage(message);
     }
 }

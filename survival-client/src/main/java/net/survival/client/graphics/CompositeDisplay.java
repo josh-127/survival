@@ -1,14 +1,16 @@
 package net.survival.client.graphics;
 
+import java.util.List;
+
 import org.joml.Matrix4f;
 
-import net.survival.actor.ActorSpace;
 import net.survival.block.BlockSpace;
 import net.survival.client.graphics.opengl.GLImmediateDrawCall;
 import net.survival.client.graphics.opengl.GLMatrixStack;
 import net.survival.client.graphics.opengl.GLRenderContext;
 import net.survival.client.graphics.opengl.GLState;
 import net.survival.client.particle.ClientParticleSpace;
+import net.survival.render.message.DrawModelMessage;
 
 public class CompositeDisplay implements RenderContext, GraphicsResource
 {
@@ -31,13 +33,13 @@ public class CompositeDisplay implements RenderContext, GraphicsResource
 
     public CompositeDisplay(
             BlockSpace blockSpace,
-            ActorSpace actorSpace,
+            List<DrawModelMessage> models,
             ClientParticleSpace clientParticleSpace,
             int viewportWidth,
             int viewportHeight)
     {
         blockDisplay = new BlockDisplay(blockSpace, camera, 512.0f);
-        actorDisplay = new ActorDisplay(actorSpace, camera);
+        actorDisplay = new ActorDisplay(models, camera);
         particleDisplay = new ParticleDisplay(clientParticleSpace, camera);
         this.viewportWidth = viewportWidth;
         this.viewportHeight = viewportHeight;

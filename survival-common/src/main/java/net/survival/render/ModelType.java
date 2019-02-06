@@ -1,6 +1,6 @@
-package net.survival.actor;
+package net.survival.render;
 
-public enum ActorModel
+public enum ModelType
 {
     CHICKEN,
     COW,

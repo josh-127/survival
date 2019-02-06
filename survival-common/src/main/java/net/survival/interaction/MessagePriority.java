@@ -11,6 +11,7 @@ public final class MessagePriority
     public static final int GAMEPLAY_DRAW      = 5;
 
     public static final int RESERVED_POST_STEP = 6;
+    public static final int RESERVED_DRAW = 7;
 
     private MessagePriority() {}
 }

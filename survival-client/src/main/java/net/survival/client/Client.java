@@ -1,6 +1,7 @@
 package net.survival.client;
 
 import java.io.File;
+import java.util.ArrayList;
 
 import org.lwjgl.glfw.GLFW;
 
@@ -9,6 +10,7 @@ import net.survival.actor.ActorSpace;
 import net.survival.actor.NpcActor;
 import net.survival.actor.PlayerActor;
 import net.survival.actor.message.ActorMessage;
+import net.survival.actor.message.DrawMessage;
 import net.survival.actor.message.JumpMessage;
 import net.survival.actor.message.MoveMessage;
 import net.survival.actor.message.StepMessage;
@@ -41,6 +43,9 @@ import net.survival.interaction.MessageQueue;
 import net.survival.interaction.MessageVisitor;
 import net.survival.particle.message.BurstParticlesMessage;
 import net.survival.particle.message.ParticleMessage;
+import net.survival.render.message.DrawModelMessage;
+import net.survival.render.message.RenderMessage;
+import net.survival.render.message.RenderMessageVisitor;
 
 public class Client implements AutoCloseable
 {
@@ -59,9 +64,9 @@ public class Client implements AutoCloseable
 
     private final CompositeDisplay compositeDisplay;
     private final FpvCamera fpvCamera = new FpvCamera(0.0f, -1.0f);
+    private final ArrayList<DrawModelMessage> modelsToDraw = new ArrayList<DrawModelMessage>();
 
     private final MessageQueue messageQueue = new MessageQueue();
-
     private final LocalInteractionContext interactionContext;
 
     private final int playerID;
@@ -82,7 +87,7 @@ public class Client implements AutoCloseable
         player = actorSpace.getActor(playerID);
 
         compositeDisplay = new CompositeDisplay(
-                blockSpace, actorSpace, particleSpace, GraphicsSettings.WINDOW_WIDTH, GraphicsSettings.WINDOW_HEIGHT);
+                blockSpace, modelsToDraw, particleSpace, GraphicsSettings.WINDOW_WIDTH, GraphicsSettings.WINDOW_HEIGHT);
     }
 
     @Override
@@ -127,8 +132,8 @@ public class Client implements AutoCloseable
         interactionContext.setElapsedTime(elapsedTime);
         for (var entry : actorSpace.iterateActorMap()) {
             var actorID = entry.getKey();
-            var actor = entry.getValue();
             messageQueue.enqueueMessage(new StepMessage(actorID));
+            messageQueue.enqueueMessage(new DrawMessage(actorID));
         }
 
         // Application-Wide Message Dispatcher
@@ -151,6 +156,16 @@ public class Client implements AutoCloseable
                 @Override
                 public void visit(InteractionContext ic, ParticleMessage message) {
                     message.accept(particleSpace);
+                }
+
+                @Override
+                public void visit(InteractionContext ic, RenderMessage message) {
+                    message.accept(new RenderMessageVisitor() {
+                        @Override
+                        public void visit(InteractionContext ic, DrawModelMessage message) {
+                            modelsToDraw.add(message);
+                        }
+                    }, ic);
                 }
             }, interactionContext);
         }
@@ -184,6 +199,7 @@ public class Client implements AutoCloseable
 
     private void render(double frameRate) {
         compositeDisplay.display(frameRate);
+        modelsToDraw.clear();
     }
 
     public static void main(String[] args) throws InterruptedException {

@@ -5,7 +5,7 @@ import org.lwjgl.assimp.AIMesh;
 import org.lwjgl.assimp.AIScene;
 import org.lwjgl.assimp.AIString;
 
-import net.survival.actor.Actor;
+import net.survival.render.ModelType;
 
 import static org.lwjgl.assimp.Assimp.*;
 
@@ -35,17 +35,16 @@ public class StaticModel
         this.absoluteFilePath = absoluteFilePath;
     }
 
-    public static StaticModel fromActor(Actor actor) {
-        switch (actor.getModel()) {
+    public static StaticModel fromModelType(ModelType modelType) {
+        switch (modelType) {
         case CHICKEN: return chicken;
         case COW:     return cow;
         case GOAT:    return goat;
         case HUMAN:   return human;
         case PIG:     return pig;
         case SLIME:   return slime;
+        default:      throw new IllegalArgumentException("modelType");
         }
-
-        throw new RuntimeException();
     }
 
     public static StaticModel fromFile(String filePath) {

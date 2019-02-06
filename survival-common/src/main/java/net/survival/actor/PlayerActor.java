@@ -44,9 +44,4 @@ public class PlayerActor implements Actor
     public double getZ() {
         return locomotion.getZ();
     }
-
-    @Override
-    public ActorModel getModel() {
-        return null;
-    }
 }

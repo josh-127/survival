@@ -1,23 +1,24 @@
 package net.survival.client.graphics;
 
+import java.util.List;
+
 import org.joml.Matrix4f;
 
-import net.survival.actor.Actor;
-import net.survival.actor.ActorSpace;
 import net.survival.client.graphics.model.ModelRenderer;
 import net.survival.client.graphics.model.StaticModel;
 import net.survival.client.graphics.opengl.GLMatrixStack;
+import net.survival.render.message.DrawModelMessage;
 
 class ActorDisplay
 {
-    private final ActorSpace actorSpace;
+    private final List<DrawModelMessage> models;
     private final Camera camera;
 
     private Matrix4f cameraViewMatrix = new Matrix4f();
     private Matrix4f cameraProjectionMatrix = new Matrix4f();
 
-    public ActorDisplay(ActorSpace actorSpace, Camera camera) {
-        this.actorSpace = actorSpace;
+    public ActorDisplay(List<DrawModelMessage> models, Camera camera) {
+        this.models = models;
         this.camera = camera;
     }
 
@@ -40,24 +41,22 @@ class ActorDisplay
         GLMatrixStack.push();
         GLMatrixStack.load(viewMatrix);
 
-        var actors = actorSpace.iterateActors();
-
-        for (var actor : actors)
-            displayActor(actor);
+        for (var actor : models)
+            displayModel(actor);
 
         GLMatrixStack.pop();
     }
 
-    private void displayActor(Actor actor) {
-        if (actor.getModel() != null) {
+    private void displayModel(DrawModelMessage model) {
+        if (model.modelType != null) {
             GLMatrixStack.push();
-            GLMatrixStack.translate((float) actor.getX(), (float) actor.getY(), (float) actor.getZ());
-            GLMatrixStack.rotate((float) actor.getYaw(), 0.0f, 1.0f, 0.0f);
-            GLMatrixStack.rotate((float) actor.getPitch(), 1.0f, 0.0f, 0.0f);
-            GLMatrixStack.rotate((float) actor.getRoll(), 0.0f, 0.0f, 1.0f);
+            GLMatrixStack.translate((float) model.x, (float) model.y, (float) model.z);
+            GLMatrixStack.rotate((float) model.yaw, 0.0f, 1.0f, 0.0f);
+            GLMatrixStack.rotate((float) model.pitch, 1.0f, 0.0f, 0.0f);
+            GLMatrixStack.rotate((float) model.roll, 0.0f, 0.0f, 1.0f);
     
-            var model = StaticModel.fromActor(actor);
-            ModelRenderer.displayStaticModel(model);
+            var displayable = StaticModel.fromModelType(model.modelType);
+            ModelRenderer.displayStaticModel(displayable);
     
             GLMatrixStack.pop();
         }

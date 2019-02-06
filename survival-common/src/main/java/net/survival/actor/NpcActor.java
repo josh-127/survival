@@ -1,8 +1,11 @@
 package net.survival.actor;
 
+import net.survival.actor.message.DrawMessage;
 import net.survival.actor.message.HurtMessage;
 import net.survival.actor.message.StepMessage;
 import net.survival.interaction.InteractionContext;
+import net.survival.render.ModelType;
+import net.survival.render.message.DrawModelMessage;
 import net.survival.util.HitBox;
 
 public class NpcActor implements Actor
@@ -64,6 +67,18 @@ public class NpcActor implements Actor
     }
 
     @Override
+    public void visit(InteractionContext ic, DrawMessage message) {
+        ic.postMessage(new DrawModelMessage.Builder()
+                .withPosition(
+                        locomotion.getX(),
+                        locomotion.getY(),
+                        locomotion.getZ())
+                .withRotation(direction, pitch, 0.0)
+                .withModelType(ModelType.HUMAN)
+                .build());
+    }
+
+    @Override
     public double getX() {
         return locomotion.getX();
     }
@@ -76,15 +91,5 @@ public class NpcActor implements Actor
     @Override
     public double getZ() {
         return locomotion.getZ();
-    }
-
-    @Override
-    public double getYaw() {
-        return direction;
-    }
-
-    @Override
-    public double getPitch() {
-        return pitch;
     }
 }
