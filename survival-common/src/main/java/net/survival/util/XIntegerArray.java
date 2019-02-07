@@ -1,5 +1,7 @@
 package net.survival.util;
 
+import java.util.Arrays;
+
 public class XIntegerArray
 {
     public final long[] underlyingArray;
@@ -15,6 +17,18 @@ public class XIntegerArray
         this.length = length;
         this.bitsPerElement = bitsPerElement;
         this.elementMask = (1L << bitsPerElement) - 1L;
+    }
+
+    private XIntegerArray(long[] underlyingArray, int length, int bitsPerElement, long elementMask) {
+        this.underlyingArray = underlyingArray;
+        this.length = length;
+        this.bitsPerElement = bitsPerElement;
+        this.elementMask = elementMask;
+    }
+
+    public XIntegerArray makeCopy() {
+        var copyOfArray = Arrays.copyOf(underlyingArray, length);
+        return new XIntegerArray(copyOfArray, length, bitsPerElement, elementMask);
     }
 
     public long get(int index) {
