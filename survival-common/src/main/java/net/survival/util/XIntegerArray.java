@@ -31,6 +31,23 @@ public class XIntegerArray
         return new XIntegerArray(copyOfArray, length, bitsPerElement, elementMask);
     }
 
+    public XIntegerArray getResized(int newBitsPerElement) {
+        if (newBitsPerElement == bitsPerElement)
+            return makeCopy();
+        else if (newBitsPerElement < bitsPerElement)
+            throw new IllegalArgumentException("newBitsPerElement");
+
+        var newArray = new XIntegerArray(length, newBitsPerElement);
+        for (var i = 0; i < length; ++i)
+            newArray.set(i, get(i));
+
+        return newArray;
+    }
+
+    public boolean isValidValue(long value) {
+        return (value & ~elementMask) == 0;
+    }
+
     public long get(int index) {
         assert index >= 0 && index < length;
 
