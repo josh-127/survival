@@ -145,14 +145,14 @@ public class Client implements AutoCloseable
                 public void visit(InteractionContext ic, ActorMessage message) {
                     var actorID = message.getDestActorID();
                     var actor = actorSpace.getActor(actorID);
-                    message.accept(actor, interactionContext);
+                    message.accept(actor, ic);
                 }
-                
+
                 @Override
                 public void visit(InteractionContext ic, BlockMessage message) {
-                    message.accept(blockSpace, interactionContext);
+                    message.accept(blockSpace, ic);
                 }
-                
+
                 @Override
                 public void visit(InteractionContext ic, ParticleMessage message) {
                     message.accept(particleSpace);
