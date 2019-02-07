@@ -7,9 +7,23 @@ import net.survival.util.XIntegerArray;
 class ColumnCodec
 {
     private static final int COLUMN_HEADER_SIZE = 2;
+    private static final int CHUNK_HEADER_SIZE = 6;
 
     public static ByteBuffer compressColumn(Column column) {
-        var compressedDataLength = Column.VOLUME * 8 + COLUMN_HEADER_SIZE;
+        var compressedDataLength = COLUMN_HEADER_SIZE;
+
+        for (var i = 0; i < Column.HEIGHT; ++i) {
+            var chunk = column.getChunk(i);
+            if (chunk != null) {
+                var rawData = chunk.getRawData();
+                var blockPalette = chunk.getBlockPalette();
+
+                compressedDataLength += CHUNK_HEADER_SIZE;
+                compressedDataLength += rawData.underlyingArray.length * 8;
+                compressedDataLength += blockPalette.length * 4;
+            }
+        }
+
         var compressedData = ByteBuffer.allocate(compressedDataLength);
 
         var enabledChunks = (byte) 0;
@@ -34,12 +48,12 @@ class ColumnCodec
         var underlyingArray = rawData.underlyingArray;
         var blockPalette = chunk.getBlockPalette();
 
-        compressedData.putInt(underlyingArray.length);
-        compressedData.put((byte) rawData.bitsPerElement);
+        compressedData.putShort((short) underlyingArray.length);
+        compressedData.putShort((short) rawData.bitsPerElement);
+        compressedData.putShort((short) blockPalette.length);
         for (var i = 0; i < underlyingArray.length; ++i)
             compressedData.putLong(underlyingArray[i]);
 
-        compressedData.putInt(blockPalette.length);
         for (var i = 0; i < blockPalette.length; ++i)
             compressedData.putInt(blockPalette[i]);
     }
@@ -60,19 +74,17 @@ class ColumnCodec
     }
 
     private static Chunk decompressChunk(ByteBuffer compressedData) {
-        var underlyingArrayLength = compressedData.getInt();
-        var bitsPerElement = (int) compressedData.get();
+        var underlyingArrayLength = (int) compressedData.getShort();
+        var bitsPerElement = (int) compressedData.getShort();
+        var blockPaletteLength = (int) compressedData.getShort();
 
         var underlyingArray = new long[underlyingArrayLength];
-
         for (var i = 0; i < underlyingArray.length; ++i)
             underlyingArray[i] = compressedData.getLong();
 
         var rawData = XIntegerArray.moveUnderlyingArray(underlyingArray, Chunk.VOLUME, bitsPerElement);
 
-        var blockPaletteLength = compressedData.getInt();
         var blockPalette = new int[blockPaletteLength];
-
         for (var i = 0; i < blockPalette.length; ++i)
             blockPalette[i] = compressedData.getInt();
 
