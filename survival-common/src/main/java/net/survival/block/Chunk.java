@@ -40,13 +40,15 @@ public class Chunk
         return new Chunk(copyOfRawData, copyOfRawIdToFullIdMap, copyOfFullIdToRawIdMap);
     }
 
-    public int getBlockFullID(int x, int y, int z) {
-        return rawIdToFullIdMap.get((int) rawData.get(localPositionToIndex(x, y, z)));
+    public int getBlockFullID(int index) {
+        return rawIdToFullIdMap.get((int) rawData.get(index));
     }
 
-    public void setBlockFullID(int x, int y, int z, int to) {
-        var index = localPositionToIndex(x, y, z);
+    public int getBlockFullID(int x, int y, int z) {
+        return getBlockFullID(localPositionToIndex(x, y, z));
+    }
 
+    public void setBlockFullID(int index, int to) {
         if (fullIdToRawIdMap.containsKey(to)) {
             rawData.set(index, fullIdToRawIdMap.get(to));
         }
@@ -63,6 +65,11 @@ public class Chunk
 
             rawData.set(index, newRawID);
         }
+    }
+
+    public void setBlockFullID(int x, int y, int z, int to) {
+        var index = localPositionToIndex(x, y, z);
+        setBlockFullID(index, to);
     }
 
     public int localPositionToIndex(int x, int y, int z) {
