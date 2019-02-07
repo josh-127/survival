@@ -13,7 +13,7 @@ public class XIntegerArray
         if (bitsPerElement <= 0L || bitsPerElement > 64)
             throw new IllegalArgumentException("bitsPerElement");
 
-        this.underlyingArray = new long[length];
+        this.underlyingArray = new long[(int) Math.ceil((double) length * bitsPerElement / 64.0)];
         this.length = length;
         this.bitsPerElement = bitsPerElement;
         this.elementMask = (1L << bitsPerElement) - 1L;
