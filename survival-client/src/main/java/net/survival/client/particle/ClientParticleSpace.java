@@ -5,6 +5,8 @@ import net.survival.particle.message.ParticleMessageVisitor;
 
 public class ClientParticleSpace implements ParticleMessageVisitor
 {
+    private static final double GRAVITY = -8.0;
+
     private final ParticleData data = new ParticleData(1024);
 
     @Override
@@ -28,6 +30,8 @@ public class ClientParticleSpace implements ParticleMessageVisitor
     }
 
     public void step(double elapsedTime) {
+        for (var i = 0; i < data.maxParticles; ++i)
+            data.velocityYs[i] += GRAVITY * elapsedTime;
         for (var i = 0; i < data.maxParticles; ++i)
             data.xs[i] += data.velocityXs[i] * elapsedTime;
         for (var i = 0; i < data.maxParticles; ++i)
