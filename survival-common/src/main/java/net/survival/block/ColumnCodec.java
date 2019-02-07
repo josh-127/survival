@@ -34,15 +34,11 @@ class ColumnCodec
         var underlyingArray = rawData.underlyingArray;
         var blockPalette = chunk.getBlockPalette();
 
-        System.out.printf("Array Length: %d elements\n", rawData.length);
-        System.out.printf("Underlying Array Length: %d bytes\n", underlyingArray.length);
-        System.out.printf("Bits per Element: %d\n", rawData.bitsPerElement);
         compressedData.putInt(underlyingArray.length);
         compressedData.put((byte) rawData.bitsPerElement);
         for (var i = 0; i < underlyingArray.length; ++i)
             compressedData.putLong(underlyingArray[i]);
 
-        System.out.printf("Block Palette Length: %d\n", blockPalette.length);
         compressedData.putInt(blockPalette.length);
         for (var i = 0; i < blockPalette.length; ++i)
             compressedData.putInt(blockPalette[i]);
