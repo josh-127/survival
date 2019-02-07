@@ -28,8 +28,11 @@ class ColumnCodec
     }
 
     private static void compressChunk(Chunk chunk, ByteBuffer compressedData) {
-        for (var i = 0; i < Chunk.VOLUME; ++i) {
-            compressedData.putInt(chunk.blockIDs[i]);
+        for (var y = 0; y < Chunk.YLENGTH; ++y) {
+            for (var z = 0; z < Chunk.ZLENGTH; ++z) {
+                for (var x = 0; x < Chunk.XLENGTH; ++x)
+                    compressedData.putInt(chunk.getBlockFullID(x, y, z));
+            }
         }
     }
 
@@ -49,8 +52,11 @@ class ColumnCodec
     }
 
     private static void decompressChunk(ByteBuffer compressedData, Chunk chunk) {
-        for (var i = 0; i < Chunk.VOLUME; ++i) {
-            chunk.blockIDs[i] = compressedData.getInt();
+        for (var y = 0; y < Chunk.YLENGTH; ++y) {
+            for (var z = 0; z < Chunk.ZLENGTH; ++z) {
+                for (var x = 0; x < Chunk.XLENGTH; ++x)
+                    chunk.setBlockFullID(x, y, z, compressedData.getInt());
+            }
         }
     }
 }
