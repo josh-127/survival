@@ -26,8 +26,17 @@ public class XIntegerArray
         this.elementMask = elementMask;
     }
 
+    public static XIntegerArray moveUnderlyingArray(long[] underlyingArray, int length, int bitsPerElement) {
+        return new XIntegerArray(underlyingArray, length, bitsPerElement, (1L << bitsPerElement) - 1L);
+    }
+
+    public static XIntegerArray fromUnderlyingArray(long[] underlyingArray, int length, int bitsPerElement) {
+        var copyOfUnderlyingArray = Arrays.copyOf(underlyingArray, underlyingArray.length);
+        return moveUnderlyingArray(copyOfUnderlyingArray, length, bitsPerElement);
+    }
+
     public XIntegerArray makeCopy() {
-        var copyOfArray = Arrays.copyOf(underlyingArray, length);
+        var copyOfArray = Arrays.copyOf(underlyingArray, underlyingArray.length);
         return new XIntegerArray(copyOfArray, length, bitsPerElement, elementMask);
     }
 

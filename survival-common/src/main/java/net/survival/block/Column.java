@@ -44,6 +44,10 @@ public class Column
         return chunks[index];
     }
 
+    public void setChunk(int index, Chunk to) {
+        chunks[index] = to;
+    }
+
     public int getHeight() {
         var topIndex = HEIGHT - 1;
         while (topIndex >= 0 && chunks[topIndex] == null)

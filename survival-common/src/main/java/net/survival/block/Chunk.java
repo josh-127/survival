@@ -23,6 +23,18 @@ public class Chunk
         fullIdToRawIdMap.put(0, 0);
     }
 
+    public Chunk(XIntegerArray rawData, int[] blockPalette) {
+        this.rawData = rawData;
+        rawIdToFullIdMap = new Int2IntArrayMap(blockPalette.length);
+        fullIdToRawIdMap = new Int2IntArrayMap(blockPalette.length);
+
+        for (var i = 0; i < blockPalette.length; ++i)
+            rawIdToFullIdMap.put(i, blockPalette[i]);
+
+        for (var i = 0; i < blockPalette.length; ++i)
+            fullIdToRawIdMap.put(i, blockPalette[i]);
+    }
+
     private Chunk(
             XIntegerArray rawData,
             Int2IntArrayMap rawIdToFullIdMap,
@@ -38,6 +50,14 @@ public class Chunk
         var copyOfRawIdToFullIdMap = new Int2IntArrayMap(rawIdToFullIdMap);
         var copyOfFullIdToRawIdMap = new Int2IntArrayMap(fullIdToRawIdMap);
         return new Chunk(copyOfRawData, copyOfRawIdToFullIdMap, copyOfFullIdToRawIdMap);
+    }
+
+    public XIntegerArray getRawData() {
+        return rawData;
+    }
+
+    public int[] getBlockPalette() {
+        return rawIdToFullIdMap.values().toIntArray();
     }
 
     public int getBlockFullID(int index) {
