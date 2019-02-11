@@ -9,11 +9,7 @@ public class Column
     public static final int BASE_AREA = XLENGTH * ZLENGTH;
     public static final int VOLUME = BASE_AREA * YLENGTH;
 
-    public static final int BLOCKS_MODIFIED = 1;
-
     private final Chunk[] chunks;
-
-    private int modified;
 
     public Column() {
         chunks = new Chunk[HEIGHT];
@@ -73,26 +69,9 @@ public class Column
         }
 
         chunks[index].setBlockFullID(x, y % Chunk.YLENGTH, z, to);
-        modified |= BLOCKS_MODIFIED;
     }
 
     public boolean isInBounds(int lx, int ly, int lz) {
         return lx >= 0 && ly >= 0 && lz >= 0 && lx < XLENGTH && ly < YLENGTH && lz < ZLENGTH;
-    }
-
-    public int getModificationFlags() {
-        return modified;
-    }
-
-    public boolean isBlocksModified() {
-        return (modified & BLOCKS_MODIFIED) != 0;
-    }
-
-    public void clearModificationFlags() {
-        modified = 0;
-    }
-
-    public void setModificationFlags(int to) {
-        modified = to;
     }
 }

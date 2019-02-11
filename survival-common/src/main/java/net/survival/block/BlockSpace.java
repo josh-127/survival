@@ -14,6 +14,7 @@ import net.survival.block.message.MaskColumnsMessage;
 import net.survival.block.message.PlaceBlockMessage;
 import net.survival.block.message.CheckInColumnsMessage;
 import net.survival.interaction.InteractionContext;
+import net.survival.render.message.InvalidateColumnMessage;
 
 public class BlockSpace implements BlockMessageVisitor
 {
@@ -76,15 +77,28 @@ public class BlockSpace implements BlockMessageVisitor
         return column;
     }
 
+    private void invalidateColumn(InteractionContext ic, int x, int z) {
+        var cx = ColumnPos.toColumnX(x);
+        var cz = ColumnPos.toColumnZ(z);
+
+        var column = columns.get(ColumnPos.hashPos(cx, cz));
+        if (column == null)
+            throw new RuntimeException("Cannot invalidate an unloaded column.");
+
+        ic.postMessage(new InvalidateColumnMessage(ColumnPos.hashPos(cx, cz), column));
+    }
+
     @Override
     public void visit(InteractionContext ic, BreakBlockMessage message) {
         setBlockFullID(message.getX(), message.getY(), message.getZ(), 0);
+        invalidateColumn(ic, message.getX(), message.getZ());
         ic.burstParticles(message.getX() + 0.5, message.getY() + 0.5, message.getZ() + 0.5, 2.0, 8);
     }
 
     @Override
     public void visit(InteractionContext ic, PlaceBlockMessage message) {
         setBlockFullID(message.getX(), message.getY(), message.getZ(), message.getFullID());
+        invalidateColumn(ic, message.getX(), message.getZ());
     }
     
     @Override
@@ -114,6 +128,12 @@ public class BlockSpace implements BlockMessageVisitor
         var response = message.getColumnResponse();
         loadingColumns.remove(response.columnPos);
         columns.put(response.columnPos, response.column);
+
+        var cx = ColumnPos.columnXFromHashedPos(response.columnPos);
+        var cz = ColumnPos.columnZFromHashedPos(response.columnPos);
+        var x = ColumnPos.toGlobalX(cx, 0);
+        var z = ColumnPos.toGlobalZ(cz, 0);
+        invalidateColumn(ic, x, z);
     }
 
     @Override

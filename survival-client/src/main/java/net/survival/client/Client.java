@@ -44,6 +44,7 @@ import net.survival.interaction.MessageVisitor;
 import net.survival.particle.message.BurstParticlesMessage;
 import net.survival.particle.message.ParticleMessage;
 import net.survival.render.message.DrawModelMessage;
+import net.survival.render.message.InvalidateColumnMessage;
 import net.survival.render.message.RenderMessage;
 import net.survival.render.message.RenderMessageVisitor;
 
@@ -165,6 +166,11 @@ public class Client implements AutoCloseable
                         public void visit(InteractionContext ic, DrawModelMessage message) {
                             modelsToDraw.add(message);
                         }
+
+                        @Override
+                        public void visit(InteractionContext ic, InvalidateColumnMessage message) {
+                            compositeDisplay.redrawColumn(message.columnPos);
+                        }
                     }, ic);
                 }
             }, interactionContext);
@@ -177,17 +183,6 @@ public class Client implements AutoCloseable
 
         // Temporary Test Code
         temporaryTestCode();
-
-        // Client Display
-        for (var entry : blockSpace.iterateColumnMap()) {
-            var hashedPos = entry.getKey();
-            var column = entry.getValue();
-
-            if (column.isBlocksModified()) {
-                column.clearModificationFlags();
-                compositeDisplay.redrawColumn(hashedPos);
-            }
-        }
 
         compositeDisplay.moveCamera((float) player.getX(), (float) (player.getY() + 1.0), (float) player.getZ());
         compositeDisplay.orientCamera((float) fpvCamera.yaw, (float) fpvCamera.pitch);
