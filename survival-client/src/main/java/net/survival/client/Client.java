@@ -20,10 +20,9 @@ import net.survival.block.ColumnDbPipe;
 import net.survival.block.ColumnPos;
 import net.survival.block.ColumnRequest;
 import net.survival.block.ColumnServer;
+import net.survival.block.EmptyColumnStageMask;
 import net.survival.block.message.BlockMessage;
 import net.survival.block.message.BreakBlockMessage;
-import net.survival.block.message.CheckInColumnsMessage;
-import net.survival.block.message.CheckOutColumnsMessage;
 import net.survival.block.message.ColumnResponseMessage;
 import net.survival.block.message.MaskColumnsMessage;
 import net.survival.client.graphics.CompositeDisplay;
@@ -74,7 +73,7 @@ public class Client implements AutoCloseable
     private final Actor player;
 
     private static final double SAVE_INTERVAL = 10.0;
-    private double saveTimer = SAVE_INTERVAL;
+    private double saveTimer;
 
     private Client(ColumnDbPipe.ClientSide columnPipe) {
         this.columnPipe = columnPipe;
@@ -94,7 +93,7 @@ public class Client implements AutoCloseable
     @Override
     public void close() throws RuntimeException {
         compositeDisplay.close();
-        new CheckInColumnsMessage().accept(blockSpace, interactionContext);
+        new MaskColumnsMessage(EmptyColumnStageMask.instance).accept(blockSpace, interactionContext);
     }
 
     public void tick(double elapsedTime) {
@@ -119,11 +118,8 @@ public class Client implements AutoCloseable
         saveTimer -= elapsedTime;
         if (saveTimer <= 0.0) {
             saveTimer = SAVE_INTERVAL;
-            messageQueue.enqueueMessage(new CheckInColumnsMessage());
             messageQueue.enqueueMessage(new MaskColumnsMessage(columnMask));
         }
-
-        messageQueue.enqueueMessage(new CheckOutColumnsMessage(columnMask.getColumnPositions()));
 
         for (var r = columnPipe.pollResponse(); r != null; r = columnPipe.pollResponse()) {
             messageQueue.enqueueMessage(new ColumnResponseMessage(r));

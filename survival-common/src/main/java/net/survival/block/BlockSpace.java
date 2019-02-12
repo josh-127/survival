@@ -8,11 +8,9 @@ import java.util.stream.Collectors;
 
 import net.survival.block.message.BlockMessageVisitor;
 import net.survival.block.message.BreakBlockMessage;
-import net.survival.block.message.CheckOutColumnsMessage;
 import net.survival.block.message.ColumnResponseMessage;
 import net.survival.block.message.MaskColumnsMessage;
 import net.survival.block.message.PlaceBlockMessage;
-import net.survival.block.message.CheckInColumnsMessage;
 import net.survival.interaction.InteractionContext;
 import net.survival.render.message.InvalidateColumnMessage;
 
@@ -100,28 +98,6 @@ public class BlockSpace implements BlockMessageVisitor
         setBlockFullID(message.getX(), message.getY(), message.getZ(), message.getFullID());
         invalidateColumn(ic, message.getX(), message.getZ());
     }
-    
-    @Override
-    public void visit(InteractionContext ic, CheckInColumnsMessage message) {
-        for (var entry : columns.entrySet()) {
-            var hashedPos = entry.getKey();
-            var column = entry.getValue();
-            columnPipe.request(ColumnRequest.createPostRequest(hashedPos, column));
-        }
-    }
-
-    @Override
-    public void visit(InteractionContext ic, CheckOutColumnsMessage message) {
-        var missingColumns = message.getColumnPositions().stream()
-                .filter(e -> !columns.containsKey(e))
-                .filter(e -> !loadingColumns.contains(e))
-                .collect(Collectors.toSet());
-
-        for (var hashedPos : missingColumns) {
-            loadingColumns.add(hashedPos);
-            columnPipe.request(ColumnRequest.createGetRequest(hashedPos));
-        }
-    }
 
     @Override
     public void visit(InteractionContext ic, ColumnResponseMessage message) {
@@ -138,10 +114,29 @@ public class BlockSpace implements BlockMessageVisitor
 
     @Override
     public void visit(InteractionContext ic, MaskColumnsMessage message) {
+        // Check in columns.
+        for (var entry : columns.entrySet()) {
+            var columnPos = entry.getKey();
+            var column = entry.getValue();
+            columnPipe.request(ColumnRequest.createPostRequest(columnPos, column));
+        }
+
+        // Mask out columns.
         var columnPositions = message.getMask().getColumnPositions();
 
         columns = columns.entrySet().stream()
                 .filter(e -> columnPositions.contains(e.getKey()))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+
+        // Check out columns.
+        var missingPositions = columnPositions.stream()
+                .filter(e -> !columns.containsKey(e))
+                .filter(e -> !loadingColumns.contains(e))
+                .collect(Collectors.toSet());
+
+        for (var columnPos : missingPositions) {
+            loadingColumns.add(columnPos);
+            columnPipe.request(ColumnRequest.createGetRequest(columnPos));
+        }
     }
 }
