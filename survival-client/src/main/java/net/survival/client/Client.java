@@ -15,12 +15,12 @@ import net.survival.actor.message.JumpMessage;
 import net.survival.actor.message.MoveMessage;
 import net.survival.actor.message.StepMessage;
 import net.survival.block.BlockSpace;
-import net.survival.block.CircularColumnStageMask;
+import net.survival.block.CircularColumnMask;
 import net.survival.block.ColumnDbPipe;
 import net.survival.block.ColumnPos;
 import net.survival.block.ColumnRequest;
 import net.survival.block.ColumnServer;
-import net.survival.block.EmptyColumnStageMask;
+import net.survival.block.EmptyColumnMask;
 import net.survival.block.message.BlockMessage;
 import net.survival.block.message.BreakBlockMessage;
 import net.survival.block.message.ColumnResponseMessage;
@@ -60,7 +60,7 @@ public class Client implements AutoCloseable
     private final ActorSpace actorSpace = new ActorSpace();
     private final ClientParticleSpace particleSpace = new ClientParticleSpace();
 
-    private final CircularColumnStageMask columnMask = new CircularColumnStageMask(10);
+    private final CircularColumnMask columnMask = new CircularColumnMask(10);
 
     private final CompositeDisplay compositeDisplay;
     private final FpvCamera fpvCamera = new FpvCamera(0.0f, -1.0f);
@@ -93,7 +93,7 @@ public class Client implements AutoCloseable
     @Override
     public void close() throws RuntimeException {
         compositeDisplay.close();
-        new MaskColumnsMessage(EmptyColumnStageMask.instance).accept(blockSpace, interactionContext);
+        new MaskColumnsMessage(EmptyColumnMask.instance).accept(blockSpace, interactionContext);
     }
 
     public void tick(double elapsedTime) {

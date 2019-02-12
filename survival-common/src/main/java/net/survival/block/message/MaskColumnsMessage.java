@@ -1,14 +1,14 @@
 package net.survival.block.message;
 
-import net.survival.block.ColumnStageMask;
+import net.survival.block.ColumnMask;
 import net.survival.interaction.InteractionContext;
 import net.survival.interaction.MessagePriority;
 
 public class MaskColumnsMessage extends BlockMessage
 {
-    private final ColumnStageMask mask;
+    private final ColumnMask mask;
 
-    public MaskColumnsMessage(ColumnStageMask mask) {
+    public MaskColumnsMessage(ColumnMask mask) {
         this.mask = mask;
     }
 
@@ -22,7 +22,7 @@ public class MaskColumnsMessage extends BlockMessage
         return MessagePriority.RESERVED_STEP;
     }
 
-    public ColumnStageMask getMask() {
+    public ColumnMask getMask() {
         return mask;
     }
 }

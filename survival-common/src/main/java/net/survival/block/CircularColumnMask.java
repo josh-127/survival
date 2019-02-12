@@ -3,7 +3,7 @@ package net.survival.block;
 import java.util.HashSet;
 import java.util.Set;
 
-public class CircularColumnStageMask implements ColumnStageMask
+public class CircularColumnMask implements ColumnMask
 {
     private final HashSet<Long> columnPositions;
     private final int radius;
@@ -11,7 +11,7 @@ public class CircularColumnStageMask implements ColumnStageMask
     private int prevOffsetCX;
     private int prevOffsetCZ;
 
-    public CircularColumnStageMask(int radius) {
+    public CircularColumnMask(int radius) {
         columnPositions = new HashSet<>(radius * radius);
         this.radius = radius;
 
