@@ -1,7 +1,6 @@
 package net.survival.client;
 
 import java.io.File;
-import java.util.ArrayList;
 
 import org.lwjgl.glfw.GLFW;
 
@@ -42,10 +41,7 @@ import net.survival.interaction.MessageQueue;
 import net.survival.interaction.MessageVisitor;
 import net.survival.particle.message.BurstParticlesMessage;
 import net.survival.particle.message.ParticleMessage;
-import net.survival.render.message.DrawModelMessage;
-import net.survival.render.message.InvalidateColumnMessage;
 import net.survival.render.message.RenderMessage;
-import net.survival.render.message.RenderMessageVisitor;
 
 public class Client implements AutoCloseable
 {
@@ -64,7 +60,6 @@ public class Client implements AutoCloseable
 
     private final CompositeDisplay compositeDisplay;
     private final FpvCamera fpvCamera = new FpvCamera(0.0f, -1.0f);
-    private final ArrayList<DrawModelMessage> modelsToDraw = new ArrayList<DrawModelMessage>();
 
     private final MessageQueue messageQueue = new MessageQueue();
     private final LocalInteractionContext interactionContext;
@@ -87,7 +82,7 @@ public class Client implements AutoCloseable
         player = actorSpace.getActor(playerID);
 
         compositeDisplay = new CompositeDisplay(
-                modelsToDraw, particleSpace, GraphicsSettings.WINDOW_WIDTH, GraphicsSettings.WINDOW_HEIGHT);
+                particleSpace, GraphicsSettings.WINDOW_WIDTH, GraphicsSettings.WINDOW_HEIGHT);
     }
 
     @Override
@@ -157,17 +152,10 @@ public class Client implements AutoCloseable
 
                 @Override
                 public void visit(InteractionContext ic, RenderMessage message) {
-                    message.accept(new RenderMessageVisitor() {
-                        @Override
-                        public void visit(InteractionContext ic, DrawModelMessage message) {
-                            modelsToDraw.add(message);
-                        }
-
-                        @Override
-                        public void visit(InteractionContext ic, InvalidateColumnMessage message) {
-                            compositeDisplay.redrawColumn(message.columnPos, message.column);
-                        }
-                    }, ic);
+                    // BUG: If the game is lagging, then Client::tick will run
+                    //      multiple times in a frame. As a result, CompositeDisplay
+                    //      will draw duplicate models.
+                    message.accept(compositeDisplay, ic);
                 }
             }, interactionContext);
         }
@@ -190,7 +178,6 @@ public class Client implements AutoCloseable
 
     private void render(double frameRate) {
         compositeDisplay.display(frameRate);
-        modelsToDraw.clear();
     }
 
     public static void main(String[] args) throws InterruptedException {

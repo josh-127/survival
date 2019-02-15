@@ -1,6 +1,6 @@
 package net.survival.client.graphics;
 
-import java.util.List;
+import java.util.ArrayList;
 
 import org.joml.Matrix4f;
 
@@ -11,15 +11,18 @@ import net.survival.render.message.DrawModelMessage;
 
 class ActorDisplay
 {
-    private final List<DrawModelMessage> models;
+    private final ArrayList<DrawModelMessage> modelsToDraw = new ArrayList<>();
     private final Camera camera;
 
     private Matrix4f cameraViewMatrix = new Matrix4f();
     private Matrix4f cameraProjectionMatrix = new Matrix4f();
 
-    public ActorDisplay(List<DrawModelMessage> models, Camera camera) {
-        this.models = models;
+    public ActorDisplay(Camera camera) {
         this.camera = camera;
+    }
+
+    public void drawModel(DrawModelMessage model) {
+        modelsToDraw.add(model);
     }
 
     public void display() {
@@ -35,13 +38,15 @@ class ActorDisplay
         displayActors(cameraViewMatrix);
 
         GLMatrixStack.pop();
+
+        modelsToDraw.clear();
     }
 
     private void displayActors(Matrix4f viewMatrix) {
         GLMatrixStack.push();
         GLMatrixStack.load(viewMatrix);
 
-        for (var actor : models)
+        for (var actor : modelsToDraw)
             displayModel(actor);
 
         GLMatrixStack.pop();

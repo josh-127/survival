@@ -1,7 +1,5 @@
 package net.survival.client.graphics;
 
-import java.util.List;
-
 import org.joml.Matrix4f;
 
 import net.survival.block.Column;
@@ -10,9 +8,12 @@ import net.survival.client.graphics.opengl.GLMatrixStack;
 import net.survival.client.graphics.opengl.GLRenderContext;
 import net.survival.client.graphics.opengl.GLState;
 import net.survival.client.particle.ClientParticleSpace;
+import net.survival.interaction.InteractionContext;
 import net.survival.render.message.DrawModelMessage;
+import net.survival.render.message.InvalidateColumnMessage;
+import net.survival.render.message.RenderMessageVisitor;
 
-public class CompositeDisplay implements RenderContext, GraphicsResource
+public class CompositeDisplay implements RenderContext, GraphicsResource, RenderMessageVisitor
 {
     private final Camera camera = new Camera();
 
@@ -32,14 +33,14 @@ public class CompositeDisplay implements RenderContext, GraphicsResource
     private Matrix4f hudProjectionMatrix = new Matrix4f();
 
     public CompositeDisplay(
-            List<DrawModelMessage> models,
             ClientParticleSpace clientParticleSpace,
             int viewportWidth,
             int viewportHeight)
     {
         blockDisplay = new BlockDisplay(camera);
-        actorDisplay = new ActorDisplay(models, camera);
+        actorDisplay = new ActorDisplay(camera);
         particleDisplay = new ParticleDisplay(clientParticleSpace, camera);
+
         this.viewportWidth = viewportWidth;
         this.viewportHeight = viewportHeight;
     }
@@ -313,5 +314,15 @@ public class CompositeDisplay implements RenderContext, GraphicsResource
             GLMatrixStack.loadIdentity();
             GLMatrixStack.pop();
         }
+    }
+
+    @Override
+    public void visit(InteractionContext ic, DrawModelMessage message) {
+        actorDisplay.drawModel(message);
+    }
+
+    @Override
+    public void visit(InteractionContext ic, InvalidateColumnMessage message) {
+        redrawColumn(message.columnPos, message.column);
     }
 }
