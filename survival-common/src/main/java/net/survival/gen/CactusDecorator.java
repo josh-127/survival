@@ -2,7 +2,6 @@ package net.survival.gen;
 
 import java.util.Random;
 
-import net.survival.block.Column;
 import net.survival.blocktype.BlockType;
 import net.survival.gen.layer.GenLayer;
 
@@ -14,15 +13,15 @@ class CactusDecorator extends ColumnDecorator
     private final int cactusFullID = BlockType.CACTUS.getFullID();
 
     @Override
-    public void decorate(long columnPos, Column column, GenLayer biomeMap) {
+    public void decorate(long columnPos, ColumnPrimer primer, GenLayer biomeMap) {
         random.setSeed(columnPos);
 
         for (var i = 0; i < CACTI_PER_COLUMN; ++i) {
-            var x = random.nextInt(Column.XLENGTH);
-            var z = random.nextInt(Column.ZLENGTH);
+            var x = random.nextInt(ColumnPrimer.XLENGTH);
+            var z = random.nextInt(ColumnPrimer.ZLENGTH);
 
             if (biomeMap.sampleNearest(x, z) == BiomeType.DESERT.ordinal()) {
-                column.setBlockFullID(x, 80, z, cactusFullID);
+                primer.setBlockFullID(x, 80, z, cactusFullID);
             }
         }
     }

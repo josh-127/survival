@@ -40,6 +40,8 @@ public class InfiniteColumnGenerator implements ColumnProvider
 
     private final DefaultColumnDecorator columnDecorator;
 
+    private ColumnPrimer columnPrimer;
+
     private final int bedrockID;
     private final int tempSolidID;
     private final int stoneID;
@@ -77,18 +79,18 @@ public class InfiniteColumnGenerator implements ColumnProvider
         mainNoiseGenerator.generate(densityMap, offsetX, 0.0, offsetZ);
         biomeLayer.generate(globalX, globalZ);
 
-        Column column = new Column();
-        generateBase(column);
-        replaceBlocks(cx, cz, column);
-        columnDecorator.decorate(hashedPos, column, biomeLayer);
+        var columnPrimer = new ColumnPrimer();
+        generateBase(columnPrimer);
+        replaceBlocks(cx, cz, columnPrimer);
+        columnDecorator.decorate(hashedPos, columnPrimer, biomeLayer);
 
-        return column;
+        return columnPrimer.toColumn();
     }
 
-    private void replaceBlocks(int cx, int cz, Column column) {
+    private void replaceBlocks(int cx, int cz, ColumnPrimer columnPrimer) {
         for (var z = 0; z < Column.ZLENGTH; ++z) {
             for (var x = 0; x < Column.XLENGTH; ++x)
-                column.setBlockFullID(x, 0, z, bedrockID);
+                columnPrimer.setBlockFullID(x, 0, z, bedrockID);
         }
 
         for (var z = 0; z < Column.ZLENGTH; ++z) {
@@ -98,7 +100,7 @@ public class InfiniteColumnGenerator implements ColumnProvider
                 var counter = 3;
 
                 for (var y = Column.YLENGTH - 1; y >= 1; --y) {
-                    if (column.getBlockFullID(x, y, z) != tempSolidID) {
+                    if (columnPrimer.getBlockFullID(x, y, z) != tempSolidID) {
                         state = 0;
                         counter = 3;
                         continue;
@@ -106,13 +108,13 @@ public class InfiniteColumnGenerator implements ColumnProvider
 
                     switch (state) {
                     case 0:
-                        column.setBlockFullID(x, y, z, biome.getTopBlockID());
+                        columnPrimer.setBlockFullID(x, y, z, biome.getTopBlockID());
                         ++state;
                         break;
 
                     case 1:
                         if (counter > 0) {
-                            column.setBlockFullID(x, y, z, dirtID);
+                            columnPrimer.setBlockFullID(x, y, z, dirtID);
                             --counter;
 
                             if (counter == 0) {
@@ -124,7 +126,7 @@ public class InfiniteColumnGenerator implements ColumnProvider
                         break;
 
                     case 2:
-                        column.setBlockFullID(x, y, z, stoneID);
+                        columnPrimer.setBlockFullID(x, y, z, stoneID);
                         break;
                     }
                 }
@@ -132,8 +134,8 @@ public class InfiniteColumnGenerator implements ColumnProvider
         }
     }
 
-    private void generateBase(Column column) {
-        generateElevationMaps(minElevationMap, elevationRangeMap, column, biomeLayer);
+    private void generateBase(ColumnPrimer columnPrimer) {
+        generateElevationMaps(minElevationMap, elevationRangeMap, columnPrimer, biomeLayer);
 
         for (var y = 0; y < Column.YLENGTH; ++y) {
             var noiseMapY = (double) y / NBLOCK_YLENGTH;
@@ -151,16 +153,19 @@ public class InfiniteColumnGenerator implements ColumnProvider
                     var threshold = (y - minElevation) / elevationRange;
 
                     if (density >= threshold)
-                        column.setBlockFullID(x, y, z, tempSolidID);
+                        columnPrimer.setBlockFullID(x, y, z, tempSolidID);
                     else if (y <= OCEAN_LEVEL)
-                        column.setBlockFullID(x, y, z, waterID);
+                        columnPrimer.setBlockFullID(x, y, z, waterID);
                 }
             }
         }
     }
 
-    private void generateElevationMaps(DoubleMap2D minElevationMap, DoubleMap2D elevationRangeMap,
-            Column column, GenLayer genLayer)
+    private void generateElevationMaps(
+            DoubleMap2D minElevationMap,
+            DoubleMap2D elevationRangeMap,
+            ColumnPrimer columnPrimer,
+            GenLayer genLayer)
     {
         for (var z = 0; z < Column.ZLENGTH; ++z) {
             for (var x = 0; x < Column.XLENGTH; ++x) {
