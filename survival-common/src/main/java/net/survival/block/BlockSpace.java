@@ -25,22 +25,11 @@ public class BlockSpace implements BlockMessageVisitor
         this.columnPipe = columnPipe;
     }
 
-    public Map<Long, Column> getColumnMap() { return columns; }
-    public void setColumnMap(Map<Long, Column> to) { columns = to; }
-
     public Column getColumn(int cx, int cz) { return columns.get(ColumnPos.hashPos(cx, cz)); }
     public Column getColumn(long hashedPos) { return columns.get(hashedPos); }
 
     public boolean containsColumn(int cx, int cz) { return columns.containsKey(ColumnPos.hashPos(cx, cz)); }
     public boolean containsColumn(long hashedPos) { return columns.containsKey(hashedPos); }
-
-    public Iterable<Map.Entry<Long, Column>> iterateColumnMap() { return columns.entrySet(); }
-    public Iterable<Column> iterateColumns() { return columns.values(); }
-
-    public void addColumn(int cx, int cz, Column column) { columns.put(ColumnPos.hashPos(cx, cz), column); }
-    public void addColumn(long hashedPos, Column column) { columns.put(hashedPos, column); }
-    public void removeColumn(int cx, int cz) { columns.remove(ColumnPos.hashPos(cx, cz)); }
-    public void removeColumn(long hashedPos) { columns.remove(hashedPos); }
 
     public int getBlockFullID(int x, int y, int z) {
         var cx = ColumnPos.toColumnX(x);
