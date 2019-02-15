@@ -1,5 +1,6 @@
 package net.survival.client.graphics;
 
+import net.survival.block.Column;
 import net.survival.block.ColumnPos;
 
 public interface RenderContext
@@ -38,9 +39,9 @@ public interface RenderContext
         setVisibilityFlags(getVisibilityFlags() ^ flags);
     }
 
-    void redrawColumn(long hashedPos);
-    default void redrawColumn(int cx, int cz) {
-        redrawColumn(ColumnPos.hashPos(cx, cz));
+    void redrawColumn(long columnPos, Column column);
+    default void redrawColumn(int cx, int cz, Column column) {
+        redrawColumn(ColumnPos.hashPos(cx, cz), column);
     }
 
     float getSkyboxBottomR();

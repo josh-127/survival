@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.joml.Matrix4f;
 
-import net.survival.block.BlockSpace;
+import net.survival.block.Column;
 import net.survival.client.graphics.opengl.GLImmediateDrawCall;
 import net.survival.client.graphics.opengl.GLMatrixStack;
 import net.survival.client.graphics.opengl.GLRenderContext;
@@ -32,13 +32,12 @@ public class CompositeDisplay implements RenderContext, GraphicsResource
     private Matrix4f hudProjectionMatrix = new Matrix4f();
 
     public CompositeDisplay(
-            BlockSpace blockSpace,
             List<DrawModelMessage> models,
             ClientParticleSpace clientParticleSpace,
             int viewportWidth,
             int viewportHeight)
     {
-        blockDisplay = new BlockDisplay(blockSpace, camera, 512.0f);
+        blockDisplay = new BlockDisplay(camera);
         actorDisplay = new ActorDisplay(models, camera);
         particleDisplay = new ParticleDisplay(clientParticleSpace, camera);
         this.viewportWidth = viewportWidth;
@@ -141,8 +140,8 @@ public class CompositeDisplay implements RenderContext, GraphicsResource
     }
 
     @Override
-    public void redrawColumn(long hashedPos) {
-        blockDisplay.redrawColumn(hashedPos);
+    public void redrawColumn(long columnPos, Column column) {
+        blockDisplay.redrawColumn(columnPos, column);
     }
 
     @Override

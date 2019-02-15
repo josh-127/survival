@@ -122,14 +122,21 @@ public class BlockSpace implements BlockMessageVisitor
         }
 
         // Mask out columns.
-        var columnPositions = message.getMask().getColumnPositions();
+        var mask = message.getMask().getColumnPositions();
+
+        var removedColumns = columns.entrySet().stream()
+                .filter(e -> !mask.contains(e.getKey()))
+                .collect(Collectors.toSet());
+
+        for (var entry : removedColumns)
+            ic.postMessage(new InvalidateColumnMessage(entry.getKey(), null));
 
         columns = columns.entrySet().stream()
-                .filter(e -> columnPositions.contains(e.getKey()))
+                .filter(e -> mask.contains(e.getKey()))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
         // Check out columns.
-        var missingPositions = columnPositions.stream()
+        var missingPositions = mask.stream()
                 .filter(e -> !columns.containsKey(e))
                 .filter(e -> !loadingColumns.contains(e))
                 .collect(Collectors.toSet());

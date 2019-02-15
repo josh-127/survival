@@ -87,7 +87,7 @@ public class Client implements AutoCloseable
         player = actorSpace.getActor(playerID);
 
         compositeDisplay = new CompositeDisplay(
-                blockSpace, modelsToDraw, particleSpace, GraphicsSettings.WINDOW_WIDTH, GraphicsSettings.WINDOW_HEIGHT);
+                modelsToDraw, particleSpace, GraphicsSettings.WINDOW_WIDTH, GraphicsSettings.WINDOW_HEIGHT);
     }
 
     @Override
@@ -165,7 +165,7 @@ public class Client implements AutoCloseable
 
                         @Override
                         public void visit(InteractionContext ic, InvalidateColumnMessage message) {
-                            compositeDisplay.redrawColumn(message.columnPos);
+                            compositeDisplay.redrawColumn(message.columnPos, message.column);
                         }
                     }, ic);
                 }
