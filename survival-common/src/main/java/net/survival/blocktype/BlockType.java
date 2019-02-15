@@ -64,6 +64,13 @@ public final class BlockType
                     .withDisplayName("Water")
                     .withTextureOnAllFaces("textures/blocks/water.png")
                     .build());
+    public static final BasicBlock CACTUS =
+            register(basicBlock()
+                    .withDisplayName("Cactus")
+                    .withTextureOnSides("ProgrammerArt-v3.0/textures/blocks/cactus_side.png")
+                    .withTexture(BlockFace.TOP, "ProgrammerArt-v3.0/textures/blocks/cactus_top.png")
+                    .withTexture(BlockFace.BOTTOM, "ProgrammerArt-v3.0/textures/blocks/cactus_bottom.png")
+                    .build());
 
     private static Block[] blocks;
     private static int blockCount = 0;

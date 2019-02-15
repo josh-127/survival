@@ -38,6 +38,8 @@ public class InfiniteColumnGenerator implements ColumnProvider
     private final DoubleMap2D minElevationMap;
     private final DoubleMap2D elevationRangeMap;
 
+    private final DefaultColumnDecorator columnDecorator;
+
     private final int bedrockID;
     private final int tempSolidID;
     private final int stoneID;
@@ -53,6 +55,8 @@ public class InfiniteColumnGenerator implements ColumnProvider
         densityMap = new DoubleMap3D(NMAP_XLENGTH, NMAP_YLENGTH, NMAP_ZLENGTH);
         minElevationMap = new DoubleMap2D(Column.XLENGTH, Column.ZLENGTH);
         elevationRangeMap = new DoubleMap2D(Column.XLENGTH, Column.ZLENGTH);
+
+        columnDecorator = new DefaultColumnDecorator();
 
         bedrockID = BlockType.BEDROCK.getFullID();
         tempSolidID = BlockType.TEMP_SOLID.getFullID();
@@ -76,6 +80,7 @@ public class InfiniteColumnGenerator implements ColumnProvider
         Column column = new Column();
         generateBase(column);
         replaceBlocks(cx, cz, column);
+        columnDecorator.decorate(hashedPos, column, biomeLayer);
 
         return column;
     }
