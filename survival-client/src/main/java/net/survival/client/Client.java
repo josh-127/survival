@@ -72,6 +72,9 @@ public class Client implements AutoCloseable
     private static final double SAVE_INTERVAL = 10.0;
     private double saveTimer;
 
+    private static final double PERF_LOG_INTERVAL = 1.0;
+    private double perfLogTimer;
+
     private Client(ColumnDbPipe.ClientSide columnPipe) {
         this.columnPipe = columnPipe;
 
@@ -116,6 +119,16 @@ public class Client implements AutoCloseable
         if (saveTimer <= 0.0) {
             saveTimer = SAVE_INTERVAL;
             messageQueue.enqueueMessage(new MaskColumnsMessage(columnMask));
+        }
+
+        perfLogTimer -= elapsedTime;
+        if (perfLogTimer <= 0.0) {
+            perfLogTimer = PERF_LOG_INTERVAL;
+
+            var totalMemory = Runtime.getRuntime().totalMemory();
+            var freeMemory = Runtime.getRuntime().freeMemory();
+            var usedMemory = totalMemory - freeMemory;
+            System.out.printf("Memory Usage: %.2f MiB\n", usedMemory / 1024.0 / 1024.0);
         }
 
         for (var r = columnPipe.pollResponse(); r != null; r = columnPipe.pollResponse()) {
