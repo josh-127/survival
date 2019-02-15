@@ -33,7 +33,7 @@ import net.survival.client.input.GlfwMouseAdapter;
 import net.survival.client.input.Keyboard;
 import net.survival.client.input.Mouse;
 import net.survival.client.particle.ClientParticleSpace;
-import net.survival.gen.InfiniteColumnGenerator;
+import net.survival.gen.DefaultColumnGenerator;
 import net.survival.input.Key;
 import net.survival.interaction.InteractionContext;
 import net.survival.interaction.MessageQueue;
@@ -194,7 +194,7 @@ public class Client implements AutoCloseable
     }
 
     public static void main(String[] args) throws InterruptedException {
-        var columnGenerator = new InfiniteColumnGenerator(4000L);
+        var columnGenerator = new DefaultColumnGenerator(4000L);
 
         var columnDbPipe = new ColumnDbPipe();
         var columnServer = new ColumnServer(

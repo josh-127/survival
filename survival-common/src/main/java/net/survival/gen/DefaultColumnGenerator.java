@@ -10,7 +10,7 @@ import net.survival.util.DoubleMap2D;
 import net.survival.util.DoubleMap3D;
 import net.survival.util.ImprovedNoiseGenerator3D;
 
-public class InfiniteColumnGenerator implements ColumnProvider
+public class DefaultColumnGenerator implements ColumnProvider
 {
     private static final int NBLOCK_YLENGTH = Column.YLENGTH / 32;
     private static final int NBLOCK_ZLENGTH = Column.ZLENGTH / 4;
@@ -48,7 +48,7 @@ public class InfiniteColumnGenerator implements ColumnProvider
     private final int dirtID;
     private final int waterID;
 
-    public InfiniteColumnGenerator(long seed) {
+    public DefaultColumnGenerator(long seed) {
         mainNoiseGenerator = new ImprovedNoiseGenerator3D(MAIN_NOISE_XSCALE, MAIN_NOISE_YSCALE,
                 MAIN_NOISE_ZSCALE, MAIN_NOISE_OCTAVE_COUNT, seed);
 
