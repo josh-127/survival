@@ -90,14 +90,8 @@ public class ColumnServer implements Runnable
             return columnGenerator.provideColumn(columnPos);
         }
 
-        var compressedData = ByteBuffer.allocateDirect((int) existingVau.length);
-
         fileChannel.position(existingVau.address);
-        while (compressedData.hasRemaining())
-            fileChannel.read(compressedData);
-        compressedData.flip();
-
-        return columnCodec.decompressColumn(compressedData);
+        return columnCodec.decompressColumn(fileChannel, (int) existingVau.length);
     }
 
     private void saveColumn(long columnPos, Column column) throws IOException {
