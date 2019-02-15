@@ -13,6 +13,7 @@ class CactusDecorator extends ColumnDecorator
     private static final int CACTUS_HEIGHT_RANGE = MAX_CACTUS_HEIGHT - MIN_CACTUS_HEIGHT;
 
     private final Random random = new Random();
+    private final int sandFullID = BlockType.SAND.getFullID();
     private final int cactusFullID = BlockType.CACTUS.getFullID();
 
     @Override
@@ -27,8 +28,10 @@ class CactusDecorator extends ColumnDecorator
                 var height = MIN_CACTUS_HEIGHT + random.nextInt(CACTUS_HEIGHT_RANGE + 1);
                 var topLevel = primer.getTopLevel(x, z);
 
-                for (var j = 0; j < height; ++j) {
-                    primer.setBlockFullID(x, topLevel + j, z, cactusFullID);
+                if (topLevel != -1 && primer.getBlockFullID(x, topLevel, z) == sandFullID) {
+                    for (var j = 1; j <= height && j < ColumnPrimer.YLENGTH; ++j) {
+                        primer.setBlockFullID(x, topLevel + j, z, cactusFullID);
+                    }
                 }
             }
         }
