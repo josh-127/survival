@@ -3,10 +3,13 @@ package net.survival.block;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
+import net.survival.block.message.ColumnRequest;
+import net.survival.block.message.ColumnResponseMessage;
+
 public class ColumnDbPipe
 {
     private final LinkedBlockingQueue<ColumnRequest> requests = new LinkedBlockingQueue<>();
-    private final ConcurrentLinkedQueue<ColumnResponse> responses = new ConcurrentLinkedQueue<>();
+    private final ConcurrentLinkedQueue<ColumnResponseMessage> responses = new ConcurrentLinkedQueue<>();
     private final ServerSide serverSide = new ServerSide();
     private final ClientSide clientSide = new ClientSide();
 
@@ -28,14 +31,14 @@ public class ColumnDbPipe
             }
         }
 
-        public void respond(ColumnResponse response) {
-            responses.add(response);
+        public void respond(ColumnResponseMessage message) {
+            responses.add(message);
         }
     }
 
     public class ClientSide
     {
-        public ColumnResponse pollResponse() {
+        public ColumnResponseMessage pollResponse() {
             return responses.poll();
         }
 

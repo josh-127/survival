@@ -7,6 +7,12 @@ import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import net.survival.block.message.CloseColumnRequest;
+import net.survival.block.message.ColumnRequestVisitor;
+import net.survival.block.message.ColumnResponseMessage;
+import net.survival.block.message.GetColumnRequest;
+import net.survival.block.message.PostColumnRequest;
+
 public class ColumnServer implements Runnable
 {
     private static int FOOTER_LENGTH = 2 * VirtualAllocationUnit.STRUCTURE_SIZE;
@@ -38,25 +44,34 @@ public class ColumnServer implements Runnable
                 loadMetadata();
 
             while (running.get()) {
-                var request = (ColumnRequest) null;
+                var request = columnPipe.waitForRequest();
 
-                do {
-                    request = columnPipe.waitForRequest();
-                    var columnPos = request.columnPos;
-
-                    if (request.type == ColumnRequest.TYPE_GET) {
-                        columnPipe.respond(new ColumnResponse(
-                                columnPos, loadColumn(columnPos)));
-                    }
-                    else if (request.type == ColumnRequest.TYPE_POST) {
-                        saveColumn(columnPos, request.column);
-                    }
-                    else if (request.type == ColumnRequest.TYPE_CLOSE) {
+                request.accept(new ColumnRequestVisitor() {
+                    @Override
+                    public void visit(CloseColumnRequest request) {
                         running.set(false);
-                        break;
                     }
-                }
-                while (request != null);
+                    
+                    @Override
+                    public void visit(GetColumnRequest request) {
+                        var columnPos = request.getColumnPos();
+                        try {
+                            columnPipe.respond(new ColumnResponseMessage(
+                                    columnPos, loadColumn(columnPos)));
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+
+                    @Override
+                    public void visit(PostColumnRequest request) {
+                        try {
+                            saveColumn(request.getColumnPos(), request.getColumn());
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                });
             }
 
             saveMetadata();

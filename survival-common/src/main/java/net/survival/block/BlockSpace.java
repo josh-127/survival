@@ -9,8 +9,10 @@ import java.util.stream.Collectors;
 import net.survival.block.message.BlockMessageVisitor;
 import net.survival.block.message.BreakBlockMessage;
 import net.survival.block.message.ColumnResponseMessage;
+import net.survival.block.message.GetColumnRequest;
 import net.survival.block.message.MaskColumnsMessage;
 import net.survival.block.message.PlaceBlockMessage;
+import net.survival.block.message.PostColumnRequest;
 import net.survival.interaction.InteractionContext;
 import net.survival.render.message.InvalidateColumnMessage;
 
@@ -90,12 +92,13 @@ public class BlockSpace implements BlockMessageVisitor
 
     @Override
     public void visit(InteractionContext ic, ColumnResponseMessage message) {
-        var response = message.getColumnResponse();
-        loadingColumns.remove(response.columnPos);
-        columns.put(response.columnPos, response.column);
+        var columnPos = message.getColumnPos();
+        var column = message.getColumn();
+        loadingColumns.remove(columnPos);
+        columns.put(columnPos, column);
 
-        var cx = ColumnPos.columnXFromHashedPos(response.columnPos);
-        var cz = ColumnPos.columnZFromHashedPos(response.columnPos);
+        var cx = ColumnPos.columnXFromHashedPos(columnPos);
+        var cz = ColumnPos.columnZFromHashedPos(columnPos);
         var x = ColumnPos.toGlobalX(cx, 0);
         var z = ColumnPos.toGlobalZ(cz, 0);
         invalidateColumn(ic, x, z);
@@ -107,7 +110,7 @@ public class BlockSpace implements BlockMessageVisitor
         for (var entry : columns.entrySet()) {
             var columnPos = entry.getKey();
             var column = entry.getValue();
-            columnPipe.request(ColumnRequest.createPostRequest(columnPos, column));
+            columnPipe.request(new PostColumnRequest(columnPos, column));
         }
 
         // Mask out columns.
@@ -132,7 +135,7 @@ public class BlockSpace implements BlockMessageVisitor
 
         for (var columnPos : missingPositions) {
             loadingColumns.add(columnPos);
-            columnPipe.request(ColumnRequest.createGetRequest(columnPos));
+            columnPipe.request(new GetColumnRequest(columnPos));
         }
     }
 }

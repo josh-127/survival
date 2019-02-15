@@ -17,12 +17,11 @@ import net.survival.block.BlockSpace;
 import net.survival.block.CircularColumnMask;
 import net.survival.block.ColumnDbPipe;
 import net.survival.block.ColumnPos;
-import net.survival.block.ColumnRequest;
 import net.survival.block.ColumnServer;
 import net.survival.block.EmptyColumnMask;
 import net.survival.block.message.BlockMessage;
 import net.survival.block.message.BreakBlockMessage;
-import net.survival.block.message.ColumnResponseMessage;
+import net.survival.block.message.CloseColumnRequest;
 import net.survival.block.message.MaskColumnsMessage;
 import net.survival.client.graphics.CompositeDisplay;
 import net.survival.client.graphics.GraphicsSettings;
@@ -117,7 +116,7 @@ public class Client implements AutoCloseable
         }
 
         for (var r = columnPipe.pollResponse(); r != null; r = columnPipe.pollResponse()) {
-            messageQueue.enqueueMessage(new ColumnResponseMessage(r));
+            messageQueue.enqueueMessage(r);
         }
 
         // Misc. Setup
@@ -242,7 +241,7 @@ public class Client implements AutoCloseable
         program.close();
         display.close();
 
-        columnDbPipe.getClientSide().request(ColumnRequest.createCloseRequest());
+        columnDbPipe.getClientSide().request(new CloseColumnRequest());
         columnServerThread.join();
     }
 
