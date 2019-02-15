@@ -40,7 +40,7 @@ public class DefaultColumnGenerator implements ColumnProvider
 
     private final DefaultColumnDecorator columnDecorator;
 
-    private ColumnPrimer columnPrimer;
+    private final ColumnPrimer columnPrimer;
 
     private final int bedrockID;
     private final int tempSolidID;
@@ -59,6 +59,8 @@ public class DefaultColumnGenerator implements ColumnProvider
         elevationRangeMap = new DoubleMap2D(Column.XLENGTH, Column.ZLENGTH);
 
         columnDecorator = new DefaultColumnDecorator();
+
+        columnPrimer = new ColumnPrimer();
 
         bedrockID = BlockType.BEDROCK.getFullID();
         tempSolidID = BlockType.TEMP_SOLID.getFullID();
@@ -79,7 +81,7 @@ public class DefaultColumnGenerator implements ColumnProvider
         mainNoiseGenerator.generate(densityMap, offsetX, 0.0, offsetZ);
         biomeLayer.generate(globalX, globalZ);
 
-        var columnPrimer = new ColumnPrimer();
+        columnPrimer.clear();
         generateBase(columnPrimer);
         replaceBlocks(cx, cz, columnPrimer);
         columnDecorator.decorate(hashedPos, columnPrimer, biomeLayer);
