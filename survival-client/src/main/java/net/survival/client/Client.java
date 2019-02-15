@@ -121,18 +121,19 @@ public class Client implements AutoCloseable
             messageQueue.enqueueMessage(new MaskColumnsMessage(columnMask));
         }
 
+        for (var r = columnPipe.pollResponse(); r != null; r = columnPipe.pollResponse()) {
+            messageQueue.enqueueMessage(r);
+        }
+
+        // Performance Log
         perfLogTimer -= elapsedTime;
         if (perfLogTimer <= 0.0) {
             perfLogTimer = PERF_LOG_INTERVAL;
-
+            
             var totalMemory = Runtime.getRuntime().totalMemory();
             var freeMemory = Runtime.getRuntime().freeMemory();
             var usedMemory = totalMemory - freeMemory;
             System.out.printf("Memory Usage: %.2f MiB\n", usedMemory / 1024.0 / 1024.0);
-        }
-
-        for (var r = columnPipe.pollResponse(); r != null; r = columnPipe.pollResponse()) {
-            messageQueue.enqueueMessage(r);
         }
 
         // Misc. Setup
