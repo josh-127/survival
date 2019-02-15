@@ -1,6 +1,8 @@
 package net.survival.gen;
 
 import net.survival.block.Column;
+import net.survival.blocktype.Block;
+import net.survival.blocktype.BlockType;
 
 class ColumnPrimer
 {
@@ -32,8 +34,58 @@ class ColumnPrimer
         return blockIDs[localPositionToIndex(x, y, z)];
     }
 
+    public Block getBlock(int x, int y, int z) {
+        return BlockType.byFullID(getBlockFullID(x, y, z));
+    }
+
+    public int sampleNearestBlockFullID(double x, double y, double z) {
+        return getBlockFullID((int) Math.floor(x), (int) Math.floor(y), (int) Math.floor(z));
+    }
+
+    public Block sampleNearestBlock(double x, double y, double z) {
+        return BlockType.byFullID(sampleNearestBlockFullID(x, y, z));
+    }
+
+    public int getTopLevel(int x, int z) {
+        var topLevel = YLENGTH - 1;
+        while (topLevel >= 0 && getBlockFullID(x, topLevel, z) == 0)
+            --topLevel;
+
+        return topLevel;
+    }
+
     public void setBlockFullID(int x, int y, int z, int to) {
         blockIDs[localPositionToIndex(x, y, z)] = to;
+    }
+
+    public void setBlock(int x, int y, int z, Block to) {
+        setBlockFullID(x, y, z, to.getFullID());
+    }
+
+    public boolean placeBlockIfEmpty(int x, int y, int z, int to) {
+        if (getBlockFullID(x, y, z) == 0) {
+            setBlockFullID(x, y, z, to);
+            return true;
+        }
+
+        return false;
+    }
+
+    public boolean placeBlockIfEmpty(int x, int y, int z, Block to) {
+        return placeBlockIfEmpty(x, y, z, to.getFullID());
+    }
+
+    public boolean replaceBlockIfExists(int x, int y, int z, int replacement) {
+        if (getBlockFullID(x, y, z) != 0) {
+            setBlockFullID(x, y, z, replacement);
+            return true;
+        }
+
+        return false;
+    }
+
+    public boolean replaceBlockIfExists(int x, int y, int z, Block replacement) {
+        return replaceBlockIfExists(x, y, z, replacement.getFullID());
     }
 
     public void clear() {
