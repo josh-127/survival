@@ -2,7 +2,7 @@ package net.survival.gen.layer;
 
 import java.util.Random;
 
-import net.survival.gen.biome.BiomeType;
+import net.survival.gen.BiomeType;
 
 class LandGenLayer extends GenLayer
 {

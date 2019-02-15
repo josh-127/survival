@@ -4,7 +4,6 @@ import net.survival.block.Column;
 import net.survival.block.ColumnPos;
 import net.survival.block.ColumnProvider;
 import net.survival.blocktype.BlockType;
-import net.survival.gen.biome.BiomeType;
 import net.survival.gen.layer.GenLayer;
 import net.survival.gen.layer.GenLayerFactory;
 import net.survival.util.DoubleMap2D;
