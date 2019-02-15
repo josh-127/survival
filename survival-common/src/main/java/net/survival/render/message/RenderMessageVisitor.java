@@ -11,4 +11,5 @@ public interface RenderMessageVisitor
     void visit(InteractionContext ic, SetCameraParamsMessage message);
     void visit(InteractionContext ic, SetCloudParamsMessage message);
     void visit(InteractionContext ic, SetSkyColorMessage message);
+    void visit(InteractionContext ic, UiRenderMessage message);
 }

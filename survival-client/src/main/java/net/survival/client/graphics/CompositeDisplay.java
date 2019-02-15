@@ -16,6 +16,7 @@ import net.survival.render.message.RenderMessageVisitor;
 import net.survival.render.message.SetCameraParamsMessage;
 import net.survival.render.message.SetCloudParamsMessage;
 import net.survival.render.message.SetSkyColorMessage;
+import net.survival.render.message.UiRenderMessage;
 
 public class CompositeDisplay implements RenderContext, GraphicsResource, RenderMessageVisitor
 {
@@ -26,6 +27,7 @@ public class CompositeDisplay implements RenderContext, GraphicsResource, Render
     private final ParticleDisplay particleDisplay;
     private final SkyboxDisplay skyboxDisplay = new SkyboxDisplay();
     private final CloudDisplay cloudDisplay = new CloudDisplay();
+    private final UiDisplay uiDisplay = new UiDisplay();
 
     private int viewportWidth;
     private int viewportHeight;
@@ -251,6 +253,7 @@ public class CompositeDisplay implements RenderContext, GraphicsResource, Render
 
             GLMatrixStack.push();
             GLMatrixStack.loadIdentity();
+            uiDisplay.display();
             GLMatrixStack.pop();
         }
     }
@@ -306,5 +309,10 @@ public class CompositeDisplay implements RenderContext, GraphicsResource, Render
         var tg = message.getTopG();
         var tb = message.getTopB();
         skyboxDisplay.setColor(br, bg, bb, tr, tg, tb);
+    }
+
+    @Override
+    public void visit(InteractionContext ic, UiRenderMessage message) {
+        uiDisplay.drawControl(message);
     }
 }
