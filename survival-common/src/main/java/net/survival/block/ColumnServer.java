@@ -22,6 +22,7 @@ public class ColumnServer implements Runnable
     private final ColumnDirectory directory = new ColumnDirectory();
 
     private final ColumnProvider columnGenerator;
+    private final ColumnCodec columnCodec;
 
     private final AtomicBoolean running = new AtomicBoolean(true);
     private final ColumnDbPipe.ServerSide columnPipe;
@@ -31,6 +32,7 @@ public class ColumnServer implements Runnable
         this.file = file;
         this.columnPipe = columnPipe;
         this.columnGenerator = columnGenerator;
+        columnCodec = new ColumnCodec();
     }
 
     @Override
@@ -95,9 +97,7 @@ public class ColumnServer implements Runnable
             fileChannel.read(compressedData);
         compressedData.flip();
 
-        var column = ColumnCodec.decompressColumn(compressedData);
-
-        return column;
+        return columnCodec.decompressColumn(compressedData);
     }
 
     private void saveColumn(long columnPos, Column column) throws IOException {
@@ -105,7 +105,7 @@ public class ColumnServer implements Runnable
         if (existingVau != null)
             allocator.freeMemory(existingVau.address);
 
-        var compressedData = ColumnCodec.compressColumn(column);
+        var compressedData = columnCodec.compressColumn(column);
         var columnVau = allocator.allocateMemoryAndReturnVau(compressedData.limit());
         if (columnVau == null)
             throw new RuntimeException("Cannot allocate anymore columns.");
@@ -115,6 +115,7 @@ public class ColumnServer implements Runnable
         fileChannel.position(columnVau.address);
         while (compressedData.hasRemaining())
             fileChannel.write(compressedData);
+        compressedData.flip();
     }
 
     private void loadMetadata() throws IOException {

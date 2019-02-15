@@ -9,56 +9,45 @@ class ColumnCodec
     private static final int COLUMN_HEADER_SIZE = 2;
     private static final int CHUNK_HEADER_SIZE = 6;
 
-    public static ByteBuffer compressColumn(Column column) {
-        var compressedDataLength = COLUMN_HEADER_SIZE;
+    private final ByteBuffer columnBuffer = ByteBuffer.allocateDirect(
+            COLUMN_HEADER_SIZE + 8 * CHUNK_HEADER_SIZE + 8 * Column.VOLUME);
 
-        for (var i = 0; i < Column.HEIGHT; ++i) {
-            var chunk = column.getChunk(i);
-            if (chunk != null) {
-                var rawData = chunk.getRawData();
-                var blockPalette = chunk.getBlockPalette();
-
-                compressedDataLength += CHUNK_HEADER_SIZE;
-                compressedDataLength += rawData.underlyingArray.length * 8;
-                compressedDataLength += blockPalette.length * 4;
-            }
-        }
-
-        var compressedData = ByteBuffer.allocate(compressedDataLength);
+    public ByteBuffer compressColumn(Column column) {
+        columnBuffer.clear();
 
         var enabledChunks = (byte) 0;
         for (var i = 0; i < Column.HEIGHT; ++i) {
             if (column.getChunk(i) != null)
                 enabledChunks |= 1 << i;
         }
-        compressedData.put(enabledChunks);
+        columnBuffer.put(enabledChunks);
 
         for (var i = 0; i < Column.HEIGHT; ++i) {
             var chunk = column.getChunk(i);
             if (chunk != null)
-                compressChunk(chunk, compressedData);
+                compressChunk(chunk, columnBuffer);
         }
 
-        compressedData.flip();
-        return compressedData;
+        columnBuffer.flip();
+        return columnBuffer;
     }
 
-    private static void compressChunk(Chunk chunk, ByteBuffer compressedData) {
+    private void compressChunk(Chunk chunk, ByteBuffer buffer) {
         var rawData = chunk.getRawData();
         var underlyingArray = rawData.underlyingArray;
         var blockPalette = chunk.getBlockPalette();
 
-        compressedData.putShort((short) underlyingArray.length);
-        compressedData.putShort((short) rawData.bitsPerElement);
-        compressedData.putShort((short) blockPalette.length);
+        buffer.putShort((short) underlyingArray.length);
+        buffer.putShort((short) rawData.bitsPerElement);
+        buffer.putShort((short) blockPalette.length);
         for (var i = 0; i < underlyingArray.length; ++i)
-            compressedData.putLong(underlyingArray[i]);
+            buffer.putLong(underlyingArray[i]);
 
         for (var i = 0; i < blockPalette.length; ++i)
-            compressedData.putInt(blockPalette[i]);
+            buffer.putInt(blockPalette[i]);
     }
 
-    public static Column decompressColumn(ByteBuffer compressedData) {
+    public Column decompressColumn(ByteBuffer compressedData) {
         var column = new Column();
 
         var enabledChunks = compressedData.get();
@@ -73,7 +62,7 @@ class ColumnCodec
         return column;
     }
 
-    private static Chunk decompressChunk(ByteBuffer compressedData) {
+    private Chunk decompressChunk(ByteBuffer compressedData) {
         var underlyingArrayLength = (int) compressedData.getShort();
         var bitsPerElement = (int) compressedData.getShort();
         var blockPaletteLength = (int) compressedData.getShort();
