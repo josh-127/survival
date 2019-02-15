@@ -7,12 +7,12 @@ public enum BiomeType
     OCEAN((bt) -> {
         bt.topBlockID = BlockType.DIRT.getFullID();
         bt.minElevation = 16.0;
-        bt.maxElevation = 61.0;
+        bt.maxElevation = 56.0;
         bt.biomeViewerColor = 0x000000FF;
     }),
     GRASSLAND((bt) -> {
         bt.topBlockID = BlockType.GRASS_BLOCK.getFullID();
-        bt.minElevation = 65.0;
+        bt.minElevation = 70.0;
         bt.maxElevation = 72.0;
         bt.biomeViewerColor = 0x0000FF00;
     }),
@@ -30,8 +30,8 @@ public enum BiomeType
     }),
     DESERT((bt) -> {
         bt.topBlockID = BlockType.SAND.getFullID();
-        bt.minElevation = 65.0;
-        bt.maxElevation = 72.0;
+        bt.minElevation = 67.0;
+        bt.maxElevation = 68.0;
         bt.biomeViewerColor = 0x00FFFF00;
     }),
     TUNDRA((bt) -> {

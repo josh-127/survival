@@ -194,7 +194,7 @@ public class Client implements AutoCloseable
     }
 
     public static void main(String[] args) throws InterruptedException {
-        var columnGenerator = new InfiniteColumnGenerator(22L);
+        var columnGenerator = new InfiniteColumnGenerator(4000L);
 
         var columnDbPipe = new ColumnDbPipe();
         var columnServer = new ColumnServer(

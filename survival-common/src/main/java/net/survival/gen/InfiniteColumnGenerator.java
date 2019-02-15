@@ -25,8 +25,8 @@ public class InfiniteColumnGenerator implements ColumnProvider
     private static final double MAIN_NOISE_ZSCALE = 1.0 / 128.0;
     private static final int MAIN_NOISE_OCTAVE_COUNT = 6;
 
-    private static final int BIOME_TRANSITION_XLENGTH = NBLOCK_XLENGTH * 4;
-    private static final int BIOME_TRANSITION_ZLENGTH = NBLOCK_ZLENGTH * 4;
+    private static final int BIOME_TRANSITION_XLENGTH = NBLOCK_XLENGTH * 2;
+    private static final int BIOME_TRANSITION_ZLENGTH = NBLOCK_ZLENGTH * 2;
     private static final int BIOME_TRANSITION_AREA = BIOME_TRANSITION_XLENGTH
             * BIOME_TRANSITION_ZLENGTH;
 
