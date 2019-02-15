@@ -2,7 +2,6 @@ package net.survival.client.graphics;
 
 import org.joml.Matrix4f;
 
-import net.survival.block.Column;
 import net.survival.client.graphics.opengl.GLImmediateDrawCall;
 import net.survival.client.graphics.opengl.GLMatrixStack;
 import net.survival.client.graphics.opengl.GLRenderContext;
@@ -11,7 +10,12 @@ import net.survival.client.particle.ClientParticleSpace;
 import net.survival.interaction.InteractionContext;
 import net.survival.render.message.DrawModelMessage;
 import net.survival.render.message.InvalidateColumnMessage;
+import net.survival.render.message.MoveCameraMessage;
+import net.survival.render.message.OrientCameraMessage;
 import net.survival.render.message.RenderMessageVisitor;
+import net.survival.render.message.SetCameraParamsMessage;
+import net.survival.render.message.SetCloudParamsMessage;
+import net.survival.render.message.SetSkyColorMessage;
 
 public class CompositeDisplay implements RenderContext, GraphicsResource, RenderMessageVisitor
 {
@@ -66,13 +70,6 @@ public class CompositeDisplay implements RenderContext, GraphicsResource, Render
     }
 
     @Override
-    public void moveCamera(float x, float y, float z) {
-        camera.x = x;
-        camera.y = y;
-        camera.z = z;
-    }
-
-    @Override
     public float getCameraYaw() {
         return camera.yaw;
     }
@@ -83,19 +80,8 @@ public class CompositeDisplay implements RenderContext, GraphicsResource, Render
     }
 
     @Override
-    public void orientCamera(float yaw, float pitch) {
-        camera.yaw = yaw;
-        camera.pitch = pitch;
-    }
-
-    @Override
     public float getCameraFov() {
         return camera.fov;
-    }
-
-    @Override
-    public void setCameraFov(float to) {
-        camera.fov = to;
     }
 
     @Override
@@ -109,12 +95,6 @@ public class CompositeDisplay implements RenderContext, GraphicsResource, Render
     }
 
     @Override
-    public void resizeCamera(float width, float height) {
-        camera.width = width;
-        camera.height = height;
-    }
-
-    @Override
     public float getCameraNearClipPlane() {
         return camera.nearClipPlane;
     }
@@ -125,12 +105,6 @@ public class CompositeDisplay implements RenderContext, GraphicsResource, Render
     }
 
     @Override
-    public void setCameraClipPlanes(float near, float far) {
-        camera.nearClipPlane = near;
-        camera.farClipPlane = far;
-    }
-
-    @Override
     public int getVisibilityFlags() {
         return visibilityFlags;
     }
@@ -138,11 +112,6 @@ public class CompositeDisplay implements RenderContext, GraphicsResource, Render
     @Override
     public void setVisibilityFlags(int to) {
         visibilityFlags = to;
-    }
-
-    @Override
-    public void redrawColumn(long columnPos, Column column) {
-        blockDisplay.redrawColumn(columnPos, column);
     }
 
     @Override
@@ -176,18 +145,8 @@ public class CompositeDisplay implements RenderContext, GraphicsResource, Render
     }
 
     @Override
-    public void setSkyboxColor(float br, float bg, float bb, float tr, float tg, float tb) {
-        skyboxDisplay.setColor(br, bg, bb, tr, tg, tb);
-    }
-
-    @Override
     public long getCloudSeed() {
         return cloudDisplay.getSeed();
-    }
-
-    @Override
-    public void setCloudSeed(long to) {
-        cloudDisplay.setSeed(to);
     }
 
     @Override
@@ -196,18 +155,8 @@ public class CompositeDisplay implements RenderContext, GraphicsResource, Render
     }
 
     @Override
-    public void setCloudDensity(float to) {
-        cloudDisplay.setDensity(to);
-    }
-
-    @Override
     public float getCloudElevation() {
         return cloudDisplay.getElevation();
-    }
-
-    @Override
-    public void setCloudElevation(float to) {
-        cloudDisplay.setElevation(to);
     }
 
     @Override
@@ -221,18 +170,8 @@ public class CompositeDisplay implements RenderContext, GraphicsResource, Render
     }
 
     @Override
-    public void setCloudSpeed(float dx, float dz) {
-        cloudDisplay.setSpeed(dx, dz);
-    }
-
-    @Override
     public float getCloudAlpha() {
         return cloudDisplay.getAlpha();
-    }
-
-    @Override
-    public void setCloudAlpha(float to) {
-        cloudDisplay.setAlpha(to);
     }
 
     public int getViewportWidth() {
@@ -323,6 +262,49 @@ public class CompositeDisplay implements RenderContext, GraphicsResource, Render
 
     @Override
     public void visit(InteractionContext ic, InvalidateColumnMessage message) {
-        redrawColumn(message.columnPos, message.column);
+        blockDisplay.redrawColumn(message.columnPos, message.column);
+    }
+
+    @Override
+    public void visit(InteractionContext ic, MoveCameraMessage message) {
+        camera.x = message.getX();
+        camera.y = message.getY();
+        camera.z = message.getZ();
+    }
+
+    @Override
+    public void visit(InteractionContext ic, OrientCameraMessage message) {
+        camera.yaw = message.getYaw();
+        camera.pitch = message.getPitch();
+        // TODO: Missing Camera::roll.
+    }
+    
+    @Override
+    public void visit(InteractionContext ic, SetCameraParamsMessage message) {
+        camera.fov = message.getFov();
+        camera.width = message.getWidth();
+        camera.height = message.getHeight();
+        camera.nearClipPlane = message.getNearClipPlane();
+        camera.farClipPlane = message.getFarClipPlane();
+    }
+
+    @Override
+    public void visit(InteractionContext ic, SetCloudParamsMessage message) {
+        cloudDisplay.setSeed(message.getSeed());
+        cloudDisplay.setDensity(message.getDensity());
+        cloudDisplay.setElevation(message.getElevation());
+        cloudDisplay.setSpeed(message.getSpeedX(), message.getSpeedZ());
+        cloudDisplay.setAlpha(message.getAlpha());
+    }
+
+    @Override
+    public void visit(InteractionContext ic, SetSkyColorMessage message) {
+        var br = message.getBottomR();
+        var bg = message.getBottomG();
+        var bb = message.getBottomB();
+        var tr = message.getTopR();
+        var tg = message.getTopG();
+        var tb = message.getTopB();
+        skyboxDisplay.setColor(br, bg, bb, tr, tg, tb);
     }
 }

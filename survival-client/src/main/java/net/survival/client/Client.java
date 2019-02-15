@@ -40,7 +40,10 @@ import net.survival.interaction.MessageQueue;
 import net.survival.interaction.MessageVisitor;
 import net.survival.particle.message.BurstParticlesMessage;
 import net.survival.particle.message.ParticleMessage;
+import net.survival.render.message.MoveCameraMessage;
+import net.survival.render.message.OrientCameraMessage;
 import net.survival.render.message.RenderMessage;
+import net.survival.render.message.SetCameraParamsMessage;
 
 public class Client implements AutoCloseable
 {
@@ -127,6 +130,10 @@ public class Client implements AutoCloseable
             messageQueue.enqueueMessage(new DrawMessage(actorID));
         }
 
+        messageQueue.enqueueMessage(new MoveCameraMessage((float) player.getX(), (float) (player.getY() + 1.0), (float) player.getZ()));
+        messageQueue.enqueueMessage(new OrientCameraMessage((float) fpvCamera.yaw, (float) fpvCamera.pitch, 0.0f));
+        messageQueue.enqueueMessage(new SetCameraParamsMessage((float) Math.toRadians(60.0), GraphicsSettings.WINDOW_WIDTH, GraphicsSettings.WINDOW_HEIGHT, 0.0625f, 768.0f));
+
         // Application-Wide Message Dispatcher
         while (!messageQueue.isEmpty()) {
             var m = messageQueue.dequeueMessage();
@@ -163,15 +170,8 @@ public class Client implements AutoCloseable
 
         // Misc. Code
         particleSpace.step(elapsedTime);
-
-        // Temporary Test Code
         temporaryTestCode();
 
-        compositeDisplay.moveCamera((float) player.getX(), (float) (player.getY() + 1.0), (float) player.getZ());
-        compositeDisplay.orientCamera((float) fpvCamera.yaw, (float) fpvCamera.pitch);
-        compositeDisplay.setCameraFov((float) Math.toRadians(60.0));
-        compositeDisplay.resizeCamera(GraphicsSettings.WINDOW_WIDTH, GraphicsSettings.WINDOW_HEIGHT);
-        compositeDisplay.setCameraClipPlanes(0.0625f, 768.0f);
         compositeDisplay.tick(elapsedTime);
     }
 
