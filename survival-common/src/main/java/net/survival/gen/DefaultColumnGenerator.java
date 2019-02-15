@@ -41,11 +41,7 @@ public class DefaultColumnGenerator implements ColumnProvider
     private final DefaultColumnDecorator columnDecorator;
 
     private final ColumnPrimer columnPrimer;
-
-    private final int bedrockID;
     private final int tempSolidID;
-    private final int stoneID;
-    private final int dirtID;
     private final int waterID;
 
     public DefaultColumnGenerator(long seed) {
@@ -61,11 +57,7 @@ public class DefaultColumnGenerator implements ColumnProvider
         columnDecorator = new DefaultColumnDecorator();
 
         columnPrimer = new ColumnPrimer();
-
-        bedrockID = BlockType.BEDROCK.getFullID();
         tempSolidID = BlockType.TEMP_SOLID.getFullID();
-        stoneID = BlockType.STONE.getFullID();
-        dirtID = BlockType.DIRT.getFullID();
         waterID = BlockType.WATER.getFullID();
     }
 
@@ -83,57 +75,10 @@ public class DefaultColumnGenerator implements ColumnProvider
 
         columnPrimer.clear();
         generateBase(columnPrimer);
-        replaceBlocks(cx, cz, columnPrimer);
+        //replaceBlocks(cx, cz, columnPrimer);
         columnDecorator.decorate(hashedPos, columnPrimer, biomeLayer);
 
         return columnPrimer.toColumn();
-    }
-
-    private void replaceBlocks(int cx, int cz, ColumnPrimer columnPrimer) {
-        for (var z = 0; z < Column.ZLENGTH; ++z) {
-            for (var x = 0; x < Column.XLENGTH; ++x)
-                columnPrimer.setBlockFullID(x, 0, z, bedrockID);
-        }
-
-        for (var z = 0; z < Column.ZLENGTH; ++z) {
-            for (var x = 0; x < Column.XLENGTH; ++x) {
-                var biome = BiomeType.byID(biomeLayer.sampleNearest(x, z));
-                var state = 0;
-                var counter = 3;
-
-                for (var y = Column.YLENGTH - 1; y >= 1; --y) {
-                    if (columnPrimer.getBlockFullID(x, y, z) != tempSolidID) {
-                        state = 0;
-                        counter = 3;
-                        continue;
-                    }
-
-                    switch (state) {
-                    case 0:
-                        columnPrimer.setBlockFullID(x, y, z, biome.getTopBlockID());
-                        ++state;
-                        break;
-
-                    case 1:
-                        if (counter > 0) {
-                            columnPrimer.setBlockFullID(x, y, z, dirtID);
-                            --counter;
-
-                            if (counter == 0) {
-                                ++state;
-                                counter = 8;
-                            }
-                        }
-
-                        break;
-
-                    case 2:
-                        columnPrimer.setBlockFullID(x, y, z, stoneID);
-                        break;
-                    }
-                }
-            }
-        }
     }
 
     private void generateBase(ColumnPrimer columnPrimer) {
