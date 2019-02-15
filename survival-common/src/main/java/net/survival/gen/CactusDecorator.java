@@ -8,6 +8,9 @@ import net.survival.gen.layer.GenLayer;
 class CactusDecorator extends ColumnDecorator
 {
     private static final int CACTI_PER_COLUMN = 5;
+    private static final int MIN_CACTUS_HEIGHT = 2;
+    private static final int MAX_CACTUS_HEIGHT = 4;
+    private static final int CACTUS_HEIGHT_RANGE = MAX_CACTUS_HEIGHT - MIN_CACTUS_HEIGHT;
 
     private final Random random = new Random();
     private final int cactusFullID = BlockType.CACTUS.getFullID();
@@ -21,7 +24,12 @@ class CactusDecorator extends ColumnDecorator
             var z = random.nextInt(ColumnPrimer.ZLENGTH);
 
             if (biomeMap.sampleNearest(x, z) == BiomeType.DESERT.ordinal()) {
-                primer.setBlockFullID(x, 80, z, cactusFullID);
+                var height = MIN_CACTUS_HEIGHT + random.nextInt(CACTUS_HEIGHT_RANGE + 1);
+                var topLevel = primer.getTopLevel(x, z);
+
+                for (var j = 0; j < height; ++j) {
+                    primer.setBlockFullID(x, topLevel + j, z, cactusFullID);
+                }
             }
         }
     }
