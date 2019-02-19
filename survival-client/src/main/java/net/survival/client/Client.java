@@ -40,6 +40,7 @@ import net.survival.interaction.MessageQueue;
 import net.survival.interaction.MessageVisitor;
 import net.survival.particle.message.BurstParticlesMessage;
 import net.survival.particle.message.ParticleMessage;
+import net.survival.render.message.DrawLabelMessage;
 import net.survival.render.message.MoveCameraMessage;
 import net.survival.render.message.OrientCameraMessage;
 import net.survival.render.message.RenderMessage;
@@ -71,9 +72,6 @@ public class Client implements AutoCloseable
 
     private static final double SAVE_INTERVAL = 10.0;
     private double saveTimer;
-
-    private static final double PERF_LOG_INTERVAL = 1.0;
-    private double perfLogTimer;
 
     private Client(ColumnDbPipe.ClientSide columnPipe) {
         this.columnPipe = columnPipe;
@@ -125,17 +123,6 @@ public class Client implements AutoCloseable
             messageQueue.enqueueMessage(r);
         }
 
-        // Performance Log
-        perfLogTimer -= elapsedTime;
-        if (perfLogTimer <= 0.0) {
-            perfLogTimer = PERF_LOG_INTERVAL;
-            
-            var totalMemory = Runtime.getRuntime().totalMemory();
-            var freeMemory = Runtime.getRuntime().freeMemory();
-            var usedMemory = totalMemory - freeMemory;
-            System.out.printf("Memory Usage: %.2f MiB\n", usedMemory / 1024.0 / 1024.0);
-        }
-
         // Misc. Setup
         interactionContext.setElapsedTime(elapsedTime);
         for (var entry : actorSpace.iterateActorMap()) {
@@ -147,6 +134,12 @@ public class Client implements AutoCloseable
         messageQueue.enqueueMessage(new MoveCameraMessage((float) player.getX(), (float) (player.getY() + 1.0), (float) player.getZ()));
         messageQueue.enqueueMessage(new OrientCameraMessage((float) fpvCamera.yaw, (float) fpvCamera.pitch, 0.0f));
         messageQueue.enqueueMessage(new SetCameraParamsMessage((float) Math.toRadians(60.0), GraphicsSettings.WINDOW_WIDTH, GraphicsSettings.WINDOW_HEIGHT, 0.0625f, 768.0f));
+
+        var totalMemory = Runtime.getRuntime().totalMemory();
+        var freeMemory = Runtime.getRuntime().freeMemory();
+        var usedMemory = totalMemory - freeMemory;
+        var usedMemoryText = String.format("Memory Usage: %.2f MiB\n", usedMemory / 1024.0 / 1024.0);
+        messageQueue.enqueueMessage(new DrawLabelMessage(usedMemoryText, 3.0, 30.0, 30.0));
 
         // Application-Wide Message Dispatcher
         while (!messageQueue.isEmpty()) {

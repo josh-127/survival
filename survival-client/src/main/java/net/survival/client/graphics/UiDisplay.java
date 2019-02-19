@@ -46,7 +46,7 @@ public class UiDisplay implements GraphicsResource
             }, null);
         }
 
-        controlsToDisplay.getClass();
+        controlsToDisplay.clear();
     }
 
     private void displayRectangle(GLImmediateDrawCall drawCall, RectangleElement e) {
