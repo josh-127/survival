@@ -16,6 +16,11 @@
             <artifactId>survival-common</artifactId>
             <version>0.1.0-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>dev.josh127.libwin32</groupId>
+            <artifactId>libwin32</artifactId>
+            <version>0.1.0-SNAPSHOT</version>
+        </dependency>
         <dependency><groupId>org.lwjgl</groupId><artifactId>lwjgl</artifactId><version>3.2.1</version></dependency>
         <dependency><groupId>org.lwjgl</groupId><artifactId>lwjgl-assimp</artifactId><version>3.2.1</version></dependency>
         <dependency><groupId>org.lwjgl</groupId><artifactId>lwjgl-glfw</artifactId><version>3.2.1</version></dependency>
