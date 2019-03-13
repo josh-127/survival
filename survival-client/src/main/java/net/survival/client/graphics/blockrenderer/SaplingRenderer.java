@@ -1,5 +1,6 @@
 package net.survival.client.graphics.blockrenderer;
 
+import net.survival.blocktype.BlockID;
 import net.survival.client.graphics.opengl.GLDisplayList;
 
 class SaplingRenderer extends BlockRenderer
@@ -12,10 +13,12 @@ class SaplingRenderer extends BlockRenderer
 
     @Override
     public void pushNonCubic(int x, int y, int z, int blockID, GLDisplayList.Builder builder) {
-        var u1 = topFaceTextures.getTexCoordU1(blockID);
-        var u2 = topFaceTextures.getTexCoordU2(blockID);
-        var v1 = topFaceTextures.getTexCoordV1(blockID);
-        var v2 = topFaceTextures.getTexCoordV2(blockID);
+        var typeID = BlockID.typeIDFromFullID(blockID);
+
+        var u1 = topFaceTextures.getTexCoordU1(typeID);
+        var u2 = topFaceTextures.getTexCoordU2(typeID);
+        var v1 = topFaceTextures.getTexCoordV1(typeID);
+        var v2 = topFaceTextures.getTexCoordV2(typeID);
 
         var left  = x        + PADDING;
         var right = x + 1.0f - PADDING;

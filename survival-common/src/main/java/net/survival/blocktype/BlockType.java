@@ -71,6 +71,13 @@ public final class BlockType
                     .withTexture(BlockFace.TOP, "ProgrammerArt-v3.0/textures/blocks/cactus_top.png")
                     .withTexture(BlockFace.BOTTOM, "ProgrammerArt-v3.0/textures/blocks/cactus_bottom.png")
                     .build());
+    public static final BasicBlock OAK_SAPLING =
+            register(basicBlock()
+                    .withDisplayName("Oak Sapling")
+                    .withTextureOnAllFaces("ProgrammerArt-v3.0/textures/blocks/sapling_oak.png")
+                    .withModel(BlockModel.SAPLING)
+                    .withSolidity(false)
+                    .build());
 
     private static Block[] blocks;
     private static int blockCount = 0;
