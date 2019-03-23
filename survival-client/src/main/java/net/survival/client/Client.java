@@ -243,6 +243,9 @@ public class Client implements AutoCloseable
             }
 
             GLDisplay.pollEvents();
+
+            // TODO: This is temporary.
+            System.gc();
         }
 
         program.close();
