@@ -32,7 +32,7 @@ public class Chunk
             rawIdToFullIdMap.put(i, blockPalette[i]);
 
         for (var i = 0; i < blockPalette.length; ++i)
-            fullIdToRawIdMap.put(i, blockPalette[i]);
+            fullIdToRawIdMap.put(blockPalette[i], i);
     }
 
     private Chunk(
