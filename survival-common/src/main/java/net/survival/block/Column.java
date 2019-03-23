@@ -2,9 +2,9 @@ package net.survival.block;
 
 public class Column
 {
-    public static final int HEIGHT = 8;
+    public static final int MAX_HEIGHT = 8;
     public static final int XLENGTH = Chunk.XLENGTH;
-    public static final int YLENGTH = Chunk.YLENGTH * HEIGHT;
+    public static final int YLENGTH = Chunk.YLENGTH * MAX_HEIGHT;
     public static final int ZLENGTH = Chunk.ZLENGTH;
     public static final int BASE_AREA = XLENGTH * ZLENGTH;
     public static final int VOLUME = BASE_AREA * YLENGTH;
@@ -12,7 +12,7 @@ public class Column
     private final Chunk[] chunks;
 
     public Column() {
-        chunks = new Chunk[HEIGHT];
+        chunks = new Chunk[MAX_HEIGHT];
     }
 
     private Column(Chunk[] chunks) {
@@ -20,8 +20,8 @@ public class Column
     }
 
     public Column makeCopy() {
-        var copyOfChunks = new Chunk[HEIGHT];
-        for (var i = 0; i < HEIGHT; ++i) {
+        var copyOfChunks = new Chunk[MAX_HEIGHT];
+        for (var i = 0; i < MAX_HEIGHT; ++i) {
             if (chunks[i] != null)
                 copyOfChunks[i] = chunks[i].makeCopy();
         }
@@ -45,7 +45,7 @@ public class Column
     }
 
     public int getHeight() {
-        var topIndex = HEIGHT - 1;
+        var topIndex = MAX_HEIGHT - 1;
         while (topIndex >= 0 && chunks[topIndex] == null)
             --topIndex;
 
