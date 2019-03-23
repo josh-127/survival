@@ -10,6 +10,7 @@ class DefaultColumnDecorator extends ColumnDecorator
     private final GrasslandBiomeDecorator grasslandBiomeDecorator = new GrasslandBiomeDecorator();
     private final OceanBiomeDecorator oceanBiomeDecorator = new OceanBiomeDecorator();
     private final CactusDecorator cactusDecorator = new CactusDecorator();
+    private final SaplingDecorator saplingDecorator = new SaplingDecorator();
 
     @Override
     public void decorate(long columnPos, ColumnPrimer primer, GenLayer biomeMap) {
@@ -19,5 +20,6 @@ class DefaultColumnDecorator extends ColumnDecorator
         grasslandBiomeDecorator.decorate(columnPos, primer, biomeMap);
         oceanBiomeDecorator.decorate(columnPos, primer, biomeMap);
         cactusDecorator.decorate(columnPos, primer, biomeMap);
+        saplingDecorator.decorate(columnPos, primer, biomeMap);
     }
 }
