@@ -74,13 +74,31 @@ class ColumnDisplay implements GraphicsResource
         backFaceDisplay.close();
     }
 
-    public void display() {
+    public void displayNonCubicBlocks() {
         nonCubicDisplay.displayBlocks();
+    }
+
+    public void displayTopBlocks() {
         topFaceDisplay.displayBlocks();
+    }
+
+    public void displayBottomBlocks() {
         bottomFaceDisplay.displayBlocks();
+    }
+
+    public void displayLeftBlocks() {
         leftFaceDisplay.displayBlocks();
+    }
+
+    public void displayRightBlocks() {
         rightFaceDisplay.displayBlocks();
+    }
+
+    public void displayFrontBlocks() {
         frontFaceDisplay.displayBlocks();
+    }
+
+    public void displayBackBlocks() {
         backFaceDisplay.displayBlocks();
     }
 }

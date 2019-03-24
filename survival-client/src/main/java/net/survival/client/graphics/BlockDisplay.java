@@ -68,13 +68,72 @@ class BlockDisplay implements GraphicsResource
     private void drawColumnDisplays(HashMap<Column, ColumnDisplay> displays, Matrix4f viewMatrix) {
         for (var entry : displays.entrySet()) {
             var columnDisplay = entry.getValue();
-
             var globalX = ColumnPos.toGlobalX(columnDisplay.cx, 0);
             var globalZ = ColumnPos.toGlobalZ(columnDisplay.cz, 0);
 
             modelViewMatrix.set(viewMatrix).translate(globalX, 0.0f, globalZ);
             GLMatrixStack.load(modelViewMatrix);
-            columnDisplay.display();
+            columnDisplay.displayNonCubicBlocks();
+        }
+
+        for (var entry : displays.entrySet()) {
+            var columnDisplay = entry.getValue();
+            var globalX = ColumnPos.toGlobalX(columnDisplay.cx, 0);
+            var globalZ = ColumnPos.toGlobalZ(columnDisplay.cz, 0);
+
+            modelViewMatrix.set(viewMatrix).translate(globalX, 0.0f, globalZ);
+            GLMatrixStack.load(modelViewMatrix);
+            columnDisplay.displayTopBlocks();
+        }
+
+        for (var entry : displays.entrySet()) {
+            var columnDisplay = entry.getValue();
+            var globalX = ColumnPos.toGlobalX(columnDisplay.cx, 0);
+            var globalZ = ColumnPos.toGlobalZ(columnDisplay.cz, 0);
+
+            modelViewMatrix.set(viewMatrix).translate(globalX, 0.0f, globalZ);
+            GLMatrixStack.load(modelViewMatrix);
+            columnDisplay.displayBottomBlocks();
+        }
+
+        for (var entry : displays.entrySet()) {
+            var columnDisplay = entry.getValue();
+            var globalX = ColumnPos.toGlobalX(columnDisplay.cx, 0);
+            var globalZ = ColumnPos.toGlobalZ(columnDisplay.cz, 0);
+
+            modelViewMatrix.set(viewMatrix).translate(globalX, 0.0f, globalZ);
+            GLMatrixStack.load(modelViewMatrix);
+            columnDisplay.displayLeftBlocks();
+        }
+
+        for (var entry : displays.entrySet()) {
+            var columnDisplay = entry.getValue();
+            var globalX = ColumnPos.toGlobalX(columnDisplay.cx, 0);
+            var globalZ = ColumnPos.toGlobalZ(columnDisplay.cz, 0);
+
+            modelViewMatrix.set(viewMatrix).translate(globalX, 0.0f, globalZ);
+            GLMatrixStack.load(modelViewMatrix);
+            columnDisplay.displayRightBlocks();
+        }
+
+        for (var entry : displays.entrySet()) {
+            var columnDisplay = entry.getValue();
+            var globalX = ColumnPos.toGlobalX(columnDisplay.cx, 0);
+            var globalZ = ColumnPos.toGlobalZ(columnDisplay.cz, 0);
+
+            modelViewMatrix.set(viewMatrix).translate(globalX, 0.0f, globalZ);
+            GLMatrixStack.load(modelViewMatrix);
+            columnDisplay.displayFrontBlocks();
+        }
+
+        for (var entry : displays.entrySet()) {
+            var columnDisplay = entry.getValue();
+            var globalX = ColumnPos.toGlobalX(columnDisplay.cx, 0);
+            var globalZ = ColumnPos.toGlobalZ(columnDisplay.cz, 0);
+
+            modelViewMatrix.set(viewMatrix).translate(globalX, 0.0f, globalZ);
+            GLMatrixStack.load(modelViewMatrix);
+            columnDisplay.displayBackBlocks();
         }
     }
 
