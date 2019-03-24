@@ -91,8 +91,9 @@ public class XIntegerArray
         if (coarseIndex != nextCoarseIndex) {
             var bitsBeforeCutoff = 64 - fineIndex;
             var remainingMask = (1L << (bitsPerElement - bitsBeforeCutoff)) - 1L;
+            var remainingBytes = (value & (remainingMask << bitsBeforeCutoff)) >>> bitsBeforeCutoff;
             underlyingArray[nextCoarseIndex] &= ~remainingMask;
-            underlyingArray[nextCoarseIndex] |= value & (remainingMask << bitsBeforeCutoff);
+            underlyingArray[nextCoarseIndex] |= remainingBytes;
         }
     }
 }
