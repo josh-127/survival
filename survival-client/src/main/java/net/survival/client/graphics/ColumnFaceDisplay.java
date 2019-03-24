@@ -90,7 +90,9 @@ class ColumnFaceDisplay implements GraphicsResource
         }
 
         final var LAST_INDEX = Column.MAX_HEIGHT - 1;
-        buildTopFaces(column.getChunk(LAST_INDEX), null, LAST_INDEX * Chunk.YLENGTH, builder);
+        var topChunk = column.getChunk(LAST_INDEX);
+        if (topChunk != null)
+            buildTopFaces(topChunk, null, LAST_INDEX * Chunk.YLENGTH, builder);
 
         return builder.build();
     }
@@ -141,7 +143,10 @@ class ColumnFaceDisplay implements GraphicsResource
     private static GLDisplayList createBottomFaces(Column column, GLDisplayList.Builder builder) {
         builder.setColor(BOTTOM_FACE_SHADE, BOTTOM_FACE_SHADE, BOTTOM_FACE_SHADE);
 
-        buildBottomFaces(column.getChunk(0), null, 0, builder);
+        var bottomChunk = column.getChunk(0);
+        if (bottomChunk != null)
+            buildBottomFaces(bottomChunk, null, 0, builder);
+
         for (var i = 1; i < Column.MAX_HEIGHT; ++i) {
             var chunk = column.getChunk(i);
             var adjacentChunk = column.getChunk(i - 1);
