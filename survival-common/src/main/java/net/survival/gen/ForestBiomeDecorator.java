@@ -13,11 +13,11 @@ class ForestBiomeDecorator extends ColumnDecorator
 
     private final Random random = new Random();
 
-    private final int bedrockID = BlockType.BEDROCK.getFullID();
-    private final int stoneID = BlockType.STONE.getFullID();
-    private final int dirtID = BlockType.DIRT.getFullID();
-    private final int grassID = BlockType.GRASS_BLOCK.getFullID();
-    private final int tempSolidID = BlockType.TEMP_SOLID.getFullID();
+    private final int bedrockId = BlockType.BEDROCK.getFullId();
+    private final int stoneId = BlockType.STONE.getFullId();
+    private final int dirtId = BlockType.DIRT.getFullId();
+    private final int grassId = BlockType.GRASS_BLOCK.getFullId();
+    private final int tempSolidId = BlockType.TEMP_SOLID.getFullId();
 
     @Override
     public void decorate(long columnPos, ColumnPrimer primer, GenLayer biomeMap) {
@@ -32,13 +32,13 @@ class ForestBiomeDecorator extends ColumnDecorator
     }
 
     private void decorateStrip(int x, int z, ColumnPrimer primer) {
-        primer.setBlockFullID(x, 0, z, bedrockID);
+        primer.setBlockFullId(x, 0, z, bedrockId);
 
         var state = 0;
         var counter = MIN_DIRT_DEPTH + random.nextInt(DIRT_DEPTH_RANGE + 1);
 
         for (var y = primer.getTopLevel(x, z); y >= 1; --y) {
-            if (primer.getBlockFullID(x, y, z) != tempSolidID) {
+            if (primer.getBlockFullId(x, y, z) != tempSolidId) {
                 state = 0;
                 counter = MIN_DIRT_DEPTH + random.nextInt(DIRT_DEPTH_RANGE + 1);
                 continue;
@@ -46,13 +46,13 @@ class ForestBiomeDecorator extends ColumnDecorator
 
             switch (state) {
             case 0:
-                primer.setBlockFullID(x, y, z, grassID);
+                primer.setBlockFullId(x, y, z, grassId);
                 ++state;
                 break;
 
             case 1:
                 if (counter > 0) {
-                    primer.setBlockFullID(x, y, z, dirtID);
+                    primer.setBlockFullId(x, y, z, dirtId);
                     --counter;
 
                     if (counter == 0) {
@@ -64,7 +64,7 @@ class ForestBiomeDecorator extends ColumnDecorator
                 break;
 
             case 2:
-                primer.setBlockFullID(x, y, z, stoneID);
+                primer.setBlockFullId(x, y, z, stoneId);
                 break;
             }
         }

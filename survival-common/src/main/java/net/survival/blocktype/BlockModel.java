@@ -112,7 +112,7 @@ public enum BlockModel
         return cachedValues;
     }
 
-    public static BlockModel byID(int id) {
+    public static BlockModel byId(int id) {
         return cachedValues[id];
     }
 

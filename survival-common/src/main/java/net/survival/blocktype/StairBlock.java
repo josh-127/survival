@@ -2,13 +2,13 @@ package net.survival.blocktype;
 
 public class StairBlock extends StatefulBlock
 {
-    public StairBlock(short typeID, short encodedState, BasicBlock baseBlock) {
-        super(typeID, encodedState, baseBlock);
+    public StairBlock(short typeId, short encodedState, BasicBlock baseBlock) {
+        super(typeId, encodedState, baseBlock);
     }
 
     @Override
     protected Block withState(short encodedState) {
-        return new StairBlock(typeID, encodedState, baseBlock);
+        return new StairBlock(typeId, encodedState, baseBlock);
     }
 
     @Override
@@ -21,6 +21,6 @@ public class StairBlock extends StatefulBlock
     }
 
     public StairBlock withDirection(StairDirection as) {
-        return new StairBlock(typeID, (short) as.ordinal(), baseBlock);
+        return new StairBlock(typeId, (short) as.ordinal(), baseBlock);
     }
 }

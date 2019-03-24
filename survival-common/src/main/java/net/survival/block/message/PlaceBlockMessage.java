@@ -8,13 +8,13 @@ public class PlaceBlockMessage extends BlockMessage
     private final int x;
     private final int y;
     private final int z;
-    private final int fullID;
+    private final int fullId;
 
-    public PlaceBlockMessage(int x, int y, int z, int fullID) {
+    public PlaceBlockMessage(int x, int y, int z, int fullId) {
         this.x = x;
         this.y = y;
         this.z = z;
-        this.fullID = fullID;
+        this.fullId = fullId;
     }
 
     public int getX() {
@@ -29,8 +29,8 @@ public class PlaceBlockMessage extends BlockMessage
         return z;
     }
 
-    public int getFullID() {
-        return fullID;
+    public int getFullId() {
+        return fullId;
     }
 
     @Override

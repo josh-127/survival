@@ -33,7 +33,7 @@ public class BlockSpace implements BlockMessageVisitor
     public boolean containsColumn(int cx, int cz) { return columns.containsKey(ColumnPos.hashPos(cx, cz)); }
     public boolean containsColumn(long hashedPos) { return columns.containsKey(hashedPos); }
 
-    public int getBlockFullID(int x, int y, int z) {
+    public int getBlockFullId(int x, int y, int z) {
         var cx = ColumnPos.toColumnX(x);
         var cz = ColumnPos.toColumnZ(z);
 
@@ -44,15 +44,15 @@ public class BlockSpace implements BlockMessageVisitor
         var localX = ColumnPos.toLocalX(cx, x);
         var localZ = ColumnPos.toLocalZ(cz, z);
 
-        return column.getBlockFullID(localX, y, localZ);
+        return column.getBlockFullId(localX, y, localZ);
     }
 
-    private void setBlockFullID(int x, int y, int z, int to) {
+    private void setBlockFullId(int x, int y, int z, int to) {
         var column = getColumnFromGlobalPos(x, z, "Cannot place/replace a block in an unloaded column.");
         var localX = ColumnPos.toLocalX(ColumnPos.toColumnX(x), x);
         var localZ = ColumnPos.toLocalZ(ColumnPos.toColumnZ(z), z);
 
-        column.setBlockFullID(localX, y, localZ, to);
+        column.setBlockFullId(localX, y, localZ, to);
     }
 
     private Column getColumnFromGlobalPos(int x, int z, String exceptionMessage) {
@@ -79,14 +79,14 @@ public class BlockSpace implements BlockMessageVisitor
 
     @Override
     public void visit(InteractionContext ic, BreakBlockMessage message) {
-        setBlockFullID(message.getX(), message.getY(), message.getZ(), 0);
+        setBlockFullId(message.getX(), message.getY(), message.getZ(), 0);
         invalidateColumn(ic, message.getX(), message.getZ());
         ic.burstParticles(message.getX() + 0.5, message.getY() + 0.5, message.getZ() + 0.5, 2.0, 8);
     }
 
     @Override
     public void visit(InteractionContext ic, PlaceBlockMessage message) {
-        setBlockFullID(message.getX(), message.getY(), message.getZ(), message.getFullID());
+        setBlockFullId(message.getX(), message.getY(), message.getZ(), message.getFullId());
         invalidateColumn(ic, message.getX(), message.getZ());
     }
 

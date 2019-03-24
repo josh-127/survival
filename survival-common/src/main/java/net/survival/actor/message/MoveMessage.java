@@ -8,8 +8,8 @@ public class MoveMessage extends ActorMessage
     private final double dx;
     private final double dz;
 
-    public MoveMessage(int destActorID, double dx, double dz) {
-        super(destActorID);
+    public MoveMessage(int destActorId, double dx, double dz) {
+        super(destActorId);
         this.dx = dx;
         this.dz = dz;
     }

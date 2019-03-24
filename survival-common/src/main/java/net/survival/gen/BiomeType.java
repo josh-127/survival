@@ -5,37 +5,37 @@ import net.survival.blocktype.BlockType;
 public enum BiomeType
 {
     OCEAN((bt) -> {
-        bt.topBlockID = BlockType.DIRT.getFullID();
+        bt.topBlockId = BlockType.DIRT.getFullId();
         bt.minElevation = 48.0;
         bt.maxElevation = 60.0;
         bt.biomeViewerColor = 0x000000FF;
     }),
     GRASSLAND((bt) -> {
-        bt.topBlockID = BlockType.GRASS_BLOCK.getFullID();
+        bt.topBlockId = BlockType.GRASS_BLOCK.getFullId();
         bt.minElevation = 64.0;
         bt.maxElevation = 96.0;
         bt.biomeViewerColor = 0x0000FF00;
     }),
     FOREST((bt) -> {
-        bt.topBlockID = BlockType.GRASS_BLOCK.getFullID();
+        bt.topBlockId = BlockType.GRASS_BLOCK.getFullId();
         bt.minElevation = 64.0;
         bt.maxElevation = 96.0;
         bt.biomeViewerColor = 0x00009F00;
     }),
     EXTREME_HILLS((bt) -> {
-        bt.topBlockID = BlockType.GRASS_BLOCK.getFullID();
+        bt.topBlockId = BlockType.GRASS_BLOCK.getFullId();
         bt.minElevation = 72.0;
         bt.maxElevation = 192.0;
         bt.biomeViewerColor = 0x00FF7F00;
     }),
     DESERT((bt) -> {
-        bt.topBlockID = BlockType.SAND.getFullID();
+        bt.topBlockId = BlockType.SAND.getFullId();
         bt.minElevation = 64.0;
         bt.maxElevation = 72.0;
         bt.biomeViewerColor = 0x00FFFF00;
     }),
     TUNDRA((bt) -> {
-        bt.topBlockID = BlockType.GRASS_BLOCK.getFullID();
+        bt.topBlockId = BlockType.GRASS_BLOCK.getFullId();
         bt.minElevation = 72.0;
         bt.maxElevation = 96.0;
         bt.biomeViewerColor = 0x0000FFFF;
@@ -43,7 +43,7 @@ public enum BiomeType
 
     private static final BiomeType[] cachedValues = values();
 
-    private int topBlockID;
+    private int topBlockId;
 
     private double minElevation;
     private double maxElevation;
@@ -51,7 +51,7 @@ public enum BiomeType
     private int biomeViewerColor;
 
     private BiomeType(Builder builder) {
-        topBlockID = BlockType.STONE.getFullID();
+        topBlockId = BlockType.STONE.getFullId();
         minElevation = 0.0;
         maxElevation = 1.0;
         builder.build(this);
@@ -61,12 +61,12 @@ public enum BiomeType
         return cachedValues;
     }
 
-    public static BiomeType byID(int id) {
+    public static BiomeType byId(int id) {
         return cachedValues[id];
     }
 
-    public int getTopBlockID() {
-        return topBlockID;
+    public int getTopBlockId() {
+        return topBlockId;
     }
 
     public double getMinElevation() {

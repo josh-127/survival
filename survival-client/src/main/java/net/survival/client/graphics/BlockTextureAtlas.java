@@ -23,7 +23,7 @@ public class BlockTextureAtlas implements GraphicsResource
             if (block.getTexture(blockFace) == null)
                 continue;
 
-            var dstIndex = block.getTypeID();
+            var dstIndex = block.getTypeId();
             var dstX = (dstIndex % 16) * 16;
             var dstY = (dstIndex / 16) * 16;
             var blockBitmap = Bitmap.fromFile(
@@ -68,19 +68,19 @@ public class BlockTextureAtlas implements GraphicsResource
         blockTextures.close();
     }
 
-    public float getTexCoordU1(int blockID) {
-        return texCoords[blockID << 2];
+    public float getTexCoordU1(int blockId) {
+        return texCoords[blockId << 2];
     }
 
-    public float getTexCoordV1(int blockID) {
-        return texCoords[(blockID << 2) + 1];
+    public float getTexCoordV1(int blockId) {
+        return texCoords[(blockId << 2) + 1];
     }
 
-    public float getTexCoordU2(int blockID) {
-        return texCoords[(blockID << 2) + 2];
+    public float getTexCoordU2(int blockId) {
+        return texCoords[(blockId << 2) + 2];
     }
 
-    public float getTexCoordV2(int blockID) {
-        return texCoords[(blockID << 2) + 3];
+    public float getTexCoordV2(int blockId) {
+        return texCoords[(blockId << 2) + 3];
     }
 }

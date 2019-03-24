@@ -43,7 +43,7 @@ class LocalInteractionContext implements InteractionContext
 
     @Override
     public Block getBlock(int x, int y, int z) {
-        return BlockType.byFullID(blockSpace.getBlockFullID(x, y, z));
+        return BlockType.byFullId(blockSpace.getBlockFullId(x, y, z));
     }
 
     @Override

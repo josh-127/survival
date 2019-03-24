@@ -2,13 +2,13 @@ package net.survival.blocktype;
 
 public class SlabBlock extends StatefulBlock
 {
-    public SlabBlock(short typeID, short encodedState, BasicBlock baseBlock) {
-        super(typeID, encodedState, baseBlock);
+    public SlabBlock(short typeId, short encodedState, BasicBlock baseBlock) {
+        super(typeId, encodedState, baseBlock);
     }
 
     @Override
     protected Block withState(short encodedState) {
-        return new SlabBlock(typeID, encodedState, baseBlock);
+        return new SlabBlock(typeId, encodedState, baseBlock);
     }
 
     @Override
@@ -21,6 +21,6 @@ public class SlabBlock extends StatefulBlock
     }
 
     public SlabBlock withSlabPosition(SlabPosition as) {
-        return new SlabBlock(typeID, (short) as.ordinal(), baseBlock);
+        return new SlabBlock(typeId, (short) as.ordinal(), baseBlock);
     }
 }

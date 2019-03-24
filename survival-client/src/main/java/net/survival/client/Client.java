@@ -67,7 +67,7 @@ public class Client implements AutoCloseable
     private final MessageQueue messageQueue = new MessageQueue();
     private final LocalInteractionContext interactionContext;
 
-    private final int playerID;
+    private final int playerId;
     private final Actor player;
 
     private static final double SAVE_INTERVAL = 10.0;
@@ -81,8 +81,8 @@ public class Client implements AutoCloseable
         interactionContext = new LocalInteractionContext(
                 actorSpace, blockSpace, particleSpace, messageQueue);
 
-        playerID = actorSpace.addActor(new PlayerActor(60.0, 96.0, 20.0));
-        player = actorSpace.getActor(playerID);
+        playerId = actorSpace.addActor(new PlayerActor(60.0, 96.0, 20.0));
+        player = actorSpace.getActor(playerId);
 
         compositeDisplay = new CompositeDisplay(
                 particleSpace, GraphicsSettings.WINDOW_WIDTH, GraphicsSettings.WINDOW_HEIGHT);
@@ -105,8 +105,8 @@ public class Client implements AutoCloseable
         if (Keyboard.isKeyDown(Key.D)) { jsX += Math.sin(camYaw + PI / 2.0); jsZ -= Math.cos(camYaw + PI / 2.0); }
 
         fpvCamera.rotate(-cursorDX / 128.0, -cursorDY / 128.0);
-        messageQueue.enqueueMessage(new MoveMessage(playerID, jsX, jsZ));
-        if (Keyboard.isKeyPressed(Key.SPACE)) messageQueue.enqueueMessage(new JumpMessage(playerID));
+        messageQueue.enqueueMessage(new MoveMessage(playerId, jsX, jsZ));
+        if (Keyboard.isKeyPressed(Key.SPACE)) messageQueue.enqueueMessage(new JumpMessage(playerId));
 
         // Loading/Saving Columns
         var cx = ColumnPos.toColumnX((int) Math.floor(player.getX()));
@@ -126,9 +126,9 @@ public class Client implements AutoCloseable
         // Misc. Setup
         interactionContext.setElapsedTime(elapsedTime);
         for (var entry : actorSpace.iterateActorMap()) {
-            var actorID = entry.getKey();
-            messageQueue.enqueueMessage(new StepMessage(actorID));
-            messageQueue.enqueueMessage(new DrawMessage(actorID));
+            var actorId = entry.getKey();
+            messageQueue.enqueueMessage(new StepMessage(actorId));
+            messageQueue.enqueueMessage(new DrawMessage(actorId));
         }
 
         messageQueue.enqueueMessage(new MoveCameraMessage((float) player.getX(), (float) (player.getY() + 1.0), (float) player.getZ()));
@@ -148,8 +148,8 @@ public class Client implements AutoCloseable
             m.accept(new MessageVisitor() {
                 @Override
                 public void visit(InteractionContext ic, ActorMessage message) {
-                    var actorID = message.getDestActorID();
-                    var actor = actorSpace.getActor(actorID);
+                    var actorId = message.getDestActorId();
+                    var actor = actorSpace.getActor(actorId);
                     message.accept(actor, ic);
                 }
 
@@ -264,7 +264,7 @@ public class Client implements AutoCloseable
                 py += DELTA * Math.sin(fpvCamera.pitch);
                 pz -= DELTA * Math.cos(fpvCamera.yaw) * Math.cos(fpvCamera.pitch);
                 var pxi = (int) Math.floor(px); var pyi = (int) Math.floor(py); var pzi = (int) Math.floor(pz);
-                if (blockSpace.getBlockFullID(pxi, pyi, pzi) != 0) {
+                if (blockSpace.getBlockFullId(pxi, pyi, pzi) != 0) {
                     if (Mouse.isLmbPressed()) messageQueue.enqueueMessage(new BreakBlockMessage(pxi, pyi, pzi));
                     break;
                 }

@@ -1,6 +1,6 @@
 package net.survival.client.graphics.blockrenderer;
 
-import net.survival.blocktype.BlockID;
+import net.survival.blocktype.BlockId;
 import net.survival.client.graphics.opengl.GLDisplayList;
 
 class PressurePlateRenderer extends BlockRenderer
@@ -16,20 +16,20 @@ class PressurePlateRenderer extends BlockRenderer
     }
 
     @Override
-    public void pushTopFaces(int x, int y, int z, int blockID, int adjacentBlockID,
+    public void pushTopFaces(int x, int y, int z, int blockId, int adjacentBlockId,
             GLDisplayList.Builder builder)
     {
-        if (blockToBlockingBottomTable[BlockID.typeIDFromFullID(adjacentBlockID)])
+        if (blockToBlockingBottomTable[BlockId.typeIdFromFullId(adjacentBlockId)])
             return;
 
         var left = x + PADDING;
         var right = x + 1.0f - PADDING;
         var back = z + PADDING;
         var front = z + 1.0f - PADDING;
-        var u1 = topFaceTextures.getTexCoordU1(blockID);
-        var u2 = topFaceTextures.getTexCoordU2(blockID);
-        var v1 = topFaceTextures.getTexCoordV1(blockID);
-        var v2 = topFaceTextures.getTexCoordV2(blockID);
+        var u1 = topFaceTextures.getTexCoordU1(blockId);
+        var u2 = topFaceTextures.getTexCoordU2(blockId);
+        var v1 = topFaceTextures.getTexCoordV1(blockId);
+        var v2 = topFaceTextures.getTexCoordV2(blockId);
         builder.setTexCoord(u1, v1); builder.pushVertex(left,  y + height, front);
         builder.setTexCoord(u2, v1); builder.pushVertex(right, y + height, front);
         builder.setTexCoord(u2, v2); builder.pushVertex(right, y + height, back );
@@ -39,20 +39,20 @@ class PressurePlateRenderer extends BlockRenderer
     }
 
     @Override
-    public void pushBottomFaces(int x, int y, int z, int blockID, int adjacentBlockID,
+    public void pushBottomFaces(int x, int y, int z, int blockId, int adjacentBlockId,
             GLDisplayList.Builder builder)
     {
-        if (blockToBlockingTopTable[BlockID.typeIDFromFullID(adjacentBlockID)])
+        if (blockToBlockingTopTable[BlockId.typeIdFromFullId(adjacentBlockId)])
             return;
 
         var left = x + PADDING;
         var right = x + 1.0f - PADDING;
         var back = z + PADDING;
         var front = z + 1.0f - PADDING;
-        var u1 = bottomFaceTextures.getTexCoordU1(blockID);
-        var u2 = bottomFaceTextures.getTexCoordU2(blockID);
-        var v1 = bottomFaceTextures.getTexCoordV1(blockID);
-        var v2 = bottomFaceTextures.getTexCoordV2(blockID);
+        var u1 = bottomFaceTextures.getTexCoordU1(blockId);
+        var u2 = bottomFaceTextures.getTexCoordU2(blockId);
+        var v1 = bottomFaceTextures.getTexCoordV1(blockId);
+        var v2 = bottomFaceTextures.getTexCoordV2(blockId);
         builder.setTexCoord(u1, v1); builder.pushVertex(left,  y, back );
         builder.setTexCoord(u2, v1); builder.pushVertex(right, y, back );
         builder.setTexCoord(u2, v2); builder.pushVertex(right, y, front);
@@ -62,19 +62,19 @@ class PressurePlateRenderer extends BlockRenderer
     }
 
     @Override
-    public void pushLeftFaces(int x, int y, int z, int blockID, int adjacentBlockID,
+    public void pushLeftFaces(int x, int y, int z, int blockId, int adjacentBlockId,
             GLDisplayList.Builder builder)
     {
-        if (blockToBlockingRightTable[BlockID.typeIDFromFullID(adjacentBlockID)])
+        if (blockToBlockingRightTable[BlockId.typeIdFromFullId(adjacentBlockId)])
             return;
 
         var left = x + PADDING;
         var back = z + PADDING;
         var front = z + 1.0f - PADDING;
-        var u1 = leftFaceTextures.getTexCoordU1(blockID);
-        var u2 = leftFaceTextures.getTexCoordU2(blockID);
-        var v1 = leftFaceTextures.getTexCoordV1(blockID);
-        var v2 = leftFaceTextures.getTexCoordV2(blockID);
+        var u1 = leftFaceTextures.getTexCoordU1(blockId);
+        var u2 = leftFaceTextures.getTexCoordU2(blockId);
+        var v1 = leftFaceTextures.getTexCoordV1(blockId);
+        var v2 = leftFaceTextures.getTexCoordV2(blockId);
         builder.setTexCoord(u1, v1); builder.pushVertex(left, y,          back );
         builder.setTexCoord(u2, v1); builder.pushVertex(left, y,          front);
         builder.setTexCoord(u2, v2); builder.pushVertex(left, y + height, front);
@@ -84,19 +84,19 @@ class PressurePlateRenderer extends BlockRenderer
     }
 
     @Override
-    public void pushRightFaces(int x, int y, int z, int blockID, int adjacentBlockID,
+    public void pushRightFaces(int x, int y, int z, int blockId, int adjacentBlockId,
             GLDisplayList.Builder builder)
     {
-        if (blockToBlockingLeftTable[BlockID.typeIDFromFullID(adjacentBlockID)])
+        if (blockToBlockingLeftTable[BlockId.typeIdFromFullId(adjacentBlockId)])
             return;
 
         var right = x + 1.0f - PADDING;
         var back = z + PADDING;
         var front = z + 1.0f - PADDING;
-        var u1 = rightFaceTextures.getTexCoordU1(blockID);
-        var u2 = rightFaceTextures.getTexCoordU2(blockID);
-        var v1 = rightFaceTextures.getTexCoordV1(blockID);
-        var v2 = rightFaceTextures.getTexCoordV2(blockID);
+        var u1 = rightFaceTextures.getTexCoordU1(blockId);
+        var u2 = rightFaceTextures.getTexCoordU2(blockId);
+        var v1 = rightFaceTextures.getTexCoordV1(blockId);
+        var v2 = rightFaceTextures.getTexCoordV2(blockId);
         builder.setTexCoord(u1, v1); builder.pushVertex(right, y,          front);
         builder.setTexCoord(u2, v1); builder.pushVertex(right, y,          back );
         builder.setTexCoord(u2, v2); builder.pushVertex(right, y + height, back );
@@ -106,19 +106,19 @@ class PressurePlateRenderer extends BlockRenderer
     }
 
     @Override
-    public void pushFrontFaces(int x, int y, int z, int blockID, int adjacentBlockID,
+    public void pushFrontFaces(int x, int y, int z, int blockId, int adjacentBlockId,
             GLDisplayList.Builder builder)
     {
-        if (blockToBlockingBackTable[BlockID.typeIDFromFullID(adjacentBlockID)])
+        if (blockToBlockingBackTable[BlockId.typeIdFromFullId(adjacentBlockId)])
             return;
 
         var left = x + PADDING;
         var right = x + 1.0f - PADDING;
         var front = z + 1.0f - PADDING;
-        var u1 = frontFaceTextures.getTexCoordU1(blockID);
-        var u2 = frontFaceTextures.getTexCoordU2(blockID);
-        var v1 = frontFaceTextures.getTexCoordV1(blockID);
-        var v2 = frontFaceTextures.getTexCoordV2(blockID);
+        var u1 = frontFaceTextures.getTexCoordU1(blockId);
+        var u2 = frontFaceTextures.getTexCoordU2(blockId);
+        var v1 = frontFaceTextures.getTexCoordV1(blockId);
+        var v2 = frontFaceTextures.getTexCoordV2(blockId);
         builder.setTexCoord(u1, v1); builder.pushVertex(left,  y,          front);
         builder.setTexCoord(u2, v1); builder.pushVertex(right, y,          front);
         builder.setTexCoord(u2, v2); builder.pushVertex(right, y + height, front);
@@ -128,19 +128,19 @@ class PressurePlateRenderer extends BlockRenderer
     }
 
     @Override
-    public void pushBackFaces(int x, int y, int z, int blockID, int adjacentBlockID,
+    public void pushBackFaces(int x, int y, int z, int blockId, int adjacentBlockId,
             GLDisplayList.Builder builder)
     {
-        if (blockToBlockingFrontTable[BlockID.typeIDFromFullID(adjacentBlockID)])
+        if (blockToBlockingFrontTable[BlockId.typeIdFromFullId(adjacentBlockId)])
             return;
 
         var left = x + PADDING;
         var right = x + 1.0f - PADDING;
         var back = z + PADDING;
-        var u1 = backFaceTextures.getTexCoordU1(blockID);
-        var u2 = backFaceTextures.getTexCoordU2(blockID);
-        var v1 = backFaceTextures.getTexCoordV1(blockID);
-        var v2 = backFaceTextures.getTexCoordV2(blockID);
+        var u1 = backFaceTextures.getTexCoordU1(blockId);
+        var u2 = backFaceTextures.getTexCoordU2(blockId);
+        var v1 = backFaceTextures.getTexCoordV1(blockId);
+        var v2 = backFaceTextures.getTexCoordV2(blockId);
         builder.setTexCoord(u1, v1); builder.pushVertex(right, y,          back);
         builder.setTexCoord(u2, v1); builder.pushVertex(left,  y,          back);
         builder.setTexCoord(u2, v2); builder.pushVertex(left,  y + height, back);

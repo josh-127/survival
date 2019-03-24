@@ -61,36 +61,36 @@ public class Chunk
         return rawIdToFullIdMap.toIntArray();
     }
 
-    public int getBlockFullID(int index) {
+    public int getBlockFullId(int index) {
         return rawIdToFullIdMap.getInt((int) rawData.get(index));
     }
 
-    public int getBlockFullID(int x, int y, int z) {
-        return getBlockFullID(localPositionToIndex(x, y, z));
+    public int getBlockFullId(int x, int y, int z) {
+        return getBlockFullId(localPositionToIndex(x, y, z));
     }
 
-    public void setBlockFullID(int index, int to) {
+    public void setBlockFullId(int index, int to) {
         if (fullIdToRawIdMap.containsKey(to)) {
             rawData.set(index, fullIdToRawIdMap.get(to));
         }
         else {
-            var newRawID = fullIdToRawIdMap.size();
-            fullIdToRawIdMap.put(to, newRawID);
+            var newRawId = fullIdToRawIdMap.size();
+            fullIdToRawIdMap.put(to, newRawId);
             rawIdToFullIdMap.add(to);
 
-            if (!rawData.isValidValue(newRawID)) {
+            if (!rawData.isValidValue(newRawId)) {
                 rawData = rawData.getResized(rawData.bitsPerElement + 1);
 
                 // TODO: Perform garbage collection on the block palette.
             }
 
-            rawData.set(index, newRawID);
+            rawData.set(index, newRawId);
         }
     }
 
-    public void setBlockFullID(int x, int y, int z, int to) {
+    public void setBlockFullId(int x, int y, int z, int to) {
         var index = localPositionToIndex(x, y, z);
-        setBlockFullID(index, to);
+        setBlockFullId(index, to);
     }
 
     public int localPositionToIndex(int x, int y, int z) {

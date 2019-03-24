@@ -12,13 +12,13 @@ class FenceRenderer extends BlockRenderer
     }
 
     @Override
-    public void pushTopFaces(int x, int y, int z, int blockID, int adjacentBlockID,
+    public void pushTopFaces(int x, int y, int z, int blockId, int adjacentBlockId,
             GLDisplayList.Builder builder)
     {
-        var u1 = topFaceTextures.getTexCoordU1(blockID);
-        var u2 = topFaceTextures.getTexCoordU2(blockID);
-        var v1 = topFaceTextures.getTexCoordV1(blockID);
-        var v2 = topFaceTextures.getTexCoordV2(blockID);
+        var u1 = topFaceTextures.getTexCoordU1(blockId);
+        var u2 = topFaceTextures.getTexCoordU2(blockId);
+        var v1 = topFaceTextures.getTexCoordV1(blockId);
+        var v2 = topFaceTextures.getTexCoordV2(blockId);
 
         var left  = x        + PADDING;
         var right = x + 1.0f - PADDING;
@@ -34,13 +34,13 @@ class FenceRenderer extends BlockRenderer
     }
 
     @Override
-    public void pushBottomFaces(int x, int y, int z, int blockID, int adjacentBlockID,
+    public void pushBottomFaces(int x, int y, int z, int blockId, int adjacentBlockId,
             GLDisplayList.Builder builder)
     {
-        var u1 = topFaceTextures.getTexCoordU1(blockID);
-        var u2 = topFaceTextures.getTexCoordU2(blockID);
-        var v1 = topFaceTextures.getTexCoordV1(blockID);
-        var v2 = topFaceTextures.getTexCoordV2(blockID);
+        var u1 = topFaceTextures.getTexCoordU1(blockId);
+        var u2 = topFaceTextures.getTexCoordU2(blockId);
+        var v1 = topFaceTextures.getTexCoordV1(blockId);
+        var v2 = topFaceTextures.getTexCoordV2(blockId);
 
         var left  = x        + PADDING;
         var right = x + 1.0f - PADDING;
@@ -56,13 +56,13 @@ class FenceRenderer extends BlockRenderer
     }
 
     @Override
-    public void pushLeftFaces(int x, int y, int z, int blockID, int adjacentBlockID,
+    public void pushLeftFaces(int x, int y, int z, int blockId, int adjacentBlockId,
             GLDisplayList.Builder builder)
     {
-        var u1 = topFaceTextures.getTexCoordU1(blockID);
-        var u2 = topFaceTextures.getTexCoordU2(blockID);
-        var v1 = topFaceTextures.getTexCoordV1(blockID);
-        var v2 = topFaceTextures.getTexCoordV2(blockID);
+        var u1 = topFaceTextures.getTexCoordU1(blockId);
+        var u2 = topFaceTextures.getTexCoordU2(blockId);
+        var v1 = topFaceTextures.getTexCoordV1(blockId);
+        var v2 = topFaceTextures.getTexCoordV2(blockId);
 
         var left  = x        + PADDING;
         var back  = z        + PADDING;
@@ -77,13 +77,13 @@ class FenceRenderer extends BlockRenderer
     }
 
     @Override
-    public void pushRightFaces(int x, int y, int z, int blockID, int adjacentBlockID,
+    public void pushRightFaces(int x, int y, int z, int blockId, int adjacentBlockId,
             GLDisplayList.Builder builder)
     {
-        var u1 = topFaceTextures.getTexCoordU1(blockID);
-        var u2 = topFaceTextures.getTexCoordU2(blockID);
-        var v1 = topFaceTextures.getTexCoordV1(blockID);
-        var v2 = topFaceTextures.getTexCoordV2(blockID);
+        var u1 = topFaceTextures.getTexCoordU1(blockId);
+        var u2 = topFaceTextures.getTexCoordU2(blockId);
+        var v1 = topFaceTextures.getTexCoordV1(blockId);
+        var v2 = topFaceTextures.getTexCoordV2(blockId);
 
         var right = x + 1.0f - PADDING;
         var back  = z        + PADDING;
@@ -98,13 +98,13 @@ class FenceRenderer extends BlockRenderer
     }
 
     @Override
-    public void pushFrontFaces(int x, int y, int z, int blockID, int adjacentBlockID,
+    public void pushFrontFaces(int x, int y, int z, int blockId, int adjacentBlockId,
             GLDisplayList.Builder builder)
     {
-        var u1 = topFaceTextures.getTexCoordU1(blockID);
-        var u2 = topFaceTextures.getTexCoordU2(blockID);
-        var v1 = topFaceTextures.getTexCoordV1(blockID);
-        var v2 = topFaceTextures.getTexCoordV2(blockID);
+        var u1 = topFaceTextures.getTexCoordU1(blockId);
+        var u2 = topFaceTextures.getTexCoordU2(blockId);
+        var v1 = topFaceTextures.getTexCoordV1(blockId);
+        var v2 = topFaceTextures.getTexCoordV2(blockId);
 
         var left  = x        + PADDING;
         var right = x + 1.0f - PADDING;
@@ -119,13 +119,13 @@ class FenceRenderer extends BlockRenderer
     }
 
     @Override
-    public void pushBackFaces(int x, int y, int z, int blockID, int adjacentBlockID,
+    public void pushBackFaces(int x, int y, int z, int blockId, int adjacentBlockId,
             GLDisplayList.Builder builder)
     {
-        var u1 = topFaceTextures.getTexCoordU1(blockID);
-        var u2 = topFaceTextures.getTexCoordU2(blockID);
-        var v1 = topFaceTextures.getTexCoordV1(blockID);
-        var v2 = topFaceTextures.getTexCoordV2(blockID);
+        var u1 = topFaceTextures.getTexCoordU1(blockId);
+        var u2 = topFaceTextures.getTexCoordU2(blockId);
+        var v1 = topFaceTextures.getTexCoordV1(blockId);
+        var v2 = topFaceTextures.getTexCoordV2(blockId);
 
         var left  = x        + PADDING;
         var right = x + 1.0f - PADDING;

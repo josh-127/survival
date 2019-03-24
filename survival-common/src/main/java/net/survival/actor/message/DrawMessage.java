@@ -5,8 +5,8 @@ import net.survival.interaction.MessagePriority;
 
 public class DrawMessage extends ActorMessage
 {
-    public DrawMessage(int destActorID) {
-        super(destActorID);
+    public DrawMessage(int destActorId) {
+        super(destActorId);
     }
 
     @Override

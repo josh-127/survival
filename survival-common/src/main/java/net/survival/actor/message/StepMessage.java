@@ -5,8 +5,8 @@ import net.survival.interaction.MessagePriority;
 
 public class StepMessage extends ActorMessage
 {
-    public StepMessage(int destActorID) {
-        super(destActorID);
+    public StepMessage(int destActorId) {
+        super(destActorId);
     }
 
     @Override

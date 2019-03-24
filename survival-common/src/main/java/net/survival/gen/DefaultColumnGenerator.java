@@ -41,8 +41,8 @@ public class DefaultColumnGenerator implements ColumnProvider
     private final DefaultColumnDecorator columnDecorator;
 
     private final ColumnPrimer columnPrimer;
-    private final int tempSolidID;
-    private final int waterID;
+    private final int tempSolidId;
+    private final int waterId;
 
     public DefaultColumnGenerator(long seed) {
         mainNoiseGenerator = new ImprovedNoiseGenerator3D(MAIN_NOISE_XSCALE, MAIN_NOISE_YSCALE,
@@ -60,8 +60,8 @@ public class DefaultColumnGenerator implements ColumnProvider
         columnDecorator = new DefaultColumnDecorator();
 
         columnPrimer = new ColumnPrimer();
-        tempSolidID = BlockType.TEMP_SOLID.getFullID();
-        waterID = BlockType.WATER.getFullID();
+        tempSolidId = BlockType.TEMP_SOLID.getFullId();
+        waterId = BlockType.WATER.getFullId();
     }
 
     @Override
@@ -102,9 +102,9 @@ public class DefaultColumnGenerator implements ColumnProvider
                     var threshold = (y - minElevation) / elevationRange;
 
                     if (density >= threshold)
-                        columnPrimer.setBlockFullID(x, y, z, tempSolidID);
+                        columnPrimer.setBlockFullId(x, y, z, tempSolidId);
                     else if (y <= OCEAN_LEVEL)
-                        columnPrimer.setBlockFullID(x, y, z, waterID);
+                        columnPrimer.setBlockFullId(x, y, z, waterId);
                 }
             }
         }
@@ -123,7 +123,7 @@ public class DefaultColumnGenerator implements ColumnProvider
 
                 for (var subZ = 0; subZ < BIOME_TRANSITION_ZLENGTH; ++subZ) {
                     for (var subX = 0; subX < BIOME_TRANSITION_XLENGTH; ++subX) {
-                        var biome = BiomeType.byID(genLayer.sampleNearest(x + subX, z + subZ));
+                        var biome = BiomeType.byId(genLayer.sampleNearest(x + subX, z + subZ));
                         avgMinElevation += biome.getMinElevation();
                         avgMaxElevation += biome.getMaxElevation();
                     }

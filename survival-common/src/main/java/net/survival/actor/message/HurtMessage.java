@@ -7,8 +7,8 @@ public class HurtMessage extends ActorMessage
 {
     private final double amount;
 
-    public HurtMessage(int destActorID, double amount) {
-        super(destActorID);
+    public HurtMessage(int destActorId, double amount) {
+        super(destActorId);
         this.amount = amount;
     }
 

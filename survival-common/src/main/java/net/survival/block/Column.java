@@ -52,23 +52,23 @@ public class Column
         return topIndex + 1;
     }
 
-    public int getBlockFullID(int x, int y, int z) {
+    public int getBlockFullId(int x, int y, int z) {
         var index = y / Chunk.YLENGTH;
 
         if (chunks[index] == null)
             return 0;
 
-        return chunks[index].getBlockFullID(x, y % Chunk.YLENGTH, z);
+        return chunks[index].getBlockFullId(x, y % Chunk.YLENGTH, z);
     }
 
-    public void setBlockFullID(int x, int y, int z, int to) {
+    public void setBlockFullId(int x, int y, int z, int to) {
         var index = y / Chunk.YLENGTH;
 
         if (chunks[index] == null) {
             chunks[index] = new Chunk();
         }
 
-        chunks[index].setBlockFullID(x, y % Chunk.YLENGTH, z, to);
+        chunks[index].setBlockFullId(x, y % Chunk.YLENGTH, z, to);
     }
 
     public boolean isInBounds(int lx, int ly, int lz) {

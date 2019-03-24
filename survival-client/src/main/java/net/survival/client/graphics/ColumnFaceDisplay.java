@@ -108,11 +108,11 @@ class ColumnFaceDisplay implements GraphicsResource
             var z = (i / Chunk.XLENGTH) % Chunk.ZLENGTH;
             var y = i / Chunk.BASE_AREA;
 
-            var blockID = chunk.getBlockFullID(i);
-            var adjacentBlockID = chunk.getBlockFullID(i + Chunk.BASE_AREA);
+            var blockId = chunk.getBlockFullId(i);
+            var adjacentBlockId = chunk.getBlockFullId(i + Chunk.BASE_AREA);
 
-            BlockRenderer.byFullID(blockID).pushTopFaces(
-                    x, y + offset, z, blockID, adjacentBlockID, builder);
+            BlockRenderer.byFullId(blockId).pushTopFaces(
+                    x, y + offset, z, blockId, adjacentBlockId, builder);
         }
 
         if (adjacentChunk == null) {
@@ -120,10 +120,10 @@ class ColumnFaceDisplay implements GraphicsResource
                 var x = i % Chunk.XLENGTH;
                 var z = (i / Chunk.XLENGTH) % Chunk.ZLENGTH;
 
-                var blockID = chunk.getBlockFullID(i + Chunk.VOLUME - Chunk.BASE_AREA);
+                var blockId = chunk.getBlockFullId(i + Chunk.VOLUME - Chunk.BASE_AREA);
 
-                BlockRenderer.byFullID(blockID).pushTopFaces(
-                        x, (Chunk.YLENGTH - 1) + offset, z, blockID, 0, builder);
+                BlockRenderer.byFullId(blockId).pushTopFaces(
+                        x, (Chunk.YLENGTH - 1) + offset, z, blockId, 0, builder);
             }
         }
         else {
@@ -131,11 +131,11 @@ class ColumnFaceDisplay implements GraphicsResource
                 var x = i % Chunk.XLENGTH;
                 var z = (i / Chunk.XLENGTH) % Chunk.ZLENGTH;
 
-                var blockID = chunk.getBlockFullID(i + Chunk.VOLUME - Chunk.BASE_AREA);
-                var adjacentBlockID = adjacentChunk.getBlockFullID(i);
+                var blockId = chunk.getBlockFullId(i + Chunk.VOLUME - Chunk.BASE_AREA);
+                var adjacentBlockId = adjacentChunk.getBlockFullId(i);
 
-                BlockRenderer.byFullID(blockID).pushTopFaces(
-                        x, (Chunk.YLENGTH - 1) + offset, z, blockID, adjacentBlockID, builder);
+                BlockRenderer.byFullId(blockId).pushTopFaces(
+                        x, (Chunk.YLENGTH - 1) + offset, z, blockId, adjacentBlockId, builder);
             }
         }
     }
@@ -168,11 +168,11 @@ class ColumnFaceDisplay implements GraphicsResource
             var z = (i / Chunk.XLENGTH) % Chunk.ZLENGTH;
             var y = i / Chunk.BASE_AREA;
 
-            var blockID = chunk.getBlockFullID(i);
-            var adjacentBlockID = chunk.getBlockFullID(i - Chunk.BASE_AREA);
+            var blockId = chunk.getBlockFullId(i);
+            var adjacentBlockId = chunk.getBlockFullId(i - Chunk.BASE_AREA);
 
-            BlockRenderer.byFullID(blockID).pushBottomFaces(
-                    x, y + offset, z, blockID, adjacentBlockID, builder);
+            BlockRenderer.byFullId(blockId).pushBottomFaces(
+                    x, y + offset, z, blockId, adjacentBlockId, builder);
         }
 
         if (adjacentChunk == null) {
@@ -180,10 +180,10 @@ class ColumnFaceDisplay implements GraphicsResource
                 var x = i % Chunk.XLENGTH;
                 var z = (i / Chunk.XLENGTH) % Chunk.ZLENGTH;
 
-                var blockID = chunk.getBlockFullID(i);
+                var blockId = chunk.getBlockFullId(i);
 
-                BlockRenderer.byFullID(blockID).pushBottomFaces(
-                        x, offset, z, blockID, 0, builder);
+                BlockRenderer.byFullId(blockId).pushBottomFaces(
+                        x, offset, z, blockId, 0, builder);
             }
         }
         else {
@@ -191,11 +191,11 @@ class ColumnFaceDisplay implements GraphicsResource
                 var x = i % Chunk.XLENGTH;
                 var z = (i / Chunk.XLENGTH) % Chunk.ZLENGTH;
 
-                var blockID = chunk.getBlockFullID(i);
-                var adjacentBlockID = adjacentChunk.getBlockFullID(i + Chunk.VOLUME - Chunk.BASE_AREA);
+                var blockId = chunk.getBlockFullId(i);
+                var adjacentBlockId = adjacentChunk.getBlockFullId(i + Chunk.VOLUME - Chunk.BASE_AREA);
 
-                BlockRenderer.byFullID(blockID).pushBottomFaces(
-                        x, offset, z, blockID, adjacentBlockID, builder);
+                BlockRenderer.byFullId(blockId).pushBottomFaces(
+                        x, offset, z, blockId, adjacentBlockId, builder);
             }
         }
     }
@@ -224,11 +224,11 @@ class ColumnFaceDisplay implements GraphicsResource
         for (var y = 0; y < Chunk.YLENGTH; ++y) {
             for (var z = 0; z < Chunk.ZLENGTH; ++z) {
                 for (var x = 1; x < Chunk.XLENGTH; ++x) {
-                    var blockID = chunk.getBlockFullID(x, y, z);
-                    var adjacentBlockID = chunk.getBlockFullID(x - 1, y, z);
+                    var blockId = chunk.getBlockFullId(x, y, z);
+                    var adjacentBlockId = chunk.getBlockFullId(x - 1, y, z);
 
-                    BlockRenderer.byFullID(blockID).pushLeftFaces(
-                            x, y + offset, z, blockID, adjacentBlockID, builder);
+                    BlockRenderer.byFullId(blockId).pushLeftFaces(
+                            x, y + offset, z, blockId, adjacentBlockId, builder);
                 }
             }
         }
@@ -237,21 +237,21 @@ class ColumnFaceDisplay implements GraphicsResource
             if (adjacentChunk == null) {
                 for (var y = 0; y < Chunk.YLENGTH; ++y) {
                     for (var z = 0; z < Chunk.ZLENGTH; ++z) {
-                        var blockID = chunk.getBlockFullID(0, y, z);
+                        var blockId = chunk.getBlockFullId(0, y, z);
 
-                        BlockRenderer.byFullID(blockID).pushLeftFaces(
-                                0, y + offset, z, blockID, 0, builder);
+                        BlockRenderer.byFullId(blockId).pushLeftFaces(
+                                0, y + offset, z, blockId, 0, builder);
                     }
                 }
             }
             else {
                 for (var y = 0; y < Chunk.YLENGTH; ++y) {
                     for (var z = 0; z < Chunk.ZLENGTH; ++z) {
-                        var blockID = chunk.getBlockFullID(0, y, z);
-                        var adjacentBlockID = adjacentChunk.getBlockFullID(Column.XLENGTH - 1, y, z);
+                        var blockId = chunk.getBlockFullId(0, y, z);
+                        var adjacentBlockId = adjacentChunk.getBlockFullId(Column.XLENGTH - 1, y, z);
 
-                        BlockRenderer.byFullID(blockID).pushLeftFaces(
-                                0, y + offset, z, blockID, adjacentBlockID, builder);
+                        BlockRenderer.byFullId(blockId).pushLeftFaces(
+                                0, y + offset, z, blockId, adjacentBlockId, builder);
                     }
                 }
             }
@@ -282,11 +282,11 @@ class ColumnFaceDisplay implements GraphicsResource
         for (var y = 0; y < Chunk.YLENGTH; ++y) {
             for (var z = 0; z < Chunk.ZLENGTH; ++z) {
                 for (var x = 0; x < Chunk.XLENGTH - 1; ++x) {
-                    var blockID = chunk.getBlockFullID(x, y, z);
-                    var adjacentBlockID = chunk.getBlockFullID(x + 1, y, z);
+                    var blockId = chunk.getBlockFullId(x, y, z);
+                    var adjacentBlockId = chunk.getBlockFullId(x + 1, y, z);
 
-                    BlockRenderer.byFullID(blockID).pushRightFaces(
-                            x, y + offset, z, blockID, adjacentBlockID, builder);
+                    BlockRenderer.byFullId(blockId).pushRightFaces(
+                            x, y + offset, z, blockId, adjacentBlockId, builder);
                 }
             }
         }
@@ -295,21 +295,21 @@ class ColumnFaceDisplay implements GraphicsResource
             if (adjacentChunk == null) {
                 for (var y = 0; y < Chunk.YLENGTH; ++y) {
                     for (var z = 0; z < Chunk.ZLENGTH; ++z) {
-                        var blockID = chunk.getBlockFullID(Column.XLENGTH - 1, y, z);
+                        var blockId = chunk.getBlockFullId(Column.XLENGTH - 1, y, z);
 
-                        BlockRenderer.byFullID(blockID).pushRightFaces(
-                                Column.XLENGTH - 1, y + offset, z, blockID, 0, builder);
+                        BlockRenderer.byFullId(blockId).pushRightFaces(
+                                Column.XLENGTH - 1, y + offset, z, blockId, 0, builder);
                     }
                 }
             }
             else {
                 for (var y = 0; y < Chunk.YLENGTH; ++y) {
                     for (var z = 0; z < Chunk.ZLENGTH; ++z) {
-                        var blockID = chunk.getBlockFullID(Column.XLENGTH - 1, y, z);
-                        var adjacentBlockID = adjacentChunk.getBlockFullID(0, y, z);
+                        var blockId = chunk.getBlockFullId(Column.XLENGTH - 1, y, z);
+                        var adjacentBlockId = adjacentChunk.getBlockFullId(0, y, z);
 
-                        BlockRenderer.byFullID(blockID).pushRightFaces(
-                                Column.XLENGTH - 1, y + offset, z, blockID, adjacentBlockID, builder);
+                        BlockRenderer.byFullId(blockId).pushRightFaces(
+                                Column.XLENGTH - 1, y + offset, z, blockId, adjacentBlockId, builder);
                     }
                 }
             }
@@ -340,11 +340,11 @@ class ColumnFaceDisplay implements GraphicsResource
         for (var y = 0; y < Chunk.YLENGTH; ++y) {
             for (var z = 0; z < Chunk.ZLENGTH - 1; ++z) {
                 for (var x = 0; x < Chunk.XLENGTH; ++x) {
-                    var blockID = chunk.getBlockFullID(x, y, z);
-                    var adjacentBlockID = chunk.getBlockFullID(x, y, z + 1);
+                    var blockId = chunk.getBlockFullId(x, y, z);
+                    var adjacentBlockId = chunk.getBlockFullId(x, y, z + 1);
 
-                    BlockRenderer.byFullID(blockID).pushFrontFaces(
-                            x, y + offset, z, blockID, adjacentBlockID, builder);
+                    BlockRenderer.byFullId(blockId).pushFrontFaces(
+                            x, y + offset, z, blockId, adjacentBlockId, builder);
                 }
             }
         }
@@ -353,21 +353,21 @@ class ColumnFaceDisplay implements GraphicsResource
             if (adjacentChunk == null) {
                 for (var y = 0; y < Chunk.YLENGTH; ++y) {
                     for (var x = 0; x < Chunk.XLENGTH; ++x) {
-                        var blockID = chunk.getBlockFullID(x, y, Column.ZLENGTH - 1);
+                        var blockId = chunk.getBlockFullId(x, y, Column.ZLENGTH - 1);
 
-                        BlockRenderer.byFullID(blockID).pushFrontFaces(
-                                x, y + offset, Column.ZLENGTH - 1, blockID, 0, builder);
+                        BlockRenderer.byFullId(blockId).pushFrontFaces(
+                                x, y + offset, Column.ZLENGTH - 1, blockId, 0, builder);
                     }
                 }
             }
             else {
                 for (var y = 0; y < Chunk.YLENGTH; ++y) {
                     for (var x = 0; x < Chunk.XLENGTH; ++x) {
-                        var blockID = chunk.getBlockFullID(x, y, Column.ZLENGTH - 1);
-                        var adjacentBlockID = adjacentChunk.getBlockFullID(x, y, 0);
+                        var blockId = chunk.getBlockFullId(x, y, Column.ZLENGTH - 1);
+                        var adjacentBlockId = adjacentChunk.getBlockFullId(x, y, 0);
 
-                        BlockRenderer.byFullID(blockID).pushFrontFaces(
-                                x, y + offset, Column.ZLENGTH - 1, blockID, adjacentBlockID, builder);
+                        BlockRenderer.byFullId(blockId).pushFrontFaces(
+                                x, y + offset, Column.ZLENGTH - 1, blockId, adjacentBlockId, builder);
                     }
                 }
             }
@@ -398,11 +398,11 @@ class ColumnFaceDisplay implements GraphicsResource
         for (var y = 0; y < Chunk.YLENGTH; ++y) {
             for (var z = 1; z < Chunk.ZLENGTH; ++z) {
                 for (var x = 0; x < Chunk.XLENGTH; ++x) {
-                    var blockID = chunk.getBlockFullID(x, y, z);
-                    var adjacentBlockID = chunk.getBlockFullID(x, y, z - 1);
+                    var blockId = chunk.getBlockFullId(x, y, z);
+                    var adjacentBlockId = chunk.getBlockFullId(x, y, z - 1);
 
-                    BlockRenderer.byFullID(blockID).pushBackFaces(
-                            x, y + offset, z, blockID, adjacentBlockID, builder);
+                    BlockRenderer.byFullId(blockId).pushBackFaces(
+                            x, y + offset, z, blockId, adjacentBlockId, builder);
                 }
             }
         }
@@ -411,21 +411,21 @@ class ColumnFaceDisplay implements GraphicsResource
             if (adjacentChunk == null) {
                 for (var y = 0; y < Chunk.YLENGTH; ++y) {
                     for (var x = 0; x < Chunk.XLENGTH; ++x) {
-                        var blockID = chunk.getBlockFullID(x, y, 0);
+                        var blockId = chunk.getBlockFullId(x, y, 0);
 
-                        BlockRenderer.byFullID(blockID).pushBackFaces(
-                                x, y + offset, 0, blockID, 0, builder);
+                        BlockRenderer.byFullId(blockId).pushBackFaces(
+                                x, y + offset, 0, blockId, 0, builder);
                     }
                 }
             }
             else {
                 for (var y = 0; y < Chunk.YLENGTH; ++y) {
                     for (var x = 0; x < Chunk.XLENGTH; ++x) {
-                        var blockID = chunk.getBlockFullID(x, y, 0);
-                        var adjacentBlockID = adjacentChunk.getBlockFullID(x, y, Column.ZLENGTH - 1);
+                        var blockId = chunk.getBlockFullId(x, y, 0);
+                        var adjacentBlockId = adjacentChunk.getBlockFullId(x, y, Column.ZLENGTH - 1);
 
-                        BlockRenderer.byFullID(blockID).pushBackFaces(
-                                x, y + offset, 0, blockID, adjacentBlockID, builder);
+                        BlockRenderer.byFullId(blockId).pushBackFaces(
+                                x, y + offset, 0, blockId, adjacentBlockId, builder);
                     }
                 }
             }
@@ -450,12 +450,12 @@ class ColumnFaceDisplay implements GraphicsResource
                 var x = i % Chunk.XLENGTH;
                 var z = (i / Chunk.XLENGTH) % Chunk.ZLENGTH;
                 var y = i / Chunk.BASE_AREA;
-                var blockID = chunk.getBlockFullID(x, y, z);
+                var blockId = chunk.getBlockFullId(x, y, z);
 
-                if (!BlockRenderer.byFullID(blockID).nonCubic)
+                if (!BlockRenderer.byFullId(blockId).nonCubic)
                     continue;
 
-                BlockRenderer.byFullID(blockID).pushNonCubic(x, y + offset, z, blockID, builder);
+                BlockRenderer.byFullId(blockId).pushNonCubic(x, y + offset, z, blockId, builder);
                 shouldCreateDisplayList = true;
             }
         }

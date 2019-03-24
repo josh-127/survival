@@ -6,7 +6,7 @@ import java.util.Map;
 public class ActorSpace
 {
     private final HashMap<Integer, Actor> actors = new HashMap<>();
-    private int nextID = 0;
+    private int nextId = 0;
 
     public Iterable<Map.Entry<Integer, Actor>> iterateActorMap() {
         return actors.entrySet();
@@ -21,7 +21,7 @@ public class ActorSpace
     }
 
     public int addActor(Actor actor) {
-        actors.put(nextID, actor);
-        return nextID++;
+        actors.put(nextId, actor);
+        return nextId++;
     }
 }

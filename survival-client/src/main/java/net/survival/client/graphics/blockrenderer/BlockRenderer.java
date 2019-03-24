@@ -1,7 +1,7 @@
 package net.survival.client.graphics.blockrenderer;
 
 import net.survival.blocktype.BlockFace;
-import net.survival.blocktype.BlockID;
+import net.survival.blocktype.BlockId;
 import net.survival.blocktype.BlockModel;
 import net.survival.blocktype.BlockType;
 import net.survival.client.graphics.BlockTextureAtlas;
@@ -104,33 +104,33 @@ public abstract class BlockRenderer
         this.nonCubic = nonCubic;
     }
 
-    public static BlockRenderer byFullID(int blockID) {
-        return blockRenderers[BlockType.getAllBlocks()[BlockID.typeIDFromFullID(blockID)].getModel().id];
+    public static BlockRenderer byFullId(int blockId) {
+        return blockRenderers[BlockType.getAllBlocks()[BlockId.typeIdFromFullId(blockId)].getModel().id];
     }
 
-    public void pushNonCubic(int x, int y, int z, int blockID, GLDisplayList.Builder builder) {}
+    public void pushNonCubic(int x, int y, int z, int blockId, GLDisplayList.Builder builder) {}
 
-    public void pushTopFaces(int x, int y, int z, int blockID, int adjacentBlockID,
+    public void pushTopFaces(int x, int y, int z, int blockId, int adjacentBlockId,
             GLDisplayList.Builder builder)
     {}
 
-    public void pushBottomFaces(int x, int y, int z, int blockID, int adjacentBlockID,
+    public void pushBottomFaces(int x, int y, int z, int blockId, int adjacentBlockId,
             GLDisplayList.Builder builder)
     {}
 
-    public void pushLeftFaces(int x, int y, int z, int blockID, int adjacentBlockID,
+    public void pushLeftFaces(int x, int y, int z, int blockId, int adjacentBlockId,
             GLDisplayList.Builder builder)
     {}
 
-    public void pushRightFaces(int x, int y, int z, int blockID, int adjacentBlockID,
+    public void pushRightFaces(int x, int y, int z, int blockId, int adjacentBlockId,
             GLDisplayList.Builder builder)
     {}
 
-    public void pushFrontFaces(int x, int y, int z, int blockID, int adjacentBlockID,
+    public void pushFrontFaces(int x, int y, int z, int blockId, int adjacentBlockId,
             GLDisplayList.Builder builder)
     {}
 
-    public void pushBackFaces(int x, int y, int z, int blockID, int adjacentBlockID,
+    public void pushBackFaces(int x, int y, int z, int blockId, int adjacentBlockId,
             GLDisplayList.Builder builder)
     {}
 }

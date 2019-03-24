@@ -54,7 +54,7 @@ public class ViewportComponent extends JComponent implements ActionListener, Key
         for (var z = 0; z < VIEWPORT_HEIGHT; ++z) {
             for (var x = 0; x < VIEWPORT_WIDTH; ++x) {
                 var biomeID = map.sampleNearest(x, z);
-                var biomeColor = BiomeType.byID(biomeID).getBiomeViewerColor();
+                var biomeColor = BiomeType.byId(biomeID).getBiomeViewerColor();
                 var red = (biomeColor & 0xFF0000) >>> 16;
                 var green = (biomeColor & 0xFF00) >>> 8;
                 var blue = biomeColor & 0xFF;

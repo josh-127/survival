@@ -10,8 +10,8 @@ class SaplingDecorator extends ColumnDecorator
     private static final int SAPLINGS_PER_COLUMN = 5;
 
     private final Random random = new Random();
-    private final int sandFullID = BlockType.SAND.getFullID();
-    private final int saplingFullID = BlockType.OAK_SAPLING.getFullID();
+    private final int sandFullId = BlockType.SAND.getFullId();
+    private final int saplingFullId = BlockType.OAK_SAPLING.getFullId();
 
     @Override
     public void decorate(long columnPos, ColumnPrimer primer, GenLayer biomeMap) {
@@ -26,9 +26,9 @@ class SaplingDecorator extends ColumnDecorator
 
                 if (topLevel != -1 &&
                         topLevel + 1 < ColumnPrimer.YLENGTH &&
-                        primer.getBlockFullID(x, topLevel, z) == sandFullID)
+                        primer.getBlockFullId(x, topLevel, z) == sandFullId)
                 {
-                    primer.setBlockFullID(x, topLevel + 1, z, saplingFullID);
+                    primer.setBlockFullId(x, topLevel + 1, z, saplingFullId);
                 }
             }
         }

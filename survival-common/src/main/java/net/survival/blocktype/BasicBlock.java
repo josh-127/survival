@@ -10,7 +10,7 @@ public class BasicBlock extends Block
     protected final String[] textures;
 
     private BasicBlock(
-            short typeID,
+            short typeId,
             String displayName,
             double hardness,
             double resistance,
@@ -18,7 +18,7 @@ public class BasicBlock extends Block
             BlockModel model,
             String[] textures)
     {
-        super(typeID);
+        super(typeId);
         this.displayName = displayName;
         this.hardness = hardness;
         this.resistance = resistance;
@@ -69,7 +69,7 @@ public class BasicBlock extends Block
 
     public static class Builder
     {
-        private final short typeID;
+        private final short typeId;
         private String displayName = "<undefined>";
         private double hardness = 1.0;
         private double resistance = 1.0;
@@ -77,13 +77,13 @@ public class BasicBlock extends Block
         private BlockModel model = BlockModel.DEFAULT;
         private String[] textures = new String[BlockFace.getCachedValues().length];
 
-        public Builder(short typeID) {
-            this.typeID = typeID;
+        public Builder(short typeId) {
+            this.typeId = typeId;
         }
 
         public BasicBlock build() {
             return new BasicBlock(
-                    typeID,
+                    typeId,
                     displayName,
                     hardness,
                     resistance,

@@ -224,7 +224,7 @@ public class Model
                  */
                 public TextureEntry build() {
                     if (textureId == null)
-                        throw new IllegalStateException("textureID is required");
+                        throw new IllegalStateException("textureId is required");
 
                     return new TextureEntry(textureId);
                 }
@@ -519,7 +519,7 @@ public class Model
          */
         public static class Builder
         {
-            private int materialID;
+            private int materialId;
             private final ArrayList<Short> indices;
             private final ArrayList<Vec3> vertices;
             private final ArrayList<Vec3[]> colorLayers;
@@ -560,7 +560,7 @@ public class Model
                 }
 
                 return new Mesh(
-                        materialID,
+                        materialId,
                         indicesArray,
                         vertices.toArray(new Vec3[vertices.size()]),
                         colorLayers.toArray(new Vec3[colorLayers.size()][vertices.size()]),
@@ -572,11 +572,11 @@ public class Model
              * Sets the Mesh's material ID, which is an index into the Model's material
              * list.
              * 
-             * @param materialID the material ID
+             * @param materialId the material ID
              * @return the builder
              */
-            public Builder withMaterialID(int materialID) {
-                this.materialID = materialID;
+            public Builder withMaterialId(int materialId) {
+                this.materialId = materialId;
                 return this;
             }
 
@@ -683,7 +683,7 @@ public class Model
                                 .build())
                 .addMesh(
                         Mesh.createMeshBuilder()
-                                .withMaterialID(0)
+                                .withMaterialId(0)
                                 .addVertex(new Vec3(-0.5f, -0.5f, 0.0f))
                                 .addVertex(new Vec3(0.5f, -0.5f, 0.0f))
                                 .addVertex(new Vec3(0.5f, 0.5f, 0.0f))

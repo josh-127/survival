@@ -84,14 +84,14 @@ public final class BlockType
 
     private BlockType() {}
 
-    public static Block byTypeID(int typeID) {
-        return blocks[typeID];
+    public static Block byTypeId(int typeId) {
+        return blocks[typeId];
     }
 
-    public static Block byFullID(int fullID) {
-        var typeID = (short) ((fullID & 0xFFFF0000) >>> 16);
-        var encodedState = (short) (fullID & 0xFFFF);
-        return blocks[typeID].withState(encodedState);
+    public static Block byFullId(int fullId) {
+        var typeId = (short) ((fullId & 0xFFFF0000) >>> 16);
+        var encodedState = (short) (fullId & 0xFFFF);
+        return blocks[typeId].withState(encodedState);
     }
 
     public static Block[] getAllBlocks() {

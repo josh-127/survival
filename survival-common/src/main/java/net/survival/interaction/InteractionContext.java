@@ -22,8 +22,8 @@ public interface InteractionContext
         postMessage(new BreakBlockMessage(x, y, z));
     }
 
-    default void placeBlock(int x, int y, int z, int fullID) {
-        postMessage(new PlaceBlockMessage(x, y, z, fullID));
+    default void placeBlock(int x, int y, int z, int fullId) {
+        postMessage(new PlaceBlockMessage(x, y, z, fullId));
     }
 
     default void burstParticles(double x, double y, double z, double strength, int quantity) {

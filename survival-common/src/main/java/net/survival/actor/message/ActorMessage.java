@@ -6,10 +6,10 @@ import net.survival.interaction.MessageVisitor;
 
 public abstract class ActorMessage extends Message
 {
-    private final int destActorID;
+    private final int destActorId;
 
     public ActorMessage(int destActorID) {
-        this.destActorID = destActorID;
+        this.destActorId = destActorID;
     }
 
     @Override
@@ -19,7 +19,7 @@ public abstract class ActorMessage extends Message
 
     public abstract void accept(ActorMessageVisitor visitor, InteractionContext ic);
 
-    public int getDestActorID() {
-        return destActorID;
+    public int getDestActorId() {
+        return destActorId;
     }
 }

@@ -2,26 +2,26 @@ package net.survival.blocktype;
 
 public abstract class Block
 {
-    protected final short typeID;
+    protected final short typeId;
 
-    public Block(short typeID) {
-        this.typeID = typeID;
+    public Block(short typeId) {
+        this.typeId = typeId;
     }
 
-    public int getTypeID() {
-        return typeID;
+    public int getTypeId() {
+        return typeId;
     }
 
-    public int getFullID() {
-        return (typeID << 16) | getEncodedState();
+    public int getFullId() {
+        return (typeId << 16) | getEncodedState();
     }
     
     public boolean is(Block block) {
-        return getFullID() == block.getFullID();
+        return getFullId() == block.getFullId();
     }
 
     public boolean isType(Block block) {
-        return typeID == block.typeID;
+        return typeId == block.typeId;
     }
 
     protected abstract short getEncodedState();
