@@ -2,7 +2,7 @@ package net.survival.block;
 
 public class Column
 {
-    public static final int MAX_HEIGHT = 8;
+    public static final int MAX_HEIGHT = 64;
     public static final int XLENGTH = Chunk.XLENGTH;
     public static final int YLENGTH = Chunk.YLENGTH * MAX_HEIGHT;
     public static final int ZLENGTH = Chunk.ZLENGTH;

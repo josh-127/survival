@@ -17,12 +17,12 @@ class ColumnCodec
     public ByteBuffer compressColumn(Column column) {
         columnBuffer.clear();
 
-        var enabledChunks = (byte) 0;
+        var enabledChunks = 0L;
         for (var i = 0; i < Column.MAX_HEIGHT; ++i) {
             if (column.getChunk(i) != null)
-                enabledChunks |= 1 << i;
+                enabledChunks |= 1L << i;
         }
-        columnBuffer.put(enabledChunks);
+        columnBuffer.putLong(enabledChunks);
 
         for (var i = 0; i < Column.MAX_HEIGHT; ++i) {
             var chunk = column.getChunk(i);
@@ -63,10 +63,10 @@ class ColumnCodec
         columnBuffer.flip();
 
         var column = new Column();
-        var enabledChunks = columnBuffer.get();
+        var enabledChunks = columnBuffer.getLong();
 
         for (var i = 0; i < Column.MAX_HEIGHT; ++i) {
-            if ((enabledChunks & (1 << i)) != 0) {
+            if ((enabledChunks & (1L << i)) != 0L) {
                 var chunk = decompressChunk(columnBuffer);
                 column.setChunk(i, chunk);
             }
