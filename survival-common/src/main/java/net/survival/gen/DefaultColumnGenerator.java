@@ -12,12 +12,12 @@ import net.survival.util.ImprovedNoiseGenerator3D;
 
 public class DefaultColumnGenerator implements ColumnProvider
 {
-    private static final int NBLOCK_YLENGTH = Column.YLENGTH / 32;
-    private static final int NBLOCK_ZLENGTH = Column.ZLENGTH / 4;
-    private static final int NBLOCK_XLENGTH = Column.XLENGTH / 4;
-    private static final int NMAP_YLENGTH = (Column.YLENGTH / NBLOCK_YLENGTH) + 1;
-    private static final int NMAP_ZLENGTH = (Column.ZLENGTH / NBLOCK_ZLENGTH) + 1;
-    private static final int NMAP_XLENGTH = (Column.XLENGTH / NBLOCK_XLENGTH) + 1;
+    private static final int NBLOCK_YLENGTH = ColumnPrimer.YLENGTH / 32;
+    private static final int NBLOCK_ZLENGTH = ColumnPrimer.ZLENGTH / 4;
+    private static final int NBLOCK_XLENGTH = ColumnPrimer.XLENGTH / 4;
+    private static final int NMAP_YLENGTH = (ColumnPrimer.YLENGTH / NBLOCK_YLENGTH) + 1;
+    private static final int NMAP_ZLENGTH = (ColumnPrimer.ZLENGTH / NBLOCK_ZLENGTH) + 1;
+    private static final int NMAP_XLENGTH = (ColumnPrimer.XLENGTH / NBLOCK_XLENGTH) + 1;
 
     private static final double MAIN_NOISE_XSCALE = 1.0 / 128.0;
     private static final double MAIN_NOISE_YSCALE = 1.0 / 128.0;
@@ -48,11 +48,14 @@ public class DefaultColumnGenerator implements ColumnProvider
         mainNoiseGenerator = new ImprovedNoiseGenerator3D(MAIN_NOISE_XSCALE, MAIN_NOISE_YSCALE,
                 MAIN_NOISE_ZSCALE, MAIN_NOISE_OCTAVE_COUNT, seed);
 
-        biomeLayer = GenLayerFactory.createBiomeLayer(Column.XLENGTH * 4, Column.ZLENGTH * 4, seed);
+        biomeLayer = GenLayerFactory.createBiomeLayer(
+                ColumnPrimer.XLENGTH * 4,
+                ColumnPrimer.ZLENGTH * 4,
+                seed);
 
         densityMap = new DoubleMap3D(NMAP_XLENGTH, NMAP_YLENGTH, NMAP_ZLENGTH);
-        minElevationMap = new DoubleMap2D(Column.XLENGTH, Column.ZLENGTH);
-        elevationRangeMap = new DoubleMap2D(Column.XLENGTH, Column.ZLENGTH);
+        minElevationMap = new DoubleMap2D(ColumnPrimer.XLENGTH, ColumnPrimer.ZLENGTH);
+        elevationRangeMap = new DoubleMap2D(ColumnPrimer.XLENGTH, ColumnPrimer.ZLENGTH);
 
         columnDecorator = new DefaultColumnDecorator();
 
@@ -83,13 +86,13 @@ public class DefaultColumnGenerator implements ColumnProvider
     private void generateBase(ColumnPrimer columnPrimer) {
         generateElevationMaps(minElevationMap, elevationRangeMap, columnPrimer, biomeLayer);
 
-        for (var y = 0; y < Column.YLENGTH; ++y) {
+        for (var y = 0; y < ColumnPrimer.YLENGTH; ++y) {
             var noiseMapY = (double) y / NBLOCK_YLENGTH;
 
-            for (var z = 0; z < Column.ZLENGTH; ++z) {
+            for (var z = 0; z < ColumnPrimer.ZLENGTH; ++z) {
                 var noiseMapZ = (double) z / NBLOCK_ZLENGTH;
 
-                for (var x = 0; x < Column.XLENGTH; ++x) {
+                for (var x = 0; x < ColumnPrimer.XLENGTH; ++x) {
                     var noiseMapX = (double) x / NBLOCK_XLENGTH;
 
                     var density = densityMap.sampleLinear(noiseMapX, noiseMapY, noiseMapZ);
@@ -113,8 +116,8 @@ public class DefaultColumnGenerator implements ColumnProvider
             ColumnPrimer columnPrimer,
             GenLayer genLayer)
     {
-        for (var z = 0; z < Column.ZLENGTH; ++z) {
-            for (var x = 0; x < Column.XLENGTH; ++x) {
+        for (var z = 0; z < ColumnPrimer.ZLENGTH; ++z) {
+            for (var x = 0; x < ColumnPrimer.XLENGTH; ++x) {
                 var avgMinElevation = 0.0;
                 var avgMaxElevation = 0.0;
 

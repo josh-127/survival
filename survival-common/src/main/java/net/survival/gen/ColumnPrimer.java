@@ -7,7 +7,7 @@ import net.survival.blocktype.BlockType;
 class ColumnPrimer
 {
     public static final int XLENGTH = Column.XLENGTH;
-    public static final int YLENGTH = 128;
+    public static final int YLENGTH = 256;
     public static final int ZLENGTH = Column.ZLENGTH;
     public static final int BASE_AREA = XLENGTH * ZLENGTH;
     public static final int VOLUME = BASE_AREA * YLENGTH;
