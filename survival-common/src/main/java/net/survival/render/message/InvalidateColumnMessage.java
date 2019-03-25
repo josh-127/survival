@@ -21,6 +21,6 @@ public class InvalidateColumnMessage extends RenderMessage
 
     @Override
     public int getPriority() {
-        return MessagePriority.RESERVED_DRAW;
+        return MessagePriority.RESERVED_DRAW.ordinal();
     }
 }

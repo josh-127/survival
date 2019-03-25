@@ -21,7 +21,7 @@ public class MoveMessage extends ActorMessage
 
     @Override
     public int getPriority() {
-        return MessagePriority.GAMEPLAY_PRE_STEP;
+        return MessagePriority.GAMEPLAY_PRE_STEP.ordinal();
     }
 
     public double getDX() {

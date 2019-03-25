@@ -45,6 +45,6 @@ public class BurstParticlesMessage extends ParticleMessage
 
     @Override
     public int getPriority() {
-        return MessagePriority.GAMEPLAY_POST_STEP;
+        return MessagePriority.GAMEPLAY_POST_STEP.ordinal();
     }
 }

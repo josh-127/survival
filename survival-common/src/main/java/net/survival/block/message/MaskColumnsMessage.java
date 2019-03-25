@@ -19,7 +19,7 @@ public class MaskColumnsMessage extends BlockMessage
     
     @Override
     public int getPriority() {
-        return MessagePriority.RESERVED_STEP;
+        return MessagePriority.RESERVED_STEP.ordinal();
     }
 
     public ColumnMask getMask() {

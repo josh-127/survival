@@ -34,6 +34,6 @@ public class OrientCameraMessage extends RenderMessage
 
     @Override
     public int getPriority() {
-        return MessagePriority.RESERVED_PRE_DRAW;
+        return MessagePriority.RESERVED_PRE_DRAW.ordinal();
     }
 }

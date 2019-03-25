@@ -29,6 +29,6 @@ public class ColumnResponseMessage extends BlockMessage
 
     @Override
     public int getPriority() {
-        return MessagePriority.RESERVED_STEP;
+        return MessagePriority.RESERVED_STEP.ordinal();
     }
 }
