@@ -14,6 +14,7 @@ import net.survival.block.message.MaskColumnsMessage;
 import net.survival.block.message.PlaceBlockMessage;
 import net.survival.block.message.PostColumnRequest;
 import net.survival.interaction.InteractionContext;
+import net.survival.render.message.ColumnInvalidationPriority;
 import net.survival.render.message.InvalidateColumnMessage;
 
 public class BlockSpace implements BlockMessageVisitor
@@ -66,7 +67,12 @@ public class BlockSpace implements BlockMessageVisitor
         return column;
     }
 
-    private void invalidateColumn(InteractionContext ic, int x, int z) {
+    private void invalidateColumn(
+            InteractionContext ic,
+            int x,
+            int z,
+            ColumnInvalidationPriority priority)
+    {
         var cx = ColumnPos.toColumnX(x);
         var cz = ColumnPos.toColumnZ(z);
 
@@ -74,20 +80,20 @@ public class BlockSpace implements BlockMessageVisitor
         if (column == null)
             throw new RuntimeException("Cannot invalidate an unloaded column.");
 
-        ic.postMessage(new InvalidateColumnMessage(ColumnPos.hashPos(cx, cz), column));
+        ic.postMessage(new InvalidateColumnMessage(ColumnPos.hashPos(cx, cz), column, priority));
     }
 
     @Override
     public void visit(InteractionContext ic, BreakBlockMessage message) {
         setBlockFullId(message.getX(), message.getY(), message.getZ(), 0);
-        invalidateColumn(ic, message.getX(), message.getZ());
+        invalidateColumn(ic, message.getX(), message.getZ(), ColumnInvalidationPriority.NOW);
         ic.burstParticles(message.getX() + 0.5, message.getY() + 0.5, message.getZ() + 0.5, 2.0, 8);
     }
 
     @Override
     public void visit(InteractionContext ic, PlaceBlockMessage message) {
         setBlockFullId(message.getX(), message.getY(), message.getZ(), message.getFullId());
-        invalidateColumn(ic, message.getX(), message.getZ());
+        invalidateColumn(ic, message.getX(), message.getZ(), ColumnInvalidationPriority.NOW);
     }
 
     @Override
@@ -101,7 +107,7 @@ public class BlockSpace implements BlockMessageVisitor
         var cz = ColumnPos.columnZFromHashedPos(columnPos);
         var x = ColumnPos.toGlobalX(cx, 0);
         var z = ColumnPos.toGlobalZ(cz, 0);
-        invalidateColumn(ic, x, z);
+        invalidateColumn(ic, x, z, ColumnInvalidationPriority.LOW);
     }
 
     @Override
@@ -120,8 +126,12 @@ public class BlockSpace implements BlockMessageVisitor
                 .filter(e -> !mask.contains(e.getKey()))
                 .collect(Collectors.toSet());
 
-        for (var entry : removedColumns)
-            ic.postMessage(new InvalidateColumnMessage(entry.getKey(), null));
+        for (var entry : removedColumns) {
+            ic.postMessage(new InvalidateColumnMessage(
+                    entry.getKey(),
+                    null,
+                    ColumnInvalidationPriority.LOW));
+        }
 
         columns = columns.entrySet().stream()
                 .filter(e -> mask.contains(e.getKey()))

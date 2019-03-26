@@ -8,10 +8,16 @@ public class InvalidateColumnMessage extends RenderMessage
 {
     public final long columnPos;
     public final Column column;
+    public final ColumnInvalidationPriority invalidationPriority;
 
-    public InvalidateColumnMessage(long columnPos, Column column) {
+    public InvalidateColumnMessage(
+            long columnPos,
+            Column column,
+            ColumnInvalidationPriority invalidationPriority)
+    {
         this.columnPos = columnPos;
         this.column = column;
+        this.invalidationPriority = invalidationPriority;
     }
 
     @Override

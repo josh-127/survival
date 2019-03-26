@@ -1,7 +1,8 @@
 package net.survival.client.graphics;
 
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.joml.Matrix4f;
 
@@ -11,6 +12,7 @@ import net.survival.client.graphics.opengl.GLRenderContext;
 import net.survival.client.graphics.opengl.GLState;
 import net.survival.client.particle.ClientParticleSpace;
 import net.survival.interaction.InteractionContext;
+import net.survival.render.message.ColumnInvalidationPriority;
 import net.survival.render.message.DrawModelMessage;
 import net.survival.render.message.InvalidateColumnMessage;
 import net.survival.render.message.MoveCameraMessage;
@@ -41,7 +43,7 @@ public class CompositeDisplay implements RenderContext, GraphicsResource, Render
     private Matrix4f cameraProjectionMatrix = new Matrix4f();
     private Matrix4f hudProjectionMatrix = new Matrix4f();
 
-    private Queue<InvalidateColumnMessage> columnsToInvalidate = new LinkedList<InvalidateColumnMessage>();
+    private List<InvalidateColumnMessage> columnsToInvalidate = new ArrayList<InvalidateColumnMessage>();
 
     public CompositeDisplay(
             ClientParticleSpace clientParticleSpace,
@@ -220,10 +222,20 @@ public class CompositeDisplay implements RenderContext, GraphicsResource, Render
                 1.0f);
         {
             for (int i = 0; i < 3 && !columnsToInvalidate.isEmpty(); ++i) {
-                var message = columnsToInvalidate.remove();
+                var lastIndex = columnsToInvalidate.size() - 1;
+                var message = columnsToInvalidate.remove(lastIndex);
                 var columnPos = message.columnPos;
                 var column = message.column;
                 blockDisplay.redrawColumn(columnPos, column);
+            }
+
+            for (int i = columnsToInvalidate.size() - 1; i >= 0; --i) {
+                var message = columnsToInvalidate.get(i);
+                if (message.invalidationPriority.equals(ColumnInvalidationPriority.NOW)) {
+                    var columnPos = message.columnPos;
+                    var column = message.column;
+                    blockDisplay.redrawColumn(columnPos, column);
+                }
             }
 
             if (isVisible(VisibilityFlags.BLOCKS))
@@ -277,6 +289,11 @@ public class CompositeDisplay implements RenderContext, GraphicsResource, Render
 
     @Override
     public void visit(InteractionContext ic, InvalidateColumnMessage message) {
+        var columnPos = message.columnPos;
+
+        columnsToInvalidate = columnsToInvalidate.stream()
+                .filter(e -> e.columnPos != columnPos)
+                .collect(Collectors.toList());
         columnsToInvalidate.add(message);
     }
 
