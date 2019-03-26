@@ -10,7 +10,12 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.0</version>
                 <configuration>
-                    <release>11</release>
+                    <compilerArgs>
+                        <arg>-h</arg>
+                        <arg>../libwin32-native/include/josh127/libwin32/jni</arg>
+                    </compilerArgs>
+                    <source>11</source>
+                    <target>11</target>
                 </configuration>
             </plugin>
         </plugins>
