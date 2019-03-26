@@ -42,7 +42,7 @@ public class DrawModelMessage extends RenderMessage
 
     @Override
     public int getPriority() {
-        return MessagePriority.RESERVED_DRAW.ordinal();
+        return MessagePriority.RESERVED_DRAW.getValue();
     }
 
     public ModelType getModelType() {

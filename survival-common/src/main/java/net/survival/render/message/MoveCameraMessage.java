@@ -34,6 +34,6 @@ public class MoveCameraMessage extends RenderMessage
 
     @Override
     public int getPriority() {
-        return MessagePriority.RESERVED_PRE_DRAW.ordinal();
+        return MessagePriority.RESERVED_PRE_DRAW.getValue();
     }
 }

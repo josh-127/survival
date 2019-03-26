@@ -19,7 +19,7 @@ public class HurtMessage extends ActorMessage
 
     @Override
     public int getPriority() {
-        return MessagePriority.GAMEPLAY_PRE_STEP.ordinal();
+        return MessagePriority.GAMEPLAY_PRE_STEP.getValue();
     }
 
     public double getAmount() {

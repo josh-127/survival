@@ -16,6 +16,6 @@ public class DrawMessage extends ActorMessage
 
     @Override
     public int getPriority() {
-        return MessagePriority.GAMEPLAY_DRAW.ordinal();
+        return MessagePriority.GAMEPLAY_DRAW.getValue();
     }
 }

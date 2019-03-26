@@ -40,6 +40,6 @@ public class PlaceBlockMessage extends BlockMessage
 
     @Override
     public int getPriority() {
-        return MessagePriority.GAMEPLAY_POST_STEP.ordinal();
+        return MessagePriority.GAMEPLAY_POST_STEP.getValue();
     }
 }

@@ -16,6 +16,6 @@ public class StepMessage extends ActorMessage
 
     @Override
     public int getPriority() {
-        return MessagePriority.GAMEPLAY_STEP.ordinal();
+        return MessagePriority.GAMEPLAY_STEP.getValue();
     }
 }

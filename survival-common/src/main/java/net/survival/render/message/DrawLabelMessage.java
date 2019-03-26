@@ -40,6 +40,6 @@ public class DrawLabelMessage extends UiRenderMessage
 
     @Override
     public int getPriority() {
-        return MessagePriority.RESERVED_DRAW.ordinal();
+        return MessagePriority.RESERVED_DRAW.getValue();
     }
 }
