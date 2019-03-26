@@ -13,7 +13,6 @@ class OceanBiomeDecorator extends ColumnDecorator
 
     private final Random random = new Random();
 
-    private final int bedrockId = BlockType.BEDROCK.getFullId();
     private final int stoneId = BlockType.STONE.getFullId();
     private final int dirtId = BlockType.DIRT.getFullId();
     private final int tempSolidId = BlockType.TEMP_SOLID.getFullId();
@@ -31,8 +30,6 @@ class OceanBiomeDecorator extends ColumnDecorator
     }
 
     private void decorateStrip(int x, int z, ColumnPrimer primer) {
-        primer.setBlockFullId(x, 0, z, bedrockId);
-
         var state = 0;
         var counter = MIN_DIRT_DEPTH + random.nextInt(DIRT_DEPTH_RANGE + 1);
 

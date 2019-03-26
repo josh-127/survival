@@ -4,6 +4,7 @@ import net.survival.gen.layer.GenLayer;
 
 class DefaultColumnDecorator extends ColumnDecorator
 {
+    private final BedrockDecorator bedrockDecorator = new BedrockDecorator();
     private final DesertBiomeDecorator desertBiomeDecorator = new DesertBiomeDecorator();
     private final ExtremeHillsDecorator extremeHillsDecorator = new ExtremeHillsDecorator();
     private final ForestBiomeDecorator forestBiomeDecorator = new ForestBiomeDecorator();
@@ -14,6 +15,7 @@ class DefaultColumnDecorator extends ColumnDecorator
 
     @Override
     public void decorate(long columnPos, ColumnPrimer primer, GenLayer biomeMap) {
+        bedrockDecorator.decorate(columnPos, primer, biomeMap);
         desertBiomeDecorator.decorate(columnPos, primer, biomeMap);
         extremeHillsDecorator.decorate(columnPos, primer, biomeMap);
         forestBiomeDecorator.decorate(columnPos, primer, biomeMap);

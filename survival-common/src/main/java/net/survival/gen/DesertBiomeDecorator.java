@@ -5,7 +5,6 @@ import net.survival.gen.layer.GenLayer;
 
 class DesertBiomeDecorator extends ColumnDecorator
 {
-    private final int bedrockId = BlockType.BEDROCK.getFullId();
     private final int stoneId = BlockType.STONE.getFullId();
     // TODO: Generate sandstone.
     private final int sandId = BlockType.SAND.getFullId();
@@ -22,8 +21,6 @@ class DesertBiomeDecorator extends ColumnDecorator
     }
 
     private void decorateStrip(int x, int z, ColumnPrimer primer) {
-        primer.setBlockFullId(x, 0, z, bedrockId);
-
         var state = 0;
         var counter = 3;
 
