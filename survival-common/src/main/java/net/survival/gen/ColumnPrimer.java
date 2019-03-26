@@ -21,7 +21,8 @@ class ColumnPrimer
         for (var y = 0; y < YLENGTH; ++y) {
             for (var z = 0; z < ZLENGTH; ++z) {
                 for (var x = 0; x < XLENGTH; ++x) {
-                    column.setBlockFullId(x, y, z, blockIds[index]);
+                    if (blockIds[index] != 0)
+                        column.setBlockFullId(x, y, z, blockIds[index]);
                     ++index;
                 }
             }
