@@ -93,6 +93,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;LIBWIN32NATIVE_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(JAVA_HOME)/include;$(JAVA_HOME)/include/win32;$(ProjectDir)include</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -107,6 +109,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;LIBWIN32NATIVE_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(JAVA_HOME)/include;$(JAVA_HOME)/include/win32;$(ProjectDir)include</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -123,6 +127,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;LIBWIN32NATIVE_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(JAVA_HOME)/include;$(JAVA_HOME)/include/win32;$(ProjectDir)include</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -141,6 +147,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;LIBWIN32NATIVE_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(JAVA_HOME)/include;$(JAVA_HOME)/include/win32;$(ProjectDir)include</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -151,6 +159,40 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="include\josh127\libwin32\jni\dev_josh127_libwin32_ComObject.h" />
+    <ClInclude Include="include\josh127\libwin32\jni\dev_josh127_libwin32_D3D11.h" />
+    <ClInclude Include="include\josh127\libwin32\jni\dev_josh127_libwin32_D3D11_BlendDesc.h" />
+    <ClInclude Include="include\josh127\libwin32\jni\dev_josh127_libwin32_D3D11_Box.h" />
+    <ClInclude Include="include\josh127\libwin32\jni\dev_josh127_libwin32_D3D11_BufferDesc.h" />
+    <ClInclude Include="include\josh127\libwin32\jni\dev_josh127_libwin32_D3D11_DepthStencilDesc.h" />
+    <ClInclude Include="include\josh127\libwin32\jni\dev_josh127_libwin32_D3D11_DepthStencilOpDesc.h" />
+    <ClInclude Include="include\josh127\libwin32\jni\dev_josh127_libwin32_D3D11_Device.h" />
+    <ClInclude Include="include\josh127\libwin32\jni\dev_josh127_libwin32_D3D11_DeviceContext.h" />
+    <ClInclude Include="include\josh127\libwin32\jni\dev_josh127_libwin32_D3D11_DeviceDeviceContextSwapChainTuple.h" />
+    <ClInclude Include="include\josh127\libwin32\jni\dev_josh127_libwin32_D3D11_InputElementDesc.h" />
+    <ClInclude Include="include\josh127\libwin32\jni\dev_josh127_libwin32_D3D11_MappedSubresource.h" />
+    <ClInclude Include="include\josh127\libwin32\jni\dev_josh127_libwin32_D3D11_RasterizerDesc.h" />
+    <ClInclude Include="include\josh127\libwin32\jni\dev_josh127_libwin32_D3D11_RenderTargetBlendDesc.h" />
+    <ClInclude Include="include\josh127\libwin32\jni\dev_josh127_libwin32_D3D11_SamplerDesc.h" />
+    <ClInclude Include="include\josh127\libwin32\jni\dev_josh127_libwin32_D3D11_SubresourceData.h" />
+    <ClInclude Include="include\josh127\libwin32\jni\dev_josh127_libwin32_D3D11_Texture2D.h" />
+    <ClInclude Include="include\josh127\libwin32\jni\dev_josh127_libwin32_D3D11_Texture2DDesc.h" />
+    <ClInclude Include="include\josh127\libwin32\jni\dev_josh127_libwin32_D3D11_Viewport.h" />
+    <ClInclude Include="include\josh127\libwin32\jni\dev_josh127_libwin32_Dxgi.h" />
+    <ClInclude Include="include\josh127\libwin32\jni\dev_josh127_libwin32_Dxgi_ModeDesc.h" />
+    <ClInclude Include="include\josh127\libwin32\jni\dev_josh127_libwin32_Dxgi_Rational.h" />
+    <ClInclude Include="include\josh127\libwin32\jni\dev_josh127_libwin32_Dxgi_SampleDesc.h" />
+    <ClInclude Include="include\josh127\libwin32\jni\dev_josh127_libwin32_Dxgi_SwapChain.h" />
+    <ClInclude Include="include\josh127\libwin32\jni\dev_josh127_libwin32_Dxgi_SwapChainDesc.h" />
+    <ClInclude Include="include\josh127\libwin32\jni\dev_josh127_libwin32_LibWin32Startup.h" />
+    <ClInclude Include="include\josh127\libwin32\jni\dev_josh127_libwin32_PodStruct.h" />
+    <ClInclude Include="include\josh127\libwin32\jni\dev_josh127_libwin32_Rect.h" />
+    <ClInclude Include="include\josh127\libwin32\jni\dev_josh127_libwin32_User32.h" />
+    <ClInclude Include="include\josh127\libwin32\libwin32.hh" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="source\libwin32-startup.cc" />
+    <ClCompile Include="source\user32.cc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

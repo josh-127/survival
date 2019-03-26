@@ -1,17 +1,114 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    <Filter Include="JNI">
+      <UniqueIdentifier>{4a3a63aa-1af5-443b-916a-3354656ce67d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
+    <Filter Include="Sources">
+      <UniqueIdentifier>{a382a8ea-a2b4-4903-9493-88ad55050ce8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    <Filter Include="Headers">
+      <UniqueIdentifier>{eb71f674-4c55-47c3-a06d-f4c7fe53685d}</UniqueIdentifier>
     </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\josh127\libwin32\jni\dev_josh127_libwin32_ComObject.h">
+      <Filter>JNI</Filter>
+    </ClInclude>
+    <ClInclude Include="include\josh127\libwin32\jni\dev_josh127_libwin32_D3D11.h">
+      <Filter>JNI</Filter>
+    </ClInclude>
+    <ClInclude Include="include\josh127\libwin32\jni\dev_josh127_libwin32_D3D11_BlendDesc.h">
+      <Filter>JNI</Filter>
+    </ClInclude>
+    <ClInclude Include="include\josh127\libwin32\jni\dev_josh127_libwin32_D3D11_Box.h">
+      <Filter>JNI</Filter>
+    </ClInclude>
+    <ClInclude Include="include\josh127\libwin32\jni\dev_josh127_libwin32_D3D11_BufferDesc.h">
+      <Filter>JNI</Filter>
+    </ClInclude>
+    <ClInclude Include="include\josh127\libwin32\jni\dev_josh127_libwin32_D3D11_DepthStencilDesc.h">
+      <Filter>JNI</Filter>
+    </ClInclude>
+    <ClInclude Include="include\josh127\libwin32\jni\dev_josh127_libwin32_D3D11_DepthStencilOpDesc.h">
+      <Filter>JNI</Filter>
+    </ClInclude>
+    <ClInclude Include="include\josh127\libwin32\jni\dev_josh127_libwin32_D3D11_Device.h">
+      <Filter>JNI</Filter>
+    </ClInclude>
+    <ClInclude Include="include\josh127\libwin32\jni\dev_josh127_libwin32_D3D11_DeviceContext.h">
+      <Filter>JNI</Filter>
+    </ClInclude>
+    <ClInclude Include="include\josh127\libwin32\jni\dev_josh127_libwin32_D3D11_DeviceDeviceContextSwapChainTuple.h">
+      <Filter>JNI</Filter>
+    </ClInclude>
+    <ClInclude Include="include\josh127\libwin32\jni\dev_josh127_libwin32_D3D11_InputElementDesc.h">
+      <Filter>JNI</Filter>
+    </ClInclude>
+    <ClInclude Include="include\josh127\libwin32\jni\dev_josh127_libwin32_D3D11_MappedSubresource.h">
+      <Filter>JNI</Filter>
+    </ClInclude>
+    <ClInclude Include="include\josh127\libwin32\jni\dev_josh127_libwin32_D3D11_RasterizerDesc.h">
+      <Filter>JNI</Filter>
+    </ClInclude>
+    <ClInclude Include="include\josh127\libwin32\jni\dev_josh127_libwin32_D3D11_RenderTargetBlendDesc.h">
+      <Filter>JNI</Filter>
+    </ClInclude>
+    <ClInclude Include="include\josh127\libwin32\jni\dev_josh127_libwin32_D3D11_SamplerDesc.h">
+      <Filter>JNI</Filter>
+    </ClInclude>
+    <ClInclude Include="include\josh127\libwin32\jni\dev_josh127_libwin32_D3D11_SubresourceData.h">
+      <Filter>JNI</Filter>
+    </ClInclude>
+    <ClInclude Include="include\josh127\libwin32\jni\dev_josh127_libwin32_D3D11_Texture2D.h">
+      <Filter>JNI</Filter>
+    </ClInclude>
+    <ClInclude Include="include\josh127\libwin32\jni\dev_josh127_libwin32_D3D11_Texture2DDesc.h">
+      <Filter>JNI</Filter>
+    </ClInclude>
+    <ClInclude Include="include\josh127\libwin32\jni\dev_josh127_libwin32_D3D11_Viewport.h">
+      <Filter>JNI</Filter>
+    </ClInclude>
+    <ClInclude Include="include\josh127\libwin32\jni\dev_josh127_libwin32_Dxgi.h">
+      <Filter>JNI</Filter>
+    </ClInclude>
+    <ClInclude Include="include\josh127\libwin32\jni\dev_josh127_libwin32_Dxgi_ModeDesc.h">
+      <Filter>JNI</Filter>
+    </ClInclude>
+    <ClInclude Include="include\josh127\libwin32\jni\dev_josh127_libwin32_Dxgi_Rational.h">
+      <Filter>JNI</Filter>
+    </ClInclude>
+    <ClInclude Include="include\josh127\libwin32\jni\dev_josh127_libwin32_Dxgi_SampleDesc.h">
+      <Filter>JNI</Filter>
+    </ClInclude>
+    <ClInclude Include="include\josh127\libwin32\jni\dev_josh127_libwin32_Dxgi_SwapChain.h">
+      <Filter>JNI</Filter>
+    </ClInclude>
+    <ClInclude Include="include\josh127\libwin32\jni\dev_josh127_libwin32_Dxgi_SwapChainDesc.h">
+      <Filter>JNI</Filter>
+    </ClInclude>
+    <ClInclude Include="include\josh127\libwin32\jni\dev_josh127_libwin32_LibWin32Startup.h">
+      <Filter>JNI</Filter>
+    </ClInclude>
+    <ClInclude Include="include\josh127\libwin32\jni\dev_josh127_libwin32_PodStruct.h">
+      <Filter>JNI</Filter>
+    </ClInclude>
+    <ClInclude Include="include\josh127\libwin32\jni\dev_josh127_libwin32_Rect.h">
+      <Filter>JNI</Filter>
+    </ClInclude>
+    <ClInclude Include="include\josh127\libwin32\jni\dev_josh127_libwin32_User32.h">
+      <Filter>JNI</Filter>
+    </ClInclude>
+    <ClInclude Include="include\josh127\libwin32\libwin32.hh">
+      <Filter>Headers</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="source\user32.cc">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="source\libwin32-startup.cc">
+      <Filter>Sources</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
