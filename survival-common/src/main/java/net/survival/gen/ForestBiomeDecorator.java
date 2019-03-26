@@ -3,7 +3,6 @@ package net.survival.gen;
 import java.util.Random;
 
 import net.survival.blocktype.BlockType;
-import net.survival.gen.layer.GenLayer;
 
 class ForestBiomeDecorator extends ColumnDecorator
 {
@@ -19,7 +18,11 @@ class ForestBiomeDecorator extends ColumnDecorator
     private final int tempSolidId = BlockType.TEMP_SOLID.getFullId();
 
     @Override
-    public void decorate(long columnPos, ColumnPrimer primer, GenLayer biomeMap) {
+    public void decorate(DecoratorContext context) {
+        var columnPos = context.getColumnPos();
+        var primer = context.getColumnPrimer();
+        var biomeMap = context.getBiomeMap();
+
         random.setSeed(columnPos);
 
         for (var z = 0; z < ColumnPrimer.ZLENGTH; ++z) {

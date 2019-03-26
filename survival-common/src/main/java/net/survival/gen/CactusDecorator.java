@@ -3,7 +3,6 @@ package net.survival.gen;
 import java.util.Random;
 
 import net.survival.blocktype.BlockType;
-import net.survival.gen.layer.GenLayer;
 
 class CactusDecorator extends ColumnDecorator
 {
@@ -17,7 +16,11 @@ class CactusDecorator extends ColumnDecorator
     private final int cactusFullId = BlockType.CACTUS.getFullId();
 
     @Override
-    public void decorate(long columnPos, ColumnPrimer primer, GenLayer biomeMap) {
+    public void decorate(DecoratorContext context) {
+        var columnPos = context.getColumnPos();
+        var primer = context.getColumnPrimer();
+        var biomeMap = context.getBiomeMap();
+
         random.setSeed(columnPos);
 
         for (var i = 0; i < CACTI_PER_COLUMN; ++i) {

@@ -78,7 +78,7 @@ public class DefaultColumnGenerator implements ColumnProvider
 
         columnPrimer.clear();
         generateBase(columnPrimer);
-        columnDecorator.decorate(hashedPos, columnPrimer, biomeLayer);
+        columnDecorator.decorate(new DecoratorContext(hashedPos, columnPrimer, biomeLayer));
 
         return columnPrimer.toColumn();
     }

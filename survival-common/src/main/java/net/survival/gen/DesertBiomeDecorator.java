@@ -1,7 +1,6 @@
 package net.survival.gen;
 
 import net.survival.blocktype.BlockType;
-import net.survival.gen.layer.GenLayer;
 
 class DesertBiomeDecorator extends ColumnDecorator
 {
@@ -11,7 +10,10 @@ class DesertBiomeDecorator extends ColumnDecorator
     private final int tempSolidId = BlockType.TEMP_SOLID.getFullId();
 
     @Override
-    public void decorate(long columnPos, ColumnPrimer primer, GenLayer biomeMap) {
+    public void decorate(DecoratorContext context) {
+        var primer = context.getColumnPrimer();
+        var biomeMap = context.getBiomeMap();
+
         for (var z = 0; z < ColumnPrimer.ZLENGTH; ++z) {
             for (var x = 0; x < ColumnPrimer.XLENGTH; ++x) {
                 if (biomeMap.sampleNearest(x, z) == BiomeType.DESERT.ordinal())

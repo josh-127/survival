@@ -1,7 +1,5 @@
 package net.survival.gen;
 
-import net.survival.gen.layer.GenLayer;
-
 class DefaultColumnDecorator extends ColumnDecorator
 {
     private final BedrockDecorator bedrockDecorator = new BedrockDecorator();
@@ -14,14 +12,14 @@ class DefaultColumnDecorator extends ColumnDecorator
     private final SaplingDecorator saplingDecorator = new SaplingDecorator();
 
     @Override
-    public void decorate(long columnPos, ColumnPrimer primer, GenLayer biomeMap) {
-        bedrockDecorator.decorate(columnPos, primer, biomeMap);
-        desertBiomeDecorator.decorate(columnPos, primer, biomeMap);
-        extremeHillsDecorator.decorate(columnPos, primer, biomeMap);
-        forestBiomeDecorator.decorate(columnPos, primer, biomeMap);
-        grasslandBiomeDecorator.decorate(columnPos, primer, biomeMap);
-        oceanBiomeDecorator.decorate(columnPos, primer, biomeMap);
-        cactusDecorator.decorate(columnPos, primer, biomeMap);
-        saplingDecorator.decorate(columnPos, primer, biomeMap);
+    public void decorate(DecoratorContext context) {
+        bedrockDecorator.decorate(context);
+        desertBiomeDecorator.decorate(context);
+        extremeHillsDecorator.decorate(context);
+        forestBiomeDecorator.decorate(context);
+        grasslandBiomeDecorator.decorate(context);
+        oceanBiomeDecorator.decorate(context);
+        cactusDecorator.decorate(context);
+        saplingDecorator.decorate(context);
     }
 }

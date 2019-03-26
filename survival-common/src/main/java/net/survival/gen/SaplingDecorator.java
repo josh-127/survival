@@ -3,7 +3,6 @@ package net.survival.gen;
 import java.util.Random;
 
 import net.survival.blocktype.BlockType;
-import net.survival.gen.layer.GenLayer;
 
 class SaplingDecorator extends ColumnDecorator
 {
@@ -14,7 +13,11 @@ class SaplingDecorator extends ColumnDecorator
     private final int saplingFullId = BlockType.OAK_SAPLING.getFullId();
 
     @Override
-    public void decorate(long columnPos, ColumnPrimer primer, GenLayer biomeMap) {
+    public void decorate(DecoratorContext context) {
+        var columnPos = context.getColumnPos();
+        var primer = context.getColumnPrimer();
+        var biomeMap = context.getBiomeMap();
+
         random.setSeed(columnPos + 1000L);
 
         for (var i = 0; i < SAPLINGS_PER_COLUMN; ++i) {
