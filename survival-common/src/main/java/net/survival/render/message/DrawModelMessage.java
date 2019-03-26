@@ -6,16 +6,16 @@ import net.survival.render.ModelType;
 
 public class DrawModelMessage extends RenderMessage
 {
-    public final double x;
-    public final double y;
-    public final double z;
-    public final double yaw;
-    public final double pitch;
-    public final double roll;
-    public final double scaleX;
-    public final double scaleY;
-    public final double scaleZ;
-    public final ModelType modelType;
+    private final double x;
+    private final double y;
+    private final double z;
+    private final double yaw;
+    private final double pitch;
+    private final double roll;
+    private final double scaleX;
+    private final double scaleY;
+    private final double scaleZ;
+    private final ModelType modelType;
 
     private DrawModelMessage(
             double x, double y, double z,
@@ -35,6 +35,46 @@ public class DrawModelMessage extends RenderMessage
         this.modelType = modelType;
     }
 
+    public double getX() {
+        return x;
+    }
+
+    public double getY() {
+        return y;
+    }
+
+    public double getZ() {
+        return z;
+    }
+
+    public double getYaw() {
+        return yaw;
+    }
+
+    public double getPitch() {
+        return pitch;
+    }
+
+    public double getRoll() {
+        return roll;
+    }
+
+    public double getScaleX() {
+        return scaleX;
+    }
+
+    public double getScaleY() {
+        return scaleY;
+    }
+
+    public double getScaleZ() {
+        return scaleZ;
+    }
+
+    public ModelType getModelType() {
+        return modelType;
+    }
+
     @Override
     public void accept(RenderMessageVisitor visitor, InteractionContext ic) {
         visitor.visit(ic, this);
@@ -43,10 +83,6 @@ public class DrawModelMessage extends RenderMessage
     @Override
     public int getPriority() {
         return MessagePriority.RESERVED_DRAW.getValue();
-    }
-
-    public ModelType getModelType() {
-        return modelType;
     }
 
     public static class Builder

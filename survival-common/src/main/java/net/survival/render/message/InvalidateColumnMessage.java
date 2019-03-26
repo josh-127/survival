@@ -6,9 +6,9 @@ import net.survival.interaction.MessagePriority;
 
 public class InvalidateColumnMessage extends RenderMessage
 {
-    public final long columnPos;
-    public final Column column;
-    public final ColumnInvalidationPriority invalidationPriority;
+    private final long columnPos;
+    private final Column column;
+    private final ColumnInvalidationPriority invalidationPriority;
 
     public InvalidateColumnMessage(
             long columnPos,
@@ -18,6 +18,18 @@ public class InvalidateColumnMessage extends RenderMessage
         this.columnPos = columnPos;
         this.column = column;
         this.invalidationPriority = invalidationPriority;
+    }
+
+    public long getColumnPos() {
+        return columnPos;
+    }
+
+    public Column getColumn() {
+        return column;
+    }
+
+    public ColumnInvalidationPriority getInvalidationPriority() {
+        return invalidationPriority;
     }
 
     @Override

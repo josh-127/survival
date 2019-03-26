@@ -53,14 +53,17 @@ class ActorDisplay
     }
 
     private void displayModel(DrawModelMessage model) {
-        if (model.modelType != null) {
+        if (model.getModelType() != null) {
             GLMatrixStack.push();
-            GLMatrixStack.translate((float) model.x, (float) model.y, (float) model.z);
-            GLMatrixStack.rotate((float) model.yaw, 0.0f, 1.0f, 0.0f);
-            GLMatrixStack.rotate((float) model.pitch, 1.0f, 0.0f, 0.0f);
-            GLMatrixStack.rotate((float) model.roll, 0.0f, 0.0f, 1.0f);
+            GLMatrixStack.translate(
+                    (float) model.getX(),
+                    (float) model.getY(),
+                    (float) model.getZ());
+            GLMatrixStack.rotate((float) model.getYaw(), 0.0f, 1.0f, 0.0f);
+            GLMatrixStack.rotate((float) model.getPitch(), 1.0f, 0.0f, 0.0f);
+            GLMatrixStack.rotate((float) model.getRoll(), 0.0f, 0.0f, 1.0f);
     
-            var displayable = StaticModel.fromModelType(model.modelType);
+            var displayable = StaticModel.fromModelType(model.getModelType());
             ModelRenderer.displayStaticModel(displayable);
     
             GLMatrixStack.pop();

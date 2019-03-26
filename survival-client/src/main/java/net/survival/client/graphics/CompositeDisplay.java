@@ -224,16 +224,16 @@ public class CompositeDisplay implements RenderContext, GraphicsResource, Render
             for (int i = 0; i < 3 && !columnsToInvalidate.isEmpty(); ++i) {
                 var lastIndex = columnsToInvalidate.size() - 1;
                 var message = columnsToInvalidate.remove(lastIndex);
-                var columnPos = message.columnPos;
-                var column = message.column;
+                var columnPos = message.getColumnPos();
+                var column = message.getColumn();
                 blockDisplay.redrawColumn(columnPos, column);
             }
 
             for (int i = columnsToInvalidate.size() - 1; i >= 0; --i) {
                 var message = columnsToInvalidate.get(i);
-                if (message.invalidationPriority.equals(ColumnInvalidationPriority.NOW)) {
-                    var columnPos = message.columnPos;
-                    var column = message.column;
+                if (message.getInvalidationPriority().equals(ColumnInvalidationPriority.NOW)) {
+                    var columnPos = message.getColumnPos();
+                    var column = message.getColumn();
                     blockDisplay.redrawColumn(columnPos, column);
                 }
             }
@@ -289,10 +289,10 @@ public class CompositeDisplay implements RenderContext, GraphicsResource, Render
 
     @Override
     public void visit(InteractionContext ic, InvalidateColumnMessage message) {
-        var columnPos = message.columnPos;
+        var columnPos = message.getColumnPos();
 
         columnsToInvalidate = columnsToInvalidate.stream()
-                .filter(e -> e.columnPos != columnPos)
+                .filter(e -> e.getColumnPos() != columnPos)
                 .collect(Collectors.toList());
         columnsToInvalidate.add(message);
     }
