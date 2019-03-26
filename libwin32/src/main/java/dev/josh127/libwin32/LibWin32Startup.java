@@ -22,7 +22,7 @@ public final class LibWin32Startup
             checkResult("dxgi.cc", result);
         }
 
-        if ((libraries & LibWin32Libraries.DXGI) != 0) {
+        if ((libraries & LibWin32Libraries.D3D11) != 0) {
             var result = D3D11.nativeInit();
             checkResult("d3d11.cc", result);
         }
