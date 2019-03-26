@@ -11,7 +11,7 @@ public enum MessagePriority
     RESERVED_POST_STEP(3000),
     RESERVED_PRE_DRAW (3100),
     RESERVED_DRAW     (3200),
-    RESERVED_DRAW_DRAW(3300);
+    RESERVED_POST_DRAW(3300);
 
     private int priorityValue;
 
