@@ -1,5 +1,8 @@
 package net.survival.client.graphics;
 
+import java.util.LinkedList;
+import java.util.Queue;
+
 import org.joml.Matrix4f;
 
 import net.survival.client.graphics.opengl.GLImmediateDrawCall;
@@ -37,6 +40,8 @@ public class CompositeDisplay implements RenderContext, GraphicsResource, Render
     private Matrix4f cameraViewMatrix = new Matrix4f();
     private Matrix4f cameraProjectionMatrix = new Matrix4f();
     private Matrix4f hudProjectionMatrix = new Matrix4f();
+
+    private Queue<InvalidateColumnMessage> columnsToInvalidate = new LinkedList<InvalidateColumnMessage>();
 
     public CompositeDisplay(
             ClientParticleSpace clientParticleSpace,
@@ -214,6 +219,13 @@ public class CompositeDisplay implements RenderContext, GraphicsResource, Render
                 0.5f * (skyboxDisplay.getBottomB() + skyboxDisplay.getTopB()),
                 1.0f);
         {
+            for (int i = 0; i < 3 && !columnsToInvalidate.isEmpty(); ++i) {
+                var message = columnsToInvalidate.remove();
+                var columnPos = message.columnPos;
+                var column = message.column;
+                blockDisplay.redrawColumn(columnPos, column);
+            }
+
             if (isVisible(VisibilityFlags.BLOCKS))
                 blockDisplay.display();
 
@@ -265,7 +277,7 @@ public class CompositeDisplay implements RenderContext, GraphicsResource, Render
 
     @Override
     public void visit(InteractionContext ic, InvalidateColumnMessage message) {
-        blockDisplay.redrawColumn(message.columnPos, message.column);
+        columnsToInvalidate.add(message);
     }
 
     @Override
