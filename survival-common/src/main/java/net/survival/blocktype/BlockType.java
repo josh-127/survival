@@ -13,6 +13,7 @@ public final class BlockType
     public static final BasicBlock BEDROCK =
             register(basicBlock()
                     .withDisplayName("Bedrock")
+                    .withTextureOnAllFaces("ProgrammerArt-v3.0/textures/blocks/bedrock.png")
                     .build());
     public static final BasicBlock TEMP_SOLID =
             register(basicBlock()
