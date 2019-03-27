@@ -6,7 +6,7 @@ import net.survival.blocktype.BlockType;
 
 class CactusDecorator extends ColumnDecorator
 {
-    private static final int CACTI_PER_COLUMN = 5;
+    private static final int CACTI_PER_COLUMN = 1;
     private static final int MIN_CACTUS_HEIGHT = 2;
     private static final int MAX_CACTUS_HEIGHT = 4;
     private static final int CACTUS_HEIGHT_RANGE = MAX_CACTUS_HEIGHT - MIN_CACTUS_HEIGHT;

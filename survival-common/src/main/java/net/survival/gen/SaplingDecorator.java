@@ -6,7 +6,7 @@ import net.survival.blocktype.BlockType;
 
 class SaplingDecorator extends ColumnDecorator
 {
-    private static final int SAPLINGS_PER_COLUMN = 5;
+    private static final int SAPLINGS_PER_COLUMN = 2;
 
     private final Random random = new Random();
     private final int sandFullId = BlockType.SAND.getFullId();
