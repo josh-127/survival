@@ -110,5 +110,11 @@
     <ClCompile Include="source\libwin32-startup.cc">
       <Filter>Sources</Filter>
     </ClCompile>
+    <ClCompile Include="source\d3d11.cc">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="source\dxgi.cc">
+      <Filter>Sources</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
