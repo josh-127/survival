@@ -19,9 +19,9 @@ public class DefaultColumnGenerator implements ColumnProvider
     private static final int NMAP_ZLENGTH = (ColumnPrimer.ZLENGTH / NBLOCK_ZLENGTH) + 1;
     private static final int NMAP_XLENGTH = (ColumnPrimer.XLENGTH / NBLOCK_XLENGTH) + 1;
 
-    private static final double MAIN_NOISE_XSCALE = 1.0 / 128.0;
-    private static final double MAIN_NOISE_YSCALE = 1.0 / 128.0;
-    private static final double MAIN_NOISE_ZSCALE = 1.0 / 128.0;
+    private static final double MAIN_NOISE_XSCALE = 1.0 / 48.0;
+    private static final double MAIN_NOISE_YSCALE = 1.0 / 48.0;
+    private static final double MAIN_NOISE_ZSCALE = 1.0 / 48.0;
     private static final int MAIN_NOISE_OCTAVE_COUNT = 6;
 
     private static final int BIOME_TRANSITION_XLENGTH = NBLOCK_XLENGTH * 2;
