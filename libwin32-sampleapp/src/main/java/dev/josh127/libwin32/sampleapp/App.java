@@ -58,6 +58,7 @@ public class App {
         var backBufferTexture = swapChain.getBuffer(0);
         var backBufferView = device.createRenderTargetView(backBufferTexture, null);
         deviceContext.omSetRenderTargets(new D3D11.RenderTargetView[] { backBufferView }, null);
+        backBufferTexture.release();
 
         var viewport = D3D11.Viewport.create(0.0f, 0.0f, CLIENT_WIDTH, CLIENT_HEIGHT, -1.0f, 1.0f);
         deviceContext.rsSetViewports(new D3D11.Viewport[] { viewport });
@@ -68,5 +69,11 @@ public class App {
             deviceContext.clearRenderTargetView(backBufferView, 0.0f, 0.0f, 1.0f, 0.0f);
             swapChain.present(0, 0);
         }
+
+        backBufferView.release();
+
+        device.release();
+        deviceContext.release();
+        swapChain.release();
     }
 }
