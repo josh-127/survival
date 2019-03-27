@@ -5,7 +5,7 @@ import net.survival.blocktype.BlockType;
 class DesertBiomeDecorator extends ColumnDecorator
 {
     private final int stoneId = BlockType.STONE.getFullId();
-    // TODO: Generate sandstone.
+    private final int sandstoneId = BlockType.SANDSTONE.getFullId();
     private final int sandId = BlockType.SAND.getFullId();
     private final int tempSolidId = BlockType.TEMP_SOLID.getFullId();
 
@@ -53,6 +53,18 @@ class DesertBiomeDecorator extends ColumnDecorator
                 break;
 
             case 2:
+                if (counter > 0) {
+                    primer.setBlockFullId(x, y, z, sandstoneId);
+                    --counter;
+
+                    if (counter == 0) {
+                        ++state;
+                        counter = 8;
+                    }
+                }
+                break;
+
+            case 3:
                 primer.setBlockFullId(x, y, z, stoneId);
                 break;
             }

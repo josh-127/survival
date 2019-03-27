@@ -41,6 +41,12 @@ public final class BlockType
             register(basicBlock()
                     .withTextureOnAllFaces("ProgrammerArt-v3.0/textures/blocks/sand.png")
                     .build());
+    public static final BasicBlock SANDSTONE =
+            register(basicBlock()
+                    .withTextureOnSides("ProgrammerArt-v3.0/textures/blocks/sandstone_normal.png")
+                    .withTexture(BlockFace.TOP, "ProgrammerArt-v3.0/textures/blocks/sandstone_top.png")
+                    .withTexture(BlockFace.BOTTOM, "ProgrammerArt-v3.0/textures/blocks/sandstone_bottom.png")
+                    .build());
     public static final BasicBlock GRASS_BLOCK =
             register(basicBlock()
                     .withDisplayName("Grass Block")
