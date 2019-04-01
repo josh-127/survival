@@ -49,7 +49,7 @@ class SurfaceDecorator extends ColumnDecorator
 
             var blockId = layer.getBlockId();
 
-            while (thickness >= 0) {
+            while (thickness > 0) {
                 primer.setBlockFullId(x, y, z, blockId);
                 --y;
                 --thickness;

@@ -39,7 +39,7 @@ public class DefaultColumnGenerator implements ColumnProvider
     private final DefaultColumnDecorator columnDecorator;
 
     private final ColumnPrimer columnPrimer;
-    private final int tempSolidId;
+    private final int stoneId;
 
     public DefaultColumnGenerator(long seed) {
         mainNoiseGenerator = new ImprovedNoiseGenerator3D(MAIN_NOISE_XSCALE, MAIN_NOISE_YSCALE,
@@ -57,7 +57,7 @@ public class DefaultColumnGenerator implements ColumnProvider
         columnDecorator = new DefaultColumnDecorator();
 
         columnPrimer = new ColumnPrimer();
-        tempSolidId = BlockType.TEMP_SOLID.getFullId();
+        stoneId = BlockType.STONE.getFullId();
     }
 
     @Override
@@ -98,7 +98,7 @@ public class DefaultColumnGenerator implements ColumnProvider
                     var threshold = (y - minElevation) / elevationRange;
 
                     if (density >= threshold)
-                        columnPrimer.setBlockFullId(x, y, z, tempSolidId);
+                        columnPrimer.setBlockFullId(x, y, z, stoneId);
                 }
             }
         }
