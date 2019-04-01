@@ -3,31 +3,8 @@ package net.survival.client.graphics.blockrenderer;
 import net.survival.blocktype.BlockId;
 import net.survival.client.graphics.opengl.GLDisplayList;
 
-class NorthCeilingStairsRenderer extends BlockRenderer
+class NorthCeilingStairsRenderer extends DefaultBlockRenderer
 {
-    public NorthCeilingStairsRenderer() {
-        super(false);
-    }
-
-    @Override
-    public void pushTopFaces(int x, int y, int z, int blockId, int adjacentBlockId,
-            GLDisplayList.Builder builder)
-    {
-        if (blockToBlockingBottomTable[BlockId.typeIdFromFullId(adjacentBlockId)])
-            return;
-
-        var u1 = topFaceTextures.getTexCoordU1(blockId);
-        var u2 = topFaceTextures.getTexCoordU2(blockId);
-        var v1 = topFaceTextures.getTexCoordV1(blockId);
-        var v2 = topFaceTextures.getTexCoordV2(blockId);
-        builder.setTexCoord(u1, v1); builder.pushVertex(x,        y + 1.0f, z + 1.0f);
-        builder.setTexCoord(u2, v1); builder.pushVertex(x + 1.0f, y + 1.0f, z + 1.0f);
-        builder.setTexCoord(u2, v2); builder.pushVertex(x + 1.0f, y + 1.0f, z       );
-        builder.setTexCoord(u2, v2); builder.pushVertex(x + 1.0f, y + 1.0f, z       );
-        builder.setTexCoord(u1, v2); builder.pushVertex(x,        y + 1.0f, z       );
-        builder.setTexCoord(u1, v1); builder.pushVertex(x,        y + 1.0f, z + 1.0f);
-    }
-
     @Override
     public void pushBottomFaces(int x, int y, int z, int blockId, int adjacentBlockId,
             GLDisplayList.Builder builder)
@@ -130,24 +107,5 @@ class NorthCeilingStairsRenderer extends BlockRenderer
         builder.setTexCoord(u2, v2); builder.pushVertex(x + 1.0f, y + 0.5f, z + 0.5f);
         builder.setTexCoord(u1, v2); builder.pushVertex(x,        y + 0.5f, z + 0.5f);
         builder.setTexCoord(u1, v1); builder.pushVertex(x,        y,        z + 0.5f);
-    }
-
-    @Override
-    public void pushBackFaces(int x, int y, int z, int blockId, int adjacentBlockId,
-            GLDisplayList.Builder builder)
-    {
-        if (blockToBlockingFrontTable[BlockId.typeIdFromFullId(adjacentBlockId)])
-            return;
-
-        var u1 = backFaceTextures.getTexCoordU1(blockId);
-        var u2 = backFaceTextures.getTexCoordU2(blockId);
-        var v1 = backFaceTextures.getTexCoordV1(blockId);
-        var v2 = backFaceTextures.getTexCoordV2(blockId);
-        builder.setTexCoord(u1, v1); builder.pushVertex(x + 1.0f, y,        z);
-        builder.setTexCoord(u2, v1); builder.pushVertex(x,        y,        z);
-        builder.setTexCoord(u2, v2); builder.pushVertex(x,        y + 1.0f, z);
-        builder.setTexCoord(u2, v2); builder.pushVertex(x,        y + 1.0f, z);
-        builder.setTexCoord(u1, v2); builder.pushVertex(x + 1.0f, y + 1.0f, z);
-        builder.setTexCoord(u1, v1); builder.pushVertex(x + 1.0f, y,        z);
     }
 }
