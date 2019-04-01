@@ -29,8 +29,6 @@ public class DefaultColumnGenerator implements ColumnProvider
     private static final int BIOME_TRANSITION_AREA = BIOME_TRANSITION_XLENGTH
             * BIOME_TRANSITION_ZLENGTH;
 
-    private static final int OCEAN_LEVEL = 64;
-
     private final ImprovedNoiseGenerator3D mainNoiseGenerator;
     private final GenLayer biomeLayer;
 
@@ -42,7 +40,6 @@ public class DefaultColumnGenerator implements ColumnProvider
 
     private final ColumnPrimer columnPrimer;
     private final int tempSolidId;
-    private final int waterId;
 
     public DefaultColumnGenerator(long seed) {
         mainNoiseGenerator = new ImprovedNoiseGenerator3D(MAIN_NOISE_XSCALE, MAIN_NOISE_YSCALE,
@@ -61,7 +58,6 @@ public class DefaultColumnGenerator implements ColumnProvider
 
         columnPrimer = new ColumnPrimer();
         tempSolidId = BlockType.TEMP_SOLID.getFullId();
-        waterId = BlockType.WATER.getFullId();
     }
 
     @Override
@@ -103,8 +99,6 @@ public class DefaultColumnGenerator implements ColumnProvider
 
                     if (density >= threshold)
                         columnPrimer.setBlockFullId(x, y, z, tempSolidId);
-                    else if (y <= OCEAN_LEVEL)
-                        columnPrimer.setBlockFullId(x, y, z, waterId);
                 }
             }
         }
