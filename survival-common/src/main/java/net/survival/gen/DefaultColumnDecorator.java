@@ -45,6 +45,8 @@ class DefaultColumnDecorator extends ColumnDecorator
             .build();
     private final SurfaceDecorator oceanSurfaceDecorator = new SurfaceDecorator(oceanSurface);
 
+    private final WaterDecorator waterDecorator = new WaterDecorator();
+
     private final CactusDecorator cactusDecorator = new CactusDecorator();
     private final SaplingDecorator saplingDecorator = new SaplingDecorator();
 
@@ -56,6 +58,7 @@ class DefaultColumnDecorator extends ColumnDecorator
         forestSurfaceDecorator.decorate(context);
         grasslandSurfaceDecorator.decorate(context);
         oceanSurfaceDecorator.decorate(context);
+        waterDecorator.decorate(context);
         cactusDecorator.decorate(context);
         saplingDecorator.decorate(context);
     }
