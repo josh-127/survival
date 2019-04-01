@@ -23,6 +23,8 @@ import net.survival.block.message.BlockMessage;
 import net.survival.block.message.BreakBlockMessage;
 import net.survival.block.message.CloseColumnRequest;
 import net.survival.block.message.MaskColumnsMessage;
+import net.survival.block.message.PlaceBlockMessage;
+import net.survival.blocktype.BlockType;
 import net.survival.client.graphics.CompositeDisplay;
 import net.survival.client.graphics.GraphicsSettings;
 import net.survival.client.graphics.VisibilityFlags;
@@ -265,7 +267,9 @@ public class Client implements AutoCloseable
                 pz -= DELTA * Math.cos(fpvCamera.yaw) * Math.cos(fpvCamera.pitch);
                 var pxi = (int) Math.floor(px); var pyi = (int) Math.floor(py); var pzi = (int) Math.floor(pz);
                 if (blockSpace.getBlockFullId(pxi, pyi, pzi) != 0) {
-                    if (Mouse.isLmbPressed()) messageQueue.enqueueMessage(new BreakBlockMessage(pxi, pyi, pzi));
+                    var blockId = BlockType.STONE_STAIRS.getFullId();
+                    if (Mouse.isLmbPressed())      messageQueue.enqueueMessage(new BreakBlockMessage(pxi, pyi, pzi));
+                    else if (Mouse.isRmbPressed()) messageQueue.enqueueMessage(new PlaceBlockMessage(pxi, pyi, pzi, blockId));
                     break;
                 }
             }
