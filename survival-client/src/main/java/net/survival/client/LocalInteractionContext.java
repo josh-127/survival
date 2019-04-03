@@ -5,7 +5,7 @@ import net.survival.block.BlockSpace;
 import net.survival.block.ColumnPos;
 import net.survival.blocktype.Block;
 import net.survival.blocktype.BlockType;
-import net.survival.client.particle.ClientParticleSpace;
+import net.survival.graphics.particle.ClientParticleSpace;
 import net.survival.interaction.InteractionContext;
 import net.survival.interaction.Message;
 import net.survival.interaction.MessageQueue;
