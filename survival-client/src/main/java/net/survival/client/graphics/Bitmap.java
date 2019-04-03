@@ -20,6 +20,13 @@ public class Bitmap
         this.pixels = pixels;
     }
 
+    public Bitmap makeCopy() {
+        int[] copyOfPixels = new int[pixels.length];
+        System.arraycopy(pixels, 0, copyOfPixels, 0, copyOfPixels.length);
+
+        return new Bitmap(width, height, copyOfPixels);
+    }
+
     private static final int[] stbi_load_w = new int[1];
     private static final int[] stbi_load_h = new int[1];
     private static final int[] stbi_load_comp = new int[1];
