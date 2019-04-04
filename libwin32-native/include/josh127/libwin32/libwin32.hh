@@ -133,7 +133,6 @@ public:
     }
 
     static inline T* Alloc() {
-        // Dunno why GlobalAlloc didn't work. Ah well. >:/
         return reinterpret_cast<T*>(VirtualAlloc(0, sizeof(T*), MEM_COMMIT, PAGE_READWRITE));
     }
 
