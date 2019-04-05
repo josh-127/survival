@@ -36,8 +36,14 @@ class BitmapComponent extends JComponent {
 
             for (var y = 0; y < height; ++y) {
                 for (var x = 0; x < width; ++x) {
-                    var color = bitmap.getPixel(x, y);
-                    g.setColor(new Color(color));
+                    var srcColor = bitmap.getPixel(x, y);
+                    var red = srcColor & 0xFF;
+                    var green = (srcColor & 0xFF00) >>> 8;
+                    var blue = (srcColor & 0xFF0000) >>> 16;
+
+                    var destColor = (red << 16) | (green << 8) | blue;
+
+                    g.setColor(new Color(destColor));
                     g.fillRect(x, y, 1, 1);
                 }
             }
