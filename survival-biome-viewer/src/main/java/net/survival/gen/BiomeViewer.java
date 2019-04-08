@@ -20,7 +20,6 @@ public class BiomeViewer extends JFrame
     private BiomeViewer(long seed) {
         viewport = new ViewportComponent();
         addKeyListener(viewport);
-        setContentPane(viewport);
 
         setJMenuBar(new JMenuBar());
         createGeneratorMenu();
@@ -31,6 +30,9 @@ public class BiomeViewer extends JFrame
         setExtendedState(getExtendedState() | JFrame.MAXIMIZED_BOTH);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         requestFocusInWindow();
+
+        viewport.setSize(getSize());
+        add(viewport);
     }
 
     public static void main(String[] args) {

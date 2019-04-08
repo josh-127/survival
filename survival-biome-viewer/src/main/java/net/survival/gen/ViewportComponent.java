@@ -1,11 +1,15 @@
 package net.survival.gen;
 
+import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.image.BufferStrategy;
+import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferInt;
 
 import javax.swing.JComponent;
 import javax.swing.Timer;
@@ -13,7 +17,7 @@ import javax.swing.Timer;
 import net.survival.gen.layer.GenLayer;
 import net.survival.gen.layer.GenLayerFactory;
 
-public class ViewportComponent extends JComponent implements ActionListener, KeyListener
+public class ViewportComponent extends Canvas implements ActionListener, KeyListener
 {
     private static final long serialVersionUID = 1L;
 
@@ -27,6 +31,8 @@ public class ViewportComponent extends JComponent implements ActionListener, Key
     private boolean leftPressed;
     private boolean rightPressed;
 
+    private BufferStrategy bufferStrategy;
+
     public ViewportComponent() {
         map = GenLayerFactory.createBiomeLayer(768, 768, 0L);
 
@@ -39,29 +45,38 @@ public class ViewportComponent extends JComponent implements ActionListener, Key
         timer.start();
     }
 
-    @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
+    public void redraw() {
+        var dest = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_RGB);
+        var destPixels = ((DataBufferInt) dest.getRaster().getDataBuffer()).getData();
+        bufferStrategy = getBufferStrategy();
+        if (bufferStrategy == null) {
+            createBufferStrategy(4);
+            return;
+        }
 
         final var VIEWPORT_WIDTH = map.lengthX;
         final var VIEWPORT_HEIGHT = map.lengthZ;
         final var VIEWPORT_X = (getWidth() - VIEWPORT_WIDTH) / 2;
         final var VIEWPORT_Z = (getHeight() - VIEWPORT_HEIGHT) / 2;
 
-        g.setColor(Color.BLACK);
-        g.fillRect(0, 0, getWidth(), getHeight());
+        var destWidth = dest.getWidth();
+        var destHeight = dest.getHeight();
+
+        //g.setColor(Color.BLACK);
+        //g.fillRect(0, 0, getWidth(), getHeight());
 
         for (var z = 0; z < VIEWPORT_HEIGHT; ++z) {
             for (var x = 0; x < VIEWPORT_WIDTH; ++x) {
                 var biomeID = map.sampleNearest(x, z);
                 var biomeColor = BiomeType.byId(biomeID).getBiomeViewerColor();
-                var red = (biomeColor & 0xFF0000) >>> 16;
-                var green = (biomeColor & 0xFF00) >>> 8;
-                var blue = biomeColor & 0xFF;
-                g.setColor(new Color(red, green, blue));
-                g.fillRect(VIEWPORT_X + x, VIEWPORT_Z + z, 1, 1);
+                destPixels[(VIEWPORT_X + x) + (VIEWPORT_Z + z) * destWidth] = biomeColor;
             }
         }
+
+        var graphics = bufferStrategy.getDrawGraphics();
+        graphics.drawImage(dest, 0, 0, destWidth, destHeight, null);
+        graphics.dispose();
+        bufferStrategy.show();
     }
 
     @Override
@@ -82,7 +97,7 @@ public class ViewportComponent extends JComponent implements ActionListener, Key
 
         if (offsetX != prevOffsetX || offsetZ != prevOffsetZ) {
             map.generate(offsetX, offsetZ);
-            repaint();
+            redraw();
         }
     }
 
