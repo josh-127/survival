@@ -61,14 +61,18 @@ public class TexturePacker extends JFrame {
                         .toString();
 
                 var chooser = new JFileChooser(assetDir);
+                chooser.setMultiSelectionEnabled(true);
+
                 var result = chooser.showOpenDialog(parent);
 
                 if (result == JFileChooser.APPROVE_OPTION) {
-                    var file = chooser.getSelectedFile();
-                    var bitmap = (Bitmap) null;
+                    var files = chooser.getSelectedFiles();
+                    var bitmaps = new Bitmap[files.length];
 
                     try {
-                        bitmap = Bitmap.fromFile(file.getCanonicalPath());
+                        for (var i = 0; i < bitmaps.length; ++i) {
+                                bitmaps[i] = Bitmap.fromFile(files[i].getCanonicalPath());
+                        }
                     }
                     catch (Exception e1) {
                         JOptionPane.showMessageDialog(
@@ -76,11 +80,13 @@ public class TexturePacker extends JFrame {
                                 "Unable to open file.",
                                 TITLE,
                                 JOptionPane.ERROR_MESSAGE);
-                        bitmap = null;
+                        bitmaps = null;
                     }
 
-                    if (bitmap != null) {
-                        atlasBuilder.addBitmap(bitmap);
+                    if (bitmaps != null) {
+                        for (var bitmap : bitmaps) {
+                            atlasBuilder.addBitmap(bitmap);
+                        }
 
                         var newAtlas = atlasBuilder.build();
                         viewport.setBitmap(newAtlas);
