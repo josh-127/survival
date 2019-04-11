@@ -140,7 +140,7 @@ public class Client implements AutoCloseable
         var totalMemory = Runtime.getRuntime().totalMemory();
         var freeMemory = Runtime.getRuntime().freeMemory();
         var usedMemory = totalMemory - freeMemory;
-        var usedMemoryText = String.format("Memory Usage: %.2f MiB\n", usedMemory / 1024.0 / 1024.0);
+        var usedMemoryText = String.format("Memory Usage: %.2f MiB", usedMemory / 1024.0 / 1024.0);
         messageQueue.enqueueMessage(new DrawLabelMessage(usedMemoryText, 3.0, 30.0, 30.0));
 
         // Application-Wide Message Dispatcher
