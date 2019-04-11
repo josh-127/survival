@@ -44,7 +44,6 @@ public class BlockTextureAtlas implements GraphicsResource
         }
 
         var texturePaths = bitmapPathMap.entrySet().stream()
-                /*
                 .sorted((o1, o2) -> {
                     var v1 = o1.getValue();
                     var v2 = o2.getValue();
@@ -58,7 +57,6 @@ public class BlockTextureAtlas implements GraphicsResource
                     }
                     return 0;
                 })
-                */
                 .collect(Collectors.toList());
 
         for (var entry : texturePaths) {
