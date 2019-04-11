@@ -11,9 +11,9 @@ class ColumnDisplay implements GraphicsResource
 {
     private static final Chunk EMPTY_CHUNK = new Chunk();
 
-    public final GLDisplayList displayList;
-    public final int cx;
-    public final int cz;
+    private final GLDisplayList displayList;
+    private final int cx;
+    private final int cz;
 
     private ColumnDisplay(GLDisplayList displayList, int cx, int cz) {
         this.displayList = displayList;
@@ -1254,6 +1254,14 @@ class ColumnDisplay implements GraphicsResource
         if (displayList != null) {
             GLRenderContext.callDisplayList(displayList, texture);
         }
+    }
+
+    public int getChunkX() {
+        return cx;
+    }
+
+    public int getChunkZ() {
+        return cz;
     }
 
     public boolean isEmpty() {

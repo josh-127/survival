@@ -68,8 +68,8 @@ class BlockDisplay implements GraphicsResource
     private void drawColumnDisplays(HashMap<Column, ColumnDisplay> displays, Matrix4f viewMatrix) {
         for (var entry : displays.entrySet()) {
             var columnDisplay = entry.getValue();
-            var globalX = ColumnPos.toGlobalX(columnDisplay.cx, 0);
-            var globalZ = ColumnPos.toGlobalZ(columnDisplay.cz, 0);
+            var globalX = ColumnPos.toGlobalX(columnDisplay.getChunkX(), 0);
+            var globalZ = ColumnPos.toGlobalZ(columnDisplay.getChunkZ(), 0);
 
             modelViewMatrix.set(viewMatrix).translate(globalX, 0.0f, globalZ);
             GLMatrixStack.load(modelViewMatrix);
