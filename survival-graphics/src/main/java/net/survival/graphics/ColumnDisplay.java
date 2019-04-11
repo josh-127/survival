@@ -32,11 +32,8 @@ class ColumnDisplay implements GraphicsResource
     {
         var builder = new GLDisplayList.Builder();
 
-        for (var i = 0; i < Column.MAX_HEIGHT; ++i) {
+        for (var i = 0; i < column.getHeight(); ++i) {
             var chunk = column.getChunk(i);
-            if (chunk == null) {
-                continue;
-            }
 
             var topAdjChunk = (Chunk) null;
             var bottomAdjChunk = (Chunk) null;
@@ -45,12 +42,11 @@ class ColumnDisplay implements GraphicsResource
             var frontAdjChunk = (Chunk) null;
             var backAdjChunk = (Chunk) null;
 
-            if (i < Column.MAX_HEIGHT - 1) {
-                topAdjChunk = column.getChunk(i + 1);
-                if (topAdjChunk == null) {
-                    topAdjChunk = EMPTY_CHUNK;
-                }
+            topAdjChunk = column.getChunk(i + 1);
+            if (topAdjChunk == null) {
+                topAdjChunk = EMPTY_CHUNK;
             }
+
             if (i > 0) {
                 bottomAdjChunk = column.getChunk(i - 1);
                 if (bottomAdjChunk == null) {

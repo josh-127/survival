@@ -10,21 +10,17 @@ class ColumnCodec
 {
     private static final int COLUMN_HEADER_SIZE = 2;
     private static final int CHUNK_HEADER_SIZE = 6;
+    private static final int MAX_COLUMN_VOLUME = Column.BASE_AREA * 4096;
 
     private final ByteBuffer columnBuffer = ByteBuffer.allocateDirect(
-            COLUMN_HEADER_SIZE + 8 * CHUNK_HEADER_SIZE + 8 * Column.VOLUME);
+            COLUMN_HEADER_SIZE + 8 * CHUNK_HEADER_SIZE + 8 * MAX_COLUMN_VOLUME);
 
     public ByteBuffer compressColumn(Column column) {
         columnBuffer.clear();
 
-        var enabledChunks = 0L;
-        for (var i = 0; i < Column.MAX_HEIGHT; ++i) {
-            if (column.getChunk(i) != null)
-                enabledChunks |= 1L << i;
-        }
-        columnBuffer.putLong(enabledChunks);
+        columnBuffer.putInt(column.getHeight());
 
-        for (var i = 0; i < Column.MAX_HEIGHT; ++i) {
+        for (var i = 0; i < column.getHeight(); ++i) {
             var chunk = column.getChunk(i);
             if (chunk != null)
                 compressChunk(chunk, columnBuffer);
@@ -63,13 +59,11 @@ class ColumnCodec
         columnBuffer.flip();
 
         var column = new Column();
-        var enabledChunks = columnBuffer.getLong();
+        var columnHeight = columnBuffer.getInt();
 
-        for (var i = 0; i < Column.MAX_HEIGHT; ++i) {
-            if ((enabledChunks & (1L << i)) != 0L) {
+        for (var i = 0; i < columnHeight; ++i) {
                 var chunk = decompressChunk(columnBuffer);
-                column.setChunk(i, chunk);
-            }
+                column.pushChunk(chunk);
         }
 
         return column;

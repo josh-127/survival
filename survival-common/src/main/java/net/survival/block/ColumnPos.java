@@ -49,8 +49,12 @@ public class ColumnPos
     }
 
     public static boolean isInBounds(int lx, int ly, int lz) {
-        return lx >= 0 && lx < Column.XLENGTH && ly >= 0 && ly < Column.YLENGTH && lz >= 0
-                && lz < Column.ZLENGTH;
+        return
+                lx >= 0 &&
+                lx < Column.XLENGTH &&
+                ly >= 0 &&
+                lz >= 0 &&
+                lz < Column.ZLENGTH;
     }
 
     /**

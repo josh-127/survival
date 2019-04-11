@@ -1,6 +1,5 @@
 package net.survival.actor;
 
-import net.survival.block.Column;
 import net.survival.interaction.InteractionContext;
 import net.survival.util.HitBox;
 import net.survival.util.MathEx;
@@ -118,7 +117,7 @@ public class Locomotion
 
         var floorY = (int) Math.floor(y - hitBox.radiusY);
 
-        if (floorY < 0 || floorY + 1 >= Column.YLENGTH)
+        if (floorY < 0)
             return false;
 
         for (var blockZ = startZ; blockZ <= endZ; ++blockZ) {
@@ -155,7 +154,7 @@ public class Locomotion
 
         var ceilingY = (int) Math.floor(y + hitBox.radiusY);
 
-        if (ceilingY - 1 < 0 || ceilingY >= Column.YLENGTH)
+        if (ceilingY - 1 < 0)
             return false;
 
         for (var blockZ = startZ; blockZ <= endZ; ++blockZ) {
@@ -185,7 +184,7 @@ public class Locomotion
         var startY = (int) Math.floor(y - hitBox.radiusY);
         var endY = (int) Math.floor(y + hitBox.radiusY);
 
-        if (startY < 0 || endY >= Column.YLENGTH)
+        if (startY < 0)
             return false;
 
         var startZ = (int) Math.floor(z - hitBox.radiusZ);
@@ -220,7 +219,7 @@ public class Locomotion
         var startY = (int) Math.floor(y - hitBox.radiusY);
         var endY = (int) Math.floor(y + hitBox.radiusY);
 
-        if (startY < 0 || endY >= Column.YLENGTH)
+        if (startY < 0)
             return false;
 
         var startZ = (int) Math.floor(z - hitBox.radiusZ);
@@ -255,7 +254,7 @@ public class Locomotion
         var startY = (int) Math.floor(y - hitBox.radiusY);
         var endY = (int) Math.floor(y + hitBox.radiusY);
 
-        if (startY < 0 || endY >= Column.YLENGTH)
+        if (startY < 0)
             return false;
 
         var startX = (int) Math.floor(x - hitBox.radiusX);
@@ -290,7 +289,7 @@ public class Locomotion
         var startY = (int) Math.floor(y - hitBox.radiusY);
         var endY = (int) Math.floor(y + hitBox.radiusY);
 
-        if (startY < 0 || endY >= Column.YLENGTH)
+        if (startY < 0)
             return false;
 
         var startX = (int) Math.floor(x - hitBox.radiusX);
