@@ -4,7 +4,7 @@ import net.survival.block.Column;
 import net.survival.blocktype.Block;
 import net.survival.blocktype.BlockType;
 
-class ColumnPrimer
+public class ColumnPrimer
 {
     public static final int XLENGTH = Column.XLENGTH;
     public static final int YLENGTH = 256;

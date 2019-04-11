@@ -1,6 +1,7 @@
-package net.survival.gen;
+package net.survival.gen.decoration;
 
 import net.survival.blocktype.BlockType;
+import net.survival.gen.ColumnPrimer;
 
 class BedrockDecorator extends ColumnDecorator
 {

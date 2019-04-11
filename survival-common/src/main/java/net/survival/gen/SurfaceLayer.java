@@ -1,6 +1,6 @@
 package net.survival.gen;
 
-class SurfaceLayer
+public class SurfaceLayer
 {
     private final int blockId;
     private final int minThickness;

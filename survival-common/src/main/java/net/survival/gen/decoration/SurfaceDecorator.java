@@ -1,6 +1,11 @@
-package net.survival.gen;
+package net.survival.gen.decoration;
 
 import java.util.Random;
+
+import net.survival.gen.BiomeType;
+import net.survival.gen.ColumnPrimer;
+import net.survival.gen.SurfaceDescription;
+import net.survival.gen.SurfaceLayer;
 
 class SurfaceDecorator extends ColumnDecorator
 {

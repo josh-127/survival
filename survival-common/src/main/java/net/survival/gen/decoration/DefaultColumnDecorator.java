@@ -1,8 +1,12 @@
-package net.survival.gen;
+package net.survival.gen.decoration;
 
 import net.survival.blocktype.BlockType;
+import net.survival.gen.BiomeType;
+import net.survival.gen.SurfaceDescription;
+import net.survival.gen.SurfaceLayer;
+import net.survival.gen.SurfaceDescription.Builder;
 
-class DefaultColumnDecorator extends ColumnDecorator
+public class DefaultColumnDecorator extends ColumnDecorator
 {
     private final int grassId = BlockType.GRASS_BLOCK.getFullId();
     private final int dirtId = BlockType.DIRT.getFullId();

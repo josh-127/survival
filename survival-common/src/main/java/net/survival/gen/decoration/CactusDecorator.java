@@ -1,8 +1,10 @@
-package net.survival.gen;
+package net.survival.gen.decoration;
 
 import java.util.Random;
 
 import net.survival.blocktype.BlockType;
+import net.survival.gen.BiomeType;
+import net.survival.gen.ColumnPrimer;
 
 class CactusDecorator extends ColumnDecorator
 {
