@@ -232,6 +232,140 @@ public class DoubleNoise
         return value;
     }
 
+    public static double improvedOctave2D(double x, double y, long seed) {
+        var xf = floor(x);
+        var yf = floor(y);
+        var xfi = (int) xf;
+        int yfi = (int) yf;
+        var xt = x - xf;
+        var yt = y - yf;
+
+        var tlHash = IntNoise.white2D(xfi,     yfi,     seed);
+        var trHash = IntNoise.white2D(xfi + 1, yfi,     seed);
+        var blHash = IntNoise.white2D(xfi,     yfi + 1, seed);
+        var brHash = IntNoise.white2D(xfi + 1, yfi + 1, seed);
+
+        var tlDotProduct = gradDotDist2D(tlHash, xt,       yt);
+        var trDotProduct = gradDotDist2D(trHash, xt - 1.0, yt);
+        var blDotProduct = gradDotDist2D(blHash, xt,       yt - 1.0);
+        var brDotProduct = gradDotDist2D(brHash, xt - 1.0, yt - 1.0);
+
+        var interpX = perlinFade(xt);
+        var interpY = perlinFade(yt);
+
+        var top = lerp(tlDotProduct, trDotProduct, interpX);
+        var bottom = lerp(blDotProduct, brDotProduct, interpX);
+
+        var value = lerp(top, bottom, interpY);
+        return value;
+    }
+
+    public static double improvedOctave3D(double x, double y, double z, long seed) {
+        var xf = floor(x);
+        var yf = floor(y);
+        var zf = floor(z);
+        var xfi = (int) xf;
+        var yfi = (int) yf;
+        var zfi = (int) zf;
+        var xt = x - xf;
+        var yt = y - yf;
+        var zt = z - zf;
+
+        var bblHash = IntNoise.white3D(xfi,     yfi,     zfi,     seed);
+        var bbrHash = IntNoise.white3D(xfi + 1, yfi,     zfi,     seed + 1L);
+        var bflHash = IntNoise.white3D(xfi,     yfi,     zfi + 1, seed + 2L);
+        var bfrHash = IntNoise.white3D(xfi + 1, yfi,     zfi + 1, seed + 3L);
+        var tblHash = IntNoise.white3D(xfi,     yfi + 1, zfi,     seed + 4L);
+        var tbrHash = IntNoise.white3D(xfi + 1, yfi + 1, zfi,     seed + 5L);
+        var tflHash = IntNoise.white3D(xfi,     yfi + 1, zfi + 1, seed + 6L);
+        var tfrHash = IntNoise.white3D(xfi + 1, yfi + 1, zfi + 1, seed + 7L);
+
+        var bblDotProduct = gradDotDist3D(bblHash, xt,       yt,       zt);
+        var bbrDotProduct = gradDotDist3D(bbrHash, xt - 1.0, yt,       zt);
+        var bflDotProduct = gradDotDist3D(bflHash, xt,       yt,       zt - 1.0);
+        var bfrDotProduct = gradDotDist3D(bfrHash, xt - 1.0, yt,       zt - 1.0);
+        var tblDotProduct = gradDotDist3D(tblHash, xt,       yt - 1.0, zt);
+        var tbrDotProduct = gradDotDist3D(tbrHash, xt - 1.0, yt - 1.0, zt);
+        var tflDotProduct = gradDotDist3D(tflHash, xt,       yt - 1.0, zt - 1.0);
+        var tfrDotProduct = gradDotDist3D(tfrHash, xt - 1.0, yt - 1.0, zt - 1.0);
+
+        var interpX = perlinFade(xt);
+        var interpY = perlinFade(yt);
+        var interpZ = perlinFade(zt);
+
+        var bottomBack = lerp(bblDotProduct, bbrDotProduct, interpX);
+        var bottomFront = lerp(bflDotProduct, bfrDotProduct, interpX);
+        var bottom = lerp(bottomBack, bottomFront, interpZ);
+        var topBack = lerp(tblDotProduct, tbrDotProduct, interpX);
+        var topFront = lerp(tflDotProduct, tfrDotProduct, interpX);
+        var top = lerp(topBack, topFront, interpZ);
+
+        var value = lerp(bottom, top, interpY);
+        return value;
+    }
+
+    public static double improved2D(double x, double y, int octaveCount, long seed) {
+        var value = 0.0;
+        var scale = 1.0;
+
+        for (var i = 0; i < octaveCount; ++i) {
+            value += improvedOctave2D(x * scale, y * scale, seed) / scale;
+            scale *= 2.0;
+        }
+
+        value /= (2.0 - 2.0 / scale);
+        return value;
+    }
+
+    public static double improved3D(double x, double y, double z, int octaveCount, long seed) {
+        var value = 0.0;
+        var scale = 1.0;
+
+        for (var i = 0; i < octaveCount; ++i) {
+            value += improvedOctave3D(x * scale, y * scale, z * scale, seed) / scale;
+            scale *= 2.0;
+        }
+
+        value /= (2.0 - 2.0 / scale);
+        return value;
+    }
+
+    private static double gradDotDist2D(int hash, double x, double y) {
+        switch (hash & 7) {
+        case 0:  return +x    ;
+        case 1:  return -x    ;
+        case 2:  return    + y;
+        case 3:  return    - y;
+        case 4:  return +x + y;
+        case 5:  return -x + y;
+        case 6:  return +x - y;
+        case 7:  return -x - y;
+        default: return 0.0;
+        }
+    }
+
+    private static double gradDotDist3D(int hash, double x, double y, double z) {
+        switch (hash & 15) {
+        case 0:  return +x +y   ;
+        case 1:  return -x +y   ;
+        case 2:  return +x -y   ;
+        case 3:  return -x -y   ;
+        case 4:  return +x    +z;
+        case 5:  return -x    +z;
+        case 6:  return +x    -z;
+        case 7:  return -x    -z;
+        case 8:  return    +y +z;
+        case 9:  return    -y +z;
+        case 10: return    +y -z;
+        case 11: return    -y -z;
+        case 12: return +x +y   ;
+        case 13: return    -y +z;
+        case 14: return -x +y   ;
+        case 15: return    -y -z;
+        default: return 0.0;
+        }
+    }
+
     private static double perlinFade(double t) {
         return t * t * t * (t * (t * 6 - 15) + 10);
     }
