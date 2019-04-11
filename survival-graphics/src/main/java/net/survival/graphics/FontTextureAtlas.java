@@ -1,22 +1,30 @@
 package net.survival.graphics;
 
+import java.nio.file.Paths;
+
 import net.survival.graphics.opengl.GLFilterMode;
 import net.survival.graphics.opengl.GLTexture;
 import net.survival.graphics.opengl.GLWrapMode;
 
-// TODO: Remove hard-coding
-// TODO: Make loading non-blocking
+// TODO: Make loading non-blocking.
 class FontTextureAtlas implements GraphicsResource
 {
-    public final GLTexture characters;
-    public final int fontWidth;
-    public final int fontHeight;
+    private GLTexture textureAtlas;
+    private int fontWidth;
+    private int fontHeight;
 
-    public FontTextureAtlas() {
-        var bitmap = Bitmap.fromFile(GraphicsSettings.FONT_PATH);
-        characters = new GLTexture();
+    public FontTextureAtlas() {}
 
-        characters.beginBind()
+    public void setFontPath(String path) {
+        var fullPath = Paths.get(GraphicsSettings.ASSET_ROOT_PATH, path);
+        var bitmap = Bitmap.fromFile(fullPath.toString());
+
+        if (textureAtlas != null) {
+            textureAtlas.close();
+        }
+
+        textureAtlas = new GLTexture();
+        textureAtlas.beginBind()
                 .setMipmapEnabled(false)
                 .setData(bitmap)
                 .setMinFilter(GLFilterMode.NEAREST)
@@ -31,7 +39,19 @@ class FontTextureAtlas implements GraphicsResource
 
     @Override
     public void close() {
-        characters.close();
+        textureAtlas.close();
+    }
+
+    public GLTexture getTextureAtlas() {
+        return textureAtlas;
+    }
+
+    public int getFontWidth() {
+        return fontWidth;
+    }
+
+    public int getFontHeight() {
+        return fontHeight;
     }
 
     public float getTexCoordU1(char c) {

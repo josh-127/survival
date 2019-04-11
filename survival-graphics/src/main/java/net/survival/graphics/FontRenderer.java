@@ -8,6 +8,7 @@ class FontRenderer implements GraphicsResource
 
     public FontRenderer() {
         fontTextureAtlas = new FontTextureAtlas();
+        fontTextureAtlas.setFontPath("textures/fonts/default.png");
     }
 
     @Override
@@ -17,10 +18,10 @@ class FontRenderer implements GraphicsResource
 
     public void drawText(String text, float x, float y, float z, float scaleX, float scaleY) {
         var cursorX = x;
-        var fontWidth = fontTextureAtlas.fontWidth * scaleX;
-        var fontHeight = fontTextureAtlas.fontHeight * scaleY;
+        var fontWidth = fontTextureAtlas.getFontWidth() * scaleX;
+        var fontHeight = fontTextureAtlas.getFontHeight() * scaleY;
 
-        var drawCall = GLImmediateDrawCall.beginTriangles(fontTextureAtlas.characters);
+        var drawCall = GLImmediateDrawCall.beginTriangles(fontTextureAtlas.getTextureAtlas());
         drawCall.color(1.0f, 1.0f, 1.0f);
 
         for (var i = 0; i < text.length(); ++i) {
