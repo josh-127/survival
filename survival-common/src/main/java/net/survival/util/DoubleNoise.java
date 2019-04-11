@@ -215,7 +215,7 @@ public class DoubleNoise
             scale *= 2.0;
         }
 
-        value /= (2.0 - 1.0 / scale);
+        value /= (2.0 - 2.0 / scale);
         return value;
     }
 
@@ -228,7 +228,7 @@ public class DoubleNoise
             scale *= 2.0;
         }
 
-        value /= (2.0 - 1.0 / scale);
+        value /= (2.0 - 2.0 / scale);
         return value;
     }
 
