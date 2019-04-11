@@ -1,5 +1,6 @@
 package net.survival.graphics.blockrenderer;
 
+import net.survival.blocktype.BlockFace;
 import net.survival.blocktype.BlockId;
 import net.survival.graphics.opengl.GLDisplayList;
 
@@ -7,18 +8,26 @@ class SaplingRenderer extends BlockRenderer
 {
     private static final float PADDING = 0.125f;
 
-    public SaplingRenderer() {
-        super(true);
-    }
-
     @Override
-    public void pushNonCubic(int x, int y, int z, int blockId, GLDisplayList.Builder builder) {
-        var typeId = BlockId.typeIdFromFullId(blockId);
+    public void pushVertices(
+            int x,
+            int y,
+            int z,
+            int blockId,
+            int topAdjacentBlockId,
+            int bottomAdjacentBlockId,
+            int leftAdjacentBlockId,
+            int rightAdjacentBlockId,
+            int frontAdjacentBlockId,
+            int backAdjacentBlockId,
+            GLDisplayList.Builder builder)
+    {
+        var blockTypeId = BlockId.typeIdFromFullId(blockId);
 
-        var u1 = topFaceTextures.getTexCoordU1(typeId);
-        var u2 = topFaceTextures.getTexCoordU2(typeId);
-        var v1 = topFaceTextures.getTexCoordV1(typeId);
-        var v2 = topFaceTextures.getTexCoordV2(typeId);
+        var u1 = textures.getTexCoordU1(blockTypeId, BlockFace.TOP);
+        var u2 = textures.getTexCoordU2(blockTypeId, BlockFace.TOP);
+        var v1 = textures.getTexCoordV1(blockTypeId, BlockFace.TOP);
+        var v2 = textures.getTexCoordV2(blockTypeId, BlockFace.TOP);
 
         var left  = x        + PADDING;
         var right = x + 1.0f - PADDING;

@@ -1,36 +1,74 @@
 package net.survival.graphics;
 
+import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.stream.Collectors;
+
 import net.survival.blocktype.BlockFace;
 import net.survival.blocktype.BlockType;
 import net.survival.graphics.opengl.GLFilterMode;
 import net.survival.graphics.opengl.GLTexture;
 import net.survival.graphics.opengl.GLWrapMode;
 
-// TODO: Remove hard-coding
-// TODO: Make non-blocking
+// TODO: Remove hard-coding.
+// TODO: Make non-blocking.
 public class BlockTextureAtlas implements GraphicsResource
 {
-    public final GLTexture blockTextures;
-    public final BlockFace blockFace;
+    private static final int MAX_WIDTH = 256;
+    private static final int MAX_HEIGHT = 256;
 
+    private static final int TOTAL_BLOCK_FACES = BlockFace.getCachedValues().length;
+
+    public final GLTexture blockTextures;
     private final float[] texCoords;
 
-    public BlockTextureAtlas(BlockFace blockFace) {
-        var atlas = new Bitmap(256, 256);
-        for (var block : BlockType.getAllBlocks()) {
-            if (block == null)
-                continue;
-            if (block.getTexture(blockFace) == null)
-                continue;
+    public BlockTextureAtlas() {
+        var builder = new BitmapAtlasBuilder(MAX_WIDTH, MAX_HEIGHT);
+        var bitmapPathMap = new HashMap<String, Bitmap>();
+        var regionMap = new HashMap<String, BitmapRegion>();
 
-            var dstIndex = block.getTypeId();
-            var dstX = (dstIndex % 16) * 16;
-            var dstY = (dstIndex / 16) * 16;
-            var blockBitmap = Bitmap.fromFile(
-                    GraphicsSettings.BLOCKS_PATH +
-                    block.getTexture(blockFace));
-            Bitmap.blit(blockBitmap, 0, 0, 16, 16, atlas, dstX, dstY);
+        for (var block : BlockType.getAllBlocks()) {
+            if (block == null) {
+                continue;
+            }
+
+            for (var face : BlockFace.getCachedValues()) {
+                var path = block.getTexture(face);
+
+                if (path != null) {
+                    var fullPath = Paths.get(GraphicsSettings.BLOCKS_PATH, path);
+                    var bitmap = Bitmap.fromFile(fullPath.toString());
+                    bitmapPathMap.putIfAbsent(path, bitmap);
+                }
+            }
         }
+
+        var texturePaths = bitmapPathMap.entrySet().stream()
+                /*
+                .sorted((o1, o2) -> {
+                    var v1 = o1.getValue();
+                    var v2 = o2.getValue();
+                    var area1 = v1.getWidth() * v1.getHeight();
+                    var area2 = v2.getWidth() * v2.getHeight();
+                    if (area1 < area2) {
+                        return -1;
+                    }
+                    if (area1 > area2) {
+                        return 1;
+                    }
+                    return 0;
+                })
+                */
+                .collect(Collectors.toList());
+
+        for (var entry : texturePaths) {
+            var path = entry.getKey();
+            var bitmap = entry.getValue();
+            var region = builder.addBitmap(bitmap);
+            regionMap.putIfAbsent(path, region);
+        }
+
+        var atlasBitmap = builder.build();
 
         blockTextures = new GLTexture();
         blockTextures.beginBind()
@@ -41,25 +79,36 @@ public class BlockTextureAtlas implements GraphicsResource
                 .setMipmapEnabled(true)
                 .setMinLod(0)
                 .setMaxLod(4)
-                .setData(atlas)
+                .setData(atlasBitmap)
                 .endBind();
 
-        this.blockFace = blockFace;
+        var totalBlocks = BlockType.getAllBlocks().length;
+        var totalFaces = BlockFace.getCachedValues().length;
+        texCoords = new float[totalBlocks * totalFaces * 4];
 
-        texCoords = new float[17 * 17 * 4];
-        for (var i = 0; i < 256; ++i) {
-            var indexU1 = i * 4;
-            var indexV1 = indexU1 + 1;
-            var indexU2 = indexU1 + 2;
-            var indexV2 = indexU1 + 3;
+        for (var i = 0; i < BlockType.getAllBlocks().length; ++i) {
+            var block = BlockType.getAllBlocks()[i];
 
-            var tileU = (i % 16);
-            var tileV = 15 - (i / 16);
+            if (block == null) {
+                continue;
+            }
 
-            texCoords[indexU1] = tileU / 16.0f;
-            texCoords[indexV1] = (tileV / 16.0f) + (1.0f / 16.0f);
-            texCoords[indexU2] = (tileU / 16.0f) + (1.0f / 16.0f);
-            texCoords[indexV2] = tileV / 16.0f;
+            for (var face : BlockFace.getCachedValues()) {
+                var texturePath = block.getTexture(face);
+
+                if (texturePath != null) {
+                    var region = regionMap.get(texturePath);
+                    var u1 = (float) region.getLeft() / MAX_WIDTH;
+                    var v1 = 1.0f - (float) region.getTop() / MAX_HEIGHT;
+                    var u2 = (float) (region.getRight() - 1) / MAX_WIDTH;
+                    var v2 = 1.0f - (float) (region.getBottom() - 1) / MAX_HEIGHT;
+
+                    texCoords[indexOfU1(i, face)] = u1;
+                    texCoords[indexOfV1(i, face)] = v1;
+                    texCoords[indexOfU2(i, face)] = u2;
+                    texCoords[indexOfV2(i, face)] = v2;
+                }
+            }
         }
     }
 
@@ -68,19 +117,35 @@ public class BlockTextureAtlas implements GraphicsResource
         blockTextures.close();
     }
 
-    public float getTexCoordU1(int blockId) {
-        return texCoords[blockId << 2];
+    public float getTexCoordU1(int blockTypeId, BlockFace blockFace) {
+        return texCoords[indexOfU1(blockTypeId, blockFace)];
     }
 
-    public float getTexCoordV1(int blockId) {
-        return texCoords[(blockId << 2) + 1];
+    public float getTexCoordV1(int blockTypeId, BlockFace blockFace) {
+        return texCoords[indexOfV1(blockTypeId, blockFace)];
     }
 
-    public float getTexCoordU2(int blockId) {
-        return texCoords[(blockId << 2) + 2];
+    public float getTexCoordU2(int blockTypeId, BlockFace blockFace) {
+        return texCoords[indexOfU2(blockTypeId, blockFace)];
     }
 
-    public float getTexCoordV2(int blockId) {
-        return texCoords[(blockId << 2) + 3];
+    public float getTexCoordV2(int blockTypeId, BlockFace blockFace) {
+        return texCoords[indexOfV2(blockTypeId, blockFace)];
+    }
+
+    private int indexOfU1(int blockTypeId, BlockFace blockFace) {
+        return (blockTypeId * TOTAL_BLOCK_FACES * 4) + (blockFace.ordinal() * 4);
+    }
+
+    private int indexOfV1(int blockTypeId, BlockFace blockFace) {
+        return indexOfU1(blockTypeId, blockFace) + 1;
+    }
+
+    private int indexOfU2(int blockTypeId, BlockFace blockFace) {
+        return indexOfU1(blockTypeId, blockFace) + 2;
+    }
+
+    private int indexOfV2(int blockTypeId, BlockFace blockFace) {
+        return indexOfU1(blockTypeId, blockFace) + 3;
     }
 }

@@ -1,6 +1,5 @@
 package net.survival.graphics.blockrenderer;
 
-import net.survival.blocktype.BlockFace;
 import net.survival.blocktype.BlockId;
 import net.survival.blocktype.BlockModel;
 import net.survival.blocktype.BlockType;
@@ -9,13 +8,16 @@ import net.survival.graphics.opengl.GLDisplayList;
 
 public abstract class BlockRenderer
 {
+    protected static final float NON_CUBIC_SHADE = 1.0f;
+    protected static final float TOP_FACE_SHADE = 1.0f;
+    protected static final float BOTTOM_FACE_SHADE = 0.25f;
+    protected static final float LEFT_FACE_SHADE = 0.5f;
+    protected static final float RIGHT_FACE_SHADE = 0.5f;
+    protected static final float FRONT_FACE_SHADE = 0.75f;
+    protected static final float BACK_FACE_SHADE = 0.75f;
+
     // TODO: Make private, and create accessor methods.
-    public static BlockTextureAtlas topFaceTextures = new BlockTextureAtlas(BlockFace.TOP);
-    public static BlockTextureAtlas bottomFaceTextures = new BlockTextureAtlas(BlockFace.BOTTOM);
-    public static BlockTextureAtlas leftFaceTextures = new BlockTextureAtlas(BlockFace.LEFT);
-    public static BlockTextureAtlas rightFaceTextures = new BlockTextureAtlas(BlockFace.RIGHT);
-    public static BlockTextureAtlas frontFaceTextures = new BlockTextureAtlas(BlockFace.FRONT);
-    public static BlockTextureAtlas backFaceTextures = new BlockTextureAtlas(BlockFace.BACK);
+    public static BlockTextureAtlas textures = new BlockTextureAtlas();
     private static boolean texturesInit = false;
 
     private static final BlockRenderer[] blockRenderers = new BlockRenderer[BlockModel.getCachedValues().length];
@@ -33,21 +35,21 @@ public abstract class BlockRenderer
             blockRenderers[i] = defaultBlockRenderer;
 
         blockRenderers[BlockModel.INVISIBLE.id] = new InvisibleBlockRenderer();
-        blockRenderers[BlockModel.FENCE.id] = new FenceRenderer();
+        //blockRenderers[BlockModel.FENCE.id] = new FenceRenderer();
         blockRenderers[BlockModel.SAPLING.id] = new SaplingRenderer();
-        blockRenderers[BlockModel.BOTTOM_SLAB.id] = new BottomSlabRenderer();
-        blockRenderers[BlockModel.TOP_SLAB.id] = new TopSlabRenderer();
-        blockRenderers[BlockModel.NORTH_STAIRS.id] = new NorthStairsRenderer();
-        blockRenderers[BlockModel.SOUTH_STAIRS.id] = new SouthStairsRenderer();
-        blockRenderers[BlockModel.EAST_STAIRS.id] = new EastStairsRenderer();
-        blockRenderers[BlockModel.WEST_STAIRS.id] = new WestStairsRenderer();
-        blockRenderers[BlockModel.NORTH_CEILING_STAIRS.id] = new NorthCeilingStairsRenderer();
-        blockRenderers[BlockModel.SOUTH_CEILING_STAIRS.id] = new SouthCeilingStairsRenderer();
-        blockRenderers[BlockModel.EAST_CEILING_STAIRS.id] = new EastCeilingStairsRenderer();
-        blockRenderers[BlockModel.WEST_CEILING_STAIRS.id] = new WestCeilingStairsRenderer();
-        blockRenderers[BlockModel.FARMLAND.id] = new FarmlandRenderer();
-        blockRenderers[BlockModel.PRESSURE_PLATE_OFF.id] = new PressurePlateRenderer(0.0625f);
-        blockRenderers[BlockModel.PRESSURE_PLATE_ON.id] = new PressurePlateRenderer(0.03125f);
+        //blockRenderers[BlockModel.BOTTOM_SLAB.id] = new BottomSlabRenderer();
+        //blockRenderers[BlockModel.TOP_SLAB.id] = new TopSlabRenderer();
+        //blockRenderers[BlockModel.NORTH_STAIRS.id] = new NorthStairsRenderer();
+        //blockRenderers[BlockModel.SOUTH_STAIRS.id] = new SouthStairsRenderer();
+        //blockRenderers[BlockModel.EAST_STAIRS.id] = new EastStairsRenderer();
+        //blockRenderers[BlockModel.WEST_STAIRS.id] = new WestStairsRenderer();
+        //blockRenderers[BlockModel.NORTH_CEILING_STAIRS.id] = new NorthCeilingStairsRenderer();
+        //blockRenderers[BlockModel.SOUTH_CEILING_STAIRS.id] = new SouthCeilingStairsRenderer();
+        //blockRenderers[BlockModel.EAST_CEILING_STAIRS.id] = new EastCeilingStairsRenderer();
+        //blockRenderers[BlockModel.WEST_CEILING_STAIRS.id] = new WestCeilingStairsRenderer();
+        //blockRenderers[BlockModel.FARMLAND.id] = new FarmlandRenderer();
+        //blockRenderers[BlockModel.PRESSURE_PLATE_OFF.id] = new PressurePlateRenderer(0.0625f);
+        //blockRenderers[BlockModel.PRESSURE_PLATE_ON.id] = new PressurePlateRenderer(0.03125f);
 
         for (var i = 0; i < blockToBlockingTopTable.length; ++i) {
             var block = BlockType.getAllBlocks()[i];
@@ -88,49 +90,26 @@ public abstract class BlockRenderer
 
     public static final void initTextures() {
         if (!texturesInit) {
-            topFaceTextures = new BlockTextureAtlas(BlockFace.TOP);
-            bottomFaceTextures = new BlockTextureAtlas(BlockFace.BOTTOM);
-            leftFaceTextures = new BlockTextureAtlas(BlockFace.LEFT);
-            rightFaceTextures = new BlockTextureAtlas(BlockFace.RIGHT);
-            frontFaceTextures = new BlockTextureAtlas(BlockFace.FRONT);
-            backFaceTextures = new BlockTextureAtlas(BlockFace.BACK);
+            textures = new BlockTextureAtlas();
             texturesInit = true;
         }
-    }
-
-    public final boolean nonCubic;
-
-    public BlockRenderer(boolean nonCubic) {
-        this.nonCubic = nonCubic;
     }
 
     public static BlockRenderer byFullId(int blockId) {
         return blockRenderers[BlockType.getAllBlocks()[BlockId.typeIdFromFullId(blockId)].getModel().id];
     }
 
-    public void pushNonCubic(int x, int y, int z, int blockId, GLDisplayList.Builder builder) {}
-
-    public void pushTopFaces(int x, int y, int z, int blockId, int adjacentBlockId,
-            GLDisplayList.Builder builder)
-    {}
-
-    public void pushBottomFaces(int x, int y, int z, int blockId, int adjacentBlockId,
-            GLDisplayList.Builder builder)
-    {}
-
-    public void pushLeftFaces(int x, int y, int z, int blockId, int adjacentBlockId,
-            GLDisplayList.Builder builder)
-    {}
-
-    public void pushRightFaces(int x, int y, int z, int blockId, int adjacentBlockId,
-            GLDisplayList.Builder builder)
-    {}
-
-    public void pushFrontFaces(int x, int y, int z, int blockId, int adjacentBlockId,
-            GLDisplayList.Builder builder)
-    {}
-
-    public void pushBackFaces(int x, int y, int z, int blockId, int adjacentBlockId,
+    public void pushVertices(
+            int x,
+            int y,
+            int z,
+            int blockId,
+            int topAdjacentBlockId,
+            int bottomAdjacentBlockId,
+            int leftAdjacentBlockId,
+            int rightAdjacentBlockId,
+            int frontAdjacentBlockId,
+            int backAdjacentBlockId,
             GLDisplayList.Builder builder)
     {}
 }
