@@ -85,6 +85,17 @@ public final class BlockType
                     .withModel(BlockModel.SAPLING)
                     .withSolidity(false)
                     .build());
+    public static final BasicBlock OAK_LOG =
+            register(basicBlock()
+                    .withDisplayName("Oak Log")
+                    .withTextureOnSides("ProgrammerArt-v3.0/textures/blocks/log_oak.png")
+                    .withTextureOnTopAndBottom("ProgrammerArt-v3.0/textures/blocks/log_oak_top.png")
+                    .build());
+    public static final BasicBlock OAK_LEAVES =
+            register(basicBlock()
+                    .withDisplayName("Oak Leaves")
+                    .withTextureOnAllFaces("ProgrammerArt-v3.0/textures/blocks/leaves_oak.png")
+                    .build());
 
     private static Block[] blocks;
     private static int blockCount = 0;
