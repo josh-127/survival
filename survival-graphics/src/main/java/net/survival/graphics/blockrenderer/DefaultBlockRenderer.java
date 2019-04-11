@@ -18,6 +18,7 @@ class DefaultBlockRenderer extends BlockRenderer
             int rightAdjacentBlockId,
             int frontAdjacentBlockId,
             int backAdjacentBlockId,
+            float shadeFactor,
             GLDisplayList.Builder builder)
     {
         var blockTypeId = BlockId.typeIdFromFullId(blockId);
@@ -34,7 +35,7 @@ class DefaultBlockRenderer extends BlockRenderer
             var v1 = textures.getTexCoordV1(blockTypeId, BlockFace.TOP);
             var v2 = textures.getTexCoordV2(blockTypeId, BlockFace.TOP);
 
-            builder.setColor(TOP_FACE_SHADE, TOP_FACE_SHADE, TOP_FACE_SHADE);
+            setShade(TOP_FACE_SHADE * shadeFactor, builder);
             builder.setTexCoord(u1, v1); builder.pushVertex(x,        y + 1.0f, z + 1.0f);
             builder.setTexCoord(u2, v1); builder.pushVertex(x + 1.0f, y + 1.0f, z + 1.0f);
             builder.setTexCoord(u2, v2); builder.pushVertex(x + 1.0f, y + 1.0f, z       );
@@ -49,7 +50,7 @@ class DefaultBlockRenderer extends BlockRenderer
             var v1 = textures.getTexCoordV1(blockTypeId, BlockFace.BOTTOM);
             var v2 = textures.getTexCoordV2(blockTypeId, BlockFace.BOTTOM);
 
-            builder.setColor(BOTTOM_FACE_SHADE, BOTTOM_FACE_SHADE, BOTTOM_FACE_SHADE);
+            setShade(BOTTOM_FACE_SHADE, builder);
             builder.setTexCoord(u1, v1); builder.pushVertex(x,        y, z       );
             builder.setTexCoord(u2, v1); builder.pushVertex(x + 1.0f, y, z       );
             builder.setTexCoord(u2, v2); builder.pushVertex(x + 1.0f, y, z + 1.0f);
@@ -64,7 +65,7 @@ class DefaultBlockRenderer extends BlockRenderer
             var v1 = textures.getTexCoordV1(blockTypeId, BlockFace.LEFT);
             var v2 = textures.getTexCoordV2(blockTypeId, BlockFace.LEFT);
 
-            builder.setColor(LEFT_FACE_SHADE, LEFT_FACE_SHADE, LEFT_FACE_SHADE);
+            setShade(LEFT_FACE_SHADE, builder);
             builder.setTexCoord(u1, v1); builder.pushVertex(x, y,        z       );
             builder.setTexCoord(u2, v1); builder.pushVertex(x, y,        z + 1.0f);
             builder.setTexCoord(u2, v2); builder.pushVertex(x, y + 1.0f, z + 1.0f);
@@ -79,7 +80,7 @@ class DefaultBlockRenderer extends BlockRenderer
             var v1 = textures.getTexCoordV1(blockTypeId, BlockFace.RIGHT);
             var v2 = textures.getTexCoordV2(blockTypeId, BlockFace.RIGHT);
 
-            builder.setColor(RIGHT_FACE_SHADE, RIGHT_FACE_SHADE, RIGHT_FACE_SHADE);
+            setShade(RIGHT_FACE_SHADE, builder);
             builder.setTexCoord(u1, v1); builder.pushVertex(x + 1.0f, y,        z + 1.0f);
             builder.setTexCoord(u2, v1); builder.pushVertex(x + 1.0f, y,        z       );
             builder.setTexCoord(u2, v2); builder.pushVertex(x + 1.0f, y + 1.0f, z       );
@@ -94,7 +95,7 @@ class DefaultBlockRenderer extends BlockRenderer
             var v1 = textures.getTexCoordV1(blockTypeId, BlockFace.FRONT);
             var v2 = textures.getTexCoordV2(blockTypeId, BlockFace.FRONT);
 
-            builder.setColor(FRONT_FACE_SHADE, FRONT_FACE_SHADE, FRONT_FACE_SHADE);
+            setShade(FRONT_FACE_SHADE, builder);
             builder.setTexCoord(u1, v1); builder.pushVertex(x,        y,        z + 1.0f);
             builder.setTexCoord(u2, v1); builder.pushVertex(x + 1.0f, y,        z + 1.0f);
             builder.setTexCoord(u2, v2); builder.pushVertex(x + 1.0f, y + 1.0f, z + 1.0f);
@@ -109,7 +110,7 @@ class DefaultBlockRenderer extends BlockRenderer
             var v1 = textures.getTexCoordV1(blockTypeId, BlockFace.BACK);
             var v2 = textures.getTexCoordV2(blockTypeId, BlockFace.BACK);
 
-            builder.setColor(BACK_FACE_SHADE, BACK_FACE_SHADE, BACK_FACE_SHADE);
+            setShade(BACK_FACE_SHADE, builder);
             builder.setTexCoord(u1, v1); builder.pushVertex(x + 1.0f, y,        z);
             builder.setTexCoord(u2, v1); builder.pushVertex(x,        y,        z);
             builder.setTexCoord(u2, v2); builder.pushVertex(x,        y + 1.0f, z);

@@ -110,6 +110,11 @@ public abstract class BlockRenderer
             int rightAdjacentBlockId,
             int frontAdjacentBlockId,
             int backAdjacentBlockId,
+            float shadeFactor,
             GLDisplayList.Builder builder)
     {}
+
+    protected void setShade(float shade, GLDisplayList.Builder builder) {
+        builder.setColor(shade, shade, shade);
+    }
 }

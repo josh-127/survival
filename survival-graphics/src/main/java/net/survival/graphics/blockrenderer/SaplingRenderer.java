@@ -20,6 +20,7 @@ class SaplingRenderer extends BlockRenderer
             int rightAdjacentBlockId,
             int frontAdjacentBlockId,
             int backAdjacentBlockId,
+            float shadeFactor,
             GLDisplayList.Builder builder)
     {
         var blockTypeId = BlockId.typeIdFromFullId(blockId);
@@ -34,6 +35,7 @@ class SaplingRenderer extends BlockRenderer
         var back  = z        + PADDING;
         var front = z + 1.0f - PADDING;
 
+        setShade(shadeFactor, builder);
         builder.setTexCoord(u1, v1); builder.pushVertex(left,  y,        front);
         builder.setTexCoord(u2, v1); builder.pushVertex(right, y,        back );
         builder.setTexCoord(u2, v2); builder.pushVertex(right, y + 1.0f, back );

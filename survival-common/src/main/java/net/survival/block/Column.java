@@ -43,6 +43,10 @@ public class Column
         return chunks.get(index);
     }
 
+    public Chunk getTopChunk() {
+        return chunks.peek();
+    }
+
     public void pushChunk(Chunk chunk) {
         chunks.push(chunk);
     }
