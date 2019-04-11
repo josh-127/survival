@@ -73,7 +73,7 @@ class BlockDisplay implements GraphicsResource
 
             modelViewMatrix.set(viewMatrix).translate(globalX, 0.0f, globalZ);
             GLMatrixStack.load(modelViewMatrix);
-            columnDisplay.displayBlocks();
+            columnDisplay.displayBlocks(BlockRenderer.textures.blockTextures);
         }
     }
 
