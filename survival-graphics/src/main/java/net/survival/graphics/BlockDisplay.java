@@ -8,8 +8,10 @@ import org.joml.Matrix4f;
 import net.survival.block.Column;
 import net.survival.block.ColumnPos;
 import net.survival.graphics.blockrenderer.BlockRenderer;
+import net.survival.graphics.opengl.GLComparisonFunc;
 import net.survival.graphics.opengl.GLFilterMode;
 import net.survival.graphics.opengl.GLMatrixStack;
+import net.survival.graphics.opengl.GLState;
 import net.survival.graphics.opengl.GLTexture;
 import net.survival.graphics.opengl.GLWrapMode;
 
@@ -56,6 +58,9 @@ class BlockDisplay implements GraphicsResource
         cameraProjectionMatrix.identity();
         camera.getProjectionMatrix(cameraProjectionMatrix);
 
+        GLState.pushAlphaTestEnabled(true);
+        GLState.pushAlphaFunction(GLComparisonFunc.EQUAL, 1.0f);
+
         GLMatrixStack.setProjectionMatrix(cameraProjectionMatrix);
         GLMatrixStack.push();
         GLMatrixStack.loadIdentity();
@@ -63,6 +68,9 @@ class BlockDisplay implements GraphicsResource
         drawColumnDisplays(columnDisplays, cameraViewMatrix);
 
         GLMatrixStack.pop();
+
+        GLState.popAlphaFunction();
+        GLState.popAlphaTestEnabled();
     }
 
     private void drawColumnDisplays(HashMap<Column, ColumnDisplay> displays, Matrix4f viewMatrix) {
