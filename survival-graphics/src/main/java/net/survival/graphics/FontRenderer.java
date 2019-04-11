@@ -1,6 +1,8 @@
 package net.survival.graphics;
 
+import net.survival.graphics.opengl.GLComparisonFunc;
 import net.survival.graphics.opengl.GLImmediateDrawCall;
+import net.survival.graphics.opengl.GLState;
 
 class FontRenderer implements GraphicsResource
 {
@@ -20,6 +22,9 @@ class FontRenderer implements GraphicsResource
         var cursorX = x;
         var fontWidth = fontTextureAtlas.getFontWidth() * scaleX;
         var fontHeight = fontTextureAtlas.getFontHeight() * scaleY;
+
+        GLState.pushAlphaTestEnabled(true);
+        GLState.pushAlphaFunction(GLComparisonFunc.EQUAL, 1.0f);
 
         var drawCall = GLImmediateDrawCall.beginTriangles(fontTextureAtlas.getTextureAtlas());
         drawCall.color(1.0f, 1.0f, 1.0f);
@@ -42,5 +47,8 @@ class FontRenderer implements GraphicsResource
         }
 
         drawCall.end();
+
+        GLState.popAlphaFunction();
+        GLState.popAlphaTestEnabled();
     }
 }
