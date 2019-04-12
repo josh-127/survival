@@ -27,14 +27,15 @@ class FuzzyMagnifiedGenLayer extends GenLayer
         source.generate(coarseOffsetX, coarseOffsetZ);
 
         var srcMap = source.getMap();
+        var srcLengthX = source.getLengthX();
 
         for (var z = 0; z < lengthZ / 2; ++z) {
             for (var x = 0; x < lengthX / 2; ++x) {
                 random = rngFromPosition(random, coarseOffsetX + x, coarseOffsetZ + z);
 
-                var srcTL = x + z * source.lengthX;
+                var srcTL = x + z * srcLengthX;
                 var srcTR = srcTL + 1;
-                var srcBL = srcTL + source.lengthX;
+                var srcBL = srcTL + srcLengthX;
                 var srcBR = srcBL + 1;
                 var dstTL = (x * 2) + (z * 2) * lengthX;
                 var dstTR = dstTL + 1;
@@ -64,8 +65,8 @@ class FuzzyMagnifiedGenLayer extends GenLayer
             for (var z = 0; z < lengthZ / 2; ++z) {
                 random = rngFromPosition(random, coarseOffsetX + lengthX / 2, coarseOffsetZ + z);
 
-                var srcTL = (lengthX / 2) + z * source.lengthX;
-                var srcBL = srcTL + source.lengthX;
+                var srcTL = (lengthX / 2) + z * srcLengthX;
+                var srcBL = srcTL + srcLengthX;
                 var dstTL = (lengthX - 1) + (z * 2) * lengthX;
                 var dstBL = dstTL + lengthX;
 
@@ -84,7 +85,7 @@ class FuzzyMagnifiedGenLayer extends GenLayer
             for (var x = 0; x < lengthX / 2; ++x) {
                 random = rngFromPosition(random, coarseOffsetX + x, coarseOffsetZ + lengthZ / 2);
 
-                var srcTL = x + (lengthZ / 2) * source.lengthX;
+                var srcTL = x + (lengthZ / 2) * srcLengthX;
                 var srcTR = srcTL + 1;
                 var dstTL = (x * 2) + (lengthZ - 1) * lengthX;
                 var dstTR = dstTL + 1;

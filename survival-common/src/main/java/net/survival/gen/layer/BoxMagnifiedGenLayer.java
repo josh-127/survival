@@ -22,10 +22,12 @@ class BoxMagnifiedGenLayer extends GenLayer
         source.generate(offsetX, offsetZ);
 
         var srcMap = source.getMap();
+        var srcLengthX = source.getLengthX();
+        var srcLengthZ = source.getLengthZ();
 
-        for (var z = 0; z < source.lengthZ; ++z) {
-            for (var x = 0; x < source.lengthX; ++x) {
-                var srcValue             = srcMap[x + z * source.lengthX];
+        for (var z = 0; z < srcLengthZ; ++z) {
+            for (var x = 0; x < srcLengthX; ++x) {
+                var srcValue             = srcMap[x + z * srcLengthX];
                 var dstTL                = (x * 2) + (z * 2) * lengthX;
                 map[dstTL]               = srcValue;
                 map[dstTL + 1]           = srcValue;

@@ -6,14 +6,26 @@ public enum HitBox
     PLAYER(0.4375, 0.9, 0.4375),
     NPC(0.5, 1.2, 0.5);
 
-    public final double radiusX;
-    public final double radiusY;
-    public final double radiusZ;
+    private final double radiusX;
+    private final double radiusY;
+    private final double radiusZ;
 
     private HitBox(double radiusX, double radiusY, double radiusZ) {
         this.radiusX = radiusX;
         this.radiusY = radiusY;
         this.radiusZ = radiusZ;
+    }
+
+    public double getRadiusX() {
+        return radiusX;
+    }
+
+    public double getRadiusY() {
+        return radiusY;
+    }
+
+    public double getRadiusZ() {
+        return radiusZ;
     }
 
     public static boolean intersects(double x1, double y1, double z1, HitBox hitBox1, double x2,

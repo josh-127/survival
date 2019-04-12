@@ -110,12 +110,12 @@ public class Locomotion
         if (velocityY >= 0.0)
             return false;
 
-        var startX = (int) Math.floor(x - hitBox.radiusX);
-        var endX = (int) Math.floor(x + hitBox.radiusX);
-        var startZ = (int) Math.floor(z - hitBox.radiusZ);
-        var endZ = (int) Math.floor(z + hitBox.radiusZ);
+        var startX = (int) Math.floor(x - hitBox.getRadiusX());
+        var endX = (int) Math.floor(x + hitBox.getRadiusX());
+        var startZ = (int) Math.floor(z - hitBox.getRadiusZ());
+        var endZ = (int) Math.floor(z + hitBox.getRadiusZ());
 
-        var floorY = (int) Math.floor(y - hitBox.radiusY);
+        var floorY = (int) Math.floor(y - hitBox.getRadiusY());
 
         if (floorY < 0)
             return false;
@@ -133,7 +133,7 @@ public class Locomotion
                         && getDominantAxis(blockX, floorY, blockZ) == 1
                         && intersectsFloorPlane(blockX, floorY, blockZ))
                 {
-                    y = (floorY + 1) + hitBox.radiusY;
+                    y = (floorY + 1) + hitBox.getRadiusY();
                     velocityY = 0.0;
                     return true;
                 }
@@ -147,12 +147,12 @@ public class Locomotion
         if (velocityY <= 0.0)
             return false;
 
-        var startX = (int) Math.floor(x - hitBox.radiusX);
-        var endX = (int) Math.floor(x + hitBox.radiusX);
-        var startZ = (int) Math.floor(z - hitBox.radiusZ);
-        var endZ = (int) Math.floor(z + hitBox.radiusZ);
+        var startX = (int) Math.floor(x - hitBox.getRadiusX());
+        var endX = (int) Math.floor(x + hitBox.getRadiusX());
+        var startZ = (int) Math.floor(z - hitBox.getRadiusZ());
+        var endZ = (int) Math.floor(z + hitBox.getRadiusZ());
 
-        var ceilingY = (int) Math.floor(y + hitBox.radiusY);
+        var ceilingY = (int) Math.floor(y + hitBox.getRadiusY());
 
         if (ceilingY - 1 < 0)
             return false;
@@ -170,7 +170,7 @@ public class Locomotion
                         && getDominantAxis(blockX, ceilingY, blockZ) == 1
                         && intersectsCeilingPlane(blockX, ceilingY, blockZ))
                 {
-                    y = ceilingY - hitBox.radiusY;
+                    y = ceilingY - hitBox.getRadiusY();
                     velocityY = 0.0;
                     return true;
                 }
@@ -181,16 +181,16 @@ public class Locomotion
     }
 
     private boolean handleLeftWallCollision(InteractionContext ic) {
-        var startY = (int) Math.floor(y - hitBox.radiusY);
-        var endY = (int) Math.floor(y + hitBox.radiusY);
+        var startY = (int) Math.floor(y - hitBox.getRadiusY());
+        var endY = (int) Math.floor(y + hitBox.getRadiusY());
 
         if (startY < 0)
             return false;
 
-        var startZ = (int) Math.floor(z - hitBox.radiusZ);
-        var endZ = (int) Math.floor(z + hitBox.radiusZ);
+        var startZ = (int) Math.floor(z - hitBox.getRadiusZ());
+        var endZ = (int) Math.floor(z + hitBox.getRadiusZ());
 
-        var wallX = (int) Math.floor(x + hitBox.radiusX);
+        var wallX = (int) Math.floor(x + hitBox.getRadiusX());
 
         for (var blockY = startY; blockY <= endY; ++blockY) {
             for (var blockZ = startZ; blockZ <= endZ; ++blockZ) {
@@ -205,7 +205,7 @@ public class Locomotion
                         && getDominantAxis(wallX, blockY, blockZ) == 0
                         && intersectsLeftPlane(wallX, blockY, blockZ))
                 {
-                    x = wallX - hitBox.radiusX;
+                    x = wallX - hitBox.getRadiusX();
                     velocityX = 0.0;
                     return true;
                 }
@@ -216,16 +216,16 @@ public class Locomotion
     }
 
     private boolean handleRightWallCollision(InteractionContext ic) {
-        var startY = (int) Math.floor(y - hitBox.radiusY);
-        var endY = (int) Math.floor(y + hitBox.radiusY);
+        var startY = (int) Math.floor(y - hitBox.getRadiusY());
+        var endY = (int) Math.floor(y + hitBox.getRadiusY());
 
         if (startY < 0)
             return false;
 
-        var startZ = (int) Math.floor(z - hitBox.radiusZ);
-        var endZ = (int) Math.floor(z + hitBox.radiusZ);
+        var startZ = (int) Math.floor(z - hitBox.getRadiusZ());
+        var endZ = (int) Math.floor(z + hitBox.getRadiusZ());
 
-        var wallX = (int) Math.floor(x - hitBox.radiusX);
+        var wallX = (int) Math.floor(x - hitBox.getRadiusX());
 
         for (var blockY = startY; blockY <= endY; ++blockY) {
             for (var blockZ = startZ; blockZ <= endZ; ++blockZ) {
@@ -240,7 +240,7 @@ public class Locomotion
                         && getDominantAxis(wallX, blockY, blockZ) == 0
                         && intersectsRightPlane(wallX, blockY, blockZ))
                 {
-                    x = (wallX + 1) + hitBox.radiusX;
+                    x = (wallX + 1) + hitBox.getRadiusX();
                     velocityX = 0.0;
                     return true;
                 }
@@ -251,16 +251,16 @@ public class Locomotion
     }
 
     private boolean handleFrontWallCollision(InteractionContext ic) {
-        var startY = (int) Math.floor(y - hitBox.radiusY);
-        var endY = (int) Math.floor(y + hitBox.radiusY);
+        var startY = (int) Math.floor(y - hitBox.getRadiusY());
+        var endY = (int) Math.floor(y + hitBox.getRadiusY());
 
         if (startY < 0)
             return false;
 
-        var startX = (int) Math.floor(x - hitBox.radiusX);
-        var endX = (int) Math.floor(x + hitBox.radiusX);
+        var startX = (int) Math.floor(x - hitBox.getRadiusX());
+        var endX = (int) Math.floor(x + hitBox.getRadiusX());
 
-        var wallZ = (int) Math.floor(z - hitBox.radiusZ);
+        var wallZ = (int) Math.floor(z - hitBox.getRadiusZ());
 
         for (var blockY = startY; blockY <= endY; ++blockY) {
             for (var blockX = startX; blockX <= endX; ++blockX) {
@@ -275,7 +275,7 @@ public class Locomotion
                         && getDominantAxis(blockX, blockY, wallZ) == 2
                         && intersectsFrontPlane(blockX, blockY, wallZ))
                 {
-                    z = (wallZ + 1) + hitBox.radiusZ;
+                    z = (wallZ + 1) + hitBox.getRadiusZ();
                     velocityZ = 0.0;
                     return true;
                 }
@@ -286,16 +286,16 @@ public class Locomotion
     }
 
     private boolean handleBackWallCollision(InteractionContext ic) {
-        var startY = (int) Math.floor(y - hitBox.radiusY);
-        var endY = (int) Math.floor(y + hitBox.radiusY);
+        var startY = (int) Math.floor(y - hitBox.getRadiusY());
+        var endY = (int) Math.floor(y + hitBox.getRadiusY());
 
         if (startY < 0)
             return false;
 
-        var startX = (int) Math.floor(x - hitBox.radiusX);
-        var endX = (int) Math.floor(x + hitBox.radiusX);
+        var startX = (int) Math.floor(x - hitBox.getRadiusX());
+        var endX = (int) Math.floor(x + hitBox.getRadiusX());
 
-        var wallZ = (int) Math.floor(z + hitBox.radiusZ);
+        var wallZ = (int) Math.floor(z + hitBox.getRadiusZ());
 
         for (var blockY = startY; blockY <= endY; ++blockY) {
             for (var blockX = startX; blockX <= endX; ++blockX) {
@@ -310,7 +310,7 @@ public class Locomotion
                         && getDominantAxis(blockX, blockY, wallZ) == 2
                         && intersectsBackPlane(blockX, blockY, wallZ))
                 {
-                    z = wallZ - hitBox.radiusZ;
+                    z = wallZ - hitBox.getRadiusZ();
                     velocityZ = 0.0;
                     return true;
                 }

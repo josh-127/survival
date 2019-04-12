@@ -3,14 +3,21 @@ package net.survival.util;
 public class ByteMap2D implements ByteSampler2D
 {
     protected final byte[] map;
-
-    public final int lengthX;
-    public final int lengthZ;
+    protected final int lengthX;
+    protected final int lengthZ;
 
     public ByteMap2D(int lengthX, int lengthZ) {
         map = new byte[lengthX * lengthZ];
         this.lengthX = lengthX;
         this.lengthZ = lengthZ;
+    }
+
+    public int getLengthX() {
+        return lengthX;
+    }
+
+    public int getLengthZ() {
+        return lengthZ;
     }
 
     public int getArea() {

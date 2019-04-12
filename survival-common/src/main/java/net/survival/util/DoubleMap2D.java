@@ -6,13 +6,21 @@ public class DoubleMap2D implements DoubleSampler2D
 {
     protected final double[] map;
 
-    public final int lengthX;
-    public final int lengthZ;
+    private final int lengthX;
+    private final int lengthZ;
 
     public DoubleMap2D(int lengthX, int lengthZ) {
         map = new double[lengthX * lengthZ];
         this.lengthX = lengthX;
         this.lengthZ = lengthZ;
+    }
+
+    public int getLengthX() {
+        return lengthX;
+    }
+
+    public int getLengthZ() {
+        return lengthZ;
     }
 
     public int getArea() {

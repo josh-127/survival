@@ -6,15 +6,27 @@ public class DoubleMap3D implements DoubleSampler3D
 {
     protected final double[] map;
 
-    public final int lengthX;
-    public final int lengthY;
-    public final int lengthZ;
+    private final int lengthX;
+    private final int lengthY;
+    private final int lengthZ;
 
     public DoubleMap3D(int lengthX, int lengthY, int lengthZ) {
         map = new double[lengthX * lengthY * lengthZ];
         this.lengthX = lengthX;
         this.lengthY = lengthY;
         this.lengthZ = lengthZ;
+    }
+
+    public int getLengthX() {
+        return lengthX;
+    }
+
+    public int getLengthY() {
+        return lengthY;
+    }
+
+    public int getLengthZ() {
+        return lengthZ;
     }
 
     public int getBaseArea() {

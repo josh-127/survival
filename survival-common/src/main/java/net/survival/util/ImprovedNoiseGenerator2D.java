@@ -6,10 +6,10 @@ import static net.survival.util.MathEx.lerp;
 
 public class ImprovedNoiseGenerator2D
 {
-    public final double scaleX;
-    public final double scaleZ;
-    public final int octaveCount;
-    public final long seed;
+    private final double scaleX;
+    private final double scaleZ;
+    private final int octaveCount;
+    private final long seed;
 
     private final int[] permutations;
 
@@ -23,8 +23,11 @@ public class ImprovedNoiseGenerator2D
     }
 
     public void generate(DoubleMap2D map, double offsetX, double offsetZ) {
-        for (var z = 0; z < map.lengthZ; ++z) {
-            for (var x = 0; x < map.lengthX; ++x)
+        var mapLengthX = map.getLengthX();
+        var mapLengthZ = map.getLengthZ();
+
+        for (var z = 0; z < mapLengthZ; ++z) {
+            for (var x = 0; x < mapLengthX; ++x)
                 map.setPoint(x, z, 0.0);
         }
 
@@ -35,10 +38,10 @@ public class ImprovedNoiseGenerator2D
             var octaveScaleZ = scaleZ * octaveScale;
             var invOctaveScale = 1.0 / octaveScale;
 
-            for (var z = 0; z < map.lengthZ; ++z) {
+            for (var z = 0; z < mapLengthZ; ++z) {
                 var noisePosZ = (offsetZ + z) * octaveScaleZ;
 
-                for (var x = 0; x < map.lengthX; ++x) {
+                for (var x = 0; x < mapLengthX; ++x) {
                     var noisePosX = (offsetX + x) * octaveScaleX;
                     var prevOctave = map.sampleNearest(x, z);
                     var currentOctave = valueAt(noisePosX, noisePosZ) * invOctaveScale;
@@ -52,8 +55,8 @@ public class ImprovedNoiseGenerator2D
 
         if (octaveCount > 1) {
             var clamper = 1.0 / (2.0 - 1.0 / octaveScale);
-            for (var z = 0; z < map.lengthZ; ++z) {
-                for (var x = 0; x < map.lengthX; ++x)
+            for (var z = 0; z < mapLengthZ; ++z) {
+                for (var x = 0; x < mapLengthX; ++x)
                     map.setPoint(x, z, map.sampleNearest(x, z) * clamper);
             }
         }
@@ -96,5 +99,21 @@ public class ImprovedNoiseGenerator2D
         case 7:  return -x - z;
         default: return 0.0;
         }
+    }
+
+    public double getScaleX() {
+        return scaleX;
+    }
+
+    public double getScaleZ() {
+        return scaleZ;
+    }
+
+    public int getOctaveCount() {
+        return octaveCount;
+    }
+
+    public long getSeed() {
+        return seed;
     }
 }

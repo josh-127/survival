@@ -12,21 +12,27 @@ class VoronoiMagnifiedGenLayer extends GenLayer
     private Random random;
 
     public VoronoiMagnifiedGenLayer(GenLayer source, int scaleFactor, long seed) {
-        super((source.lengthX - 2) * scaleFactor, (source.lengthZ - 2) * scaleFactor, seed);
+        super(
+                (source.getLengthX() - 2) * scaleFactor,
+                (source.getLengthZ() - 2) * scaleFactor,
+                seed);
 
         this.source = source;
         this.cellSize = scaleFactor;
 
-        pointOffsets = new int[source.lengthX * source.lengthZ * 2];
+        pointOffsets = new int[source.getLengthX() * source.getLengthZ() * 2];
     }
 
     @Override
     public void generate(int offsetX, int offsetZ) {
         source.generate(offsetX, offsetZ);
 
-        for (var z = 0; z < source.lengthZ; ++z) {
-            for (var x = 0; x < source.lengthX; ++x) {
-                var pointIndex = x + z * source.lengthX;
+        var srcLengthX = source.getLengthX();
+        var srcLengthZ = source.getLengthZ();
+
+        for (var z = 0; z < srcLengthZ; ++z) {
+            for (var x = 0; x < srcLengthX; ++x) {
+                var pointIndex = x + z * srcLengthX;
                 var indexX = pointIndex * 2;
                 var indexZ = indexX + 1;
                 random = rngFromPosition(random, offsetX + x, offsetZ + z);
@@ -37,7 +43,7 @@ class VoronoiMagnifiedGenLayer extends GenLayer
 
         for (var z = 0; z < lengthZ; ++z) {
             var sourceZ = z / cellSize;
-            var pointIndexZ = sourceZ * source.lengthX;
+            var pointIndexZ = sourceZ * srcLengthX;
 
             for (var x = 0; x < lengthX; ++x) {
                 var sourceX = x / cellSize;
@@ -45,7 +51,7 @@ class VoronoiMagnifiedGenLayer extends GenLayer
 
                 var pointIndexTL = pointIndexX + pointIndexZ;
                 var pointIndexTR = pointIndexTL + 1;
-                var pointIndexBL = pointIndexTL + source.lengthX;
+                var pointIndexBL = pointIndexTL + srcLengthX;
                 var pointIndexBR = pointIndexBL + 1;
 
                 var baseL = (x / cellSize) * cellSize;

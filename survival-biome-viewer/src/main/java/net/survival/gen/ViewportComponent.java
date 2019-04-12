@@ -52,8 +52,8 @@ public class ViewportComponent extends Canvas implements ActionListener, KeyList
             return;
         }
 
-        final var VIEWPORT_WIDTH = map.lengthX;
-        final var VIEWPORT_HEIGHT = map.lengthZ;
+        final var VIEWPORT_WIDTH = map.getLengthX();
+        final var VIEWPORT_HEIGHT = map.getLengthZ();
         final var VIEWPORT_X = (getWidth() - VIEWPORT_WIDTH) / 2;
         final var VIEWPORT_Z = (getHeight() - VIEWPORT_HEIGHT) / 2;
 

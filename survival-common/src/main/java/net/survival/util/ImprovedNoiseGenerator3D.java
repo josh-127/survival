@@ -6,12 +6,11 @@ import static net.survival.util.MathEx.lerp;
 
 public class ImprovedNoiseGenerator3D
 {
-    public final double scaleX;
-    public final double scaleY;
-    public final double scaleZ;
-    public final int octaveCount;
-    public final long seed;
-
+    private final double scaleX;
+    private final double scaleY;
+    private final double scaleZ;
+    private final int octaveCount;
+    private final long seed;
     private final int[] permutations;
 
     public ImprovedNoiseGenerator3D(double scaleX, double scaleY, double scaleZ, int octaveCount,
@@ -27,9 +26,13 @@ public class ImprovedNoiseGenerator3D
     }
 
     public void generate(DoubleMap3D map, double offsetX, double offsetY, double offsetZ) {
-        for (var y = 0; y < map.lengthY; ++y) {
-            for (var z = 0; z < map.lengthZ; ++z) {
-                for (var x = 0; x < map.lengthX; ++x)
+        var mapLengthX = map.getLengthX();
+        var mapLengthY = map.getLengthY();
+        var mapLengthZ = map.getLengthZ();
+
+        for (var y = 0; y < mapLengthY; ++y) {
+            for (var z = 0; z < mapLengthZ; ++z) {
+                for (var x = 0; x < mapLengthX; ++x)
                     map.setPoint(x, y, z, 0.0);
             }
         }
@@ -42,13 +45,13 @@ public class ImprovedNoiseGenerator3D
             var octaveScaleZ = scaleZ * octaveScale;
             var invOctaveScale = 1.0 / octaveScale;
 
-            for (var y = 0; y < map.lengthY; ++y) {
+            for (var y = 0; y < mapLengthY; ++y) {
                 var noisePosY = (offsetY + y) * octaveScaleY;
 
-                for (var z = 0; z < map.lengthZ; ++z) {
+                for (var z = 0; z < mapLengthZ; ++z) {
                     var noisePosZ = (offsetZ + z) * octaveScaleZ;
 
-                    for (var x = 0; x < map.lengthX; ++x) {
+                    for (var x = 0; x < mapLengthX; ++x) {
                         var noisePosX = (offsetX + x) * octaveScaleX;
                         var prevOctave = map.sampleNearest(x, y, z);
                         var currentOctave = valueAt(noisePosX, noisePosY, noisePosZ)
@@ -64,9 +67,10 @@ public class ImprovedNoiseGenerator3D
 
         if (octaveCount > 1) {
             var clamper = 1.0 / (2.0 - 1.0 / octaveScale);
-            for (var y = 0; y < map.lengthY; ++y) {
-                for (var z = 0; z < map.lengthZ; ++z) {
-                    for (var x = 0; x < map.lengthX; ++x)
+
+            for (var y = 0; y < mapLengthY; ++y) {
+                for (var z = 0; z < mapLengthZ; ++z) {
+                    for (var x = 0; x < mapLengthX; ++x)
                         map.setPoint(x, y, z, map.sampleNearest(x, y, z) * clamper);
                 }
             }
@@ -147,5 +151,25 @@ public class ImprovedNoiseGenerator3D
         case 15: return    -y -z;
         default: return 0.0;
         }
+    }
+
+    public double getScaleX() {
+        return scaleX;
+    }
+
+    public double getScaleY() {
+        return scaleY;
+    }
+
+    public double getScaleZ() {
+        return scaleZ;
+    }
+
+    public int getOctaveCount() {
+        return octaveCount;
+    }
+
+    public long getSeed() {
+        return seed;
     }
 }
