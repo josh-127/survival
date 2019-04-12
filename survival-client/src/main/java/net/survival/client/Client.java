@@ -61,7 +61,7 @@ public class Client implements AutoCloseable
     private final ActorSpace actorSpace = new ActorSpace();
     private final ClientParticleSpace particleSpace = new ClientParticleSpace();
 
-    private final CircularColumnMask columnMask = new CircularColumnMask(10);
+    private final CircularColumnMask columnMask = new CircularColumnMask(16);
 
     private final CompositeDisplay compositeDisplay;
     private final FpvCamera fpvCamera = new FpvCamera(0.0f, -1.0f);
