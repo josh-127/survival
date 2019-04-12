@@ -178,6 +178,7 @@ class CloudDisplay
 
         GLState.pushBlendEnabled(true);
         GLState.pushBlendFunction(GLBlendFactor.SRC_ALPHA, GLBlendFactor.ONE_MINUS_SRC_ALPHA);
+        GLState.pushCullFaceEnabled(false);
 
         var drawCall = GLImmediateDrawCall.beginTriangles(null);
         drawCall.color(1.0f, 1.0f, 1.0f, alpha);
@@ -188,6 +189,7 @@ class CloudDisplay
 
         drawCall.end();
 
+        GLState.popCullFaceEnabled();
         GLState.popBlendFunction();
         GLState.popBlendEnabled();
 
