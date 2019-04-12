@@ -206,29 +206,59 @@ public class DoubleNoise
         return value;
     }
 
-    public static double perlin2D(double x, double y, int octaveCount, long seed) {
+    public static double perlin2D(
+            double x,
+            double y,
+            int octaveCount,
+            double persistence,
+            long seed)
+    {
         var value = 0.0;
-        var scale = 1.0;
+        var frequency = 1.0;
+        var amplitude = 1.0;
+        var maxValue = 0.0;
 
         for (var i = 0; i < octaveCount; ++i) {
-            value += perlinOctave2D(x * scale, y * scale, seed) / scale;
-            scale *= 2.0;
+            var octave = perlinOctave2D(
+                    x * frequency,
+                    y * frequency,
+                    seed);
+            value += octave * amplitude;
+            maxValue += amplitude;
+            amplitude *= persistence;
+            frequency *= 2.0;
         }
 
-        value /= (2.0 - 2.0 / scale);
+        value /= maxValue;
         return value;
     }
 
-    public static double perlin3D(double x, double y, double z, int octaveCount, long seed) {
+    public static double perlin3D(
+            double x,
+            double y,
+            double z,
+            int octaveCount,
+            double persistence,
+            long seed)
+    {
         var value = 0.0;
-        var scale = 1.0;
+        var frequency = 1.0;
+        var amplitude = 1.0;
+        var maxValue = 0.0;
 
         for (var i = 0; i < octaveCount; ++i) {
-            value += perlinOctave3D(x * scale, y * scale, z * scale, seed) / scale;
-            scale *= 2.0;
+            var octave = perlinOctave3D(
+                    x * frequency,
+                    y * frequency,
+                    z * frequency,
+                    seed);
+            value += octave * amplitude;
+            maxValue += amplitude;
+            amplitude *= persistence;
+            frequency *= 2.0;
         }
 
-        value /= (2.0 - 2.0 / scale);
+        value /= maxValue;
         return value;
     }
 
@@ -304,29 +334,56 @@ public class DoubleNoise
         return value;
     }
 
-    public static double improved2D(double x, double y, int octaveCount, long seed) {
+    public static double improved2D(
+            double x,
+            double y,
+            int octaveCount,
+            double persistence,
+            long seed)
+    {
         var value = 0.0;
-        var scale = 1.0;
+        var frequency = 1.0;
+        var amplitude = 1.0;
+        var maxValue = 0.0;
 
         for (var i = 0; i < octaveCount; ++i) {
-            value += improvedOctave2D(x * scale, y * scale, seed) / scale;
-            scale *= 2.0;
+            var octave = improvedOctave2D(x * frequency, y * frequency, seed);
+            value += octave * amplitude;
+            maxValue += amplitude;
+            amplitude *= persistence;
+            frequency *= 2.0;
         }
 
-        value /= (2.0 - 2.0 / scale);
+        value /= maxValue;
         return value;
     }
 
-    public static double improved3D(double x, double y, double z, int octaveCount, long seed) {
+    public static double improved3D(
+            double x,
+            double y,
+            double z,
+            int octaveCount,
+            double persistence,
+            long seed)
+    {
         var value = 0.0;
-        var scale = 1.0;
+        var frequency = 1.0;
+        var amplitude = 1.0;
+        var maxValue = 0.0;
 
         for (var i = 0; i < octaveCount; ++i) {
-            value += improvedOctave3D(x * scale, y * scale, z * scale, seed) / scale;
-            scale *= 2.0;
+            var octave = improvedOctave3D(
+                    x * frequency,
+                    y * frequency,
+                    z * frequency,
+                    seed);
+            value += octave * amplitude;
+            maxValue += amplitude;
+            amplitude *= persistence;
+            frequency *= 2.0;
         }
 
-        value /= (2.0 - 2.0 / scale);
+        value /= maxValue;
         return value;
     }
 
