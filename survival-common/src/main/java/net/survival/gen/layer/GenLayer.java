@@ -1,6 +1,5 @@
 package net.survival.gen.layer;
 
-import java.util.ArrayList;
 import java.util.Random;
 
 import net.survival.util.ByteMap2D;
@@ -9,7 +8,6 @@ import net.survival.util.IntNoise;
 public class GenLayer extends ByteMap2D
 {
     public final long baseSeed;
-    private final ArrayList<GenLayer> dependencies;
 
     private int lastOffsetX;
     private int lastOffsetZ;
@@ -18,15 +16,6 @@ public class GenLayer extends ByteMap2D
         super(lengthX, lengthZ);
 
         this.baseSeed = baseSeed;
-        dependencies = new ArrayList<>();
-    }
-
-    public Iterable<GenLayer> iterateDependencies() {
-        return dependencies;
-    }
-
-    protected void addDependency(GenLayer dependency) {
-        dependencies.add(dependency);
     }
 
     protected Random rngFromPosition(Random random, int x, int z) {

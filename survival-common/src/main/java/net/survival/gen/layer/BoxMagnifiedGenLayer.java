@@ -10,9 +10,7 @@ class BoxMagnifiedGenLayer extends GenLayer
             GenLayerFactory sourceFactory)
     {
         super(lengthX, lengthZ, seed);
-
         source = sourceFactory.create(lengthX / 2, lengthZ / 2, seed + 1L);
-        addDependency(source);
     }
 
     @Override

@@ -11,9 +11,7 @@ class FuzzyMagnifiedGenLayer extends GenLayer
             GenLayerFactory sourceFactory)
     {
         super(lengthX, lengthZ, seed);
-
         source = sourceFactory.create(lengthX / 2 + 3, lengthZ / 2 + 3, seed + 1L);
-        addDependency(source);
     }
 
     @Override

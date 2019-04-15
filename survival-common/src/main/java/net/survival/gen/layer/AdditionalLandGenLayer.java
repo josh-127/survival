@@ -13,9 +13,7 @@ class AdditionalLandGenLayer extends GenLayer
             GenLayerFactory sourceFactory)
     {
         super(lengthX, lengthZ, seed);
-
         source = sourceFactory.create(lengthX, lengthZ, seed + 1L);
-        addDependency(source);
     }
 
     @Override
