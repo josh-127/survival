@@ -7,24 +7,24 @@ public interface GenLayerFactory
     public static GenLayer createBiomeLayer(int lengthX, int lengthZ, long baseSeed) {
         // TODO: Replace this mess.
         return
+            new FuzzyMagnifiedGenLayer.Factory(
                 new FuzzyMagnifiedGenLayer.Factory(
+                    new FuzzyMagnifiedGenLayer.Factory(
                         new FuzzyMagnifiedGenLayer.Factory(
+                            new FuzzyMagnifiedGenLayer.Factory(
                                 new FuzzyMagnifiedGenLayer.Factory(
-                                        new FuzzyMagnifiedGenLayer.Factory(
-                                                new FuzzyMagnifiedGenLayer.Factory(
-                                                        new FuzzyMagnifiedGenLayer.Factory(
-                                                                new FuzzyMagnifiedGenLayer.Factory(
-                                                                        new AdditionalLandGenLayer.Factory(
-                                                                                new FuzzyMagnifiedGenLayer.Factory(
-                                                                                        new LandGenLayer.Factory()
-                                                                                        )
-                                                                                )
-                                                                        )
-                                                                )
-                                                        )
-                                                )
+                                    new FuzzyMagnifiedGenLayer.Factory(
+                                        new AdditionalLandGenLayer.Factory(
+                                            new FuzzyMagnifiedGenLayer.Factory(
+                                                new LandGenLayer.Factory()
+                                            )
                                         )
+                                    )
                                 )
-                        ).create(lengthX, lengthZ, baseSeed);
+                            )
+                        )
+                    )
+                )
+            ).create(lengthX, lengthZ, baseSeed);
     }
 }

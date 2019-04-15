@@ -21,10 +21,12 @@ public class GenLayer extends ByteMap2D
     protected Random rngFromPosition(Random random, int x, int z) {
         var columnSeed = (long) IntNoise.white2D(x, z, baseSeed);
 
-        if (random == null)
+        if (random == null) {
             random = new Random(columnSeed);
-        else
+        }
+        else {
             random.setSeed(columnSeed);
+        }
 
         return random;
     }
