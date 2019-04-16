@@ -14,8 +14,6 @@ class LandGenLayer extends GenLayer
 
     @Override
     public void generate(int offsetX, int offsetZ) {
-        super.generate(offsetX, offsetZ);
-
         for (var z = 0; z < lengthZ; ++z) {
             for (var x = 0; x < lengthX; ++x) {
                 random = rngFromPosition(random, offsetX + x, offsetZ + z);

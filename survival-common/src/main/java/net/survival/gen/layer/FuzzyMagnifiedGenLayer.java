@@ -16,8 +16,6 @@ class FuzzyMagnifiedGenLayer extends GenLayer
 
     @Override
     public void generate(int offsetX, int offsetZ) {
-        super.generate(offsetX, offsetZ);
-
         // TODO: Remove code duplication.
         var coarseOffsetX = offsetX >= 0 ? offsetX / 2 : (offsetX - 1) / 2;
         var coarseOffsetZ = offsetZ >= 0 ? offsetZ / 2 : (offsetZ - 1) / 2;

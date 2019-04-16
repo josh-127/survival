@@ -15,8 +15,6 @@ class BoxMagnifiedGenLayer extends GenLayer
 
     @Override
     public void generate(int offsetX, int offsetZ) {
-        super.generate(offsetX, offsetZ);
-
         source.generate(offsetX, offsetZ);
 
         var srcMap = source.getMap();

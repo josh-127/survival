@@ -5,12 +5,9 @@ import java.util.Random;
 import net.survival.util.ByteMap2D;
 import net.survival.util.IntNoise;
 
-public class GenLayer extends ByteMap2D
+public abstract class GenLayer extends ByteMap2D
 {
     public final long baseSeed;
-
-    private int lastOffsetX;
-    private int lastOffsetZ;
 
     public GenLayer(int lengthX, int lengthZ, long baseSeed) {
         super(lengthX, lengthZ);
@@ -35,16 +32,5 @@ public class GenLayer extends ByteMap2D
         return map;
     }
 
-    public void generate(int offsetX, int offsetZ) {
-        lastOffsetX = offsetX;
-        lastOffsetZ = offsetZ;
-    }
-
-    public int getLastOffsetX() {
-        return lastOffsetX;
-    }
-
-    public int getLastOffsetZ() {
-        return lastOffsetZ;
-    }
+    public abstract void generate(int offsetX, int offsetZ);
 }

@@ -18,8 +18,6 @@ class AdditionalLandGenLayer extends GenLayer
 
     @Override
     public void generate(int offsetX, int offsetZ) {
-        super.generate(offsetX, offsetZ);
-
         source.generate(offsetX, offsetZ);
         System.arraycopy(source.getMap(), 0, map, 0, map.length);
 
