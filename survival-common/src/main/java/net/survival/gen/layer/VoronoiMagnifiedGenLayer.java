@@ -2,6 +2,8 @@ package net.survival.gen.layer;
 
 import java.util.Random;
 
+import net.survival.util.IntNoise;
+
 class VoronoiMagnifiedGenLayer extends GenLayer
 {
     private final GenLayer source;
@@ -96,5 +98,18 @@ class VoronoiMagnifiedGenLayer extends GenLayer
                 map[x + z * lengthX] = source.sampleNearest(chosenSampleX, chosenSampleZ);
             }
         }
+    }
+
+    protected Random rngFromPosition(Random random, int x, int z) {
+        var columnSeed = (long) IntNoise.white2D(x, z, baseSeed);
+
+        if (random == null) {
+            random = new Random(columnSeed);
+        }
+        else {
+            random.setSeed(columnSeed);
+        }
+
+        return random;
     }
 }

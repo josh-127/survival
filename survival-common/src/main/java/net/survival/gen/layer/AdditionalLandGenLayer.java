@@ -1,19 +1,17 @@
 package net.survival.gen.layer;
 
-import java.util.Random;
-
 import net.survival.gen.BiomeType;
+import net.survival.util.IntNoise;
 
 class AdditionalLandGenLayer extends GenLayer
 {
     private final GenLayer source;
-    private Random random;
 
     public AdditionalLandGenLayer(int lengthX, int lengthZ, long seed,
             GenLayerFactory sourceFactory)
     {
         super(lengthX, lengthZ, seed);
-        source = sourceFactory.create(lengthX, lengthZ, seed + 1L);
+        source = sourceFactory.create(lengthX, lengthZ, seed + 1000L);
     }
 
     @Override
@@ -23,10 +21,13 @@ class AdditionalLandGenLayer extends GenLayer
 
         for (var z = 0; z < lengthZ; ++z) {
             for (var x = 0; x < lengthX; ++x) {
-                random = rngFromPosition(random, offsetX + x, offsetZ + z);
                 var dstIndex = x + z * lengthX;
-                if (map[dstIndex] == 0 && random.nextInt(12) == 0)
-                    map[dstIndex] = (byte) (random.nextInt(BiomeType.getCachedValues().length - 1) + 1);
+
+                if (map[dstIndex] == 0 && IntNoise.white2D(offsetX + x, offsetZ + z, baseSeed) == 0) {
+                    var noise = IntNoise.white2D(offsetX + x, offsetZ + z, baseSeed + 1L);
+                    var value = (noise & 0x7FFFFFFF) % (BiomeType.getCachedValues().length - 1) + 1;
+                    map[dstIndex] = (byte) value;
+                }
             }
         }
     }

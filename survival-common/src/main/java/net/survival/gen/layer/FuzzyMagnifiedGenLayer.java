@@ -1,17 +1,16 @@
 package net.survival.gen.layer;
 
-import java.util.Random;
+import net.survival.util.IntNoise;
 
 class FuzzyMagnifiedGenLayer extends GenLayer
 {
     private final GenLayer source;
-    private Random random;
 
     private FuzzyMagnifiedGenLayer(int lengthX, int lengthZ, long seed,
             GenLayerFactory sourceFactory)
     {
         super(lengthX, lengthZ, seed);
-        source = sourceFactory.create(lengthX / 2 + 3, lengthZ / 2 + 3, seed + 1L);
+        source = sourceFactory.create(lengthX / 2 + 3, lengthZ / 2 + 3, seed + 1000L);
     }
 
     @Override
@@ -27,8 +26,6 @@ class FuzzyMagnifiedGenLayer extends GenLayer
 
         for (var z = 0; z < lengthZ / 2; ++z) {
             for (var x = 0; x < lengthX / 2; ++x) {
-                random = rngFromPosition(random, coarseOffsetX + x, coarseOffsetZ + z);
-
                 var srcTL = x + z * srcLengthX;
                 var srcTR = srcTL + 1;
                 var srcBL = srcTL + srcLengthX;
@@ -39,10 +36,16 @@ class FuzzyMagnifiedGenLayer extends GenLayer
                 var dstBR = dstBL + 1;
 
                 map[dstTL] = srcMap[srcTL];
-                map[dstTR] = random.nextInt(2) == 0 ? srcMap[srcTL] : srcMap[srcTR];
-                map[dstBL] = random.nextInt(2) == 0 ? srcMap[srcTL] : srcMap[srcBL];
+                map[dstTR] =
+                        IntNoise.white2D(coarseOffsetX + x, coarseOffsetZ + z, baseSeed) % 2 == 0
+                        ? srcMap[srcTL] : srcMap[srcTR];
+                map[dstBL] =
+                        IntNoise.white2D(coarseOffsetX + x, coarseOffsetZ + z, baseSeed + 1L) % 2 == 0
+                        ? srcMap[srcTL] : srcMap[srcBL];
 
-                switch (random.nextInt(4)) {
+                var noise = IntNoise.white2D(coarseOffsetX + x, coarseOffsetZ + z, baseSeed + 2L);
+
+                switch ((noise & 0x7FFFFFFF) % 4) {
                 case 0: map[dstBR] = srcMap[srcTL]; break;
                 case 1: map[dstBR] = srcMap[srcTR]; break;
                 case 2: map[dstBR] = srcMap[srcBL]; break;
@@ -54,40 +57,41 @@ class FuzzyMagnifiedGenLayer extends GenLayer
 
         if (offsetX - coarseOffsetX * 2 != 0) {
             for (var z = 0; z < lengthZ; ++z) {
-                for (var x = 1; x < lengthX; ++x)
+                for (var x = 1; x < lengthX; ++x) {
                     map[(x - 1) + z * lengthX] = map[x + z * lengthX];
+                }
             }
 
             for (var z = 0; z < lengthZ / 2; ++z) {
-                random = rngFromPosition(random, coarseOffsetX + lengthX / 2, coarseOffsetZ + z);
-
                 var srcTL = (lengthX / 2) + z * srcLengthX;
                 var srcBL = srcTL + srcLengthX;
                 var dstTL = (lengthX - 1) + (z * 2) * lengthX;
                 var dstBL = dstTL + lengthX;
 
                 map[dstTL] = srcMap[srcTL];
-                random.nextInt();
-                map[dstBL] = random.nextInt(2) == 0 ? srcMap[srcTL] : srcMap[srcBL];
+                map[dstBL] =
+                        IntNoise.white2D(coarseOffsetX + lengthX / 2, coarseOffsetZ + z, baseSeed + 1L) % 2 == 0
+                        ? srcMap[srcTL] : srcMap[srcBL];
             }
         }
 
         if (offsetZ - coarseOffsetZ * 2 != 0) {
             for (var z = 1; z < lengthZ; ++z) {
-                for (var x = 0; x < lengthX; ++x)
+                for (var x = 0; x < lengthX; ++x) {
                     map[x + (z - 1) * lengthX] = map[x + z * lengthZ];
+                }
             }
 
             for (var x = 0; x < lengthX / 2; ++x) {
-                random = rngFromPosition(random, coarseOffsetX + x, coarseOffsetZ + lengthZ / 2);
-
                 var srcTL = x + (lengthZ / 2) * srcLengthX;
                 var srcTR = srcTL + 1;
                 var dstTL = (x * 2) + (lengthZ - 1) * lengthX;
                 var dstTR = dstTL + 1;
 
                 map[dstTL] = srcMap[srcTL];
-                map[dstTR] = random.nextInt(2) == 0 ? srcMap[srcTL] : srcMap[srcTR];
+                map[dstTR] =
+                        IntNoise.white2D(coarseOffsetX + x, coarseOffsetZ + lengthZ / 2, baseSeed) % 2 == 0
+                        ? srcMap[srcTL] : srcMap[srcTR];
             }
         }
     }
