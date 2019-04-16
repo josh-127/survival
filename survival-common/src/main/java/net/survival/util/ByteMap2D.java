@@ -32,4 +32,8 @@ public class ByteMap2D implements ByteSampler2D
     public byte sampleNearest(int x, int z) {
         return map[indexOf(x, z)];
     }
+
+    public void setPoint(int x, int z, byte to) {
+        map[indexOf(x, z)] = to;
+    }
 }
