@@ -4,7 +4,6 @@ import net.survival.blocktype.BlockType;
 import net.survival.gen.BiomeType;
 import net.survival.gen.SurfaceDescription;
 import net.survival.gen.SurfaceLayer;
-import net.survival.gen.SurfaceDescription.Builder;
 
 public class DefaultColumnDecorator extends ColumnDecorator
 {
@@ -54,6 +53,12 @@ public class DefaultColumnDecorator extends ColumnDecorator
     private final CactusDecorator cactusDecorator = new CactusDecorator();
     private final SaplingDecorator saplingDecorator = new SaplingDecorator();
 
+    private final boolean includeWater;
+
+    public DefaultColumnDecorator(boolean includeWater) {
+        this.includeWater = includeWater;
+    }
+
     @Override
     public void decorate(DecoratorContext context) {
         bedrockDecorator.decorate(context);
@@ -62,7 +67,11 @@ public class DefaultColumnDecorator extends ColumnDecorator
         forestSurfaceDecorator.decorate(context);
         grasslandSurfaceDecorator.decorate(context);
         oceanSurfaceDecorator.decorate(context);
-        waterDecorator.decorate(context);
+
+        if (includeWater) {
+            waterDecorator.decorate(context);
+        }
+
         cactusDecorator.decorate(context);
         saplingDecorator.decorate(context);
     }

@@ -7,25 +7,25 @@ import net.survival.gen.decoration.DecoratorContext;
 import net.survival.gen.decoration.DefaultColumnDecorator;
 import net.survival.gen.layer.GenLayer;
 import net.survival.gen.layer.GenLayerFactory;
-import net.survival.gen.terrain.DefaultTerrainGenerator;
+import net.survival.gen.terrain.FlatTerrainGenerator;
 import net.survival.gen.terrain.TerrainContext;
 
-public class DefaultColumnGenerator implements ColumnProvider
+public class FlatBiomeColumnGenerator implements ColumnProvider
 {
     private final GenLayer biomeMap;
-    private final DefaultTerrainGenerator terrainGenerator;
+    private final FlatTerrainGenerator terrainGenerator;
     private final DefaultColumnDecorator decorator;
 
     private final ColumnPrimer primer;
 
-    public DefaultColumnGenerator(long seed) {
+    public FlatBiomeColumnGenerator(long seed) {
         biomeMap = GenLayerFactory.createBiomeLayer(
                 ColumnPrimer.XLENGTH * 4,
                 ColumnPrimer.ZLENGTH * 4,
                 seed);
 
-        terrainGenerator = new DefaultTerrainGenerator(seed);
-        decorator = new DefaultColumnDecorator(true);
+        terrainGenerator = new FlatTerrainGenerator();
+        decorator = new DefaultColumnDecorator(false);
 
         primer = new ColumnPrimer();
     }
