@@ -12,6 +12,10 @@ public class ByteMap2D implements ByteSampler2D
         this.lengthZ = lengthZ;
     }
 
+    public byte[] getRawMap() {
+        return map;
+    }
+
     public int getLengthX() {
         return lengthX;
     }

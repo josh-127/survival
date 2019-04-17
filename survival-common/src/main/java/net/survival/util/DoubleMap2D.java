@@ -5,7 +5,6 @@ import static net.survival.util.MathEx.lerp;
 public class DoubleMap2D implements DoubleSampler2D
 {
     protected final double[] map;
-
     private final int lengthX;
     private final int lengthZ;
 
@@ -13,6 +12,10 @@ public class DoubleMap2D implements DoubleSampler2D
         map = new double[lengthX * lengthZ];
         this.lengthX = lengthX;
         this.lengthZ = lengthZ;
+    }
+
+    public double[] getRawMap() {
+        return map;
     }
 
     public int getLengthX() {

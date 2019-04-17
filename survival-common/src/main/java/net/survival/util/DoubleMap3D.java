@@ -5,7 +5,6 @@ import static net.survival.util.MathEx.lerp;
 public class DoubleMap3D implements DoubleSampler3D
 {
     protected final double[] map;
-
     private final int lengthX;
     private final int lengthY;
     private final int lengthZ;
@@ -15,6 +14,10 @@ public class DoubleMap3D implements DoubleSampler3D
         this.lengthX = lengthX;
         this.lengthY = lengthY;
         this.lengthZ = lengthZ;
+    }
+
+    public double[] getRawMap() {
+        return map;
     }
 
     public int getLengthX() {
