@@ -4,6 +4,7 @@ import java.util.Random;
 
 import net.survival.util.IntNoise;
 
+@Deprecated
 class VoronoiMagnifiedGenLayer extends GenLayer
 {
     private final GenLayer source;

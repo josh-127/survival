@@ -1,5 +1,6 @@
 package net.survival.gen.layer;
 
+@Deprecated
 class BoxMagnifiedGenLayer extends GenLayer
 {
     // TODO: Implement fine-offset scrolling.

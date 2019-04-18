@@ -3,6 +3,7 @@ package net.survival.gen.layer;
 import net.survival.gen.BiomeType;
 import net.survival.util.IntNoise;
 
+@Deprecated
 class AdditionalLandGenLayer extends GenLayer
 {
     private final GenLayer source;

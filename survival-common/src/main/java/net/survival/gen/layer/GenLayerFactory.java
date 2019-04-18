@@ -1,5 +1,6 @@
 package net.survival.gen.layer;
 
+@Deprecated
 public interface GenLayerFactory
 {
     GenLayer create(int lengthX, int lengthZ, long seed);

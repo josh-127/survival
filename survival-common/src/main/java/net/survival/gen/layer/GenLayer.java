@@ -2,6 +2,7 @@ package net.survival.gen.layer;
 
 import net.survival.util.ByteMap2D;
 
+@Deprecated
 public abstract class GenLayer extends ByteMap2D
 {
     public final long baseSeed;
