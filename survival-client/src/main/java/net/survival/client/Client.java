@@ -61,7 +61,7 @@ public class Client implements AutoCloseable
     private final ActorSpace actorSpace = new ActorSpace();
     private final ClientParticleSpace particleSpace = new ClientParticleSpace();
 
-    private final CircularColumnMask columnMask = new CircularColumnMask(16);
+    private final CircularColumnMask columnMask = new CircularColumnMask(12);
 
     private final CompositeDisplay compositeDisplay;
     private final FpvCamera fpvCamera = new FpvCamera(0.0f, -1.0f);
@@ -83,7 +83,7 @@ public class Client implements AutoCloseable
         interactionContext = new LocalInteractionContext(
                 actorSpace, blockSpace, particleSpace, messageQueue);
 
-        playerId = actorSpace.addActor(new PlayerActor(60.0, 96.0, 20.0));
+        playerId = actorSpace.addActor(new PlayerActor(60.0, 128.0, 20.0));
         player = actorSpace.getActor(playerId);
 
         compositeDisplay = new CompositeDisplay(

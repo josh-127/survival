@@ -221,7 +221,7 @@ public class CompositeDisplay implements RenderContext, GraphicsResource, Render
                 0.5f * (skyboxDisplay.getBottomB() + skyboxDisplay.getTopB()),
                 1.0f);
         {
-            for (int i = 0; i < 3 && !columnsToInvalidate.isEmpty(); ++i) {
+            for (int i = 0; i < 6 && !columnsToInvalidate.isEmpty(); ++i) {
                 var lastIndex = columnsToInvalidate.size() - 1;
                 var message = columnsToInvalidate.remove(lastIndex);
                 var columnPos = message.getColumnPos();
