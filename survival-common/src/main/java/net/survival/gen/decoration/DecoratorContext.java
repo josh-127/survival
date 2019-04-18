@@ -2,18 +2,15 @@ package net.survival.gen.decoration;
 
 import net.survival.block.ColumnPos;
 import net.survival.gen.ColumnPrimer;
-import net.survival.gen.layer.GenLayer;
 
 public class DecoratorContext
 {
     private final long columnPos;
     private final ColumnPrimer primer;
-    private final GenLayer biomeMap;
 
-    public DecoratorContext(long columnPos, ColumnPrimer primer, GenLayer biomeMap) {
+    public DecoratorContext(long columnPos, ColumnPrimer primer) {
         this.columnPos = columnPos;
         this.primer = primer;
-        this.biomeMap = biomeMap;
     }
 
     public long getColumnPos() {
@@ -30,9 +27,5 @@ public class DecoratorContext
 
     public ColumnPrimer getColumnPrimer() {
         return primer;
-    }
-
-    public GenLayer getBiomeMap() {
-        return biomeMap;
     }
 }

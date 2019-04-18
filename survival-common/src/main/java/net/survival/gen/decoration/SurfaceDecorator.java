@@ -2,10 +2,8 @@ package net.survival.gen.decoration;
 
 import java.util.Random;
 
-import net.survival.gen.BiomeType;
 import net.survival.gen.ColumnPrimer;
 import net.survival.gen.SurfaceDescription;
-import net.survival.gen.SurfaceLayer;
 
 class SurfaceDecorator extends ColumnDecorator
 {
@@ -20,17 +18,12 @@ class SurfaceDecorator extends ColumnDecorator
     public void decorate(DecoratorContext context) {
         var columnPos = context.getColumnPos();
         var primer = context.getColumnPrimer();
-        var biomeMap = context.getBiomeMap();
-
-        var targetBiome = description.getBiomeType();
 
         random.setSeed(columnPos);
 
         for (var z = 0; z < ColumnPrimer.ZLENGTH; ++z) {
             for (var x = 0; x < ColumnPrimer.XLENGTH; ++x) {
-                if (biomeMap.sampleNearest(x, z) == targetBiome.ordinal()) {
-                    decorateStrip(x, z, primer);
-                }
+                decorateStrip(x, z, primer);
             }
         }
     }
