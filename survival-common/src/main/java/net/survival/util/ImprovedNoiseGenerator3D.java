@@ -37,13 +37,14 @@ public class ImprovedNoiseGenerator3D
             }
         }
 
-        var octaveScale = 1.0;
+        var frequency = 1.0;
+        var amplitude = 1.0;
+        var maxValue = 0.0;
 
         for (var o = 0; o < octaveCount; ++o) {
-            var octaveScaleX = scaleX * octaveScale;
-            var octaveScaleY = scaleY * octaveScale;
-            var octaveScaleZ = scaleZ * octaveScale;
-            var invOctaveScale = 1.0 / octaveScale;
+            var octaveScaleX = scaleX * frequency;
+            var octaveScaleY = scaleY * frequency;
+            var octaveScaleZ = scaleZ * frequency;
 
             for (var y = 0; y < mapLengthY; ++y) {
                 var noisePosY = (offsetY + y) * octaveScaleY;
@@ -54,24 +55,25 @@ public class ImprovedNoiseGenerator3D
                     for (var x = 0; x < mapLengthX; ++x) {
                         var noisePosX = (offsetX + x) * octaveScaleX;
                         var prevOctave = map.sampleNearest(x, y, z);
-                        var currentOctave = valueAt(noisePosX, noisePosY, noisePosZ)
-                                * invOctaveScale;
+                        var octave = valueAt(noisePosX, noisePosY, noisePosZ) * amplitude;
 
-                        map.setPoint(x, y, z, prevOctave + currentOctave);
+                        map.setPoint(x, y, z, prevOctave + octave);
                     }
                 }
             }
 
-            octaveScale *= 2.0;
+            maxValue += amplitude;
+            amplitude *= 0.5;
+            frequency *= 2.0;
         }
 
         if (octaveCount > 1) {
-            var clamper = 1.0 / (2.0 - 1.0 / octaveScale);
-
             for (var y = 0; y < mapLengthY; ++y) {
                 for (var z = 0; z < mapLengthZ; ++z) {
-                    for (var x = 0; x < mapLengthX; ++x)
-                        map.setPoint(x, y, z, map.sampleNearest(x, y, z) * clamper);
+                    for (var x = 0; x < mapLengthX; ++x) {
+                        var value = map.sampleNearest(x, y, z);
+                        map.setPoint(x, y, z, value / maxValue);
+                    }
                 }
             }
         }

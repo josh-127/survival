@@ -31,12 +31,13 @@ public class ImprovedNoiseGenerator2D
                 map.setPoint(x, z, 0.0);
         }
 
-        var octaveScale = 1.0;
+        var frequency = 1.0;
+        var amplitude = 1.0;
+        var maxValue = 0.0;
 
         for (var o = 0; o < octaveCount; ++o) {
-            var octaveScaleX = scaleX * octaveScale;
-            var octaveScaleZ = scaleZ * octaveScale;
-            var invOctaveScale = 1.0 / octaveScale;
+            var octaveScaleX = scaleX * frequency;
+            var octaveScaleZ = scaleZ * frequency;
 
             for (var z = 0; z < mapLengthZ; ++z) {
                 var noisePosZ = (offsetZ + z) * octaveScaleZ;
@@ -44,20 +45,23 @@ public class ImprovedNoiseGenerator2D
                 for (var x = 0; x < mapLengthX; ++x) {
                     var noisePosX = (offsetX + x) * octaveScaleX;
                     var prevOctave = map.sampleNearest(x, z);
-                    var currentOctave = valueAt(noisePosX, noisePosZ) * invOctaveScale;
+                    var octave = valueAt(noisePosX, noisePosZ) * amplitude;
 
-                    map.setPoint(x, z, prevOctave + currentOctave);
+                    map.setPoint(x, z, prevOctave + octave);
                 }
             }
 
-            octaveScale *= 2.0;
+            maxValue += amplitude;
+            amplitude *= 0.5;
+            frequency *= 2.0;
         }
 
         if (octaveCount > 1) {
-            var clamper = 1.0 / (2.0 - 1.0 / octaveScale);
             for (var z = 0; z < mapLengthZ; ++z) {
-                for (var x = 0; x < mapLengthX; ++x)
-                    map.setPoint(x, z, map.sampleNearest(x, z) * clamper);
+                for (var x = 0; x < mapLengthX; ++x) {
+                    var value = map.sampleNearest(x, z);
+                    map.setPoint(x, z, value / maxValue);
+                }
             }
         }
     }
