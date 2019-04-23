@@ -80,10 +80,10 @@ public class ImprovedNoiseGenerator2D
         var fracX = x - floorX;
         var fracZ = z - floorZ;
 
-        var dotTL = dotProductOfGradientAndDistance(hashTL, fracX, fracZ);
-        var dotTR = dotProductOfGradientAndDistance(hashTR, fracX - 1.0, fracZ);
-        var dotBL = dotProductOfGradientAndDistance(hashBL, fracX, fracZ - 1.0);
-        var dotBR = dotProductOfGradientAndDistance(hashBR, fracX - 1.0, fracZ - 1.0);
+        var dotTL = gradDotDist(hashTL, fracX, fracZ);
+        var dotTR = gradDotDist(hashTR, fracX - 1.0, fracZ);
+        var dotBL = gradDotDist(hashBL, fracX, fracZ - 1.0);
+        var dotBR = gradDotDist(hashBR, fracX - 1.0, fracZ - 1.0);
 
         var fadeX = fade(fracX);
         var fadeZ = fade(fracZ);
@@ -91,7 +91,7 @@ public class ImprovedNoiseGenerator2D
         return lerp(lerp(dotTL, dotTR, fadeX), lerp(dotBL, dotBR, fadeX), fadeZ);
     }
 
-    private static double dotProductOfGradientAndDistance(int hash, double x, double z) {
+    private static double gradDotDist(int hash, double x, double z) {
         switch (hash & 7) {
         case 0:  return +x    ;
         case 1:  return -x    ;

@@ -107,14 +107,14 @@ public class ImprovedNoiseGenerator3D
         var fracY = y - floorY;
         var fracZ = z - floorZ;
 
-        var dotBBL = dotProductOfGradientAndDistance(hashBBL, fracX,       fracY,       fracZ      );
-        var dotBBR = dotProductOfGradientAndDistance(hashBBR, fracX - 1.0, fracY,       fracZ      );
-        var dotBFL = dotProductOfGradientAndDistance(hashBFL, fracX,       fracY,       fracZ - 1.0);
-        var dotBFR = dotProductOfGradientAndDistance(hashBFR, fracX - 1.0, fracY,       fracZ - 1.0);
-        var dotTBL = dotProductOfGradientAndDistance(hashTBL, fracX,       fracY - 1.0, fracZ      );
-        var dotTBR = dotProductOfGradientAndDistance(hashTBR, fracX - 1.0, fracY - 1.0, fracZ      );
-        var dotTFL = dotProductOfGradientAndDistance(hashTFL, fracX,       fracY - 1.0, fracZ - 1.0);
-        var dotTFR = dotProductOfGradientAndDistance(hashTFR, fracX - 1.0, fracY - 1.0, fracZ - 1.0);
+        var dotBBL = gradDotDist(hashBBL, fracX,       fracY,       fracZ      );
+        var dotBBR = gradDotDist(hashBBR, fracX - 1.0, fracY,       fracZ      );
+        var dotBFL = gradDotDist(hashBFL, fracX,       fracY,       fracZ - 1.0);
+        var dotBFR = gradDotDist(hashBFR, fracX - 1.0, fracY,       fracZ - 1.0);
+        var dotTBL = gradDotDist(hashTBL, fracX,       fracY - 1.0, fracZ      );
+        var dotTBR = gradDotDist(hashTBR, fracX - 1.0, fracY - 1.0, fracZ      );
+        var dotTFL = gradDotDist(hashTFL, fracX,       fracY - 1.0, fracZ - 1.0);
+        var dotTFR = gradDotDist(hashTFR, fracX - 1.0, fracY - 1.0, fracZ - 1.0);
 
         var fadeX = fade(fracX);
         var fadeY = fade(fracY);
@@ -133,7 +133,7 @@ public class ImprovedNoiseGenerator3D
                 fadeY);
     }
 
-    private static double dotProductOfGradientAndDistance(int hash, double x, double y, double z) {
+    private static double gradDotDist(int hash, double x, double y, double z) {
         switch (hash & 15) {
         case 0:  return +x +y   ;
         case 1:  return -x +y   ;
