@@ -3,7 +3,7 @@ package net.survival.gen.terrain;
 import net.survival.blocktype.BlockType;
 import net.survival.gen.ColumnPrimer;
 import net.survival.util.DoubleMap3D;
-import net.survival.util.ImprovedNoiseGenerator3D;
+import net.survival.util.ImprovedNoiseGenerator;
 
 public class DefaultTerrainGenerator implements TerrainGenerator
 {
@@ -19,17 +19,15 @@ public class DefaultTerrainGenerator implements TerrainGenerator
     private static final double MAIN_NOISE_ZSCALE = 1.0 / 128.0;
     private static final int MAIN_NOISE_OCTAVE_COUNT = 6;
 
-    private final ImprovedNoiseGenerator3D mainNoiseGenerator;
-    private final DoubleMap3D densityMap;
+    private final long seed;
 
+    private final DoubleMap3D densityMap;
     private final int stoneId;
 
     public DefaultTerrainGenerator(long seed) {
-        mainNoiseGenerator = new ImprovedNoiseGenerator3D(MAIN_NOISE_XSCALE, MAIN_NOISE_YSCALE,
-                MAIN_NOISE_ZSCALE, MAIN_NOISE_OCTAVE_COUNT, seed);
+        this.seed = seed;
 
         densityMap = new DoubleMap3D(NMAP_XLENGTH, NMAP_YLENGTH, NMAP_ZLENGTH);
-
         stoneId = BlockType.STONE.getFullId();
     }
 
@@ -41,7 +39,17 @@ public class DefaultTerrainGenerator implements TerrainGenerator
         var offsetZ = cz * (NMAP_ZLENGTH - 1);
         var columnPrimer = context.getColumnPrimer();
 
-        mainNoiseGenerator.generate(densityMap, offsetX, 0.0, offsetZ);
+        ImprovedNoiseGenerator.generate3D(
+                offsetX,
+                0.0,
+                offsetZ,
+                MAIN_NOISE_XSCALE,
+                MAIN_NOISE_YSCALE,
+                MAIN_NOISE_ZSCALE,
+                MAIN_NOISE_OCTAVE_COUNT,
+                seed,
+                densityMap);
+
         generateBase(columnPrimer);
     }
 
