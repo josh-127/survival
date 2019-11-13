@@ -10,12 +10,12 @@ import net.survival.util.MathEx;
 class ParticleDisplay
 {
     private final ClientParticleSpace clientParticleSpace;
-    private final Camera camera;
+    private final PerspectiveCamera camera;
 
     private final Matrix4f cameraViewMatrix = new Matrix4f();
     private final Matrix4f cameraProjectionMatrix = new Matrix4f();
 
-    public ParticleDisplay(ClientParticleSpace clientParticleSpace, Camera camera) {
+    public ParticleDisplay(ClientParticleSpace clientParticleSpace, PerspectiveCamera camera) {
         this.clientParticleSpace = clientParticleSpace;
         this.camera = camera;
     }
@@ -58,17 +58,41 @@ class ParticleDisplay
         camRightY *= 0.25f;
         camRightZ *= 0.25f;
 
-        var drawCall = GLImmediateDrawCall.beginTriangles(null);
+        var textureAtlas = Assets.getMipmappedTextureAtlas();
+        var textures = textureAtlas.getTextureObject();
+
+        var drawCall = GLImmediateDrawCall.beginTriangles(textures);
         drawCall.color(1.0f, 1.0f, 1.0f);
 
-        var data = clientParticleSpace.getData();
-        var maxParticles = data.maxParticles;
+        for (var entry : clientParticleSpace.getParticleDomains().entrySet()) {
+            var texture = entry.getKey();
+            var particleDomain = entry.getValue();
 
-        for (var i = 0; i < maxParticles; ++i) {
-            var x = (float) data.xs[i];
-            var y = (float) data.ys[i];
-            var z = (float) data.zs[i];
-            displayBillboard(drawCall, x, y, z, camRightX, camRightY, camRightZ, camUpX, camUpY, camUpZ);
+            var data = particleDomain.getData();
+            var maxParticles = data.maxParticles;
+
+            var u1 = textureAtlas.getTexCoordU1(texture);
+            var v1 = textureAtlas.getTexCoordV1(texture);
+            var u2 = textureAtlas.getTexCoordU2(texture);
+            var v2 = textureAtlas.getTexCoordV2(texture);
+
+            final var PADDING = 0.25f;
+            var uu1 = u1 + PADDING * (u2 - u1);
+            var vv1 = v1 + PADDING * (v2 - v1);
+            var uu2 = u1 + (1.0f - PADDING) * (u2 - u1);
+            var vv2 = v1 + (1.0f - PADDING) * (v2 - v1);
+
+            for (var i = 0; i < maxParticles; ++i) {
+                var x = (float) data.xs[i];
+                var y = (float) data.ys[i];
+                var z = (float) data.zs[i];
+                displayBillboard(
+                        drawCall,
+                        x, y, z,
+                        uu1, vv1, uu2, vv2,
+                        camRightX, camRightY, camRightZ,
+                        camUpX, camUpY, camUpZ);
+            }
         }
 
         drawCall.end();
@@ -77,6 +101,7 @@ class ParticleDisplay
     private void displayBillboard(
             GLImmediateDrawCall drawCall,
             float x, float y, float z,
+            float u1, float v1, float u2, float v2,
             float camRightX, float camRightY, float camRightZ,
             float camUpX, float camUpY, float camUpZ)
     {
@@ -93,11 +118,17 @@ class ParticleDisplay
         var trY = y + camRightY + camUpY;
         var trZ = z + camRightZ + camUpZ;
 
+        drawCall.texCoord(u1, v1);
         drawCall.vertex(blX, blY, blZ);
+        drawCall.texCoord(u2, v1);
         drawCall.vertex(brX, brY, brZ);
+        drawCall.texCoord(u2, v2);
         drawCall.vertex(trX, trY, trZ);
+        drawCall.texCoord(u2, v2);
         drawCall.vertex(trX, trY, trZ);
+        drawCall.texCoord(u1, v2);
         drawCall.vertex(tlX, tlY, tlZ);
+        drawCall.texCoord(u1, v1);
         drawCall.vertex(blX, blY, blZ);
     }
 }

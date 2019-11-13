@@ -1,7 +1,10 @@
 package net.survival.block;
 
-import it.unimi.dsi.fastutil.ints.Int2IntArrayMap;
-import it.unimi.dsi.fastutil.ints.IntArrayList;
+import java.util.ArrayList;
+
+import it.unimi.dsi.fastutil.objects.Object2ShortArrayMap;
+import net.survival.block.state.AirBlock;
+import net.survival.block.state.BlockState;
 import net.survival.util.XIntegerArray;
 
 public class Chunk
@@ -13,70 +16,79 @@ public class Chunk
     public static final int VOLUME = BASE_AREA * YLENGTH;
 
     private XIntegerArray rawData;
-    private IntArrayList rawIdToFullIdMap;
-    private Int2IntArrayMap fullIdToRawIdMap;
+    private ArrayList<BlockState> rawIdToBlockMap;
+    private Object2ShortArrayMap<BlockState> blockToRawIdMap;
 
     public Chunk() {
         rawData = new XIntegerArray(VOLUME, 1);
-        rawIdToFullIdMap = new IntArrayList(4);
-        fullIdToRawIdMap = new Int2IntArrayMap(4);
-        rawIdToFullIdMap.add(0);
-        fullIdToRawIdMap.put(0, 0);
+        rawIdToBlockMap = new ArrayList<>(4);
+        blockToRawIdMap = new Object2ShortArrayMap<>(4);
+        rawIdToBlockMap.add(AirBlock.INSTANCE);
+        blockToRawIdMap.put(AirBlock.INSTANCE, (short) 0);
     }
 
-    public Chunk(XIntegerArray rawData, int[] blockPalette) {
+    public Chunk(XIntegerArray rawData, BlockState[] blockPalette) {
         this.rawData = rawData;
-        rawIdToFullIdMap = new IntArrayList(blockPalette.length);
-        fullIdToRawIdMap = new Int2IntArrayMap(blockPalette.length);
+        rawIdToBlockMap = new ArrayList<>(blockPalette.length);
+        blockToRawIdMap = new Object2ShortArrayMap<>(blockPalette.length);
 
-        for (var i = 0; i < blockPalette.length; ++i)
-            rawIdToFullIdMap.add(blockPalette[i]);
+        for (var i = 0; i < blockPalette.length; ++i) {
+            rawIdToBlockMap.add(blockPalette[i]);
+        }
 
-        for (var i = 0; i < blockPalette.length; ++i)
-            fullIdToRawIdMap.put(blockPalette[i], i);
+        for (var i = 0; i < blockPalette.length; ++i) {
+            blockToRawIdMap.put(blockPalette[i], (short) i);
+        }
     }
 
     private Chunk(
             XIntegerArray rawData,
-            IntArrayList rawIdToFullIdMap,
-            Int2IntArrayMap fullIdToRawIdMap)
+            ArrayList<BlockState> rawIdToBlockMap,
+            Object2ShortArrayMap<BlockState> blockToRawIdMap)
     {
         this.rawData = rawData;
-        this.rawIdToFullIdMap = rawIdToFullIdMap;
-        this.fullIdToRawIdMap = fullIdToRawIdMap;
+        this.rawIdToBlockMap = rawIdToBlockMap;
+        this.blockToRawIdMap = blockToRawIdMap;
     }
 
     public Chunk makeCopy() {
         var copyOfRawData = rawData.makeCopy();
-        var copyOfRawIdToFullIdMap = new IntArrayList(rawIdToFullIdMap);
-        var copyOfFullIdToRawIdMap = new Int2IntArrayMap(fullIdToRawIdMap);
-        return new Chunk(copyOfRawData, copyOfRawIdToFullIdMap, copyOfFullIdToRawIdMap);
+        var copyOfRawIdToBlockMap = new ArrayList<BlockState>(rawIdToBlockMap);
+        var copyOfBlockToRawIdMap = new Object2ShortArrayMap<BlockState>(blockToRawIdMap);
+        return new Chunk(copyOfRawData, copyOfRawIdToBlockMap, copyOfBlockToRawIdMap);
     }
 
     public XIntegerArray getRawData() {
         return rawData;
     }
 
-    public int[] getBlockPalette() {
-        return rawIdToFullIdMap.toIntArray();
+    public BlockState[] getBlockPalette() {
+        var array = new BlockState[rawIdToBlockMap.size()];
+        rawIdToBlockMap.toArray(array);
+
+        return array;
     }
 
-    public int getBlockFullId(int index) {
-        return rawIdToFullIdMap.getInt((int) rawData.get(index));
+    public BlockState getBlock(int index) {
+        return rawIdToBlockMap.get((int) rawData.get(index));
     }
 
-    public int getBlockFullId(int x, int y, int z) {
-        return getBlockFullId(localPositionToIndex(x, y, z));
+    public BlockState getBlock(int x, int y, int z) {
+        return getBlock(localPositionToIndex(x, y, z));
     }
 
-    public void setBlockFullId(int index, int to) {
-        if (fullIdToRawIdMap.containsKey(to)) {
-            rawData.set(index, fullIdToRawIdMap.get(to));
+    public void setBlock(int index, BlockState to) {
+        if (to == null) {
+            throw new IllegalArgumentException("to");
+        }
+
+        if (blockToRawIdMap.containsKey(to)) {
+            rawData.set(index, blockToRawIdMap.getShort(to));
         }
         else {
-            var newRawId = fullIdToRawIdMap.size();
-            fullIdToRawIdMap.put(to, newRawId);
-            rawIdToFullIdMap.add(to);
+            var newRawId = blockToRawIdMap.size();
+            blockToRawIdMap.put(to, (short) newRawId);
+            rawIdToBlockMap.add(to);
 
             if (!rawData.isValidValue(newRawId)) {
                 rawData = rawData.getResized(rawData.bitsPerElement + 1);
@@ -88,9 +100,9 @@ public class Chunk
         }
     }
 
-    public void setBlockFullId(int x, int y, int z, int to) {
+    public void setBlock(int x, int y, int z, BlockState to) {
         var index = localPositionToIndex(x, y, z);
-        setBlockFullId(index, to);
+        setBlock(index, to);
     }
 
     public int localPositionToIndex(int x, int y, int z) {

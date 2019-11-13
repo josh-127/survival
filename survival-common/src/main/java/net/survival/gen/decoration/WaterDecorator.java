@@ -1,13 +1,11 @@
 package net.survival.gen.decoration;
 
-import net.survival.blocktype.BlockType;
+import net.survival.block.state.WaterBlock;
 import net.survival.gen.ColumnPrimer;
 
 public class WaterDecorator extends ColumnDecorator
 {
     private static final int SEA_LEVEL = 63;
-
-    private final int waterId = BlockType.WATER.getFullId();
 
     @Override
     public void decorate(DecoratorContext context) {
@@ -20,8 +18,8 @@ public class WaterDecorator extends ColumnDecorator
                     continue;
                 }
 
-                for (int y = surfaceY; y <= SEA_LEVEL; ++y) {
-                    primer.setBlockFullId(x, y, z, waterId);
+                for (int y = surfaceY + 1; y <= SEA_LEVEL; ++y) {
+                    primer.setBlock(x, y, z, WaterBlock.INSTANCE);
                 }
             }
         }

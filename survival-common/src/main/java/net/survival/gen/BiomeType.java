@@ -1,41 +1,45 @@
 package net.survival.gen;
 
-import net.survival.blocktype.BlockType;
+import net.survival.block.state.BlockState;
+import net.survival.block.state.DirtBlock;
+import net.survival.block.state.GrassBlock;
+import net.survival.block.state.SandBlock;
+import net.survival.block.state.StoneBlock;
 
 public enum BiomeType
 {
     OCEAN((bt) -> {
-        bt.topBlockId = BlockType.DIRT.getFullId();
+        bt.topBlock = DirtBlock.INSTANCE;
         bt.minElevation = 48.0;
         bt.maxElevation = 60.0;
         bt.biomeViewerColor = 0x000000FF;
     }),
     GRASSLAND((bt) -> {
-        bt.topBlockId = BlockType.GRASS_BLOCK.getFullId();
+        bt.topBlock = GrassBlock.INSTANCE;
         bt.minElevation = 64.0;
         bt.maxElevation = 96.0;
         bt.biomeViewerColor = 0x0000FF00;
     }),
     FOREST((bt) -> {
-        bt.topBlockId = BlockType.GRASS_BLOCK.getFullId();
+        bt.topBlock = GrassBlock.INSTANCE;
         bt.minElevation = 64.0;
         bt.maxElevation = 96.0;
         bt.biomeViewerColor = 0x00009F00;
     }),
     EXTREME_HILLS((bt) -> {
-        bt.topBlockId = BlockType.GRASS_BLOCK.getFullId();
+        bt.topBlock = GrassBlock.INSTANCE;
         bt.minElevation = 72.0;
         bt.maxElevation = 192.0;
         bt.biomeViewerColor = 0x00FF7F00;
     }),
     DESERT((bt) -> {
-        bt.topBlockId = BlockType.SAND.getFullId();
+        bt.topBlock = SandBlock.INSTANCE;
         bt.minElevation = 64.0;
         bt.maxElevation = 72.0;
         bt.biomeViewerColor = 0x00FFFF00;
     }),
     TUNDRA((bt) -> {
-        bt.topBlockId = BlockType.GRASS_BLOCK.getFullId();
+        bt.topBlock = GrassBlock.INSTANCE;
         bt.minElevation = 72.0;
         bt.maxElevation = 96.0;
         bt.biomeViewerColor = 0x0000FFFF;
@@ -43,7 +47,7 @@ public enum BiomeType
 
     private static final BiomeType[] cachedValues = values();
 
-    private int topBlockId;
+    private BlockState topBlock;
 
     private double minElevation;
     private double maxElevation;
@@ -51,7 +55,7 @@ public enum BiomeType
     private int biomeViewerColor;
 
     private BiomeType(Builder builder) {
-        topBlockId = BlockType.STONE.getFullId();
+        topBlock = StoneBlock.INSTANCE;
         minElevation = 0.0;
         maxElevation = 1.0;
         builder.build(this);
@@ -65,8 +69,8 @@ public enum BiomeType
         return cachedValues[id];
     }
 
-    public int getTopBlockId() {
-        return topBlockId;
+    public BlockState getTopBlock() {
+        return topBlock;
     }
 
     public double getMinElevation() {

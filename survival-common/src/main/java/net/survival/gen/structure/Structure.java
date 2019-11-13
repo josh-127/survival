@@ -1,6 +1,6 @@
 package net.survival.gen.structure;
 
-public abstract class Structure implements StructureMessageVisitor
+public abstract class Structure
 {
     protected final int x;
     protected final int y;

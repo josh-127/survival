@@ -266,7 +266,7 @@ public class DoubleNoise
         var xf = floor(x);
         var yf = floor(y);
         var xfi = (int) xf;
-        int yfi = (int) yf;
+        var yfi = (int) yf;
         var xt = x - xf;
         var yt = y - yf;
 

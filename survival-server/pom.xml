@@ -4,12 +4,12 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>net.survival.server</groupId>
 	<artifactId>survival-server</artifactId>
-	<version>0.1.0-SNAPSHOT</version>
+	<version>0.3.0-SNAPSHOT</version>
 	<dependencies>
 		<dependency>
 			<groupId>net.survival</groupId>
 			<artifactId>survival-common</artifactId>
-			<version>0.1.0-SNAPSHOT</version>
+			<version>0.3.0-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
     <build>
@@ -17,9 +17,9 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.0</version>
+                <version>3.8.1</version>
                 <configuration>
-                    <release>11</release>
+                    <release>13</release>
                 </configuration>
             </plugin>
         </plugins>

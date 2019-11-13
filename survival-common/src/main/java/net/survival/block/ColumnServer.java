@@ -8,8 +8,7 @@ import java.nio.channels.FileChannel;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import net.survival.block.message.CloseColumnRequest;
-import net.survival.block.message.ColumnRequestVisitor;
-import net.survival.block.message.ColumnResponseMessage;
+import net.survival.block.message.ColumnResponse;
 import net.survival.block.message.GetColumnRequest;
 import net.survival.block.message.PostColumnRequest;
 
@@ -47,33 +46,31 @@ public class ColumnServer implements Runnable
 
             while (running.get()) {
                 var request = columnPipe.waitForRequest();
-
-                request.accept(new ColumnRequestVisitor() {
-                    @Override
-                    public void visit(CloseColumnRequest request) {
-                        running.set(false);
-                    }
+                
+                if (request instanceof CloseColumnRequest) {
+                    running.set(false);
+                }
+                else if (request instanceof GetColumnRequest) {
+                    var gcr = (GetColumnRequest) request;
+                    var columnPos = gcr.getColumnPos();
                     
-                    @Override
-                    public void visit(GetColumnRequest request) {
-                        var columnPos = request.getColumnPos();
-                        try {
-                            columnPipe.respond(new ColumnResponseMessage(
-                                    columnPos, loadColumn(columnPos)));
-                        } catch (IOException e) {
-                            throw new RuntimeException(e);
-                        }
+                    try {
+                        var column = loadColumn(columnPos);
+                        columnPipe.respond(new ColumnResponse(columnPos, column));
                     }
-
-                    @Override
-                    public void visit(PostColumnRequest request) {
-                        try {
-                            saveColumn(request.getColumnPos(), request.getColumn());
-                        } catch (IOException e) {
-                            throw new RuntimeException(e);
-                        }
+                    catch (IOException e) {
+                        throw new RuntimeException(e);
                     }
-                });
+                }
+                else if (request instanceof PostColumnRequest) {
+                    var pcr = (PostColumnRequest) request;
+                    try {
+                        saveColumn(pcr.getColumnPos(), pcr.getColumn());
+                    }
+                    catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
             }
 
             saveMetadata();
@@ -96,8 +93,9 @@ public class ColumnServer implements Runnable
 
     private void saveColumn(long columnPos, Column column) throws IOException {
         var existingVau = directory.get(columnPos);
-        if (existingVau != null)
+        if (existingVau != null) {
             allocator.freeMemory(existingVau.address);
+        }
 
         var compressedData = columnCodec.compressColumn(column);
         var columnVau = allocator.allocateMemoryAndReturnVau(compressedData.limit());

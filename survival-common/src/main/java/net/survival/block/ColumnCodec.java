@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 
+import net.survival.block.state.BlockState;
 import net.survival.util.XIntegerArray;
 
 class ColumnCodec
@@ -22,8 +23,9 @@ class ColumnCodec
 
         for (var i = 0; i < column.getHeight(); ++i) {
             var chunk = column.getChunk(i);
-            if (chunk != null)
+            if (chunk != null) {
                 compressChunk(chunk, columnBuffer);
+            }
         }
 
         columnBuffer.flip();
@@ -38,11 +40,14 @@ class ColumnCodec
         buffer.putShort((short) underlyingArray.length);
         buffer.putShort((short) rawData.bitsPerElement);
         buffer.putShort((short) blockPalette.length);
-        for (var i = 0; i < underlyingArray.length; ++i)
-            buffer.putLong(underlyingArray[i]);
 
-        for (var i = 0; i < blockPalette.length; ++i)
-            buffer.putInt(blockPalette[i]);
+        for (var i = 0; i < underlyingArray.length; ++i) {
+            buffer.putLong(underlyingArray[i]);
+        }
+
+        for (var block : blockPalette) {
+            BlockSerializer.serializeBlock(block, buffer);
+        }
     }
 
     public Column decompressColumn(FileChannel fileChannel, int bufferSize) {
@@ -62,8 +67,8 @@ class ColumnCodec
         var columnHeight = columnBuffer.getInt();
 
         for (var i = 0; i < columnHeight; ++i) {
-                var chunk = decompressChunk(columnBuffer);
-                column.pushChunk(chunk);
+            var chunk = decompressChunk(columnBuffer);
+            column.pushChunk(chunk);
         }
 
         return column;
@@ -75,14 +80,16 @@ class ColumnCodec
         var blockPaletteLength = (int) buffer.getShort();
 
         var underlyingArray = new long[underlyingArrayLength];
-        for (var i = 0; i < underlyingArray.length; ++i)
+        for (var i = 0; i < underlyingArray.length; ++i) {
             underlyingArray[i] = buffer.getLong();
+        }
 
         var rawData = XIntegerArray.moveUnderlyingArray(underlyingArray, Chunk.VOLUME, bitsPerElement);
 
-        var blockPalette = new int[blockPaletteLength];
-        for (var i = 0; i < blockPalette.length; ++i)
-            blockPalette[i] = buffer.getInt();
+        var blockPalette = new BlockState[blockPaletteLength];
+        for (var i = 0; i < blockPalette.length; ++i) {
+            blockPalette[i] = BlockSerializer.deserializeBlock(buffer);
+        }
 
         return new Chunk(rawData, blockPalette);
     }

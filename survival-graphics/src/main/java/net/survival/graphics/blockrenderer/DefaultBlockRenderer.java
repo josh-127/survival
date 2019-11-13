@@ -1,7 +1,8 @@
 package net.survival.graphics.blockrenderer;
 
-import net.survival.blocktype.BlockFace;
-import net.survival.blocktype.BlockId;
+import net.survival.block.state.BlockFace;
+import net.survival.block.state.BlockState;
+import net.survival.graphics.Assets;
 import net.survival.graphics.opengl.GLDisplayList;
 
 class DefaultBlockRenderer extends BlockRenderer
@@ -11,29 +12,24 @@ class DefaultBlockRenderer extends BlockRenderer
             int x,
             int y,
             int z,
-            int blockId,
-            int topAdjacentBlockId,
-            int bottomAdjacentBlockId,
-            int leftAdjacentBlockId,
-            int rightAdjacentBlockId,
-            int frontAdjacentBlockId,
-            int backAdjacentBlockId,
+            BlockState block,
+            BlockState topAdjBlock,
+            BlockState bottomAdjBlock,
+            BlockState leftAdjBlock,
+            BlockState rightAdjBlock,
+            BlockState frontAdjBlock,
+            BlockState backAdjBlock,
             float shadeFactor,
             GLDisplayList.Builder builder)
     {
-        var blockTypeId = BlockId.typeIdFromFullId(blockId);
-        var topAdjacentBlockTypeId = BlockId.typeIdFromFullId(topAdjacentBlockId);
-        var bottomAdjacentBlockTypeId = BlockId.typeIdFromFullId(bottomAdjacentBlockId);
-        var leftAdjacentBlockTypeId = BlockId.typeIdFromFullId(leftAdjacentBlockId);
-        var rightAdjacentBlockTypeId = BlockId.typeIdFromFullId(rightAdjacentBlockId);
-        var frontAdjacentBlockTypeId = BlockId.typeIdFromFullId(frontAdjacentBlockId);
-        var backAdjacentBlockTypeId = BlockId.typeIdFromFullId(backAdjacentBlockId);
+        var textureAtlas = Assets.getMipmappedTextureAtlas();
 
-        if (!blockToBlockingBottomTable[topAdjacentBlockTypeId]) {
-            var u1 = textures.getTexCoordU1(blockTypeId, BlockFace.TOP);
-            var u2 = textures.getTexCoordU2(blockTypeId, BlockFace.TOP);
-            var v1 = textures.getTexCoordV1(blockTypeId, BlockFace.TOP);
-            var v2 = textures.getTexCoordV2(blockTypeId, BlockFace.TOP);
+        if (!topAdjBlock.getModel().isBlockingBottom()) {
+            var texture = block.getTexture(BlockFace.TOP);
+            var u1 = textureAtlas.getTexCoordU1(texture);
+            var u2 = textureAtlas.getTexCoordU2(texture);
+            var v1 = textureAtlas.getTexCoordV1(texture);
+            var v2 = textureAtlas.getTexCoordV2(texture);
 
             setShade(TOP_FACE_SHADE * shadeFactor, builder);
             builder.setTexCoord(u1, v1); builder.pushVertex(x,        y + 1.0f, z + 1.0f);
@@ -44,11 +40,12 @@ class DefaultBlockRenderer extends BlockRenderer
             builder.setTexCoord(u1, v1); builder.pushVertex(x,        y + 1.0f, z + 1.0f);
         }
 
-        if (!blockToBlockingTopTable[bottomAdjacentBlockTypeId]) {
-            var u1 = textures.getTexCoordU1(blockTypeId, BlockFace.BOTTOM);
-            var u2 = textures.getTexCoordU2(blockTypeId, BlockFace.BOTTOM);
-            var v1 = textures.getTexCoordV1(blockTypeId, BlockFace.BOTTOM);
-            var v2 = textures.getTexCoordV2(blockTypeId, BlockFace.BOTTOM);
+        if (!bottomAdjBlock.getModel().isBlockingTop()) {
+            var texture = block.getTexture(BlockFace.BOTTOM);
+            var u1 = textureAtlas.getTexCoordU1(texture);
+            var u2 = textureAtlas.getTexCoordU2(texture);
+            var v1 = textureAtlas.getTexCoordV1(texture);
+            var v2 = textureAtlas.getTexCoordV2(texture);
 
             setShade(BOTTOM_FACE_SHADE, builder);
             builder.setTexCoord(u1, v1); builder.pushVertex(x,        y, z       );
@@ -59,11 +56,12 @@ class DefaultBlockRenderer extends BlockRenderer
             builder.setTexCoord(u1, v1); builder.pushVertex(x,        y, z       );
         }
 
-        if (!blockToBlockingRightTable[leftAdjacentBlockTypeId]) {
-            var u1 = textures.getTexCoordU1(blockTypeId, BlockFace.LEFT);
-            var u2 = textures.getTexCoordU2(blockTypeId, BlockFace.LEFT);
-            var v1 = textures.getTexCoordV1(blockTypeId, BlockFace.LEFT);
-            var v2 = textures.getTexCoordV2(blockTypeId, BlockFace.LEFT);
+        if (!leftAdjBlock.getModel().isBlockingRight()) {
+            var texture = block.getTexture(BlockFace.LEFT);
+            var u1 = textureAtlas.getTexCoordU1(texture);
+            var u2 = textureAtlas.getTexCoordU2(texture);
+            var v1 = textureAtlas.getTexCoordV1(texture);
+            var v2 = textureAtlas.getTexCoordV2(texture);
 
             setShade(LEFT_FACE_SHADE, builder);
             builder.setTexCoord(u1, v1); builder.pushVertex(x, y,        z       );
@@ -74,11 +72,12 @@ class DefaultBlockRenderer extends BlockRenderer
             builder.setTexCoord(u1, v1); builder.pushVertex(x, y,        z       );
         }
 
-        if (!blockToBlockingLeftTable[rightAdjacentBlockTypeId]) {
-            var u1 = textures.getTexCoordU1(blockTypeId, BlockFace.RIGHT);
-            var u2 = textures.getTexCoordU2(blockTypeId, BlockFace.RIGHT);
-            var v1 = textures.getTexCoordV1(blockTypeId, BlockFace.RIGHT);
-            var v2 = textures.getTexCoordV2(blockTypeId, BlockFace.RIGHT);
+        if (!rightAdjBlock.getModel().isBlockingLeft()) {
+            var texture = block.getTexture(BlockFace.RIGHT);
+            var u1 = textureAtlas.getTexCoordU1(texture);
+            var u2 = textureAtlas.getTexCoordU2(texture);
+            var v1 = textureAtlas.getTexCoordV1(texture);
+            var v2 = textureAtlas.getTexCoordV2(texture);
 
             setShade(RIGHT_FACE_SHADE, builder);
             builder.setTexCoord(u1, v1); builder.pushVertex(x + 1.0f, y,        z + 1.0f);
@@ -89,11 +88,12 @@ class DefaultBlockRenderer extends BlockRenderer
             builder.setTexCoord(u1, v1); builder.pushVertex(x + 1.0f, y,        z + 1.0f);
         }
 
-        if (!blockToBlockingBackTable[frontAdjacentBlockTypeId]) {
-            var u1 = textures.getTexCoordU1(blockTypeId, BlockFace.FRONT);
-            var u2 = textures.getTexCoordU2(blockTypeId, BlockFace.FRONT);
-            var v1 = textures.getTexCoordV1(blockTypeId, BlockFace.FRONT);
-            var v2 = textures.getTexCoordV2(blockTypeId, BlockFace.FRONT);
+        if (!frontAdjBlock.getModel().isBlockingBack()) {
+            var texture = block.getTexture(BlockFace.FRONT);
+            var u1 = textureAtlas.getTexCoordU1(texture);
+            var u2 = textureAtlas.getTexCoordU2(texture);
+            var v1 = textureAtlas.getTexCoordV1(texture);
+            var v2 = textureAtlas.getTexCoordV2(texture);
 
             setShade(FRONT_FACE_SHADE, builder);
             builder.setTexCoord(u1, v1); builder.pushVertex(x,        y,        z + 1.0f);
@@ -104,11 +104,12 @@ class DefaultBlockRenderer extends BlockRenderer
             builder.setTexCoord(u1, v1); builder.pushVertex(x,        y,        z + 1.0f);
         }
 
-        if (!blockToBlockingFrontTable[backAdjacentBlockTypeId]) {
-            var u1 = textures.getTexCoordU1(blockTypeId, BlockFace.BACK);
-            var u2 = textures.getTexCoordU2(blockTypeId, BlockFace.BACK);
-            var v1 = textures.getTexCoordV1(blockTypeId, BlockFace.BACK);
-            var v2 = textures.getTexCoordV2(blockTypeId, BlockFace.BACK);
+        if (!backAdjBlock.getModel().isBlockingFront()) {
+            var texture = block.getTexture(BlockFace.BACK);
+            var u1 = textureAtlas.getTexCoordU1(texture);
+            var u2 = textureAtlas.getTexCoordU2(texture);
+            var v1 = textureAtlas.getTexCoordV1(texture);
+            var v2 = textureAtlas.getTexCoordV2(texture);
 
             setShade(BACK_FACE_SHADE, builder);
             builder.setTexCoord(u1, v1); builder.pushVertex(x + 1.0f, y,        z);

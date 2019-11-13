@@ -2,6 +2,9 @@ package net.survival.block;
 
 import java.util.Stack;
 
+import net.survival.block.state.AirBlock;
+import net.survival.block.state.BlockState;
+
 public class Column
 {
     public static final int XLENGTH = Chunk.XLENGTH;
@@ -9,6 +12,8 @@ public class Column
     public static final int BASE_AREA = XLENGTH * ZLENGTH;
 
     private final Stack<Chunk> chunks;
+    private boolean newFlag = true;
+    private boolean modified;
 
     public Column() {
         chunks = new Stack<>();
@@ -55,27 +60,44 @@ public class Column
         return chunks.size();
     }
 
-    public int getBlockFullId(int x, int y, int z) {
+    public BlockState getBlock(int x, int y, int z) {
         var index = y / Chunk.YLENGTH;
 
         if (index >= chunks.size()) {
-            return 0;
+            return AirBlock.INSTANCE;
         }
 
-        return chunks.get(index).getBlockFullId(x, y % Chunk.YLENGTH, z);
+        return chunks.get(index).getBlock(x, y % Chunk.YLENGTH, z);
     }
 
-    public void setBlockFullId(int x, int y, int z, int to) {
+    public void setBlock(int x, int y, int z, BlockState to) {
         var index = y / Chunk.YLENGTH;
 
         while (index >= chunks.size()) {
             chunks.push(new Chunk());
         }
 
-        chunks.get(index).setBlockFullId(x, y % Chunk.YLENGTH, z, to);
+        chunks.get(index).setBlock(x, y % Chunk.YLENGTH, z, to);
+        modified = true;
     }
 
     public boolean isInBounds(int lx, int ly, int lz) {
         return lx >= 0 && ly >= 0 && lz >= 0 && lx < XLENGTH && lz < ZLENGTH;
+    }
+
+    public boolean isNew() {
+        return newFlag;
+    }
+
+    public void clearNewFlag() {
+        newFlag = false;
+    }
+
+    public boolean isModified() {
+        return modified;
+    }
+
+    public void clearModifiedFlag() {
+        modified = false;
     }
 }

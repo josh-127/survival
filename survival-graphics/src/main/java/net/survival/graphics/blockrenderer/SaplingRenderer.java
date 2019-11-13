@@ -1,7 +1,8 @@
 package net.survival.graphics.blockrenderer;
 
-import net.survival.blocktype.BlockFace;
-import net.survival.blocktype.BlockId;
+import net.survival.block.state.BlockFace;
+import net.survival.block.state.BlockState;
+import net.survival.graphics.Assets;
 import net.survival.graphics.opengl.GLDisplayList;
 
 class SaplingRenderer extends BlockRenderer
@@ -13,22 +14,23 @@ class SaplingRenderer extends BlockRenderer
             int x,
             int y,
             int z,
-            int blockId,
-            int topAdjacentBlockId,
-            int bottomAdjacentBlockId,
-            int leftAdjacentBlockId,
-            int rightAdjacentBlockId,
-            int frontAdjacentBlockId,
-            int backAdjacentBlockId,
+            BlockState block,
+            BlockState topAdjBlock,
+            BlockState bottomAdjBlock,
+            BlockState leftAdjBlock,
+            BlockState rightAdjBlock,
+            BlockState frontAdjBlock,
+            BlockState backAdjBlock,
             float shadeFactor,
             GLDisplayList.Builder builder)
     {
-        var blockTypeId = BlockId.typeIdFromFullId(blockId);
+        var textureAtlas = Assets.getMipmappedTextureAtlas();
 
-        var u1 = textures.getTexCoordU1(blockTypeId, BlockFace.TOP);
-        var u2 = textures.getTexCoordU2(blockTypeId, BlockFace.TOP);
-        var v1 = textures.getTexCoordV1(blockTypeId, BlockFace.TOP);
-        var v2 = textures.getTexCoordV2(blockTypeId, BlockFace.TOP);
+        var texture = block.getTexture(BlockFace.TOP);
+        var u1 = textureAtlas.getTexCoordU1(texture);
+        var u2 = textureAtlas.getTexCoordU2(texture);
+        var v1 = textureAtlas.getTexCoordV1(texture);
+        var v2 = textureAtlas.getTexCoordV2(texture);
 
         var left  = x        + PADDING;
         var right = x + 1.0f - PADDING;

@@ -4,100 +4,77 @@ import java.io.File;
 
 import org.lwjgl.glfw.GLFW;
 
-import net.survival.actor.Actor;
-import net.survival.actor.ActorSpace;
-import net.survival.actor.NpcActor;
-import net.survival.actor.PlayerActor;
-import net.survival.actor.message.ActorMessage;
-import net.survival.actor.message.DrawMessage;
-import net.survival.actor.message.JumpMessage;
-import net.survival.actor.message.MoveMessage;
-import net.survival.actor.message.StepMessage;
-import net.survival.block.BlockSpace;
-import net.survival.block.CircularColumnMask;
+import net.survival.actor.Jump;
+import net.survival.actor.Move;
+import net.survival.actor.Physics;
+import net.survival.actor.Player;
 import net.survival.block.ColumnDbPipe;
 import net.survival.block.ColumnPos;
 import net.survival.block.ColumnServer;
-import net.survival.block.EmptyColumnMask;
-import net.survival.block.message.BlockMessage;
-import net.survival.block.message.BreakBlockMessage;
 import net.survival.block.message.CloseColumnRequest;
-import net.survival.block.message.MaskColumnsMessage;
-import net.survival.block.message.PlaceBlockMessage;
-import net.survival.blocktype.BlockType;
+import net.survival.block.state.AirBlock;
 import net.survival.client.input.GlfwKeyboardAdapter;
 import net.survival.client.input.GlfwMouseAdapter;
 import net.survival.client.input.Key;
 import net.survival.client.input.Keyboard;
 import net.survival.client.input.Mouse;
 import net.survival.gen.DefaultColumnGenerator;
+import net.survival.graphics.ColumnInvalidationPriority;
 import net.survival.graphics.CompositeDisplay;
-import net.survival.graphics.GraphicsSettings;
 import net.survival.graphics.VisibilityFlags;
 import net.survival.graphics.opengl.GLDisplay;
 import net.survival.graphics.opengl.GLRenderContext;
 import net.survival.graphics.particle.ClientParticleSpace;
-import net.survival.interaction.InteractionContext;
-import net.survival.interaction.MessageQueue;
-import net.survival.interaction.MessageVisitor;
-import net.survival.particle.message.BurstParticlesMessage;
-import net.survival.particle.message.ParticleMessage;
-import net.survival.render.message.DrawLabelMessage;
-import net.survival.render.message.MoveCameraMessage;
-import net.survival.render.message.OrientCameraMessage;
-import net.survival.render.message.RenderMessage;
-import net.survival.render.message.SetCameraParamsMessage;
+import net.survival.world.ColumnIO;
+import net.survival.world.World;
 
 public class Client implements AutoCloseable
 {
+    private static final int WINDOW_WIDTH = 1600;
+    private static final int WINDOW_HEIGHT = 900;
     private static final String WINDOW_TITLE = "Survival";
 
     private static final double TICKS_PER_SECOND = 60.0;
     private static final double SECONDS_PER_TICK = 1.0 / TICKS_PER_SECOND;
 
-    private final ColumnDbPipe.ClientSide columnPipe;
-
-    private final BlockSpace blockSpace;
-    private final ActorSpace actorSpace = new ActorSpace();
     private final ClientParticleSpace particleSpace = new ClientParticleSpace();
-
-    private final CircularColumnMask columnMask = new CircularColumnMask(12);
-
     private final CompositeDisplay compositeDisplay;
+    private final World world = new World();
+    private final Player player = new Player();
     private final FpvCamera fpvCamera = new FpvCamera(0.0f, -1.0f);
 
-    private final MessageQueue messageQueue = new MessageQueue();
-    private final LocalInteractionContext interactionContext;
+    private final ColumnIO columnIO;
 
-    private final int playerId;
-    private final Actor player;
-
-    private static final double SAVE_INTERVAL = 10.0;
+    private static final double SAVE_INTERVAL = 30.0;
     private double saveTimer;
 
     private Client(ColumnDbPipe.ClientSide columnPipe) {
-        this.columnPipe = columnPipe;
+        compositeDisplay = new CompositeDisplay(particleSpace, WINDOW_WIDTH, WINDOW_HEIGHT);
+        player.setX(60.0);
+        player.setY(128.0);
+        player.setZ(20.0);
 
-        blockSpace = new BlockSpace(columnPipe);
-
-        interactionContext = new LocalInteractionContext(
-                actorSpace, blockSpace, particleSpace, messageQueue);
-
-        playerId = actorSpace.addActor(new PlayerActor(60.0, 128.0, 20.0));
-        player = actorSpace.getActor(playerId);
-
-        compositeDisplay = new CompositeDisplay(
-                particleSpace, GraphicsSettings.WINDOW_WIDTH, GraphicsSettings.WINDOW_HEIGHT);
+        columnIO = new ColumnIO(columnPipe);
     }
 
     @Override
     public void close() throws RuntimeException {
         compositeDisplay.close();
-        new MaskColumnsMessage(EmptyColumnMask.instance).accept(blockSpace, interactionContext);
     }
 
-    public void tick(double elapsedTime) {
-        // Camera
+    public void tick(double elapsedTime, int frameRate) {
+        // Loading/Saving Columns
+        saveTimer -= elapsedTime;
+        if (saveTimer <= 0.0) {
+            saveTimer = SAVE_INTERVAL;
+            columnIO.maskColumns(ColumnMaskFactory.createCircle(12, player.getX(), player.getZ()));
+        }
+
+        columnIO.update();
+        world.getColumns().clear();
+        world.getColumns().putAll(columnIO.getColumns());
+
+        // Misc. Code.
         final var PI = Math.PI;
         var cursorDX = Mouse.getDeltaX(); var cursorDY = Mouse.getDeltaY();
         var jsX = 0.0; var jsZ = 0.0; var camYaw = fpvCamera.yaw;
@@ -106,86 +83,40 @@ public class Client implements AutoCloseable
         if (Keyboard.isKeyDown(Key.A)) { jsX += Math.sin(camYaw - PI / 2.0); jsZ -= Math.cos(camYaw - PI / 2.0); }
         if (Keyboard.isKeyDown(Key.D)) { jsX += Math.sin(camYaw + PI / 2.0); jsZ -= Math.cos(camYaw + PI / 2.0); }
 
-        fpvCamera.rotate(-cursorDX / 128.0, -cursorDY / 128.0);
-        messageQueue.enqueueMessage(new MoveMessage(playerId, jsX, jsZ));
-        if (Keyboard.isKeyPressed(Key.SPACE)) messageQueue.enqueueMessage(new JumpMessage(playerId));
+        if (Mouse.getMode() == Mouse.MODE_CENTERED) fpvCamera.rotate(-cursorDX / 128.0, -cursorDY / 128.0);
+        Move.dispatch(player, jsX, jsZ);
+        if (Keyboard.isKeyPressed(Key.SPACE)) Jump.dispatch(player, 1.1);
 
-        // Loading/Saving Columns
-        var cx = ColumnPos.toColumnX((int) Math.floor(player.getX()));
-        var cz = ColumnPos.toColumnZ((int) Math.floor(player.getZ()));
-        columnMask.setCenter(cx, cz);
-
-        saveTimer -= elapsedTime;
-        if (saveTimer <= 0.0) {
-            saveTimer = SAVE_INTERVAL;
-            messageQueue.enqueueMessage(new MaskColumnsMessage(columnMask));
+        temporaryTestCode(elapsedTime);
+        
+        Physics.dispatch(player, world, elapsedTime);
+        
+        for (var entry : world.getColumns().entrySet()) {
+            var columnPos = entry.getKey();
+            var column = entry.getValue();
+            if (column.isNew()) {
+                compositeDisplay.invalidateColumn(columnPos, column, ColumnInvalidationPriority.LOW);
+                column.clearNewFlag();
+            }
+            else if (column.isModified()) {
+                compositeDisplay.invalidateColumn(columnPos, column, ColumnInvalidationPriority.LOW);
+                column.clearModifiedFlag();
+            }
         }
-
-        for (var r = columnPipe.pollResponse(); r != null; r = columnPipe.pollResponse()) {
-            messageQueue.enqueueMessage(r);
-        }
-
-        // Misc. Setup
-        interactionContext.setElapsedTime(elapsedTime);
-        for (var entry : actorSpace.iterateActorMap()) {
-            var actorId = entry.getKey();
-            messageQueue.enqueueMessage(new StepMessage(actorId));
-            messageQueue.enqueueMessage(new DrawMessage(actorId));
-        }
-
-        messageQueue.enqueueMessage(new MoveCameraMessage((float) player.getX(), (float) (player.getY() + 1.0), (float) player.getZ()));
-        messageQueue.enqueueMessage(new OrientCameraMessage((float) fpvCamera.yaw, (float) fpvCamera.pitch, 0.0f));
-        messageQueue.enqueueMessage(new SetCameraParamsMessage((float) Math.toRadians(60.0), GraphicsSettings.WINDOW_WIDTH, GraphicsSettings.WINDOW_HEIGHT, 0.0625f, 768.0f));
-
-        var totalMemory = Runtime.getRuntime().totalMemory();
-        var freeMemory = Runtime.getRuntime().freeMemory();
-        var usedMemory = totalMemory - freeMemory;
-        var usedMemoryText = String.format("Memory Usage: %.2f MiB", usedMemory / 1024.0 / 1024.0);
-        messageQueue.enqueueMessage(new DrawLabelMessage(usedMemoryText, 3.0, 30.0, 30.0));
-
-        // Application-Wide Message Dispatcher
-        while (!messageQueue.isEmpty()) {
-            var m = messageQueue.dequeueMessage();
-
-            m.accept(new MessageVisitor() {
-                @Override
-                public void visit(InteractionContext ic, ActorMessage message) {
-                    var actorId = message.getDestActorId();
-                    var actor = actorSpace.getActor(actorId);
-                    message.accept(actor, ic);
-                }
-
-                @Override
-                public void visit(InteractionContext ic, BlockMessage message) {
-                    message.accept(blockSpace, ic);
-                }
-
-                @Override
-                public void visit(InteractionContext ic, ParticleMessage message) {
-                    message.accept(particleSpace);
-                }
-
-                @Override
-                public void visit(InteractionContext ic, RenderMessage message) {
-                    // BUG: If the game is lagging, then Client::tick will run
-                    //      multiple times in a frame. As a result, CompositeDisplay
-                    //      will draw duplicate models.
-                    message.accept(compositeDisplay, ic);
-                }
-            }, interactionContext);
-        }
-
-        messageQueue.nextFrame();
-
-        // Misc. Code
-        particleSpace.step(elapsedTime);
-        temporaryTestCode();
-
-        compositeDisplay.tick(elapsedTime);
+        
+        compositeDisplay.moveCamera((float) player.getX(), (float) (player.getY() + 1.0), (float) player.getZ());
+        compositeDisplay.orientCamera((float) fpvCamera.yaw, (float) fpvCamera.pitch);
+        compositeDisplay.setCameraParams((float) Math.toRadians(60.0), WINDOW_WIDTH, WINDOW_HEIGHT, 0.0625f, 1536.0f);
+        
+        compositeDisplay.drawLabel(String.format("Memory Usage: %.2f MiB", (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 1024.0 / 1024.0), 3.0, 0.0, 0.0);
+        compositeDisplay.drawLabel(String.format("Frame Rate: %d FPS", frameRate), 3.0, 0.0, 1.1);
+        compositeDisplay.drawLabel(String.format("X: %d", (int) Math.floor(player.getX())), 1.0, 0.0, 2.2);
+        compositeDisplay.drawLabel(String.format("Y: %d", (int) Math.floor(player.getY())), 1.0, 0.0, 3.3);
+        compositeDisplay.drawLabel(String.format("Z: %d", (int) Math.floor(player.getZ())), 1.0, 0.0, 4.4);
     }
 
-    private void render(double frameRate) {
-        compositeDisplay.display(frameRate);
+    private void render() {
+        compositeDisplay.display();
     }
 
     public static void main(String[] args) throws InterruptedException {
@@ -200,7 +131,7 @@ public class Client implements AutoCloseable
         var columnServerThread = new Thread(columnServer);
         columnServerThread.start();
 
-        var display = new GLDisplay(GraphicsSettings.WINDOW_WIDTH, GraphicsSettings.WINDOW_HEIGHT, WINDOW_TITLE);
+        var display = new GLDisplay(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE);
         var keyboardAdapter = new GlfwKeyboardAdapter();
         var mouseAdapter = new GlfwMouseAdapter(display.getUnderlyingGlfwWindow());
         GLFW.glfwSetKeyCallback(display.getUnderlyingGlfwWindow(), keyboardAdapter);
@@ -228,13 +159,13 @@ public class Client implements AutoCloseable
             if (unprocessedTicks >= 1.0) {
                 while (unprocessedTicks >= 1.0) {
                     mouseAdapter.tick();
-                    program.tick(SECONDS_PER_TICK);
+                    program.tick(SECONDS_PER_TICK, frameRate);
                     keyboardAdapter.nextInputFrame();
                     unprocessedTicks -= 1.0;
                 }
 
                 ++frameCounter;
-                program.render(frameRate);
+                program.render();
                 display.swapBuffers();
             }
 
@@ -245,9 +176,6 @@ public class Client implements AutoCloseable
             }
 
             GLDisplay.pollEvents();
-
-            // TODO: This is temporary.
-            System.gc();
         }
 
         program.close();
@@ -257,7 +185,7 @@ public class Client implements AutoCloseable
         columnServerThread.join();
     }
 
-    private void temporaryTestCode() {
+    private void temporaryTestCode(double elapsedTime) {
         if (Mouse.isLmbPressed() || Mouse.isRmbPressed()) {
             var px = player.getX(); var py = player.getY() + 1.0; var pz = player.getZ();
             final var DELTA = 0.0078125;
@@ -266,19 +194,13 @@ public class Client implements AutoCloseable
                 py += DELTA * Math.sin(fpvCamera.pitch);
                 pz -= DELTA * Math.cos(fpvCamera.yaw) * Math.cos(fpvCamera.pitch);
                 var pxi = (int) Math.floor(px); var pyi = (int) Math.floor(py); var pzi = (int) Math.floor(pz);
-                if (blockSpace.getBlockFullId(pxi, pyi, pzi) != 0) {
-                    var blockId = BlockType.STONE_STAIRS.getFullId();
-                    if (Mouse.isLmbPressed())      messageQueue.enqueueMessage(new BreakBlockMessage(pxi, pyi, pzi));
-                    else if (Mouse.isRmbPressed()) messageQueue.enqueueMessage(new PlaceBlockMessage(pxi, pyi, pzi, blockId));
+                var cx = ColumnPos.toColumnX(pxi); var cz = ColumnPos.toColumnZ(pzi);
+                if (world.getColumns().containsKey(ColumnPos.hashPos(cx, cz)) && pyi >= 0.0 && !(world.getBlock(pxi, pyi, pzi) instanceof AirBlock)) {
+                    if (Mouse.isLmbPressed()) world.setBlock(pxi, pyi, pzi, AirBlock.INSTANCE);
                     break;
                 }
             }
         }
-
-        if (Keyboard.isKeyPressed(Key.T))
-            actorSpace.addActor(new NpcActor(player.getX(), player.getY(), player.getZ()));
-        else if (Keyboard.isKeyPressed(Key.Y))
-            messageQueue.enqueueMessage(new BurstParticlesMessage(player.getX(), player.getY(), player.getZ(), 1.0, 64));
 
         // Visibility Flags
         if (Keyboard.isKeyPressed(Key._1)) compositeDisplay.toggleVisibilityFlags(VisibilityFlags.BLOCKS);

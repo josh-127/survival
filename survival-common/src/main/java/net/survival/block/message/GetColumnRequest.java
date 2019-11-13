@@ -11,9 +11,4 @@ public class GetColumnRequest extends ColumnRequest
     public long getColumnPos() {
         return columnPos;
     }
-
-    @Override
-    public void accept(ColumnRequestVisitor visitor) {
-        visitor.visit(this);
-    }
 }

@@ -1,6 +1,6 @@
 package net.survival.gen.terrain;
 
-import net.survival.blocktype.BlockType;
+import net.survival.block.state.StoneBlock;
 import net.survival.gen.ColumnPrimer;
 import net.survival.util.DoubleMap3D;
 import net.survival.util.ImprovedNoiseGenerator;
@@ -19,16 +19,16 @@ public class DefaultTerrainGenerator implements TerrainGenerator
     private static final double MAIN_NOISE_ZSCALE = 1.0 / 128.0;
     private static final int MAIN_NOISE_OCTAVE_COUNT = 6;
 
-    private final long seed;
+    private static final double ELEVATION_BASE = 64.0;
+    private static final double ELEVATION_RANGE = 96.0;
 
+    private final long seed;
     private final DoubleMap3D densityMap;
-    private final int stoneId;
 
     public DefaultTerrainGenerator(long seed) {
         this.seed = seed;
 
         densityMap = new DoubleMap3D(NMAP_XLENGTH, NMAP_YLENGTH, NMAP_ZLENGTH);
-        stoneId = BlockType.STONE.getFullId();
     }
 
     @Override
@@ -64,10 +64,10 @@ public class DefaultTerrainGenerator implements TerrainGenerator
                     var noiseMapX = (double) x / NBLOCK_XLENGTH;
 
                     var density = densityMap.sampleLinear(noiseMapX, noiseMapY, noiseMapZ);
-                    var threshold = (y - 96.0) / ColumnPrimer.YLENGTH;
+                    var threshold = (y - ELEVATION_BASE) / ELEVATION_RANGE;
 
                     if (density >= threshold) {
-                        columnPrimer.setBlockFullId(x, y, z, stoneId);
+                        columnPrimer.setBlock(x, y, z, StoneBlock.INSTANCE);
                     }
                 }
             }

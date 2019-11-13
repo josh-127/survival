@@ -19,9 +19,4 @@ public class PostColumnRequest extends ColumnRequest
     public Column getColumn() {
         return column;
     }
-
-    @Override
-    public void accept(ColumnRequestVisitor visitor) {
-        visitor.visit(this);
-    }
 }

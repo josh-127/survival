@@ -20,12 +20,12 @@ import java.nio.file.Paths;
 
 public class StaticModel
 {
-    public static final StaticModel chicken = fromFile("../assets/models/entities/chicken.obj");
-    public static final StaticModel cow = fromFile("../assets/models/entities/cow.obj");
-    public static final StaticModel goat = fromFile("../assets/models/entities/goat.obj");
-    public static final StaticModel human = fromFile("../assets/models/entities/human.obj");
-    public static final StaticModel pig = fromFile("../assets/models/entities/pig.obj");
-    public static final StaticModel slime = fromFile("../assets/models/entities/slime.obj");
+    public static final StaticModel chicken = fromFile("../../assets/models/entities/chicken.obj");
+    public static final StaticModel cow = fromFile("../../assets/models/entities/cow.obj");
+    public static final StaticModel goat = fromFile("../../assets/models/entities/goat.obj");
+    public static final StaticModel human = fromFile("../../assets/models/entities/human.obj");
+    public static final StaticModel pig = fromFile("../../assets/models/entities/pig.obj");
+    public static final StaticModel slime = fromFile("../../assets/models/entities/slime.obj");
 
     public final Mesh[] meshes;
     public final String absoluteFilePath;

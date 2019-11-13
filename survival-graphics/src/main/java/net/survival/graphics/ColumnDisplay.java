@@ -2,6 +2,7 @@ package net.survival.graphics;
 
 import net.survival.block.Chunk;
 import net.survival.block.Column;
+import net.survival.block.state.AirBlock;
 import net.survival.graphics.blockrenderer.BlockRenderer;
 import net.survival.graphics.opengl.GLDisplayList;
 import net.survival.graphics.opengl.GLRenderContext;
@@ -202,25 +203,25 @@ class ColumnDisplay implements GraphicsResource
         for (var y = 1; y < Chunk.YLENGTH - 1; ++y) {
             for (var z = 1; z < Chunk.ZLENGTH - 1; ++z) {
                 for (var x = 1; x < Chunk.XLENGTH - 1; ++x) {
-                    var blockId          = chunk.getBlockFullId(x,     y,     z);
-                    var topAdjBlockId    = chunk.getBlockFullId(x,     y + 1, z);
-                    var bottomAdjBlockId = chunk.getBlockFullId(x,     y - 1, z);
-                    var leftAdjBlockId   = chunk.getBlockFullId(x - 1, y,     z);
-                    var rightAdjBlockId  = chunk.getBlockFullId(x + 1, y,     z);
-                    var frontAdjBlockId  = chunk.getBlockFullId(x,     y,     z + 1);
-                    var backAdjBlockId   = chunk.getBlockFullId(x,     y,     z - 1);
+                    var block          = chunk.getBlock(x,     y,     z);
+                    var topAdjBlock    = chunk.getBlock(x,     y + 1, z);
+                    var bottomAdjBlock = chunk.getBlock(x,     y - 1, z);
+                    var leftAdjBlock   = chunk.getBlock(x - 1, y,     z);
+                    var rightAdjBlock  = chunk.getBlock(x + 1, y,     z);
+                    var frontAdjBlock  = chunk.getBlock(x,     y,     z + 1);
+                    var backAdjBlock   = chunk.getBlock(x,     y,     z - 1);
 
-                    BlockRenderer.byFullId(blockId).pushVertices(
+                    BlockRenderer.byBlock(block).pushVertices(
                             x,
                             y + offsetY,
                             z,
-                            blockId,
-                            topAdjBlockId,
-                            bottomAdjBlockId,
-                            leftAdjBlockId,
-                            rightAdjBlockId,
-                            frontAdjBlockId,
-                            backAdjBlockId,
+                            block,
+                            topAdjBlock,
+                            bottomAdjBlock,
+                            leftAdjBlock,
+                            rightAdjBlock,
+                            frontAdjBlock,
+                            backAdjBlock,
                             getShade(x, y + offsetY, z, heightMap),
                             builder);
                 }
@@ -240,25 +241,25 @@ class ColumnDisplay implements GraphicsResource
 
         for (var z = 1; z < Chunk.ZLENGTH - 1; ++z) {
             for (var x = 1; x < Chunk.XLENGTH - 1; ++x) {
-                var blockId          = chunk.getBlockFullId   (x,     Y,     z);
-                var topAdjBlockId    = adjChunk.getBlockFullId(x,     0,     z);
-                var bottomAdjBlockId = chunk.getBlockFullId   (x,     Y - 1, z);
-                var leftAdjBlockId   = chunk.getBlockFullId   (x - 1, Y,     z);
-                var rightAdjBlockId  = chunk.getBlockFullId   (x + 1, Y,     z);
-                var frontAdjBlockId  = chunk.getBlockFullId   (x,     Y,     z + 1);
-                var backAdjBlockId   = chunk.getBlockFullId   (x,     Y,     z - 1);
+                var block          = chunk.getBlock   (x,     Y,     z);
+                var topAdjBlock    = adjChunk.getBlock(x,     0,     z);
+                var bottomAdjBlock = chunk.getBlock   (x,     Y - 1, z);
+                var leftAdjBlock   = chunk.getBlock   (x - 1, Y,     z);
+                var rightAdjBlock  = chunk.getBlock   (x + 1, Y,     z);
+                var frontAdjBlock  = chunk.getBlock   (x,     Y,     z + 1);
+                var backAdjBlock   = chunk.getBlock   (x,     Y,     z - 1);
 
-                BlockRenderer.byFullId(blockId).pushVertices(
+                BlockRenderer.byBlock(block).pushVertices(
                         x,
                         Y + offsetY,
                         z,
-                        blockId,
-                        topAdjBlockId,
-                        bottomAdjBlockId,
-                        leftAdjBlockId,
-                        rightAdjBlockId,
-                        frontAdjBlockId,
-                        backAdjBlockId,
+                        block,
+                        topAdjBlock,
+                        bottomAdjBlock,
+                        leftAdjBlock,
+                        rightAdjBlock,
+                        frontAdjBlock,
+                        backAdjBlock,
                         getShade(x, Y + offsetY, z, heightMap),
                         builder);
             }
@@ -278,25 +279,25 @@ class ColumnDisplay implements GraphicsResource
         var offsetY = chunkIndex * Chunk.YLENGTH;
 
         for (var z = 1; z < Chunk.ZLENGTH - 1; ++z) {
-            var blockId          = chunk.getBlockFullId       (0,           Y,     z);
-            var topAdjBlockId    = topAdjChunk.getBlockFullId (0,           0,     z);
-            var bottomAdjBlockId = chunk.getBlockFullId       (0,           Y - 1, z);
-            var leftAdjBlockId   = leftAdjChunk.getBlockFullId(XLENGTH - 1, Y,     z);
-            var rightAdjBlockId  = chunk.getBlockFullId       (1,           Y,     z);
-            var frontAdjBlockId  = chunk.getBlockFullId       (0,           Y,     z + 1);
-            var backAdjBlockId   = chunk.getBlockFullId       (0,           Y,     z - 1);
+            var block          = chunk.getBlock       (0,           Y,     z);
+            var topAdjBlock    = topAdjChunk.getBlock (0,           0,     z);
+            var bottomAdjBlock = chunk.getBlock       (0,           Y - 1, z);
+            var leftAdjBlock   = leftAdjChunk.getBlock(XLENGTH - 1, Y,     z);
+            var rightAdjBlock  = chunk.getBlock       (1,           Y,     z);
+            var frontAdjBlock  = chunk.getBlock       (0,           Y,     z + 1);
+            var backAdjBlock   = chunk.getBlock       (0,           Y,     z - 1);
 
-            BlockRenderer.byFullId(blockId).pushVertices(
+            BlockRenderer.byBlock(block).pushVertices(
                     0,
                     Y + offsetY,
                     z,
-                    blockId,
-                    topAdjBlockId,
-                    bottomAdjBlockId,
-                    leftAdjBlockId,
-                    rightAdjBlockId,
-                    frontAdjBlockId,
-                    backAdjBlockId,
+                    block,
+                    topAdjBlock,
+                    bottomAdjBlock,
+                    leftAdjBlock,
+                    rightAdjBlock,
+                    frontAdjBlock,
+                    backAdjBlock,
                     getShade(0, Y + offsetY, z, heightMap),
                     builder);
         }
@@ -315,25 +316,25 @@ class ColumnDisplay implements GraphicsResource
         var offsetY = chunkIndex * Chunk.YLENGTH;
 
         for (var z = 1; z < Chunk.ZLENGTH - 1; ++z) {
-            var blockId          = chunk.getBlockFullId        (X,     Y,     z);
-            var topAdjBlockId    = topAdjChunk.getBlockFullId  (X,     0,     z);
-            var bottomAdjBlockId = chunk.getBlockFullId        (X,     Y - 1, z);
-            var leftAdjBlockId   = chunk.getBlockFullId        (X - 1, Y,     z);
-            var rightAdjBlockId  = rightAdjChunk.getBlockFullId(0,     Y,     z);
-            var frontAdjBlockId  = chunk.getBlockFullId        (X,     Y,     z + 1);
-            var backAdjBlockId   = chunk.getBlockFullId        (X,     Y,     z - 1);
+            var block          = chunk.getBlock        (X,     Y,     z);
+            var topAdjBlock    = topAdjChunk.getBlock  (X,     0,     z);
+            var bottomAdjBlock = chunk.getBlock        (X,     Y - 1, z);
+            var leftAdjBlock   = chunk.getBlock        (X - 1, Y,     z);
+            var rightAdjBlock  = rightAdjChunk.getBlock(0,     Y,     z);
+            var frontAdjBlock  = chunk.getBlock        (X,     Y,     z + 1);
+            var backAdjBlock   = chunk.getBlock        (X,     Y,     z - 1);
 
-            BlockRenderer.byFullId(blockId).pushVertices(
+            BlockRenderer.byBlock(block).pushVertices(
                     X,
                     Y + offsetY,
                     z,
-                    blockId,
-                    topAdjBlockId,
-                    bottomAdjBlockId,
-                    leftAdjBlockId,
-                    rightAdjBlockId,
-                    frontAdjBlockId,
-                    backAdjBlockId,
+                    block,
+                    topAdjBlock,
+                    bottomAdjBlock,
+                    leftAdjBlock,
+                    rightAdjBlock,
+                    frontAdjBlock,
+                    backAdjBlock,
                     getShade(X, Y + offsetY, z, heightMap),
                     builder);
         }
@@ -352,25 +353,25 @@ class ColumnDisplay implements GraphicsResource
         var offsetY = chunkIndex * Chunk.YLENGTH;
 
         for (var x = 1; x < Chunk.XLENGTH - 1; ++x) {
-            var blockId          = chunk.getBlockFullId        (x,     Y,     Z);
-            var topAdjBlockId    = topAdjChunk.getBlockFullId  (x,     0,     Z);
-            var bottomAdjBlockId = chunk.getBlockFullId        (x,     Y - 1, Z);
-            var leftAdjBlockId   = chunk.getBlockFullId        (x - 1, Y,     Z);
-            var rightAdjBlockId  = chunk.getBlockFullId        (x + 1, Y,     Z);
-            var frontAdjBlockId  = frontAdjChunk.getBlockFullId(x,     Y,     0);
-            var backAdjBlockId   = chunk.getBlockFullId        (x,     Y,     Z - 1);
+            var block          = chunk.getBlock        (x,     Y,     Z);
+            var topAdjBlock    = topAdjChunk.getBlock  (x,     0,     Z);
+            var bottomAdjBlock = chunk.getBlock        (x,     Y - 1, Z);
+            var leftAdjBlock   = chunk.getBlock        (x - 1, Y,     Z);
+            var rightAdjBlock  = chunk.getBlock        (x + 1, Y,     Z);
+            var frontAdjBlock  = frontAdjChunk.getBlock(x,     Y,     0);
+            var backAdjBlock   = chunk.getBlock        (x,     Y,     Z - 1);
 
-            BlockRenderer.byFullId(blockId).pushVertices(
+            BlockRenderer.byBlock(block).pushVertices(
                     x,
                     Y + offsetY,
                     Z,
-                    blockId,
-                    topAdjBlockId,
-                    bottomAdjBlockId,
-                    leftAdjBlockId,
-                    rightAdjBlockId,
-                    frontAdjBlockId,
-                    backAdjBlockId,
+                    block,
+                    topAdjBlock,
+                    bottomAdjBlock,
+                    leftAdjBlock,
+                    rightAdjBlock,
+                    frontAdjBlock,
+                    backAdjBlock,
                     getShade(x, Y + offsetY, Z, heightMap),
                     builder);
         }
@@ -389,25 +390,25 @@ class ColumnDisplay implements GraphicsResource
         var offsetY = chunkIndex * Chunk.YLENGTH;
 
         for (var x = 1; x < Chunk.XLENGTH - 1; ++x) {
-            var blockId          = chunk.getBlockFullId       (x,     Y,     0);
-            var topAdjBlockId    = topAdjChunk.getBlockFullId (x,     0,     0);
-            var bottomAdjBlockId = chunk.getBlockFullId       (x,     Y - 1, 0);
-            var leftAdjBlockId   = chunk.getBlockFullId       (x - 1, Y,     0);
-            var rightAdjBlockId  = chunk.getBlockFullId       (x + 1, Y,     0);
-            var frontAdjBlockId  = chunk.getBlockFullId       (x,     Y,     1);
-            var backAdjBlockId   = backAdjChunk.getBlockFullId(x,     Y,     ZLENGTH - 1);
+            var block          = chunk.getBlock       (x,     Y,     0);
+            var topAdjBlock    = topAdjChunk.getBlock (x,     0,     0);
+            var bottomAdjBlock = chunk.getBlock       (x,     Y - 1, 0);
+            var leftAdjBlock   = chunk.getBlock       (x - 1, Y,     0);
+            var rightAdjBlock  = chunk.getBlock       (x + 1, Y,     0);
+            var frontAdjBlock  = chunk.getBlock       (x,     Y,     1);
+            var backAdjBlock   = backAdjChunk.getBlock(x,     Y,     ZLENGTH - 1);
 
-            BlockRenderer.byFullId(blockId).pushVertices(
+            BlockRenderer.byBlock(block).pushVertices(
                     x,
                     Y + offsetY,
                     0,
-                    blockId,
-                    topAdjBlockId,
-                    bottomAdjBlockId,
-                    leftAdjBlockId,
-                    rightAdjBlockId,
-                    frontAdjBlockId,
-                    backAdjBlockId,
+                    block,
+                    topAdjBlock,
+                    bottomAdjBlock,
+                    leftAdjBlock,
+                    rightAdjBlock,
+                    frontAdjBlock,
+                    backAdjBlock,
                     getShade(x, Y + offsetY, 0, heightMap),
                     builder);
         }
@@ -427,25 +428,25 @@ class ColumnDisplay implements GraphicsResource
         final var XLENGTH = Chunk.XLENGTH;
         var offsetY = chunkIndex * Chunk.YLENGTH;
 
-        var blockId          = chunk.getBlockFullId        (0,           Y,     Z);
-        var topAdjBlockId    = topAdjChunk.getBlockFullId  (0,           0,     Z);
-        var bottomAdjBlockId = chunk.getBlockFullId        (0,           Y - 1, Z);
-        var leftAdjBlockId   = leftAdjChunk.getBlockFullId (XLENGTH - 1, Y,     Z);
-        var rightAdjBlockId  = chunk.getBlockFullId        (1,           Y,     Z);
-        var frontAdjBlockId  = frontAdjChunk.getBlockFullId(0,           Y,     0);
-        var backAdjBlockId   = chunk.getBlockFullId        (0,           Y,     Z - 1);
+        var block          = chunk.getBlock        (0,           Y,     Z);
+        var topAdjBlock    = topAdjChunk.getBlock  (0,           0,     Z);
+        var bottomAdjBlock = chunk.getBlock        (0,           Y - 1, Z);
+        var leftAdjBlock   = leftAdjChunk.getBlock (XLENGTH - 1, Y,     Z);
+        var rightAdjBlock  = chunk.getBlock        (1,           Y,     Z);
+        var frontAdjBlock  = frontAdjChunk.getBlock(0,           Y,     0);
+        var backAdjBlock   = chunk.getBlock        (0,           Y,     Z - 1);
 
-        BlockRenderer.byFullId(blockId).pushVertices(
+        BlockRenderer.byBlock(block).pushVertices(
                 0,
                 Y + offsetY,
                 Z,
-                blockId,
-                topAdjBlockId,
-                bottomAdjBlockId,
-                leftAdjBlockId,
-                rightAdjBlockId,
-                frontAdjBlockId,
-                backAdjBlockId,
+                block,
+                topAdjBlock,
+                bottomAdjBlock,
+                leftAdjBlock,
+                rightAdjBlock,
+                frontAdjBlock,
+                backAdjBlock,
                 getShade(0, Y + offsetY, Z, heightMap),
                 builder);
     }
@@ -464,25 +465,25 @@ class ColumnDisplay implements GraphicsResource
         final var Z = Chunk.ZLENGTH - 1;
         var offsetY = chunkIndex * Chunk.YLENGTH;
 
-        var blockId          = chunk.getBlockFullId        (X,     Y,     Z);
-        var topAdjBlockId    = topAdjChunk.getBlockFullId  (X,     0,     Z);
-        var bottomAdjBlockId = chunk.getBlockFullId        (X,     Y - 1, Z);
-        var leftAdjBlockId   = chunk.getBlockFullId        (X - 1, Y,     Z);
-        var rightAdjBlockId  = rightAdjChunk.getBlockFullId(0,     Y,     Z);
-        var frontAdjBlockId  = frontAdjChunk.getBlockFullId(X,     Y,     0);
-        var backAdjBlockId   = chunk.getBlockFullId        (X,     Y,     Z - 1);
+        var block          = chunk.getBlock        (X,     Y,     Z);
+        var topAdjBlock    = topAdjChunk.getBlock  (X,     0,     Z);
+        var bottomAdjBlock = chunk.getBlock        (X,     Y - 1, Z);
+        var leftAdjBlock   = chunk.getBlock        (X - 1, Y,     Z);
+        var rightAdjBlock  = rightAdjChunk.getBlock(0,     Y,     Z);
+        var frontAdjBlock  = frontAdjChunk.getBlock(X,     Y,     0);
+        var backAdjBlock   = chunk.getBlock        (X,     Y,     Z - 1);
 
-        BlockRenderer.byFullId(blockId).pushVertices(
+        BlockRenderer.byBlock(block).pushVertices(
                 X,
                 Y + offsetY,
                 Z,
-                blockId,
-                topAdjBlockId,
-                bottomAdjBlockId,
-                leftAdjBlockId,
-                rightAdjBlockId,
-                frontAdjBlockId,
-                backAdjBlockId,
+                block,
+                topAdjBlock,
+                bottomAdjBlock,
+                leftAdjBlock,
+                rightAdjBlock,
+                frontAdjBlock,
+                backAdjBlock,
                 getShade(X, Y + offsetY, Z, heightMap),
                 builder);
     }
@@ -501,25 +502,25 @@ class ColumnDisplay implements GraphicsResource
         final var ZLENGTH = Chunk.ZLENGTH;
         var offsetY = chunkIndex * Chunk.YLENGTH;
 
-        var blockId          = chunk.getBlockFullId       (0,           Y,     0);
-        var topAdjBlockId    = topAdjChunk.getBlockFullId (0,           0,     0);
-        var bottomAdjBlockId = chunk.getBlockFullId       (0,           Y - 1, 0);
-        var leftAdjBlockId   = leftAdjChunk.getBlockFullId(XLENGTH - 1, Y,     0);
-        var rightAdjBlockId  = chunk.getBlockFullId       (1,           Y,     0);
-        var frontAdjBlockId  = chunk.getBlockFullId       (0,           Y,     1);
-        var backAdjBlockId   = backAdjChunk.getBlockFullId(0,           Y,     ZLENGTH - 1);
+        var block          = chunk.getBlock       (0,           Y,     0);
+        var topAdjBlock    = topAdjChunk.getBlock (0,           0,     0);
+        var bottomAdjBlock = chunk.getBlock       (0,           Y - 1, 0);
+        var leftAdjBlock   = leftAdjChunk.getBlock(XLENGTH - 1, Y,     0);
+        var rightAdjBlock  = chunk.getBlock       (1,           Y,     0);
+        var frontAdjBlock  = chunk.getBlock       (0,           Y,     1);
+        var backAdjBlock   = backAdjChunk.getBlock(0,           Y,     ZLENGTH - 1);
 
-        BlockRenderer.byFullId(blockId).pushVertices(
+        BlockRenderer.byBlock(block).pushVertices(
                 0,
                 Y + offsetY,
                 0,
-                blockId,
-                topAdjBlockId,
-                bottomAdjBlockId,
-                leftAdjBlockId,
-                rightAdjBlockId,
-                frontAdjBlockId,
-                backAdjBlockId,
+                block,
+                topAdjBlock,
+                bottomAdjBlock,
+                leftAdjBlock,
+                rightAdjBlock,
+                frontAdjBlock,
+                backAdjBlock,
                 getShade(0, Y + offsetY, 0, heightMap),
                 builder);
     }
@@ -538,25 +539,25 @@ class ColumnDisplay implements GraphicsResource
         final var ZLENGTH = Chunk.ZLENGTH;
         var offsetY = chunkIndex * Chunk.YLENGTH;
 
-        var blockId          = chunk.getBlockFullId        (X,     Y,     0);
-        var topAdjBlockId    = topAdjChunk.getBlockFullId  (X,     0,     0);
-        var bottomAdjBlockId = chunk.getBlockFullId        (X,     Y - 1, 0);
-        var leftAdjBlockId   = chunk.getBlockFullId        (X - 1, Y,     0);
-        var rightAdjBlockId  = rightAdjChunk.getBlockFullId(0,     Y,     0);
-        var frontAdjBlockId  = chunk.getBlockFullId        (X,     Y,     1);
-        var backAdjBlockId   = backAdjChunk.getBlockFullId (X,     Y,     ZLENGTH - 1);
+        var block          = chunk.getBlock        (X,     Y,     0);
+        var topAdjBlock    = topAdjChunk.getBlock  (X,     0,     0);
+        var bottomAdjBlock = chunk.getBlock        (X,     Y - 1, 0);
+        var leftAdjBlock   = chunk.getBlock        (X - 1, Y,     0);
+        var rightAdjBlock  = rightAdjChunk.getBlock(0,     Y,     0);
+        var frontAdjBlock  = chunk.getBlock        (X,     Y,     1);
+        var backAdjBlock   = backAdjChunk.getBlock (X,     Y,     ZLENGTH - 1);
 
-        BlockRenderer.byFullId(blockId).pushVertices(
+        BlockRenderer.byBlock(block).pushVertices(
                 X,
                 Y + offsetY,
                 0,
-                blockId,
-                topAdjBlockId,
-                bottomAdjBlockId,
-                leftAdjBlockId,
-                rightAdjBlockId,
-                frontAdjBlockId,
-                backAdjBlockId,
+                block,
+                topAdjBlock,
+                bottomAdjBlock,
+                leftAdjBlock,
+                rightAdjBlock,
+                frontAdjBlock,
+                backAdjBlock,
                 getShade(X, Y + offsetY, 0, heightMap),
                 builder);
     }
@@ -573,25 +574,25 @@ class ColumnDisplay implements GraphicsResource
 
         for (var z = 1; z < Chunk.ZLENGTH - 1; ++z) {
             for (var x = 1; x < Chunk.XLENGTH - 1; ++x) {
-                var blockId          = chunk.getBlockFullId   (x,     0,           z);
-                var topAdjBlockId    = chunk.getBlockFullId   (x,     1,           z);
-                var bottomAdjBlockId = adjChunk.getBlockFullId(x,     YLENGTH - 1, z);
-                var leftAdjBlockId   = chunk.getBlockFullId   (x - 1, 0,           z);
-                var rightAdjBlockId  = chunk.getBlockFullId   (x + 1, 0,           z);
-                var frontAdjBlockId  = chunk.getBlockFullId   (x,     0,           z + 1);
-                var backAdjBlockId   = chunk.getBlockFullId   (x,     0,           z - 1);
+                var block          = chunk.getBlock   (x,     0,           z);
+                var topAdjBlock    = chunk.getBlock   (x,     1,           z);
+                var bottomAdjBlock = adjChunk.getBlock(x,     YLENGTH - 1, z);
+                var leftAdjBlock   = chunk.getBlock   (x - 1, 0,           z);
+                var rightAdjBlock  = chunk.getBlock   (x + 1, 0,           z);
+                var frontAdjBlock  = chunk.getBlock   (x,     0,           z + 1);
+                var backAdjBlock   = chunk.getBlock   (x,     0,           z - 1);
 
-                BlockRenderer.byFullId(blockId).pushVertices(
+                BlockRenderer.byBlock(block).pushVertices(
                         x,
                         offsetY,
                         z,
-                        blockId,
-                        topAdjBlockId,
-                        bottomAdjBlockId,
-                        leftAdjBlockId,
-                        rightAdjBlockId,
-                        frontAdjBlockId,
-                        backAdjBlockId,
+                        block,
+                        topAdjBlock,
+                        bottomAdjBlock,
+                        leftAdjBlock,
+                        rightAdjBlock,
+                        frontAdjBlock,
+                        backAdjBlock,
                         getShade(x, offsetY, z, heightMap),
                         builder);
             }
@@ -611,25 +612,25 @@ class ColumnDisplay implements GraphicsResource
         var offsetY = chunkIndex * Chunk.YLENGTH;
 
         for (var z = 1; z < Chunk.ZLENGTH - 1; ++z) {
-            var blockId          = chunk.getBlockFullId         (0,           0,           z);
-            var topAdjBlockId    = chunk.getBlockFullId         (0,           1,           z);
-            var bottomAdjBlockId = bottomAdjChunk.getBlockFullId(0,           YLENGTH - 1, z);
-            var leftAdjBlockId   = leftAdjChunk.getBlockFullId  (XLENGTH - 1, 0,           z);
-            var rightAdjBlockId  = chunk.getBlockFullId         (1,           0,           z);
-            var frontAdjBlockId  = chunk.getBlockFullId         (0,           0,           z + 1);
-            var backAdjBlockId   = chunk.getBlockFullId         (0,           0,           z - 1);
+            var block          = chunk.getBlock         (0,           0,           z);
+            var topAdjBlock    = chunk.getBlock         (0,           1,           z);
+            var bottomAdjBlock = bottomAdjChunk.getBlock(0,           YLENGTH - 1, z);
+            var leftAdjBlock   = leftAdjChunk.getBlock  (XLENGTH - 1, 0,           z);
+            var rightAdjBlock  = chunk.getBlock         (1,           0,           z);
+            var frontAdjBlock  = chunk.getBlock         (0,           0,           z + 1);
+            var backAdjBlock   = chunk.getBlock         (0,           0,           z - 1);
 
-            BlockRenderer.byFullId(blockId).pushVertices(
+            BlockRenderer.byBlock(block).pushVertices(
                     0,
                     offsetY,
                     z,
-                    blockId,
-                    topAdjBlockId,
-                    bottomAdjBlockId,
-                    leftAdjBlockId,
-                    rightAdjBlockId,
-                    frontAdjBlockId,
-                    backAdjBlockId,
+                    block,
+                    topAdjBlock,
+                    bottomAdjBlock,
+                    leftAdjBlock,
+                    rightAdjBlock,
+                    frontAdjBlock,
+                    backAdjBlock,
                     getShade(0, offsetY, z, heightMap),
                     builder);
         }
@@ -648,25 +649,25 @@ class ColumnDisplay implements GraphicsResource
         var offsetY = chunkIndex * Chunk.YLENGTH;
 
         for (var z = 1; z < Chunk.ZLENGTH - 1; ++z) {
-            var blockId          = chunk.getBlockFullId         (X,     0,           z);
-            var topAdjBlockId    = chunk.getBlockFullId         (X,     1,           z);
-            var bottomAdjBlockId = bottomAdjChunk.getBlockFullId(X,     YLENGTH - 1, z);
-            var leftAdjBlockId   = chunk.getBlockFullId         (X - 1, 0,           z);
-            var rightAdjBlockId  = rightAdjChunk.getBlockFullId (0,     0,           z);
-            var frontAdjBlockId  = chunk.getBlockFullId         (X,     0,           z + 1);
-            var backAdjBlockId   = chunk.getBlockFullId         (X,     0,           z - 1);
+            var block          = chunk.getBlock         (X,     0,           z);
+            var topAdjBlock    = chunk.getBlock         (X,     1,           z);
+            var bottomAdjBlock = bottomAdjChunk.getBlock(X,     YLENGTH - 1, z);
+            var leftAdjBlock   = chunk.getBlock         (X - 1, 0,           z);
+            var rightAdjBlock  = rightAdjChunk.getBlock (0,     0,           z);
+            var frontAdjBlock  = chunk.getBlock         (X,     0,           z + 1);
+            var backAdjBlock   = chunk.getBlock         (X,     0,           z - 1);
 
-            BlockRenderer.byFullId(blockId).pushVertices(
+            BlockRenderer.byBlock(block).pushVertices(
                     X,
                     offsetY,
                     z,
-                    blockId,
-                    topAdjBlockId,
-                    bottomAdjBlockId,
-                    leftAdjBlockId,
-                    rightAdjBlockId,
-                    frontAdjBlockId,
-                    backAdjBlockId,
+                    block,
+                    topAdjBlock,
+                    bottomAdjBlock,
+                    leftAdjBlock,
+                    rightAdjBlock,
+                    frontAdjBlock,
+                    backAdjBlock,
                     getShade(X, offsetY, z, heightMap),
                     builder);
         }
@@ -685,25 +686,25 @@ class ColumnDisplay implements GraphicsResource
         var offsetY = chunkIndex * Chunk.YLENGTH;
 
         for (var x = 1; x < Chunk.XLENGTH - 1; ++x) {
-            var blockId          = chunk.getBlockFullId         (x,     0,           Z);
-            var topAdjBlockId    = chunk.getBlockFullId         (x,     1,           Z);
-            var bottomAdjBlockId = bottomAdjChunk.getBlockFullId(x,     YLENGTH - 1, Z);
-            var leftAdjBlockId   = chunk.getBlockFullId         (x - 1, 0,           Z);
-            var rightAdjBlockId  = chunk.getBlockFullId         (x + 1, 0,           Z);
-            var frontAdjBlockId  = frontAdjChunk.getBlockFullId (x,     0,           0);
-            var backAdjBlockId   = chunk.getBlockFullId         (x,     0,           Z - 1);
+            var block          = chunk.getBlock         (x,     0,           Z);
+            var topAdjBlock    = chunk.getBlock         (x,     1,           Z);
+            var bottomAdjBlock = bottomAdjChunk.getBlock(x,     YLENGTH - 1, Z);
+            var leftAdjBlock   = chunk.getBlock         (x - 1, 0,           Z);
+            var rightAdjBlock  = chunk.getBlock         (x + 1, 0,           Z);
+            var frontAdjBlock  = frontAdjChunk.getBlock (x,     0,           0);
+            var backAdjBlock   = chunk.getBlock         (x,     0,           Z - 1);
 
-            BlockRenderer.byFullId(blockId).pushVertices(
+            BlockRenderer.byBlock(block).pushVertices(
                     x,
                     offsetY,
                     Z,
-                    blockId,
-                    topAdjBlockId,
-                    bottomAdjBlockId,
-                    leftAdjBlockId,
-                    rightAdjBlockId,
-                    frontAdjBlockId,
-                    backAdjBlockId,
+                    block,
+                    topAdjBlock,
+                    bottomAdjBlock,
+                    leftAdjBlock,
+                    rightAdjBlock,
+                    frontAdjBlock,
+                    backAdjBlock,
                     getShade(x, offsetY, Z, heightMap),
                     builder);
         }
@@ -722,25 +723,25 @@ class ColumnDisplay implements GraphicsResource
         var offsetY = chunkIndex * Chunk.YLENGTH;
 
         for (var x = 1; x < Chunk.XLENGTH - 1; ++x) {
-            var blockId          = chunk.getBlockFullId         (x,     0,           0);
-            var topAdjBlockId    = chunk.getBlockFullId         (x,     1,           0);
-            var bottomAdjBlockId = bottomAdjChunk.getBlockFullId(x,     YLENGTH - 1, 0);
-            var leftAdjBlockId   = chunk.getBlockFullId         (x - 1, 0,           0);
-            var rightAdjBlockId  = chunk.getBlockFullId         (x + 1, 0,           0);
-            var frontAdjBlockId  = chunk.getBlockFullId         (x,     0,           1);
-            var backAdjBlockId   = backAdjChunk.getBlockFullId  (x,     0,           ZLENGTH - 1);
+            var block          = chunk.getBlock         (x,     0,           0);
+            var topAdjBlock    = chunk.getBlock         (x,     1,           0);
+            var bottomAdjBlock = bottomAdjChunk.getBlock(x,     YLENGTH - 1, 0);
+            var leftAdjBlock   = chunk.getBlock         (x - 1, 0,           0);
+            var rightAdjBlock  = chunk.getBlock         (x + 1, 0,           0);
+            var frontAdjBlock  = chunk.getBlock         (x,     0,           1);
+            var backAdjBlock   = backAdjChunk.getBlock  (x,     0,           ZLENGTH - 1);
 
-            BlockRenderer.byFullId(blockId).pushVertices(
+            BlockRenderer.byBlock(block).pushVertices(
                     x,
                     offsetY,
                     0,
-                    blockId,
-                    topAdjBlockId,
-                    bottomAdjBlockId,
-                    leftAdjBlockId,
-                    rightAdjBlockId,
-                    frontAdjBlockId,
-                    backAdjBlockId,
+                    block,
+                    topAdjBlock,
+                    bottomAdjBlock,
+                    leftAdjBlock,
+                    rightAdjBlock,
+                    frontAdjBlock,
+                    backAdjBlock,
                     getShade(x, offsetY, 0, heightMap),
                     builder);
         }
@@ -760,25 +761,25 @@ class ColumnDisplay implements GraphicsResource
         final var YLENGTH = Chunk.YLENGTH;
         var offsetY = chunkIndex * Chunk.YLENGTH;
 
-        var blockId          = chunk.getBlockFullId         (0,           0,           Z);
-        var topAdjBlockId    = chunk.getBlockFullId         (0,           1,           Z);
-        var bottomAdjBlockId = bottomAdjChunk.getBlockFullId(0,           YLENGTH - 1, Z);
-        var leftAdjBlockId   = leftAdjChunk.getBlockFullId  (XLENGTH - 1, 0,           Z);
-        var rightAdjBlockId  = chunk.getBlockFullId         (1,           0,           Z);
-        var frontAdjBlockId  = frontAdjChunk.getBlockFullId (0,           0,           0);
-        var backAdjBlockId   = chunk.getBlockFullId         (0,           0,           Z - 1);
+        var block          = chunk.getBlock         (0,           0,           Z);
+        var topAdjBlock    = chunk.getBlock         (0,           1,           Z);
+        var bottomAdjBlock = bottomAdjChunk.getBlock(0,           YLENGTH - 1, Z);
+        var leftAdjBlock   = leftAdjChunk.getBlock  (XLENGTH - 1, 0,           Z);
+        var rightAdjBlock  = chunk.getBlock         (1,           0,           Z);
+        var frontAdjBlock  = frontAdjChunk.getBlock (0,           0,           0);
+        var backAdjBlock   = chunk.getBlock         (0,           0,           Z - 1);
 
-        BlockRenderer.byFullId(blockId).pushVertices(
+        BlockRenderer.byBlock(block).pushVertices(
                 0,
                 offsetY,
                 Z,
-                blockId,
-                topAdjBlockId,
-                bottomAdjBlockId,
-                leftAdjBlockId,
-                rightAdjBlockId,
-                frontAdjBlockId,
-                backAdjBlockId,
+                block,
+                topAdjBlock,
+                bottomAdjBlock,
+                leftAdjBlock,
+                rightAdjBlock,
+                frontAdjBlock,
+                backAdjBlock,
                 getShade(0, offsetY, Z, heightMap),
                 builder);
     }
@@ -797,25 +798,25 @@ class ColumnDisplay implements GraphicsResource
         final var YLENGTH = Chunk.YLENGTH;
         var offsetY = chunkIndex * Chunk.YLENGTH;
 
-        var blockId          = chunk.getBlockFullId         (X,     0,           Z);
-        var topAdjBlockId    = chunk.getBlockFullId         (X,     1,           Z);
-        var bottomAdjBlockId = bottomAdjChunk.getBlockFullId(X,     YLENGTH - 1, Z);
-        var leftAdjBlockId   = chunk.getBlockFullId         (X - 1, 0,           Z);
-        var rightAdjBlockId  = rightAdjChunk.getBlockFullId (0,     0,           Z);
-        var frontAdjBlockId  = frontAdjChunk.getBlockFullId (X,     0,           0);
-        var backAdjBlockId   = chunk.getBlockFullId         (X,     0,           Z - 1);
+        var block          = chunk.getBlock         (X,     0,           Z);
+        var topAdjBlock    = chunk.getBlock         (X,     1,           Z);
+        var bottomAdjBlock = bottomAdjChunk.getBlock(X,     YLENGTH - 1, Z);
+        var leftAdjBlock   = chunk.getBlock         (X - 1, 0,           Z);
+        var rightAdjBlock  = rightAdjChunk.getBlock (0,     0,           Z);
+        var frontAdjBlock  = frontAdjChunk.getBlock (X,     0,           0);
+        var backAdjBlock   = chunk.getBlock         (X,     0,           Z - 1);
 
-        BlockRenderer.byFullId(blockId).pushVertices(
+        BlockRenderer.byBlock(block).pushVertices(
                 X,
                 offsetY,
                 Z,
-                blockId,
-                topAdjBlockId,
-                bottomAdjBlockId,
-                leftAdjBlockId,
-                rightAdjBlockId,
-                frontAdjBlockId,
-                backAdjBlockId,
+                block,
+                topAdjBlock,
+                bottomAdjBlock,
+                leftAdjBlock,
+                rightAdjBlock,
+                frontAdjBlock,
+                backAdjBlock,
                 getShade(X, offsetY, Z, heightMap),
                 builder);
     }
@@ -834,25 +835,25 @@ class ColumnDisplay implements GraphicsResource
         final var ZLENGTH = Chunk.ZLENGTH;
         var offsetY = chunkIndex * Chunk.YLENGTH;
 
-        var blockId          = chunk.getBlockFullId         (0,           0,           0);
-        var topAdjBlockId    = chunk.getBlockFullId         (0,           1,           0);
-        var bottomAdjBlockId = bottomAdjChunk.getBlockFullId(0,           YLENGTH - 1, 0);
-        var leftAdjBlockId   = leftAdjChunk.getBlockFullId  (XLENGTH - 1, 0,           0);
-        var rightAdjBlockId  = chunk.getBlockFullId         (1,           0,           0);
-        var frontAdjBlockId  = chunk.getBlockFullId         (0,           0,           1);
-        var backAdjBlockId   = backAdjChunk.getBlockFullId  (0,           0,           ZLENGTH - 1);
+        var block          = chunk.getBlock         (0,           0,           0);
+        var topAdjBlock    = chunk.getBlock         (0,           1,           0);
+        var bottomAdjBlock = bottomAdjChunk.getBlock(0,           YLENGTH - 1, 0);
+        var leftAdjBlock   = leftAdjChunk.getBlock  (XLENGTH - 1, 0,           0);
+        var rightAdjBlock  = chunk.getBlock         (1,           0,           0);
+        var frontAdjBlock  = chunk.getBlock         (0,           0,           1);
+        var backAdjBlock   = backAdjChunk.getBlock  (0,           0,           ZLENGTH - 1);
 
-        BlockRenderer.byFullId(blockId).pushVertices(
+        BlockRenderer.byBlock(block).pushVertices(
                 0,
                 offsetY,
                 0,
-                blockId,
-                topAdjBlockId,
-                bottomAdjBlockId,
-                leftAdjBlockId,
-                rightAdjBlockId,
-                frontAdjBlockId,
-                backAdjBlockId,
+                block,
+                topAdjBlock,
+                bottomAdjBlock,
+                leftAdjBlock,
+                rightAdjBlock,
+                frontAdjBlock,
+                backAdjBlock,
                 getShade(0, offsetY, 0, heightMap),
                 builder);
     }
@@ -871,25 +872,25 @@ class ColumnDisplay implements GraphicsResource
         final var ZLENGTH = Chunk.ZLENGTH;
         var offsetY = chunkIndex * Chunk.YLENGTH;
 
-        var blockId          = chunk.getBlockFullId         (X,     0,           0);
-        var topAdjBlockId    = chunk.getBlockFullId         (X,     1,           0);
-        var bottomAdjBlockId = bottomAdjChunk.getBlockFullId(X,     YLENGTH - 1, 0);
-        var leftAdjBlockId   = chunk.getBlockFullId         (X - 1, 0,           0);
-        var rightAdjBlockId  = rightAdjChunk.getBlockFullId (0,     0,           0);
-        var frontAdjBlockId  = chunk.getBlockFullId         (X,     0,           1);
-        var backAdjBlockId   = backAdjChunk.getBlockFullId  (X,     0,           ZLENGTH - 1);
+        var block          = chunk.getBlock         (X,     0,           0);
+        var topAdjBlock    = chunk.getBlock         (X,     1,           0);
+        var bottomAdjBlock = bottomAdjChunk.getBlock(X,     YLENGTH - 1, 0);
+        var leftAdjBlock   = chunk.getBlock         (X - 1, 0,           0);
+        var rightAdjBlock  = rightAdjChunk.getBlock (0,     0,           0);
+        var frontAdjBlock  = chunk.getBlock         (X,     0,           1);
+        var backAdjBlock   = backAdjChunk.getBlock  (X,     0,           ZLENGTH - 1);
 
-        BlockRenderer.byFullId(blockId).pushVertices(
+        BlockRenderer.byBlock(block).pushVertices(
                 X,
                 offsetY,
                 0,
-                blockId,
-                topAdjBlockId,
-                bottomAdjBlockId,
-                leftAdjBlockId,
-                rightAdjBlockId,
-                frontAdjBlockId,
-                backAdjBlockId,
+                block,
+                topAdjBlock,
+                bottomAdjBlock,
+                leftAdjBlock,
+                rightAdjBlock,
+                frontAdjBlock,
+                backAdjBlock,
                 getShade(X, offsetY, 0, heightMap),
                 builder);
     }
@@ -906,25 +907,25 @@ class ColumnDisplay implements GraphicsResource
 
         for (var y = 1; y < Chunk.YLENGTH - 1; ++y) {
             for (var z = 1; z < Chunk.ZLENGTH - 1; ++z) {
-                var blockId          = chunk.getBlockFullId   (0,           y,     z);
-                var topAdjBlockId    = chunk.getBlockFullId   (0,           y + 1, z);
-                var bottomAdjBlockId = chunk.getBlockFullId   (0,           y - 1, z);
-                var leftAdjBlockId   = adjChunk.getBlockFullId(XLENGTH - 1, y,     z);
-                var rightAdjBlockId  = chunk.getBlockFullId   (1,           y,     z);
-                var frontAdjBlockId  = chunk.getBlockFullId   (0,           y, z + 1);
-                var backAdjBlockId   = chunk.getBlockFullId   (0,           y, z - 1);
+                var block          = chunk.getBlock   (0,           y,     z);
+                var topAdjBlock    = chunk.getBlock   (0,           y + 1, z);
+                var bottomAdjBlock = chunk.getBlock   (0,           y - 1, z);
+                var leftAdjBlock   = adjChunk.getBlock(XLENGTH - 1, y,     z);
+                var rightAdjBlock  = chunk.getBlock   (1,           y,     z);
+                var frontAdjBlock  = chunk.getBlock   (0,           y, z + 1);
+                var backAdjBlock   = chunk.getBlock   (0,           y, z - 1);
 
-                BlockRenderer.byFullId(blockId).pushVertices(
+                BlockRenderer.byBlock(block).pushVertices(
                         0,
                         y + offsetY,
                         z,
-                        blockId,
-                        topAdjBlockId,
-                        bottomAdjBlockId,
-                        leftAdjBlockId,
-                        rightAdjBlockId,
-                        frontAdjBlockId,
-                        backAdjBlockId,
+                        block,
+                        topAdjBlock,
+                        bottomAdjBlock,
+                        leftAdjBlock,
+                        rightAdjBlock,
+                        frontAdjBlock,
+                        backAdjBlock,
                         getShade(0, y + offsetY, z, heightMap),
                         builder);
             }
@@ -943,25 +944,25 @@ class ColumnDisplay implements GraphicsResource
 
         for (var y = 1; y < Chunk.YLENGTH - 1; ++y) {
             for (var z = 1; z < Chunk.ZLENGTH - 1; ++z) {
-                var blockId          = chunk.getBlockFullId   (X,     y,     z);
-                var topAdjBlockId    = chunk.getBlockFullId   (X,     y + 1, z);
-                var bottomAdjBlockId = chunk.getBlockFullId   (X,     y - 1, z);
-                var leftAdjBlockId   = chunk.getBlockFullId   (X - 1, y,     z);
-                var rightAdjBlockId  = adjChunk.getBlockFullId(0,     y,     z);
-                var frontAdjBlockId  = chunk.getBlockFullId   (X,     y,     z + 1);
-                var backAdjBlockId   = chunk.getBlockFullId   (X,     y,     z - 1);
+                var block          = chunk.getBlock   (X,     y,     z);
+                var topAdjBlock    = chunk.getBlock   (X,     y + 1, z);
+                var bottomAdjBlock = chunk.getBlock   (X,     y - 1, z);
+                var leftAdjBlock   = chunk.getBlock   (X - 1, y,     z);
+                var rightAdjBlock  = adjChunk.getBlock(0,     y,     z);
+                var frontAdjBlock  = chunk.getBlock   (X,     y,     z + 1);
+                var backAdjBlock   = chunk.getBlock   (X,     y,     z - 1);
 
-                BlockRenderer.byFullId(blockId).pushVertices(
+                BlockRenderer.byBlock(block).pushVertices(
                         X,
                         y + offsetY,
                         z,
-                        blockId,
-                        topAdjBlockId,
-                        bottomAdjBlockId,
-                        leftAdjBlockId,
-                        rightAdjBlockId,
-                        frontAdjBlockId,
-                        backAdjBlockId,
+                        block,
+                        topAdjBlock,
+                        bottomAdjBlock,
+                        leftAdjBlock,
+                        rightAdjBlock,
+                        frontAdjBlock,
+                        backAdjBlock,
                         getShade(X, y + offsetY, z, heightMap),
                         builder);
             }
@@ -980,25 +981,25 @@ class ColumnDisplay implements GraphicsResource
 
         for (var y = 1; y < Chunk.YLENGTH - 1; ++y) {
             for (var x = 1; x < Chunk.XLENGTH - 1; ++x) {
-                var blockId          = chunk.getBlockFullId   (x,     y,     Z);
-                var topAdjBlockId    = chunk.getBlockFullId   (x,     y + 1, Z);
-                var bottomAdjBlockId = chunk.getBlockFullId   (x,     y - 1, Z);
-                var leftAdjBlockId   = chunk.getBlockFullId   (x - 1, y,     Z);
-                var rightAdjBlockId  = chunk.getBlockFullId   (x + 1, y,     Z);
-                var frontAdjBlockId  = adjChunk.getBlockFullId(x,     y,     0);
-                var backAdjBlockId   = chunk.getBlockFullId   (x,     y,     Z - 1);
+                var block          = chunk.getBlock   (x,     y,     Z);
+                var topAdjBlock    = chunk.getBlock   (x,     y + 1, Z);
+                var bottomAdjBlock = chunk.getBlock   (x,     y - 1, Z);
+                var leftAdjBlock   = chunk.getBlock   (x - 1, y,     Z);
+                var rightAdjBlock  = chunk.getBlock   (x + 1, y,     Z);
+                var frontAdjBlock  = adjChunk.getBlock(x,     y,     0);
+                var backAdjBlock   = chunk.getBlock   (x,     y,     Z - 1);
 
-                BlockRenderer.byFullId(blockId).pushVertices(
+                BlockRenderer.byBlock(block).pushVertices(
                         x,
                         y + offsetY,
                         Z,
-                        blockId,
-                        topAdjBlockId,
-                        bottomAdjBlockId,
-                        leftAdjBlockId,
-                        rightAdjBlockId,
-                        frontAdjBlockId,
-                        backAdjBlockId,
+                        block,
+                        topAdjBlock,
+                        bottomAdjBlock,
+                        leftAdjBlock,
+                        rightAdjBlock,
+                        frontAdjBlock,
+                        backAdjBlock,
                         getShade(x, y + offsetY, Z, heightMap),
                         builder);
             }
@@ -1017,25 +1018,25 @@ class ColumnDisplay implements GraphicsResource
 
         for (var y = 1; y < Chunk.YLENGTH - 1; ++y) {
             for (var x = 1; x < Chunk.XLENGTH - 1; ++x) {
-                var blockId          = chunk.getBlockFullId   (x,     y,     0);
-                var topAdjBlockId    = chunk.getBlockFullId   (x,     y + 1, 0);
-                var bottomAdjBlockId = chunk.getBlockFullId   (x,     y - 1, 0);
-                var leftAdjBlockId   = chunk.getBlockFullId   (x - 1, y,     0);
-                var rightAdjBlockId  = chunk.getBlockFullId   (x + 1, y,     0);
-                var frontAdjBlockId  = chunk.getBlockFullId   (x,     y,     1);
-                var backAdjBlockId   = adjChunk.getBlockFullId(x,     y,     ZLENGTH - 1);
+                var block          = chunk.getBlock   (x,     y,     0);
+                var topAdjBlock    = chunk.getBlock   (x,     y + 1, 0);
+                var bottomAdjBlock = chunk.getBlock   (x,     y - 1, 0);
+                var leftAdjBlock   = chunk.getBlock   (x - 1, y,     0);
+                var rightAdjBlock  = chunk.getBlock   (x + 1, y,     0);
+                var frontAdjBlock  = chunk.getBlock   (x,     y,     1);
+                var backAdjBlock   = adjChunk.getBlock(x,     y,     ZLENGTH - 1);
 
-                BlockRenderer.byFullId(blockId).pushVertices(
+                BlockRenderer.byBlock(block).pushVertices(
                         x,
                         y + offsetY,
                         0,
-                        blockId,
-                        topAdjBlockId,
-                        bottomAdjBlockId,
-                        leftAdjBlockId,
-                        rightAdjBlockId,
-                        frontAdjBlockId,
-                        backAdjBlockId,
+                        block,
+                        topAdjBlock,
+                        bottomAdjBlock,
+                        leftAdjBlock,
+                        rightAdjBlock,
+                        frontAdjBlock,
+                        backAdjBlock,
                         getShade(x, y + offsetY, 0, heightMap),
                         builder);
             }
@@ -1055,25 +1056,25 @@ class ColumnDisplay implements GraphicsResource
         var offsetY = chunkIndex * Chunk.YLENGTH;
 
         for (var y = 1; y < Chunk.YLENGTH - 1; ++y) {
-            var blockId          = chunk.getBlockFullId        (0,           y,     Z);
-            var topAdjBlockId    = chunk.getBlockFullId        (0,           y + 1, Z);
-            var bottomAdjBlockId = chunk.getBlockFullId        (0,           y - 1, Z);
-            var leftAdjBlockId   = leftAdjChunk.getBlockFullId (XLENGTH - 1, y,     Z);
-            var rightAdjBlockId  = chunk.getBlockFullId        (1,           y,     Z);
-            var frontAdjBlockId  = frontAdjChunk.getBlockFullId(0,           y,     0);
-            var backAdjBlockId   = chunk.getBlockFullId        (0,           y,     Z - 1);
+            var block          = chunk.getBlock        (0,           y,     Z);
+            var topAdjBlock    = chunk.getBlock        (0,           y + 1, Z);
+            var bottomAdjBlock = chunk.getBlock        (0,           y - 1, Z);
+            var leftAdjBlock   = leftAdjChunk.getBlock (XLENGTH - 1, y,     Z);
+            var rightAdjBlock  = chunk.getBlock        (1,           y,     Z);
+            var frontAdjBlock  = frontAdjChunk.getBlock(0,           y,     0);
+            var backAdjBlock   = chunk.getBlock        (0,           y,     Z - 1);
 
-            BlockRenderer.byFullId(blockId).pushVertices(
+            BlockRenderer.byBlock(block).pushVertices(
                     0,
                     y + offsetY,
                     Z,
-                    blockId,
-                    topAdjBlockId,
-                    bottomAdjBlockId,
-                    leftAdjBlockId,
-                    rightAdjBlockId,
-                    frontAdjBlockId,
-                    backAdjBlockId,
+                    block,
+                    topAdjBlock,
+                    bottomAdjBlock,
+                    leftAdjBlock,
+                    rightAdjBlock,
+                    frontAdjBlock,
+                    backAdjBlock,
                     getShade(0, y + offsetY, Z, heightMap),
                     builder);
         }
@@ -1092,25 +1093,25 @@ class ColumnDisplay implements GraphicsResource
         var offsetY = chunkIndex * Chunk.YLENGTH;
 
         for (var y = 1; y < Chunk.YLENGTH - 1; ++y) {
-            var blockId          = chunk.getBlockFullId        (X,     y,     Z);
-            var topAdjBlockId    = chunk.getBlockFullId        (X,     y + 1, Z);
-            var bottomAdjBlockId = chunk.getBlockFullId        (X,     y - 1, Z);
-            var leftAdjBlockId   = chunk.getBlockFullId        (X - 1, y,     Z);
-            var rightAdjBlockId  = rightAdjChunk.getBlockFullId(0,     y,     Z);
-            var frontAdjBlockId  = frontAdjChunk.getBlockFullId(X,     y,     0);
-            var backAdjBlockId   = chunk.getBlockFullId        (X,     y,     Z - 1);
+            var block          = chunk.getBlock        (X,     y,     Z);
+            var topAdjBlock    = chunk.getBlock        (X,     y + 1, Z);
+            var bottomAdjBlock = chunk.getBlock        (X,     y - 1, Z);
+            var leftAdjBlock   = chunk.getBlock        (X - 1, y,     Z);
+            var rightAdjBlock  = rightAdjChunk.getBlock(0,     y,     Z);
+            var frontAdjBlock  = frontAdjChunk.getBlock(X,     y,     0);
+            var backAdjBlock   = chunk.getBlock        (X,     y,     Z - 1);
 
-            BlockRenderer.byFullId(blockId).pushVertices(
+            BlockRenderer.byBlock(block).pushVertices(
                     X,
                     y + offsetY,
                     Z,
-                    blockId,
-                    topAdjBlockId,
-                    bottomAdjBlockId,
-                    leftAdjBlockId,
-                    rightAdjBlockId,
-                    frontAdjBlockId,
-                    backAdjBlockId,
+                    block,
+                    topAdjBlock,
+                    bottomAdjBlock,
+                    leftAdjBlock,
+                    rightAdjBlock,
+                    frontAdjBlock,
+                    backAdjBlock,
                     getShade(X, y + offsetY, Z, heightMap),
                     builder);
         }
@@ -1129,25 +1130,25 @@ class ColumnDisplay implements GraphicsResource
         var offsetY = chunkIndex * Chunk.YLENGTH;
 
         for (var y = 1; y < Chunk.YLENGTH - 1; ++y) {
-            var blockId          = chunk.getBlockFullId       (0,           y,     0);
-            var topAdjBlockId    = chunk.getBlockFullId       (0,           y + 1, 0);
-            var bottomAdjBlockId = chunk.getBlockFullId       (0,           y - 1, 0);
-            var leftAdjBlockId   = leftAdjChunk.getBlockFullId(XLENGTH - 1, y,     0);
-            var rightAdjBlockId  = chunk.getBlockFullId       (1,           y,     0);
-            var frontAdjBlockId  = chunk.getBlockFullId       (0,           y,     1);
-            var backAdjBlockId   = backAdjChunk.getBlockFullId(0,           y,     ZLENGTH - 1);
+            var block          = chunk.getBlock       (0,           y,     0);
+            var topAdjBlock    = chunk.getBlock       (0,           y + 1, 0);
+            var bottomAdjBlock = chunk.getBlock       (0,           y - 1, 0);
+            var leftAdjBlock   = leftAdjChunk.getBlock(XLENGTH - 1, y,     0);
+            var rightAdjBlock  = chunk.getBlock       (1,           y,     0);
+            var frontAdjBlock  = chunk.getBlock       (0,           y,     1);
+            var backAdjBlock   = backAdjChunk.getBlock(0,           y,     ZLENGTH - 1);
 
-            BlockRenderer.byFullId(blockId).pushVertices(
+            BlockRenderer.byBlock(block).pushVertices(
                     0,
                     y + offsetY,
                     0,
-                    blockId,
-                    topAdjBlockId,
-                    bottomAdjBlockId,
-                    leftAdjBlockId,
-                    rightAdjBlockId,
-                    frontAdjBlockId,
-                    backAdjBlockId,
+                    block,
+                    topAdjBlock,
+                    bottomAdjBlock,
+                    leftAdjBlock,
+                    rightAdjBlock,
+                    frontAdjBlock,
+                    backAdjBlock,
                     getShade(0, y + offsetY, 0, heightMap),
                     builder);
         }
@@ -1166,25 +1167,25 @@ class ColumnDisplay implements GraphicsResource
         var offsetY = chunkIndex * Chunk.YLENGTH;
 
         for (var y = 1; y < Chunk.YLENGTH - 1; ++y) {
-            var blockId          = chunk.getBlockFullId        (X,     y,     0);
-            var topAdjBlockId    = chunk.getBlockFullId        (X,     y + 1, 0);
-            var bottomAdjBlockId = chunk.getBlockFullId        (X,     y - 1, 0);
-            var leftAdjBlockId   = chunk.getBlockFullId        (X - 1, y,     0);
-            var rightAdjBlockId  = rightAdjChunk.getBlockFullId(0,     y,     0);
-            var frontAdjBlockId  = chunk.getBlockFullId        (X,     y,     1);
-            var backAdjBlockId   = backAdjChunk.getBlockFullId (X,     y,     ZLENGTH - 1);
+            var block          = chunk.getBlock        (X,     y,     0);
+            var topAdjBlock    = chunk.getBlock        (X,     y + 1, 0);
+            var bottomAdjBlock = chunk.getBlock        (X,     y - 1, 0);
+            var leftAdjBlock   = chunk.getBlock        (X - 1, y,     0);
+            var rightAdjBlock  = rightAdjChunk.getBlock(0,     y,     0);
+            var frontAdjBlock  = chunk.getBlock        (X,     y,     1);
+            var backAdjBlock   = backAdjChunk.getBlock (X,     y,     ZLENGTH - 1);
 
-            BlockRenderer.byFullId(blockId).pushVertices(
+            BlockRenderer.byBlock(block).pushVertices(
                     X,
                     y + offsetY,
                     0,
-                    blockId,
-                    topAdjBlockId,
-                    bottomAdjBlockId,
-                    leftAdjBlockId,
-                    rightAdjBlockId,
-                    frontAdjBlockId,
-                    backAdjBlockId,
+                    block,
+                    topAdjBlock,
+                    bottomAdjBlock,
+                    leftAdjBlock,
+                    rightAdjBlock,
+                    frontAdjBlock,
+                    backAdjBlock,
                     getShade(X, y + offsetY, 0, heightMap),
                     builder);
         }
@@ -1213,7 +1214,7 @@ class ColumnDisplay implements GraphicsResource
 
                     var topY = Chunk.YLENGTH - 1;
 
-                    while (topY >= 0 && chunk.getBlockFullId(x, topY, z) == 0) {
+                    while (topY >= 0 && chunk.getBlock(x, topY, z) instanceof AirBlock) {
                         --topY;
                     }
 

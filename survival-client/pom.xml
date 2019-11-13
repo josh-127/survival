@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.survival.client</groupId>
     <artifactId>survival-client</artifactId>
-    <version>0.1.0-SNAPSHOT</version>
+    <version>0.3.0-SNAPSHOT</version>
     <profiles>
         <profile><id>lwjgl-natives-linux</id><activation><os><family>unix</family></os></activation><properties><lwjgl.natives>natives-linux</lwjgl.natives></properties></profile>
         <profile><id>lwjgl-natives-macos</id><activation><os><family>mac</family></os></activation><properties><lwjgl.natives>natives-macos</lwjgl.natives></properties></profile>
@@ -14,17 +14,17 @@
         <dependency>
             <groupId>net.survival</groupId>
             <artifactId>survival-common</artifactId>
-            <version>0.1.0-SNAPSHOT</version>
+            <version>0.3.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>net.survival.graphics</groupId>
             <artifactId>survival-graphics</artifactId>
-            <version>0.1.0-SNAPSHOT</version>
+            <version>0.3.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>dev.josh127.libwin32</groupId>
             <artifactId>libwin32</artifactId>
-            <version>0.1.0-SNAPSHOT</version>
+            <version>0.3.0-SNAPSHOT</version>
         </dependency>
         <dependency><groupId>org.lwjgl</groupId><artifactId>lwjgl</artifactId><version>3.2.1</version></dependency>
         <dependency><groupId>org.lwjgl</groupId><artifactId>lwjgl-assimp</artifactId><version>3.2.1</version></dependency>
@@ -45,7 +45,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.0</version>
+                <version>3.8.1</version>
                 <configuration>
                     <release>11</release>
                 </configuration>

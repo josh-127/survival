@@ -16,7 +16,7 @@ public class DefaultColumnGenerator implements ColumnProvider
 
     public DefaultColumnGenerator(long seed) {
         terrainGenerator = new DefaultTerrainGenerator(seed);
-        decorator = new DefaultColumnDecorator(false);
+        decorator = new DefaultColumnDecorator(true);
 
         primer = new ColumnPrimer();
     }

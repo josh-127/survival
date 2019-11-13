@@ -1,8 +1,8 @@
 package net.survival.gen;
 
 import net.survival.block.Column;
-import net.survival.blocktype.Block;
-import net.survival.blocktype.BlockType;
+import net.survival.block.state.AirBlock;
+import net.survival.block.state.BlockState;
 
 public class ColumnPrimer
 {
@@ -12,7 +12,15 @@ public class ColumnPrimer
     public static final int BASE_AREA = XLENGTH * ZLENGTH;
     public static final int VOLUME = BASE_AREA * YLENGTH;
 
-    public final int[] blockIds = new int[VOLUME];
+    public final BlockState[] blocks;
+
+    public ColumnPrimer() {
+        blocks = new BlockState[VOLUME];
+
+        for (int i = 0; i < blocks.length; ++i) {
+            blocks[i] = AirBlock.INSTANCE;
+        }
+    }
 
     public Column toColumn() {
         var column = new Column();
@@ -21,8 +29,9 @@ public class ColumnPrimer
         for (var y = 0; y < YLENGTH; ++y) {
             for (var z = 0; z < ZLENGTH; ++z) {
                 for (var x = 0; x < XLENGTH; ++x) {
-                    if (blockIds[index] != 0)
-                        column.setBlockFullId(x, y, z, blockIds[index]);
+                    if (!(blocks[index] instanceof AirBlock)) {
+                        column.setBlock(x, y, z, blocks[index]);
+                    }
                     ++index;
                 }
             }
@@ -31,67 +40,57 @@ public class ColumnPrimer
         return column;
     }
 
-    public int getBlockFullId(int x, int y, int z) {
-        return blockIds[localPositionToIndex(x, y, z)];
+    public BlockState getBlock(int x, int y, int z) {
+        return blocks[localPositionToIndex(x, y, z)];
     }
 
-    public Block getBlock(int x, int y, int z) {
-        return BlockType.byFullId(getBlockFullId(x, y, z));
-    }
+    public BlockState sampleNearestBlock(double x, double y, double z) {
+        var xi = (int) Math.floor(x);
+        var yi = (int) Math.floor(y);
+        var zi = (int) Math.floor(z);
 
-    public int sampleNearestBlockFullId(double x, double y, double z) {
-        return getBlockFullId((int) Math.floor(x), (int) Math.floor(y), (int) Math.floor(z));
-    }
-
-    public Block sampleNearestBlock(double x, double y, double z) {
-        return BlockType.byFullId(sampleNearestBlockFullId(x, y, z));
+        return getBlock(xi, yi, zi);
     }
 
     public int getTopLevel(int x, int z) {
         var topLevel = YLENGTH - 1;
-        while (topLevel >= 0 && getBlockFullId(x, topLevel, z) == 0)
+        while (topLevel >= 0 && getBlock(x, topLevel, z) instanceof AirBlock) {
             --topLevel;
+        }
 
         return topLevel;
     }
 
-    public void setBlockFullId(int x, int y, int z, int to) {
-        blockIds[localPositionToIndex(x, y, z)] = to;
+    public void setBlock(int x, int y, int z, BlockState to) {
+        if (to == null) {
+            throw new IllegalArgumentException("to");
+        }
+
+        blocks[localPositionToIndex(x, y, z)] = to;
     }
 
-    public void setBlock(int x, int y, int z, Block to) {
-        setBlockFullId(x, y, z, to.getFullId());
-    }
-
-    public boolean placeBlockIfEmpty(int x, int y, int z, int to) {
-        if (getBlockFullId(x, y, z) == 0) {
-            setBlockFullId(x, y, z, to);
+    public boolean placeBlockIfEmpty(int x, int y, int z, BlockState to) {
+        if (getBlock(x, y, z) instanceof AirBlock) {
+            setBlock(x, y, z, to);
             return true;
         }
 
         return false;
     }
 
-    public boolean placeBlockIfEmpty(int x, int y, int z, Block to) {
-        return placeBlockIfEmpty(x, y, z, to.getFullId());
-    }
-
-    public boolean replaceBlockIfExists(int x, int y, int z, int replacement) {
-        if (getBlockFullId(x, y, z) != 0) {
-            setBlockFullId(x, y, z, replacement);
+    public boolean replaceBlockIfExists(int x, int y, int z, BlockState replacement) {
+        if (!(getBlock(x, y, z) instanceof AirBlock)) {
+            setBlock(x, y, z, replacement);
             return true;
         }
 
         return false;
-    }
-
-    public boolean replaceBlockIfExists(int x, int y, int z, Block replacement) {
-        return replaceBlockIfExists(x, y, z, replacement.getFullId());
     }
 
     public void clear() {
-        for (var i = 0; i < blockIds.length; ++i)
-            blockIds[i] = 0;
+        for (var i = 0; i < blocks.length; ++i) {
+            blocks[i] = AirBlock.INSTANCE;
+        }
     }
 
     private int localPositionToIndex(int x, int y, int z) {

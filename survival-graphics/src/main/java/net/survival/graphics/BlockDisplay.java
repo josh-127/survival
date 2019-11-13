@@ -7,7 +7,6 @@ import org.joml.Matrix4f;
 
 import net.survival.block.Column;
 import net.survival.block.ColumnPos;
-import net.survival.graphics.blockrenderer.BlockRenderer;
 import net.survival.graphics.opengl.GLComparisonFunc;
 import net.survival.graphics.opengl.GLFilterMode;
 import net.survival.graphics.opengl.GLMatrixStack;
@@ -22,12 +21,12 @@ class BlockDisplay implements GraphicsResource
     private final HashMap<Long, Column> invalidatedColumns = new HashMap<>();
     private final GLTexture overlayTexture;
 
-    private final Camera camera;
+    private final PerspectiveCamera camera;
     private Matrix4f cameraViewMatrix = new Matrix4f();
     private Matrix4f cameraProjectionMatrix = new Matrix4f();
     private Matrix4f modelViewMatrix = new Matrix4f();
 
-    public BlockDisplay(Camera camera) {
+    public BlockDisplay(PerspectiveCamera camera) {
         var overlayBitmap = Bitmap.fromFile("../assets/textures/overlays/low_contrast.png");
         overlayTexture = new GLTexture();
         overlayTexture.beginBind()
@@ -40,8 +39,6 @@ class BlockDisplay implements GraphicsResource
                 .endBind();
 
         this.camera = camera;
-
-        BlockRenderer.initTextures();
     }
 
     @Override
@@ -74,6 +71,9 @@ class BlockDisplay implements GraphicsResource
     }
 
     private void drawColumnDisplays(HashMap<Column, ColumnDisplay> displays, Matrix4f viewMatrix) {
+        var textureAtlas = Assets.getMipmappedTextureAtlas();
+        var textures = textureAtlas.getTextureObject();
+
         for (var entry : displays.entrySet()) {
             var columnDisplay = entry.getValue();
             var globalX = ColumnPos.toGlobalX(columnDisplay.getChunkX(), 0);
@@ -81,7 +81,7 @@ class BlockDisplay implements GraphicsResource
 
             modelViewMatrix.set(viewMatrix).translate(globalX, 0.0f, globalZ);
             GLMatrixStack.load(modelViewMatrix);
-            columnDisplay.displayBlocks(BlockRenderer.textures.blockTextures);
+            columnDisplay.displayBlocks(textures);
         }
     }
 
@@ -158,7 +158,7 @@ class BlockDisplay implements GraphicsResource
         invalidatedColumns.putIfAbsent(columnPos, columns.get(columnPos));
     }
 
-    public Camera getCamera() {
+    public PerspectiveCamera getCamera() {
         return camera;
     }
 }

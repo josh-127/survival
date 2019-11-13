@@ -20,6 +20,14 @@ public class BitmapAtlasBuilder
         freeRegions.add(new BitmapRegion(0, 0, width, height, null));
     }
 
+    public int getWidth() {
+        return atlasWidth;
+    }
+
+    public int getHeight() {
+        return atlasHeight;
+    }
+
     public Bitmap build() {
         var atlas = new Bitmap(atlasWidth, atlasHeight);
 

@@ -11,14 +11,14 @@ import net.survival.graphics.opengl.GLState;
 
 class CloudDisplay
 {
-    private static final int MAP_LENGTH_X = 16;
-    private static final int MAP_LENGTH_Z = 16;
+    private static final int MAP_LENGTH_X = 48;
+    private static final int MAP_LENGTH_Z = 48;
     private static final long DEFAULT_MAP_SEED = 0L;
-    private static final int DEFAULT_SCALE = 16;
+    private static final int DEFAULT_SCALE = 48;
     private static final float DEFAULT_DENSITY = 0.5f;
-    private static final float DEFAULT_ELEVATION = 144.5f;
+    private static final float DEFAULT_ELEVATION = 383.5f;
     private static final float DEFAULT_SPEED_X = 0.0f;
-    private static final float DEFAULT_SPEED_Z = 2.0f;
+    private static final float DEFAULT_SPEED_Z = 8.0f;
     private static final float DEFAULT_ALPHA = 0.875f;
 
     private static final int TOTAL_LENGTH_X = MAP_LENGTH_X * DEFAULT_SCALE;
@@ -34,8 +34,8 @@ class CloudDisplay
     private boolean shouldRebuild;
 
     private float[] vertexPositions;
-    private float x;
-    private float z;
+    private float posX;
+    private float posZ;
 
     public CloudDisplay() {
         mapSeed = DEFAULT_MAP_SEED;
@@ -128,38 +128,40 @@ class CloudDisplay
     }
 
     public void tick(double elapsedTime) {
-        x += speedX * elapsedTime;
-        z += speedZ * elapsedTime;
+        posX += speedX * elapsedTime;
+        posZ += speedZ * elapsedTime;
 
         // NOTE: Clouds will run away if speedX or speedZ is too large.
-        if (speedX > 0.0f && x >= TOTAL_LENGTH_X)
-            x -= TOTAL_LENGTH_X;
-        else if (speedX < 0.0f && x < 0.0f)
-            x += TOTAL_LENGTH_X;
+        if (speedX > 0.0f && posX >= TOTAL_LENGTH_X)
+            posX -= TOTAL_LENGTH_X;
+        else if (speedX < 0.0f && posX < 0.0f)
+            posX += TOTAL_LENGTH_X;
 
-        if (speedZ > 0.0f && z >= TOTAL_LENGTH_Z)
-            z -= TOTAL_LENGTH_Z;
-        else if (speedZ < 0.0f && z < 0.0f)
-            z += TOTAL_LENGTH_Z;
+        if (speedZ > 0.0f && posZ >= TOTAL_LENGTH_Z)
+            posZ -= TOTAL_LENGTH_Z;
+        else if (speedZ < 0.0f && posZ < 0.0f)
+            posZ += TOTAL_LENGTH_Z;
     }
 
-    public void display(Matrix4f viewMatrix, Matrix4f projectionMatrix, float offsetX, float offsetZ)
+    public void display(Matrix4f viewMatrix, Matrix4f projectionMatrix, float cameraX, float cameraZ)
     {
         if (shouldRebuild) {
             rebuildVertexArray();
             shouldRebuild = false;
         }
 
-        offsetX = ((int) Math.floor(offsetX) / TOTAL_LENGTH_X) * TOTAL_LENGTH_X;
-        offsetZ = ((int) Math.floor(offsetZ) / TOTAL_LENGTH_Z) * TOTAL_LENGTH_Z;
-        offsetX += x;
-        offsetZ += z;
+        var offsetX = (float) ((int) Math.floor(cameraX) / TOTAL_LENGTH_X) * TOTAL_LENGTH_X;
+        var offsetZ = (float) ((int) Math.floor(cameraZ) / TOTAL_LENGTH_Z) * TOTAL_LENGTH_Z;
+        offsetX += posX;
+        offsetZ += posZ;
 
-        for (var i = -4; i <= 2; ++i) {
-            for (var j = -3; j <= 2; ++j) {
+        for (var i = -2; i <= 0; ++i) {
+            for (var j = -1; j <= 0; ++j) {
                 displayPart(
                         viewMatrix,
                         projectionMatrix,
+                        cameraX,
+                        cameraZ,
                         offsetX + TOTAL_LENGTH_X * j,
                         offsetZ + TOTAL_LENGTH_Z * i);
             }
@@ -169,6 +171,8 @@ class CloudDisplay
     private void displayPart(
             Matrix4f viewMatrix,
             Matrix4f projectionMatrix,
+            float cameraX,
+            float cameraZ,
             float offsetX,
             float offsetZ)
     {
@@ -181,10 +185,20 @@ class CloudDisplay
         GLState.pushCullFaceEnabled(false);
 
         var drawCall = GLImmediateDrawCall.beginTriangles(null);
-        drawCall.color(1.0f, 1.0f, 1.0f, alpha);
 
         for (var i = 0; i < vertexPositions.length; i += 2) {
-            drawCall.vertex(offsetX + vertexPositions[i], elevation, offsetZ + vertexPositions[i + 1]);
+            var vx = vertexPositions[i];
+            var vz = vertexPositions[i + 1];
+            var gx = offsetX + vx;
+            var gz = offsetZ + vz;
+
+            var distX = cameraX - gx;
+            var distZ = cameraZ - gz;
+            var dist = (float) Math.sqrt(distX * distX + distZ * distZ);
+            var alpha = Math.max(0.0f, (float) Math.exp(-dist * 0.002f));
+
+            drawCall.color(1.0f, 1.0f, 1.0f, alpha);
+            drawCall.vertex(gx, elevation, gz);
         }
 
         drawCall.end();
