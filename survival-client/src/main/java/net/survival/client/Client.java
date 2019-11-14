@@ -25,6 +25,7 @@ import net.survival.graphics.VisibilityFlags;
 import net.survival.graphics.opengl.GLDisplay;
 import net.survival.graphics.opengl.GLRenderContext;
 import net.survival.graphics.particle.ClientParticleSpace;
+import net.survival.util.HitBox;
 import net.survival.world.ColumnIO;
 import net.survival.world.World;
 
@@ -53,6 +54,8 @@ public class Client implements AutoCloseable
         player.setX(60.0);
         player.setY(128.0);
         player.setZ(20.0);
+        player.setHitBox(HitBox.PLAYER);
+        player.setMovementSpeed(5.0);
 
         columnIO = new ColumnIO(columnPipe);
     }
