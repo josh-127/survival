@@ -1,6 +1,6 @@
 package net.survival.util;
 
-public class TwoLevelCache<K, V extends LastAccessedMonitor> implements Cache<K, V> {
+public class TwoLevelCache<K, V> implements Cache<K, V> {
     private final Cache<K, V> l1Cache;
     private final Cache<K, V> l2Cache;
 

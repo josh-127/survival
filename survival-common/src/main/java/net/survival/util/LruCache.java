@@ -1,51 +1,89 @@
 package net.survival.util;
 
-import java.util.Comparator;
-import java.util.PriorityQueue;
+import java.util.HashMap;
 
-public abstract class LruCache<K, V extends LastAccessedMonitor> implements Cache<K, V> {
-    private final LruComparator<V> comparator = new LruComparator<>();
-    private final PriorityQueue<V> elements;
-    private final int maxCapacity;
+public abstract class LruCache<K, V> implements Cache<K, V> {
+    private final HashMap<K, LinkedNode<V>> elements;
+    private LinkedNode<V> head;
+    private LinkedNode<V> tail;
+    private int maxCapacity;
+    private int size;
 
     public LruCache(int maxCapacity) {
-        elements = new PriorityQueue<>(maxCapacity, comparator);
+        if (maxCapacity <= 0) {
+            throw new IllegalArgumentException("maxCapacity");
+        }
+
+        elements = new HashMap<>(maxCapacity * 4 / 3);
         this.maxCapacity = maxCapacity;
     }
 
     protected abstract K getKeyForElement(V element);
 
     public V get(K key) {
-        for (var element : elements) {
-            var elementKey = getKeyForElement(element);
-
-            if (key.equals(elementKey)) {
-                element.access();
-                return element;
-            }
+        var node = elements.get(key);
+        if (node == null) {
+            return null;
         }
 
-        return null;
+        var nextNode = node.next;
+        var prevNode = node.prev;
+
+        if (prevNode != null) {
+            prevNode.next = nextNode;
+        }
+
+        if (nextNode != null) {
+            nextNode.prev = prevNode;
+        }
+
+        if (node != head) {
+            node.next = head;
+            node.prev = null;
+            head.prev = node;
+            head = node;
+        }
+
+        return node.element;
     }
 
     public void add(V element) {
-        element.access();
+        var key = getKeyForElement(element);
 
-        if (elements.size() + 1 >= maxCapacity) {
-            elements.remove();
+        if (head == null) {
+            head = new LinkedNode<>();
+            head.element = element;
+            tail = head;
+            return;
+        }
+        else {
+            var newHead = new LinkedNode<V>();
+            newHead.next = head;
+            head.prev = newHead;
+            head = newHead;
         }
 
-        elements.add(element);
+        elements.put(key, head);
+        ++size;
+
+        if (size > maxCapacity) {
+            tail = tail.prev;
+            if (tail != null) {
+                tail.next = null;
+
+                var tailKey = getKeyForElement(tail.element);
+                elements.remove(tailKey);
+            }
+        }
     }
 
     public int getMaxCapacity() {
         return maxCapacity;
     }
 
-    private static class LruComparator<E extends LastAccessedMonitor> implements Comparator<E> {
-        @Override
-        public int compare(E o1, E o2) {
-            return (int) (o1.getLastAccessed() - o2.getLastAccessed());
-        }
+    private static class LinkedNode<E> {
+        private E element;
+        private LinkedNode<E> next;
+        private LinkedNode<E> prev;
     }
 }
