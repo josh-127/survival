@@ -2,11 +2,13 @@ package net.survival.graphics;
 
 import net.survival.block.Chunk;
 import net.survival.block.Column;
-import net.survival.block.state.AirBlock;
-import net.survival.graphics.blockrenderer.BlockRenderer;
+import net.survival.block.Block;
+import net.survival.block.BlockModel;
+import net.survival.block.StandardBlocks;
 import net.survival.graphics.opengl.GLDisplayList;
 import net.survival.graphics.opengl.GLRenderContext;
 import net.survival.graphics.opengl.GLTexture;
+import net.survival.util.MathEx;
 
 class ColumnDisplay implements GraphicsResource {
     private static final Chunk EMPTY_CHUNK = new Chunk();
@@ -31,7 +33,6 @@ class ColumnDisplay implements GraphicsResource {
             Column backAdjColumn)
     {
         var heightMap = genHeightMap(column);
-
         var builder = new GLDisplayList.Builder();
 
         for (var i = 0; i < column.getHeight(); ++i) {
@@ -210,19 +211,18 @@ class ColumnDisplay implements GraphicsResource {
                     var frontAdjBlock  = chunk.getBlock(x,     y,     z + 1);
                     var backAdjBlock   = chunk.getBlock(x,     y,     z - 1);
 
-                    BlockRenderer.byBlock(block).pushVertices(
-                            x,
-                            y + offsetY,
-                            z,
-                            block,
-                            topAdjBlock,
-                            bottomAdjBlock,
-                            leftAdjBlock,
-                            rightAdjBlock,
-                            frontAdjBlock,
-                            backAdjBlock,
-                            getShade(x, y + offsetY, z, heightMap),
-                            builder);
+                    pushSingleBlock(
+                        x, y + offsetY, z,
+                        block,
+                        topAdjBlock,
+                        bottomAdjBlock,
+                        leftAdjBlock,
+                        rightAdjBlock,
+                        frontAdjBlock,
+                        backAdjBlock,
+                        getShade(x, y + offsetY, z, heightMap),
+                        builder
+                    );
                 }
             }
         }
@@ -248,19 +248,18 @@ class ColumnDisplay implements GraphicsResource {
                 var frontAdjBlock  = chunk.getBlock   (x,     Y,     z + 1);
                 var backAdjBlock   = chunk.getBlock   (x,     Y,     z - 1);
 
-                BlockRenderer.byBlock(block).pushVertices(
-                        x,
-                        Y + offsetY,
-                        z,
-                        block,
-                        topAdjBlock,
-                        bottomAdjBlock,
-                        leftAdjBlock,
-                        rightAdjBlock,
-                        frontAdjBlock,
-                        backAdjBlock,
-                        getShade(x, Y + offsetY, z, heightMap),
-                        builder);
+                pushSingleBlock(
+                    x, Y + offsetY, z,
+                    block,
+                    topAdjBlock,
+                    bottomAdjBlock,
+                    leftAdjBlock,
+                    rightAdjBlock,
+                    frontAdjBlock,
+                    backAdjBlock,
+                    getShade(x, Y + offsetY, z, heightMap),
+                    builder
+                );
             }
         }
     }
@@ -271,8 +270,8 @@ class ColumnDisplay implements GraphicsResource {
             Chunk topAdjChunk,
             Chunk leftAdjChunk,
             int[] heightMap,
-            GLDisplayList.Builder builder)
-    {
+            GLDisplayList.Builder builder
+    ) {
         final var Y = Chunk.YLENGTH - 1;
         final var XLENGTH = Chunk.XLENGTH;
         var offsetY = chunkIndex * Chunk.YLENGTH;
@@ -286,19 +285,18 @@ class ColumnDisplay implements GraphicsResource {
             var frontAdjBlock  = chunk.getBlock       (0,           Y,     z + 1);
             var backAdjBlock   = chunk.getBlock       (0,           Y,     z - 1);
 
-            BlockRenderer.byBlock(block).pushVertices(
-                    0,
-                    Y + offsetY,
-                    z,
-                    block,
-                    topAdjBlock,
-                    bottomAdjBlock,
-                    leftAdjBlock,
-                    rightAdjBlock,
-                    frontAdjBlock,
-                    backAdjBlock,
-                    getShade(0, Y + offsetY, z, heightMap),
-                    builder);
+            pushSingleBlock(
+                0, Y + offsetY, z,
+                block,
+                topAdjBlock,
+                bottomAdjBlock,
+                leftAdjBlock,
+                rightAdjBlock,
+                frontAdjBlock,
+                backAdjBlock,
+                getShade(0, Y + offsetY, z, heightMap),
+                builder
+            );
         }
     }
 
@@ -308,8 +306,8 @@ class ColumnDisplay implements GraphicsResource {
             Chunk topAdjChunk,
             Chunk rightAdjChunk,
             int[] heightMap,
-            GLDisplayList.Builder builder)
-    {
+            GLDisplayList.Builder builder
+    ) {
         final var X = Chunk.XLENGTH - 1;
         final var Y = Chunk.YLENGTH - 1;
         var offsetY = chunkIndex * Chunk.YLENGTH;
@@ -323,19 +321,18 @@ class ColumnDisplay implements GraphicsResource {
             var frontAdjBlock  = chunk.getBlock        (X,     Y,     z + 1);
             var backAdjBlock   = chunk.getBlock        (X,     Y,     z - 1);
 
-            BlockRenderer.byBlock(block).pushVertices(
-                    X,
-                    Y + offsetY,
-                    z,
-                    block,
-                    topAdjBlock,
-                    bottomAdjBlock,
-                    leftAdjBlock,
-                    rightAdjBlock,
-                    frontAdjBlock,
-                    backAdjBlock,
-                    getShade(X, Y + offsetY, z, heightMap),
-                    builder);
+            pushSingleBlock(
+                X, Y + offsetY, z,
+                block,
+                topAdjBlock,
+                bottomAdjBlock,
+                leftAdjBlock,
+                rightAdjBlock,
+                frontAdjBlock,
+                backAdjBlock,
+                getShade(X, Y + offsetY, z, heightMap),
+                builder
+            );
         }
     }
 
@@ -345,8 +342,8 @@ class ColumnDisplay implements GraphicsResource {
             Chunk topAdjChunk,
             Chunk frontAdjChunk,
             int[] heightMap,
-            GLDisplayList.Builder builder)
-    {
+            GLDisplayList.Builder builder
+    ) {
         final var Y = Chunk.YLENGTH - 1;
         final var Z = Chunk.ZLENGTH - 1;
         var offsetY = chunkIndex * Chunk.YLENGTH;
@@ -360,19 +357,20 @@ class ColumnDisplay implements GraphicsResource {
             var frontAdjBlock  = frontAdjChunk.getBlock(x,     Y,     0);
             var backAdjBlock   = chunk.getBlock        (x,     Y,     Z - 1);
 
-            BlockRenderer.byBlock(block).pushVertices(
-                    x,
-                    Y + offsetY,
-                    Z,
-                    block,
-                    topAdjBlock,
-                    bottomAdjBlock,
-                    leftAdjBlock,
-                    rightAdjBlock,
-                    frontAdjBlock,
-                    backAdjBlock,
-                    getShade(x, Y + offsetY, Z, heightMap),
-                    builder);
+            pushSingleBlock(
+                x,
+                Y + offsetY,
+                Z,
+                block,
+                topAdjBlock,
+                bottomAdjBlock,
+                leftAdjBlock,
+                rightAdjBlock,
+                frontAdjBlock,
+                backAdjBlock,
+                getShade(x, Y + offsetY, Z, heightMap),
+                builder
+            );
         }
     }
 
@@ -382,8 +380,8 @@ class ColumnDisplay implements GraphicsResource {
             Chunk topAdjChunk,
             Chunk backAdjChunk,
             int[] heightMap,
-            GLDisplayList.Builder builder)
-    {
+            GLDisplayList.Builder builder
+    ) {
         final var Y = Chunk.YLENGTH - 1;
         final var ZLENGTH = Chunk.ZLENGTH;
         var offsetY = chunkIndex * Chunk.YLENGTH;
@@ -397,19 +395,20 @@ class ColumnDisplay implements GraphicsResource {
             var frontAdjBlock  = chunk.getBlock       (x,     Y,     1);
             var backAdjBlock   = backAdjChunk.getBlock(x,     Y,     ZLENGTH - 1);
 
-            BlockRenderer.byBlock(block).pushVertices(
-                    x,
-                    Y + offsetY,
-                    0,
-                    block,
-                    topAdjBlock,
-                    bottomAdjBlock,
-                    leftAdjBlock,
-                    rightAdjBlock,
-                    frontAdjBlock,
-                    backAdjBlock,
-                    getShade(x, Y + offsetY, 0, heightMap),
-                    builder);
+            pushSingleBlock(
+                x,
+                Y + offsetY,
+                0,
+                block,
+                topAdjBlock,
+                bottomAdjBlock,
+                leftAdjBlock,
+                rightAdjBlock,
+                frontAdjBlock,
+                backAdjBlock,
+                getShade(x, Y + offsetY, 0, heightMap),
+                builder
+            );
         }
     }
 
@@ -420,8 +419,8 @@ class ColumnDisplay implements GraphicsResource {
             Chunk frontAdjChunk,
             Chunk leftAdjChunk,
             int[] heightMap,
-            GLDisplayList.Builder builder)
-    {
+            GLDisplayList.Builder builder
+    ) {
         final var Y = Chunk.YLENGTH - 1;
         final var Z = Chunk.ZLENGTH - 1;
         final var XLENGTH = Chunk.XLENGTH;
@@ -435,19 +434,18 @@ class ColumnDisplay implements GraphicsResource {
         var frontAdjBlock  = frontAdjChunk.getBlock(0,           Y,     0);
         var backAdjBlock   = chunk.getBlock        (0,           Y,     Z - 1);
 
-        BlockRenderer.byBlock(block).pushVertices(
-                0,
-                Y + offsetY,
-                Z,
-                block,
-                topAdjBlock,
-                bottomAdjBlock,
-                leftAdjBlock,
-                rightAdjBlock,
-                frontAdjBlock,
-                backAdjBlock,
-                getShade(0, Y + offsetY, Z, heightMap),
-                builder);
+        pushSingleBlock(
+            0, Y + offsetY, Z,
+            block,
+            topAdjBlock,
+            bottomAdjBlock,
+            leftAdjBlock,
+            rightAdjBlock,
+            frontAdjBlock,
+            backAdjBlock,
+            getShade(0, Y + offsetY, Z, heightMap),
+            builder
+        );
     }
 
     private static void pushTopFrontRightCornerBlock(
@@ -457,8 +455,8 @@ class ColumnDisplay implements GraphicsResource {
             Chunk frontAdjChunk,
             Chunk rightAdjChunk,
             int[] heightMap,
-            GLDisplayList.Builder builder)
-    {
+            GLDisplayList.Builder builder
+    ) {
         final var X = Chunk.XLENGTH - 1;
         final var Y = Chunk.YLENGTH - 1;
         final var Z = Chunk.ZLENGTH - 1;
@@ -472,19 +470,18 @@ class ColumnDisplay implements GraphicsResource {
         var frontAdjBlock  = frontAdjChunk.getBlock(X,     Y,     0);
         var backAdjBlock   = chunk.getBlock        (X,     Y,     Z - 1);
 
-        BlockRenderer.byBlock(block).pushVertices(
-                X,
-                Y + offsetY,
-                Z,
-                block,
-                topAdjBlock,
-                bottomAdjBlock,
-                leftAdjBlock,
-                rightAdjBlock,
-                frontAdjBlock,
-                backAdjBlock,
-                getShade(X, Y + offsetY, Z, heightMap),
-                builder);
+        pushSingleBlock(
+            X, Y + offsetY, Z,
+            block,
+            topAdjBlock,
+            bottomAdjBlock,
+            leftAdjBlock,
+            rightAdjBlock,
+            frontAdjBlock,
+            backAdjBlock,
+            getShade(X, Y + offsetY, Z, heightMap),
+            builder
+        );
     }
 
     private static void pushTopBackLeftCornerBlock(
@@ -494,8 +491,8 @@ class ColumnDisplay implements GraphicsResource {
             Chunk backAdjChunk,
             Chunk leftAdjChunk,
             int[] heightMap,
-            GLDisplayList.Builder builder)
-    {
+            GLDisplayList.Builder builder
+    ) {
         final var Y = Chunk.YLENGTH - 1;
         final var XLENGTH = Chunk.XLENGTH;
         final var ZLENGTH = Chunk.ZLENGTH;
@@ -509,19 +506,18 @@ class ColumnDisplay implements GraphicsResource {
         var frontAdjBlock  = chunk.getBlock       (0,           Y,     1);
         var backAdjBlock   = backAdjChunk.getBlock(0,           Y,     ZLENGTH - 1);
 
-        BlockRenderer.byBlock(block).pushVertices(
-                0,
-                Y + offsetY,
-                0,
-                block,
-                topAdjBlock,
-                bottomAdjBlock,
-                leftAdjBlock,
-                rightAdjBlock,
-                frontAdjBlock,
-                backAdjBlock,
-                getShade(0, Y + offsetY, 0, heightMap),
-                builder);
+        pushSingleBlock(
+            0, Y + offsetY, 0,
+            block,
+            topAdjBlock,
+            bottomAdjBlock,
+            leftAdjBlock,
+            rightAdjBlock,
+            frontAdjBlock,
+            backAdjBlock,
+            getShade(0, Y + offsetY, 0, heightMap),
+            builder
+        );
     }
 
     private static void pushTopBackRightCornerBlock(
@@ -531,8 +527,8 @@ class ColumnDisplay implements GraphicsResource {
             Chunk backAdjChunk,
             Chunk rightAdjChunk,
             int[] heightMap,
-            GLDisplayList.Builder builder)
-    {
+            GLDisplayList.Builder builder
+    ) {
         final var X = Chunk.XLENGTH - 1;
         final var Y = Chunk.YLENGTH - 1;
         final var ZLENGTH = Chunk.ZLENGTH;
@@ -546,19 +542,18 @@ class ColumnDisplay implements GraphicsResource {
         var frontAdjBlock  = chunk.getBlock        (X,     Y,     1);
         var backAdjBlock   = backAdjChunk.getBlock (X,     Y,     ZLENGTH - 1);
 
-        BlockRenderer.byBlock(block).pushVertices(
-                X,
-                Y + offsetY,
-                0,
-                block,
-                topAdjBlock,
-                bottomAdjBlock,
-                leftAdjBlock,
-                rightAdjBlock,
-                frontAdjBlock,
-                backAdjBlock,
-                getShade(X, Y + offsetY, 0, heightMap),
-                builder);
+        pushSingleBlock(
+            X, Y + offsetY, 0,
+            block,
+            topAdjBlock,
+            bottomAdjBlock,
+            leftAdjBlock,
+            rightAdjBlock,
+            frontAdjBlock,
+            backAdjBlock,
+            getShade(X, Y + offsetY, 0, heightMap),
+            builder
+        );
     }
 
     private static void pushBottomBlocks(
@@ -566,8 +561,8 @@ class ColumnDisplay implements GraphicsResource {
             Chunk chunk,
             Chunk adjChunk,
             int[] heightMap,
-            GLDisplayList.Builder builder)
-    {
+            GLDisplayList.Builder builder
+    ) {
         final var YLENGTH = Chunk.YLENGTH;
         var offsetY = chunkIndex * Chunk.YLENGTH;
 
@@ -581,19 +576,18 @@ class ColumnDisplay implements GraphicsResource {
                 var frontAdjBlock  = chunk.getBlock   (x,     0,           z + 1);
                 var backAdjBlock   = chunk.getBlock   (x,     0,           z - 1);
 
-                BlockRenderer.byBlock(block).pushVertices(
-                        x,
-                        offsetY,
-                        z,
-                        block,
-                        topAdjBlock,
-                        bottomAdjBlock,
-                        leftAdjBlock,
-                        rightAdjBlock,
-                        frontAdjBlock,
-                        backAdjBlock,
-                        getShade(x, offsetY, z, heightMap),
-                        builder);
+                pushSingleBlock(
+                    x, offsetY, z,
+                    block,
+                    topAdjBlock,
+                    bottomAdjBlock,
+                    leftAdjBlock,
+                    rightAdjBlock,
+                    frontAdjBlock,
+                    backAdjBlock,
+                    getShade(x, offsetY, z, heightMap),
+                    builder
+                );
             }
         }
     }
@@ -604,8 +598,8 @@ class ColumnDisplay implements GraphicsResource {
             Chunk bottomAdjChunk,
             Chunk leftAdjChunk,
             int[] heightMap,
-            GLDisplayList.Builder builder)
-    {
+            GLDisplayList.Builder builder
+    ) {
         final var XLENGTH = Chunk.XLENGTH;
         final var YLENGTH = Chunk.YLENGTH;
         var offsetY = chunkIndex * Chunk.YLENGTH;
@@ -619,19 +613,18 @@ class ColumnDisplay implements GraphicsResource {
             var frontAdjBlock  = chunk.getBlock         (0,           0,           z + 1);
             var backAdjBlock   = chunk.getBlock         (0,           0,           z - 1);
 
-            BlockRenderer.byBlock(block).pushVertices(
-                    0,
-                    offsetY,
-                    z,
-                    block,
-                    topAdjBlock,
-                    bottomAdjBlock,
-                    leftAdjBlock,
-                    rightAdjBlock,
-                    frontAdjBlock,
-                    backAdjBlock,
-                    getShade(0, offsetY, z, heightMap),
-                    builder);
+            pushSingleBlock(
+                0, offsetY, z,
+                block,
+                topAdjBlock,
+                bottomAdjBlock,
+                leftAdjBlock,
+                rightAdjBlock,
+                frontAdjBlock,
+                backAdjBlock,
+                getShade(0, offsetY, z, heightMap),
+                builder
+            );
         }
     }
 
@@ -641,8 +634,8 @@ class ColumnDisplay implements GraphicsResource {
             Chunk bottomAdjChunk,
             Chunk rightAdjChunk,
             int[] heightMap,
-            GLDisplayList.Builder builder)
-    {
+            GLDisplayList.Builder builder
+    ) {
         final var X = Chunk.XLENGTH - 1;
         final var YLENGTH = Chunk.YLENGTH;
         var offsetY = chunkIndex * Chunk.YLENGTH;
@@ -656,19 +649,18 @@ class ColumnDisplay implements GraphicsResource {
             var frontAdjBlock  = chunk.getBlock         (X,     0,           z + 1);
             var backAdjBlock   = chunk.getBlock         (X,     0,           z - 1);
 
-            BlockRenderer.byBlock(block).pushVertices(
-                    X,
-                    offsetY,
-                    z,
-                    block,
-                    topAdjBlock,
-                    bottomAdjBlock,
-                    leftAdjBlock,
-                    rightAdjBlock,
-                    frontAdjBlock,
-                    backAdjBlock,
-                    getShade(X, offsetY, z, heightMap),
-                    builder);
+            pushSingleBlock(
+                X, offsetY, z,
+                block,
+                topAdjBlock,
+                bottomAdjBlock,
+                leftAdjBlock,
+                rightAdjBlock,
+                frontAdjBlock,
+                backAdjBlock,
+                getShade(X, offsetY, z, heightMap),
+                builder
+            );
         }
     }
 
@@ -678,8 +670,8 @@ class ColumnDisplay implements GraphicsResource {
             Chunk bottomAdjChunk,
             Chunk frontAdjChunk,
             int[] heightMap,
-            GLDisplayList.Builder builder)
-    {
+            GLDisplayList.Builder builder
+    ) {
         final var Z = Chunk.ZLENGTH - 1;
         final var YLENGTH = Chunk.YLENGTH;
         var offsetY = chunkIndex * Chunk.YLENGTH;
@@ -693,19 +685,18 @@ class ColumnDisplay implements GraphicsResource {
             var frontAdjBlock  = frontAdjChunk.getBlock (x,     0,           0);
             var backAdjBlock   = chunk.getBlock         (x,     0,           Z - 1);
 
-            BlockRenderer.byBlock(block).pushVertices(
-                    x,
-                    offsetY,
-                    Z,
-                    block,
-                    topAdjBlock,
-                    bottomAdjBlock,
-                    leftAdjBlock,
-                    rightAdjBlock,
-                    frontAdjBlock,
-                    backAdjBlock,
-                    getShade(x, offsetY, Z, heightMap),
-                    builder);
+            pushSingleBlock(
+                x, offsetY, Z,
+                block,
+                topAdjBlock,
+                bottomAdjBlock,
+                leftAdjBlock,
+                rightAdjBlock,
+                frontAdjBlock,
+                backAdjBlock,
+                getShade(x, offsetY, Z, heightMap),
+                builder
+            );
         }
     }
 
@@ -715,8 +706,8 @@ class ColumnDisplay implements GraphicsResource {
             Chunk bottomAdjChunk,
             Chunk backAdjChunk,
             int[] heightMap,
-            GLDisplayList.Builder builder)
-    {
+            GLDisplayList.Builder builder
+    ) {
         final var YLENGTH = Chunk.YLENGTH;
         final var ZLENGTH = Chunk.ZLENGTH;
         var offsetY = chunkIndex * Chunk.YLENGTH;
@@ -730,19 +721,18 @@ class ColumnDisplay implements GraphicsResource {
             var frontAdjBlock  = chunk.getBlock         (x,     0,           1);
             var backAdjBlock   = backAdjChunk.getBlock  (x,     0,           ZLENGTH - 1);
 
-            BlockRenderer.byBlock(block).pushVertices(
-                    x,
-                    offsetY,
-                    0,
-                    block,
-                    topAdjBlock,
-                    bottomAdjBlock,
-                    leftAdjBlock,
-                    rightAdjBlock,
-                    frontAdjBlock,
-                    backAdjBlock,
-                    getShade(x, offsetY, 0, heightMap),
-                    builder);
+            pushSingleBlock(
+                x, offsetY, 0,
+                block,
+                topAdjBlock,
+                bottomAdjBlock,
+                leftAdjBlock,
+                rightAdjBlock,
+                frontAdjBlock,
+                backAdjBlock,
+                getShade(x, offsetY, 0, heightMap),
+                builder
+            );
         }
     }
 
@@ -753,8 +743,8 @@ class ColumnDisplay implements GraphicsResource {
             Chunk frontAdjChunk,
             Chunk leftAdjChunk,
             int[] heightMap,
-            GLDisplayList.Builder builder)
-    {
+            GLDisplayList.Builder builder
+    ) {
         final var Z = Chunk.ZLENGTH - 1;
         final var XLENGTH = Chunk.XLENGTH;
         final var YLENGTH = Chunk.YLENGTH;
@@ -768,19 +758,18 @@ class ColumnDisplay implements GraphicsResource {
         var frontAdjBlock  = frontAdjChunk.getBlock (0,           0,           0);
         var backAdjBlock   = chunk.getBlock         (0,           0,           Z - 1);
 
-        BlockRenderer.byBlock(block).pushVertices(
-                0,
-                offsetY,
-                Z,
-                block,
-                topAdjBlock,
-                bottomAdjBlock,
-                leftAdjBlock,
-                rightAdjBlock,
-                frontAdjBlock,
-                backAdjBlock,
-                getShade(0, offsetY, Z, heightMap),
-                builder);
+        pushSingleBlock(
+            0, offsetY, Z,
+            block,
+            topAdjBlock,
+            bottomAdjBlock,
+            leftAdjBlock,
+            rightAdjBlock,
+            frontAdjBlock,
+            backAdjBlock,
+            getShade(0, offsetY, Z, heightMap),
+            builder
+        );
     }
 
     private static void pushBottomFrontRightCornerBlock(
@@ -790,8 +779,8 @@ class ColumnDisplay implements GraphicsResource {
             Chunk frontAdjChunk,
             Chunk rightAdjChunk,
             int[] heightMap,
-            GLDisplayList.Builder builder)
-    {
+            GLDisplayList.Builder builder
+    ) {
         final var X = Chunk.XLENGTH - 1;
         final var Z = Chunk.ZLENGTH - 1;
         final var YLENGTH = Chunk.YLENGTH;
@@ -805,19 +794,18 @@ class ColumnDisplay implements GraphicsResource {
         var frontAdjBlock  = frontAdjChunk.getBlock (X,     0,           0);
         var backAdjBlock   = chunk.getBlock         (X,     0,           Z - 1);
 
-        BlockRenderer.byBlock(block).pushVertices(
-                X,
-                offsetY,
-                Z,
-                block,
-                topAdjBlock,
-                bottomAdjBlock,
-                leftAdjBlock,
-                rightAdjBlock,
-                frontAdjBlock,
-                backAdjBlock,
-                getShade(X, offsetY, Z, heightMap),
-                builder);
+        pushSingleBlock(
+            X, offsetY, Z,
+            block,
+            topAdjBlock,
+            bottomAdjBlock,
+            leftAdjBlock,
+            rightAdjBlock,
+            frontAdjBlock,
+            backAdjBlock,
+            getShade(X, offsetY, Z, heightMap),
+            builder
+        );
     }
 
     private static void pushBottomBackLeftCornerBlock(
@@ -827,8 +815,8 @@ class ColumnDisplay implements GraphicsResource {
             Chunk backAdjChunk,
             Chunk leftAdjChunk,
             int[] heightMap,
-            GLDisplayList.Builder builder)
-    {
+            GLDisplayList.Builder builder
+    ) {
         final var XLENGTH = Chunk.XLENGTH;
         final var YLENGTH = Chunk.YLENGTH;
         final var ZLENGTH = Chunk.ZLENGTH;
@@ -842,19 +830,18 @@ class ColumnDisplay implements GraphicsResource {
         var frontAdjBlock  = chunk.getBlock         (0,           0,           1);
         var backAdjBlock   = backAdjChunk.getBlock  (0,           0,           ZLENGTH - 1);
 
-        BlockRenderer.byBlock(block).pushVertices(
-                0,
-                offsetY,
-                0,
-                block,
-                topAdjBlock,
-                bottomAdjBlock,
-                leftAdjBlock,
-                rightAdjBlock,
-                frontAdjBlock,
-                backAdjBlock,
-                getShade(0, offsetY, 0, heightMap),
-                builder);
+        pushSingleBlock(
+            0, offsetY, 0,
+            block,
+            topAdjBlock,
+            bottomAdjBlock,
+            leftAdjBlock,
+            rightAdjBlock,
+            frontAdjBlock,
+            backAdjBlock,
+            getShade(0, offsetY, 0, heightMap),
+            builder
+        );
     }
 
     private static void pushBottomBackRightCornerBlock(
@@ -864,8 +851,8 @@ class ColumnDisplay implements GraphicsResource {
             Chunk backAdjChunk,
             Chunk rightAdjChunk,
             int[] heightMap,
-            GLDisplayList.Builder builder)
-    {
+            GLDisplayList.Builder builder
+    ) {
         final var X = Chunk.XLENGTH - 1;
         final var YLENGTH = Chunk.YLENGTH;
         final var ZLENGTH = Chunk.ZLENGTH;
@@ -879,28 +866,27 @@ class ColumnDisplay implements GraphicsResource {
         var frontAdjBlock  = chunk.getBlock         (X,     0,           1);
         var backAdjBlock   = backAdjChunk.getBlock  (X,     0,           ZLENGTH - 1);
 
-        BlockRenderer.byBlock(block).pushVertices(
-                X,
-                offsetY,
-                0,
-                block,
-                topAdjBlock,
-                bottomAdjBlock,
-                leftAdjBlock,
-                rightAdjBlock,
-                frontAdjBlock,
-                backAdjBlock,
-                getShade(X, offsetY, 0, heightMap),
-                builder);
+        pushSingleBlock(
+            X, offsetY, 0,
+            block,
+            topAdjBlock,
+            bottomAdjBlock,
+            leftAdjBlock,
+            rightAdjBlock,
+            frontAdjBlock,
+            backAdjBlock,
+            getShade(X, offsetY, 0, heightMap),
+            builder
+        );
     }
 
     private static void pushLeftBlocks(
-            int chunkIndex,
-            Chunk chunk,
-            Chunk adjChunk,
-            int[] heightMap,
-            GLDisplayList.Builder builder)
-    {
+        int chunkIndex,
+        Chunk chunk,
+        Chunk adjChunk,
+        int[] heightMap,
+        GLDisplayList.Builder builder
+    ) {
         final var XLENGTH = Chunk.XLENGTH;
         var offsetY = chunkIndex * Chunk.YLENGTH;
 
@@ -914,19 +900,18 @@ class ColumnDisplay implements GraphicsResource {
                 var frontAdjBlock  = chunk.getBlock   (0,           y, z + 1);
                 var backAdjBlock   = chunk.getBlock   (0,           y, z - 1);
 
-                BlockRenderer.byBlock(block).pushVertices(
-                        0,
-                        y + offsetY,
-                        z,
-                        block,
-                        topAdjBlock,
-                        bottomAdjBlock,
-                        leftAdjBlock,
-                        rightAdjBlock,
-                        frontAdjBlock,
-                        backAdjBlock,
-                        getShade(0, y + offsetY, z, heightMap),
-                        builder);
+                pushSingleBlock(
+                    0, y + offsetY, z,
+                    block,
+                    topAdjBlock,
+                    bottomAdjBlock,
+                    leftAdjBlock,
+                    rightAdjBlock,
+                    frontAdjBlock,
+                    backAdjBlock,
+                    getShade(0, y + offsetY, z, heightMap),
+                    builder
+                );
             }
         }
     }
@@ -936,8 +921,8 @@ class ColumnDisplay implements GraphicsResource {
             Chunk chunk,
             Chunk adjChunk,
             int[] heightMap,
-            GLDisplayList.Builder builder)
-    {
+            GLDisplayList.Builder builder
+    ) {
         final var X = Chunk.XLENGTH - 1;
         var offsetY = chunkIndex * Chunk.YLENGTH;
 
@@ -951,30 +936,29 @@ class ColumnDisplay implements GraphicsResource {
                 var frontAdjBlock  = chunk.getBlock   (X,     y,     z + 1);
                 var backAdjBlock   = chunk.getBlock   (X,     y,     z - 1);
 
-                BlockRenderer.byBlock(block).pushVertices(
-                        X,
-                        y + offsetY,
-                        z,
-                        block,
-                        topAdjBlock,
-                        bottomAdjBlock,
-                        leftAdjBlock,
-                        rightAdjBlock,
-                        frontAdjBlock,
-                        backAdjBlock,
-                        getShade(X, y + offsetY, z, heightMap),
-                        builder);
+                pushSingleBlock(
+                    X, y + offsetY, z,
+                    block,
+                    topAdjBlock,
+                    bottomAdjBlock,
+                    leftAdjBlock,
+                    rightAdjBlock,
+                    frontAdjBlock,
+                    backAdjBlock,
+                    getShade(X, y + offsetY, z, heightMap),
+                    builder
+                );
             }
         }
     }
 
     private static void pushFrontBlocks(
-            int chunkIndex,
-            Chunk chunk,
-            Chunk adjChunk,
-            int[] heightMap,
-            GLDisplayList.Builder builder)
-    {
+        int chunkIndex,
+        Chunk chunk,
+        Chunk adjChunk,
+        int[] heightMap,
+        GLDisplayList.Builder builder
+    ) {
         final var Z = Chunk.ZLENGTH - 1;
         var offsetY = chunkIndex * Chunk.YLENGTH;
 
@@ -988,30 +972,29 @@ class ColumnDisplay implements GraphicsResource {
                 var frontAdjBlock  = adjChunk.getBlock(x,     y,     0);
                 var backAdjBlock   = chunk.getBlock   (x,     y,     Z - 1);
 
-                BlockRenderer.byBlock(block).pushVertices(
-                        x,
-                        y + offsetY,
-                        Z,
-                        block,
-                        topAdjBlock,
-                        bottomAdjBlock,
-                        leftAdjBlock,
-                        rightAdjBlock,
-                        frontAdjBlock,
-                        backAdjBlock,
-                        getShade(x, y + offsetY, Z, heightMap),
-                        builder);
+                pushSingleBlock(
+                    x, y + offsetY, Z,
+                    block,
+                    topAdjBlock,
+                    bottomAdjBlock,
+                    leftAdjBlock,
+                    rightAdjBlock,
+                    frontAdjBlock,
+                    backAdjBlock,
+                    getShade(x, y + offsetY, Z, heightMap),
+                    builder
+                );
             }
         }
     }
 
     private static void pushBackBlocks(
-            int chunkIndex,
-            Chunk chunk,
-            Chunk adjChunk,
-            int[] heightMap,
-            GLDisplayList.Builder builder)
-    {
+        int chunkIndex,
+        Chunk chunk,
+        Chunk adjChunk,
+        int[] heightMap,
+        GLDisplayList.Builder builder
+    ) {
         final var ZLENGTH = Chunk.ZLENGTH;
         var offsetY = chunkIndex * Chunk.YLENGTH;
 
@@ -1025,31 +1008,30 @@ class ColumnDisplay implements GraphicsResource {
                 var frontAdjBlock  = chunk.getBlock   (x,     y,     1);
                 var backAdjBlock   = adjChunk.getBlock(x,     y,     ZLENGTH - 1);
 
-                BlockRenderer.byBlock(block).pushVertices(
-                        x,
-                        y + offsetY,
-                        0,
-                        block,
-                        topAdjBlock,
-                        bottomAdjBlock,
-                        leftAdjBlock,
-                        rightAdjBlock,
-                        frontAdjBlock,
-                        backAdjBlock,
-                        getShade(x, y + offsetY, 0, heightMap),
-                        builder);
+                pushSingleBlock(
+                    x, y + offsetY, 0,
+                    block,
+                    topAdjBlock,
+                    bottomAdjBlock,
+                    leftAdjBlock,
+                    rightAdjBlock,
+                    frontAdjBlock,
+                    backAdjBlock,
+                    getShade(x, y + offsetY, 0, heightMap),
+                    builder
+                );
             }
         }
     }
 
     private static void pushFrontLeftBlocks(
-            int chunkIndex,
-            Chunk chunk,
-            Chunk leftAdjChunk,
-            Chunk frontAdjChunk,
-            int[] heightMap,
-            GLDisplayList.Builder builder)
-    {
+        int chunkIndex,
+        Chunk chunk,
+        Chunk leftAdjChunk,
+        Chunk frontAdjChunk,
+        int[] heightMap,
+        GLDisplayList.Builder builder
+    ) {
         final var Z = Chunk.ZLENGTH - 1;
         final var XLENGTH = Chunk.XLENGTH;
         var offsetY = chunkIndex * Chunk.YLENGTH;
@@ -1063,30 +1045,29 @@ class ColumnDisplay implements GraphicsResource {
             var frontAdjBlock  = frontAdjChunk.getBlock(0,           y,     0);
             var backAdjBlock   = chunk.getBlock        (0,           y,     Z - 1);
 
-            BlockRenderer.byBlock(block).pushVertices(
-                    0,
-                    y + offsetY,
-                    Z,
-                    block,
-                    topAdjBlock,
-                    bottomAdjBlock,
-                    leftAdjBlock,
-                    rightAdjBlock,
-                    frontAdjBlock,
-                    backAdjBlock,
-                    getShade(0, y + offsetY, Z, heightMap),
-                    builder);
+            pushSingleBlock(
+                0, y + offsetY, Z,
+                block,
+                topAdjBlock,
+                bottomAdjBlock,
+                leftAdjBlock,
+                rightAdjBlock,
+                frontAdjBlock,
+                backAdjBlock,
+                getShade(0, y + offsetY, Z, heightMap),
+                builder
+            );
         }
     }
 
     private static void pushFrontRightBlocks(
-            int chunkIndex,
-            Chunk chunk,
-            Chunk rightAdjChunk,
-            Chunk frontAdjChunk,
-            int[] heightMap,
-            GLDisplayList.Builder builder)
-    {
+        int chunkIndex,
+        Chunk chunk,
+        Chunk rightAdjChunk,
+        Chunk frontAdjChunk,
+        int[] heightMap,
+        GLDisplayList.Builder builder
+    ) {
         final var X = Chunk.XLENGTH - 1;
         final var Z = Chunk.ZLENGTH - 1;
         var offsetY = chunkIndex * Chunk.YLENGTH;
@@ -1100,30 +1081,29 @@ class ColumnDisplay implements GraphicsResource {
             var frontAdjBlock  = frontAdjChunk.getBlock(X,     y,     0);
             var backAdjBlock   = chunk.getBlock        (X,     y,     Z - 1);
 
-            BlockRenderer.byBlock(block).pushVertices(
-                    X,
-                    y + offsetY,
-                    Z,
-                    block,
-                    topAdjBlock,
-                    bottomAdjBlock,
-                    leftAdjBlock,
-                    rightAdjBlock,
-                    frontAdjBlock,
-                    backAdjBlock,
-                    getShade(X, y + offsetY, Z, heightMap),
-                    builder);
+            pushSingleBlock(
+                X, y + offsetY, Z,
+                block,
+                topAdjBlock,
+                bottomAdjBlock,
+                leftAdjBlock,
+                rightAdjBlock,
+                frontAdjBlock,
+                backAdjBlock,
+                getShade(X, y + offsetY, Z, heightMap),
+                builder
+            );
         }
     }
 
     private static void pushBackLeftBlocks(
-            int chunkIndex,
-            Chunk chunk,
-            Chunk leftAdjChunk,
-            Chunk backAdjChunk,
-            int[] heightMap,
-            GLDisplayList.Builder builder)
-    {
+        int chunkIndex,
+        Chunk chunk,
+        Chunk leftAdjChunk,
+        Chunk backAdjChunk,
+        int[] heightMap,
+        GLDisplayList.Builder builder
+    ) {
         final var XLENGTH = Chunk.XLENGTH;
         final var ZLENGTH = Chunk.ZLENGTH;
         var offsetY = chunkIndex * Chunk.YLENGTH;
@@ -1137,30 +1117,29 @@ class ColumnDisplay implements GraphicsResource {
             var frontAdjBlock  = chunk.getBlock       (0,           y,     1);
             var backAdjBlock   = backAdjChunk.getBlock(0,           y,     ZLENGTH - 1);
 
-            BlockRenderer.byBlock(block).pushVertices(
-                    0,
-                    y + offsetY,
-                    0,
-                    block,
-                    topAdjBlock,
-                    bottomAdjBlock,
-                    leftAdjBlock,
-                    rightAdjBlock,
-                    frontAdjBlock,
-                    backAdjBlock,
-                    getShade(0, y + offsetY, 0, heightMap),
-                    builder);
+            pushSingleBlock(
+                0, y + offsetY, 0,
+                block,
+                topAdjBlock,
+                bottomAdjBlock,
+                leftAdjBlock,
+                rightAdjBlock,
+                frontAdjBlock,
+                backAdjBlock,
+                getShade(0, y + offsetY, 0, heightMap),
+                builder
+            );
         }
     }
 
     private static void pushBackRightBlocks(
-            int chunkIndex,
-            Chunk chunk,
-            Chunk rightAdjChunk,
-            Chunk backAdjChunk,
-            int[] heightMap,
-            GLDisplayList.Builder builder)
-    {
+        int chunkIndex,
+        Chunk chunk,
+        Chunk rightAdjChunk,
+        Chunk backAdjChunk,
+        int[] heightMap,
+        GLDisplayList.Builder builder
+    ) {
         final var X = Chunk.XLENGTH - 1;
         final var ZLENGTH = Chunk.ZLENGTH;
         var offsetY = chunkIndex * Chunk.YLENGTH;
@@ -1174,19 +1153,110 @@ class ColumnDisplay implements GraphicsResource {
             var frontAdjBlock  = chunk.getBlock        (X,     y,     1);
             var backAdjBlock   = backAdjChunk.getBlock (X,     y,     ZLENGTH - 1);
 
-            BlockRenderer.byBlock(block).pushVertices(
-                    X,
-                    y + offsetY,
-                    0,
-                    block,
-                    topAdjBlock,
-                    bottomAdjBlock,
-                    leftAdjBlock,
-                    rightAdjBlock,
-                    frontAdjBlock,
-                    backAdjBlock,
-                    getShade(X, y + offsetY, 0, heightMap),
-                    builder);
+            pushSingleBlock(
+                X, y + offsetY, 0,
+                block,
+                topAdjBlock,
+                bottomAdjBlock,
+                leftAdjBlock,
+                rightAdjBlock,
+                frontAdjBlock,
+                backAdjBlock,
+                getShade(X, y + offsetY, 0, heightMap),
+                builder
+            );
+        }
+    }
+
+    private static void pushSingleBlock(
+        int x, int y, int z,
+        Block block,
+        Block topAdjBlock,
+        Block bottomAdjBlock,
+        Block leftAdjBlock,
+        Block rightAdjBlock,
+        Block frontAdjBlock,
+        Block backAdjBlock,
+        float shade,
+        GLDisplayList.Builder builder
+    ) {
+        pushSingleModel(
+            x, y, z,
+            block.model,
+            topAdjBlock.model,
+            bottomAdjBlock.model,
+            leftAdjBlock.model,
+            rightAdjBlock.model,
+            frontAdjBlock.model,
+            backAdjBlock.model,
+            shade,
+            builder
+        );
+    }
+
+    private static void pushSingleModel(
+        int x, int y, int z,
+        BlockModel model,
+        BlockModel topAdjModel,
+        BlockModel bottomAdjModel,
+        BlockModel leftAdjModel,
+        BlockModel rightAdjModel,
+        BlockModel frontAdjModel,
+        BlockModel backAdjModel,
+        float shade,
+        GLDisplayList.Builder builder
+    ) {
+        if (!bottomAdjModel.isBlocking(BlockModel.FACE_POS_Y) && model.hasFace(BlockModel.FACE_NEG_Y)) {
+            builder.setColor(0.25f, 0.25f, 0.25f);
+            pushModelFace(x, y, z, model, BlockModel.FACE_NEG_Y, builder);
+        }
+        if (!topAdjModel.isBlocking(BlockModel.FACE_NEG_Y) && model.hasFace(BlockModel.FACE_POS_Y)) {
+            builder.setColor(1.0f, 1.0f, 1.0f);
+            pushModelFace(x, y, z, model, BlockModel.FACE_POS_Y, builder);
+        }
+        if (!backAdjModel.isBlocking(BlockModel.FACE_POS_Z) && model.hasFace(BlockModel.FACE_NEG_Z)) {
+            builder.setColor(0.75f, 0.75f, 0.75f);
+            pushModelFace(x, y, z, model, BlockModel.FACE_NEG_Z, builder);
+        }
+        if (!frontAdjModel.isBlocking(BlockModel.FACE_NEG_Z) && model.hasFace(BlockModel.FACE_POS_Z)) {
+            builder.setColor(0.75f, 0.75f, 0.75f);
+            pushModelFace(x, y, z, model, BlockModel.FACE_POS_Z, builder);
+        }
+        if (!leftAdjModel.isBlocking(BlockModel.FACE_POS_X) && model.hasFace(BlockModel.FACE_NEG_X)) {
+            builder.setColor(0.5f, 0.5f, 0.5f);
+            pushModelFace(x, y, z, model, BlockModel.FACE_NEG_X, builder);
+        }
+        if (!rightAdjModel.isBlocking(BlockModel.FACE_NEG_X) && model.hasFace(BlockModel.FACE_POS_X)) {
+            builder.setColor(0.5f, 0.5f, 0.5f);
+            pushModelFace(x, y, z, model, BlockModel.FACE_POS_X, builder);
+        }
+    }
+
+    private static void pushModelFace(
+        int x, int y, int z,
+        BlockModel model,
+        int face,
+        GLDisplayList.Builder builder
+    ) {
+        var textureAtlas = Assets.getMipmappedTextureAtlas();
+        var texture = model.getTexture(face);
+
+        for (var i = 0; i < model.getNumVertices(face); ++i) {
+            var vertX = model.getVertexAttribute(face, i, BlockModel.ATTRIBUTE_POS_X);
+            var vertY = model.getVertexAttribute(face, i, BlockModel.ATTRIBUTE_POS_Y);
+            var vertZ = model.getVertexAttribute(face, i, BlockModel.ATTRIBUTE_POS_Z);
+            var vertU = model.getVertexAttribute(face, i, BlockModel.ATTRIBUTE_TEX_U);
+            var vertV = model.getVertexAttribute(face, i, BlockModel.ATTRIBUTE_TEX_V);
+
+            var u1 = textureAtlas.getTexCoordU1(texture);
+            var u2 = textureAtlas.getTexCoordU2(texture);
+            var v1 = textureAtlas.getTexCoordV1(texture);
+            var v2 = textureAtlas.getTexCoordV2(texture);
+
+            var mappedU = MathEx.lerp(u1, u2, vertU);
+            var mappedV = MathEx.lerp(v1, v2, vertV);
+
+            builder.pushVertex(x + vertX, y + vertY, z + vertZ, mappedU, mappedV);
         }
     }
 
@@ -1213,7 +1283,7 @@ class ColumnDisplay implements GraphicsResource {
 
                     var topY = Chunk.YLENGTH - 1;
 
-                    while (topY >= 0 && chunk.getBlock(x, topY, z) instanceof AirBlock) {
+                    while (topY >= 0 && chunk.getBlock(x, topY, z).equals(StandardBlocks.AIR)) {
                         --topY;
                     }
 

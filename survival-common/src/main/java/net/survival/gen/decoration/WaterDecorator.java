@@ -1,6 +1,6 @@
 package net.survival.gen.decoration;
 
-import net.survival.block.state.WaterBlock;
+import net.survival.block.StandardBlocks;
 import net.survival.gen.ColumnPrimer;
 
 public class WaterDecorator extends ColumnDecorator {
@@ -18,7 +18,7 @@ public class WaterDecorator extends ColumnDecorator {
                 }
 
                 for (int y = surfaceY + 1; y <= SEA_LEVEL; ++y) {
-                    primer.setBlock(x, y, z, WaterBlock.INSTANCE);
+                    primer.setBlock(x, y, z, StandardBlocks.WATER);
                 }
             }
         }

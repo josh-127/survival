@@ -4,16 +4,20 @@ public class MathEx {
     private MathEx() {}
 
     public static double clamp(double value, double min, double max) {
-        if (value < min)
+        if (value < min) {
             return min;
-
-        if (value > max)
+        }
+        if (value > max) {
             return max;
-
+        }
         return value;
     }
 
     public static double lerp(double a, double b, double t) {
+        return a + t * (b - a);
+    }
+
+    public static float lerp(float a, float b, float t) {
         return a + t * (b - a);
     }
 

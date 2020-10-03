@@ -6,7 +6,7 @@ import java.util.Map;
 import net.survival.actor.Actor;
 import net.survival.block.Column;
 import net.survival.block.ColumnPos;
-import net.survival.block.state.BlockState;
+import net.survival.block.Block;
 
 public class World {
     private Map<Long, Column> columns = new HashMap<>();
@@ -20,7 +20,7 @@ public class World {
         return actors;
     }
 
-    public BlockState getBlock(int x, int y, int z) {
+    public Block getBlock(int x, int y, int z) {
         var cx = ColumnPos.toColumnX(x);
         var cz = ColumnPos.toColumnZ(z);
 
@@ -34,7 +34,7 @@ public class World {
         return column.getBlock(lx, y, lz);
     }
 
-    public void setBlock(int x, int y, int z, BlockState to) {
+    public void setBlock(int x, int y, int z, Block to) {
         var cx = ColumnPos.toColumnX(x);
         var cz = ColumnPos.toColumnZ(z);
 

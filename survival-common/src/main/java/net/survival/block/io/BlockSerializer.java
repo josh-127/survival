@@ -5,9 +5,8 @@ import java.nio.ByteBuffer;
 import java.util.HashMap;
 
 import net.survival.block.BlockSerializable;
+import net.survival.block.Block;
 import org.reflections.Reflections;
-
-import net.survival.block.state.BlockState;
 
 final class BlockSerializer {
     private static final HashMap<Class<?>, Integer> classToTagMap = new HashMap<>();
@@ -16,7 +15,7 @@ final class BlockSerializer {
     private BlockSerializer() {}
 
     static {
-        var reflection = new Reflections(BlockState.class);
+        var reflection = new Reflections(Block.class);
         var blockClazzes = reflection.getTypesAnnotatedWith(BlockSerializable.class);
 
         for (var clazz : blockClazzes) {
@@ -28,7 +27,7 @@ final class BlockSerializer {
         }
     }
 
-    public static void serializeBlock(BlockState block, ByteBuffer buffer) {
+    public static void serializeBlock(Block block, ByteBuffer buffer) {
         var blockClazz = block.getClass();
         var tag = classToTagMap.get(blockClazz);
 
@@ -63,7 +62,7 @@ final class BlockSerializer {
         // TODO: Serialize block state.
     }
 
-    public static BlockState deserializeBlock(ByteBuffer buffer) {
+    public static Block deserializeBlock(ByteBuffer buffer) {
         var tag = buffer.getInt();
         var blockClazz = tagToClassMap.get(tag);
 
@@ -77,7 +76,7 @@ final class BlockSerializer {
             var constructor = blockClazz.getDeclaredConstructor();
             constructor.setAccessible(true);
 
-            var instance = (BlockState) constructor.newInstance();
+            var instance = (Block) constructor.newInstance();
             // TODO: De-serialize block state.
 
             return instance;

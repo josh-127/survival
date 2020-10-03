@@ -2,9 +2,6 @@ package net.survival.block;
 
 import java.util.Stack;
 
-import net.survival.block.state.AirBlock;
-import net.survival.block.state.BlockState;
-
 public class Column {
     public static final int XLENGTH = Chunk.XLENGTH;
     public static final int ZLENGTH = Chunk.ZLENGTH;
@@ -59,17 +56,17 @@ public class Column {
         return chunks.size();
     }
 
-    public BlockState getBlock(int x, int y, int z) {
+    public Block getBlock(int x, int y, int z) {
         var index = y / Chunk.YLENGTH;
 
         if (index >= chunks.size()) {
-            return AirBlock.INSTANCE;
+            return StandardBlocks.AIR;
         }
 
         return chunks.get(index).getBlock(x, y % Chunk.YLENGTH, z);
     }
 
-    public void setBlock(int x, int y, int z, BlockState to) {
+    public void setBlock(int x, int y, int z, Block to) {
         var index = y / Chunk.YLENGTH;
 
         while (index >= chunks.size()) {

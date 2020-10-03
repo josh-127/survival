@@ -1,19 +1,19 @@
 package net.survival.gen;
 
-import net.survival.block.state.BlockState;
+import net.survival.block.Block;
 
 public class SurfaceLayer {
-    private final BlockState block;
+    private final Block block;
     private final int minThickness;
     private final int maxThickness;
 
-    public SurfaceLayer(BlockState block, int minThickness, int maxThickness) {
+    public SurfaceLayer(Block block, int minThickness, int maxThickness) {
         this.block = block;
         this.minThickness = minThickness;
         this.maxThickness = maxThickness;
     }
 
-    public BlockState getBlock() {
+    public Block getBlock() {
         return block;
     }
 

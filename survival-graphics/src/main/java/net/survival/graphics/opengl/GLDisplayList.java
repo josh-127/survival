@@ -41,9 +41,20 @@ public class GLDisplayList implements GraphicsResource {
             return this;
         }
 
-        public Builder pushVertex(float x, float y, float z, float xt, float yt, float xc, float yc,
-                float zc)
-        {
+        public Builder pushVertex(
+            float x, float y, float z,
+            float xt, float yt
+        ) {
+            glTexCoord2f(xt, yt);
+            glVertex3f(x, y, z);
+            return this;
+        }
+
+        public Builder pushVertex(
+            float x, float y, float z,
+            float xt, float yt,
+            float xc, float yc, float zc
+        ) {
             glColor3f(xc, yc, zc);
             glTexCoord2f(xt, yt);
             glVertex3f(x, y, z);

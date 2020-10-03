@@ -1,4 +1,4 @@
-package net.survival.block.state;
+package net.survival.block;
 
 public enum BlockFace {
     TOP, BOTTOM, LEFT, RIGHT, FRONT, BACK;

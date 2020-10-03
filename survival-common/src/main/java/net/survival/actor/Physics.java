@@ -106,12 +106,12 @@ public class Physics {
             for (var blockX = startX; blockX <= endX; ++blockX) {
                 var aboveFloorBlock = world.getBlock(blockX, floorY + 1, blockZ);
 
-                if (aboveFloorBlock.isSolid())
+                if (aboveFloorBlock.solid)
                     continue;
 
                 var floorBlock = world.getBlock(blockX, floorY, blockZ);
 
-                if (floorBlock.isSolid()
+                if (floorBlock.solid
                         && getDominantAxis(actor, blockX, floorY, blockZ) == 1
                         && intersectsFloorPlane(actor, blockX, floorY, blockZ))
                 {
@@ -144,12 +144,12 @@ public class Physics {
             for (var blockX = startX; blockX <= endX; ++blockX) {
                 var belowCeilingBlock = world.getBlock(blockX, ceilingY - 1, blockZ);
 
-                if (belowCeilingBlock.isSolid())
+                if (belowCeilingBlock.solid)
                     continue;
 
                 var ceilingBlock = world.getBlock(blockX, ceilingY, blockZ);
 
-                if (ceilingBlock.isSolid()
+                if (ceilingBlock.solid
                         && getDominantAxis(actor, blockX, ceilingY, blockZ) == 1
                         && intersectsCeilingPlane(actor, blockX, ceilingY, blockZ))
                 {
@@ -180,12 +180,12 @@ public class Physics {
             for (var blockZ = startZ; blockZ <= endZ; ++blockZ) {
                 var adjacentBlock = world.getBlock(wallX - 1, blockY, blockZ);
 
-                if (adjacentBlock.isSolid())
+                if (adjacentBlock.solid)
                     continue;
 
                 var wallBlock = world.getBlock(wallX, blockY, blockZ);
 
-                if (wallBlock.isSolid()
+                if (wallBlock.solid
                         && getDominantAxis(actor, wallX, blockY, blockZ) == 0
                         && intersectsLeftPlane(actor, wallX, blockY, blockZ))
                 {
@@ -216,12 +216,12 @@ public class Physics {
             for (var blockZ = startZ; blockZ <= endZ; ++blockZ) {
                 var adjacentBlock = world.getBlock(wallX + 1, blockY, blockZ);
 
-                if (adjacentBlock.isSolid())
+                if (adjacentBlock.solid)
                     continue;
 
                 var wallBlock = world.getBlock(wallX, blockY, blockZ);
 
-                if (wallBlock.isSolid()
+                if (wallBlock.solid
                         && getDominantAxis(actor, wallX, blockY, blockZ) == 0
                         && intersectsRightPlane(actor, wallX, blockY, blockZ))
                 {
@@ -252,12 +252,12 @@ public class Physics {
             for (var blockX = startX; blockX <= endX; ++blockX) {
                 var adjacentBlock = world.getBlock(blockX, blockY, wallZ + 1);
 
-                if (adjacentBlock.isSolid())
+                if (adjacentBlock.solid)
                     continue;
 
                 var wallBlock = world.getBlock(blockX, blockY, wallZ);
 
-                if (wallBlock.isSolid()
+                if (wallBlock.solid
                         && getDominantAxis(actor, blockX, blockY, wallZ) == 2
                         && intersectsFrontPlane(actor, blockX, blockY, wallZ))
                 {
@@ -288,12 +288,12 @@ public class Physics {
             for (var blockX = startX; blockX <= endX; ++blockX) {
                 var adjacentBlock = world.getBlock(blockX, blockY, wallZ - 1);
 
-                if (adjacentBlock.isSolid())
+                if (adjacentBlock.solid)
                     continue;
 
                 var wallBlock = world.getBlock(blockX, blockY, wallZ);
 
-                if (wallBlock.isSolid()
+                if (wallBlock.solid
                         && getDominantAxis(actor, blockX, blockY, wallZ) == 2
                         && intersectsBackPlane(actor, blockX, blockY, wallZ))
                 {

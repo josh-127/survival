@@ -1,6 +1,6 @@
 package net.survival.gen.terrain;
 
-import net.survival.block.state.StoneBlock;
+import net.survival.block.StandardBlocks;
 import net.survival.gen.ColumnPrimer;
 import net.survival.util.DoubleMap3D;
 import net.survival.util.ImprovedNoiseGenerator;
@@ -66,7 +66,7 @@ public class DefaultTerrainGenerator implements TerrainGenerator {
                     var threshold = (y - ELEVATION_BASE) / ELEVATION_RANGE;
 
                     if (density >= threshold) {
-                        columnPrimer.setBlock(x, y, z, StoneBlock.INSTANCE);
+                        columnPrimer.setBlock(x, y, z, StandardBlocks.STONE);
                     }
                 }
             }

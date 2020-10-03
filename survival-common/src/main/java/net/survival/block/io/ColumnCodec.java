@@ -6,7 +6,7 @@ import java.nio.channels.FileChannel;
 
 import net.survival.block.Chunk;
 import net.survival.block.Column;
-import net.survival.block.state.BlockState;
+import net.survival.block.Block;
 import net.survival.util.XIntegerArray;
 
 class ColumnCodec {
@@ -87,7 +87,7 @@ class ColumnCodec {
 
         var rawData = XIntegerArray.moveUnderlyingArray(underlyingArray, Chunk.VOLUME, bitsPerElement);
 
-        var blockPalette = new BlockState[blockPaletteLength];
+        var blockPalette = new Block[blockPaletteLength];
         for (var i = 0; i < blockPalette.length; ++i) {
             blockPalette[i] = BlockSerializer.deserializeBlock(buffer);
         }

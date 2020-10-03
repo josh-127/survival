@@ -4,6 +4,7 @@ import java.io.File;
 
 import net.survival.block.io.ColumnDbPipe;
 import net.survival.block.io.ColumnServer;
+import net.survival.block.StandardBlocks;
 import org.lwjgl.glfw.GLFW;
 
 import net.survival.actor.Jump;
@@ -12,7 +13,6 @@ import net.survival.actor.Physics;
 import net.survival.actor.Player;
 import net.survival.block.ColumnPos;
 import net.survival.block.message.CloseColumnRequest;
-import net.survival.block.state.AirBlock;
 import net.survival.client.input.GlfwKeyboardAdapter;
 import net.survival.client.input.GlfwMouseAdapter;
 import net.survival.client.input.Key;
@@ -197,8 +197,8 @@ public class Client implements AutoCloseable {
                 pz -= DELTA * Math.cos(fpvCamera.yaw) * Math.cos(fpvCamera.pitch);
                 var pxi = (int) Math.floor(px); var pyi = (int) Math.floor(py); var pzi = (int) Math.floor(pz);
                 var cx = ColumnPos.toColumnX(pxi); var cz = ColumnPos.toColumnZ(pzi);
-                if (world.getColumns().containsKey(ColumnPos.hashPos(cx, cz)) && pyi >= 0.0 && !(world.getBlock(pxi, pyi, pzi) instanceof AirBlock)) {
-                    if (Mouse.isLmbPressed()) world.setBlock(pxi, pyi, pzi, AirBlock.INSTANCE);
+                if (world.getColumns().containsKey(ColumnPos.hashPos(cx, cz)) && pyi >= 0.0 && !(world.getBlock(pxi, pyi, pzi).equals(StandardBlocks.AIR))) {
+                    if (Mouse.isLmbPressed()) world.setBlock(pxi, pyi, pzi, StandardBlocks.AIR);
                     break;
                 }
             }
