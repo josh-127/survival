@@ -1,7 +1,6 @@
-package net.survival.markup;
+package net.survival.markdown;
 
-public abstract class Page
-{
+public abstract class Page {
     private final MarkupElement root;
 
     public Page(MarkupElement root) {

@@ -8,8 +8,7 @@ import net.survival.graphics.opengl.GLImmediateDrawCall;
 import net.survival.graphics.opengl.GLTexture;
 import net.survival.graphics.opengl.GLWrapMode;
 
-public class ModelRenderer
-{
+public class ModelRenderer {
     // TODO: Need to dispose these resources.
     private static final HashMap<String, GLTexture> textureCache = new HashMap<>();
 

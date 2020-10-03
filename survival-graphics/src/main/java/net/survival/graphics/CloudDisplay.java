@@ -9,8 +9,7 @@ import net.survival.graphics.opengl.GLImmediateDrawCall;
 import net.survival.graphics.opengl.GLMatrixStack;
 import net.survival.graphics.opengl.GLState;
 
-class CloudDisplay
-{
+class CloudDisplay {
     private static final int MAP_LENGTH_X = 48;
     private static final int MAP_LENGTH_Z = 48;
     private static final long DEFAULT_MAP_SEED = 0L;

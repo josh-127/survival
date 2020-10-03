@@ -3,9 +3,8 @@ package net.survival.graphics.particle;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ClientParticleSpace
-{
-    private final HashMap<String, ParticleDomain> particleDomains = new HashMap<>();
+public class ClientParticleSpace {
+    private final HashMap<String, ParticleSim> particleDomains = new HashMap<>();
 
     public void burstParticles(
             double x,
@@ -15,11 +14,11 @@ public class ClientParticleSpace
             int quantity,
             String texture)
     {
-        particleDomains.putIfAbsent(texture, new ParticleDomain());
+        particleDomains.putIfAbsent(texture, new ParticleSim());
         particleDomains.get(texture).burstParticles(x, y, z, strength, quantity);
     }
 
-    public Map<String, ParticleDomain> getParticleDomains() {
+    public Map<String, ParticleSim> getParticleDomains() {
         return particleDomains;
     }
 

@@ -14,8 +14,7 @@ import net.survival.graphics.opengl.GLState;
 import net.survival.graphics.opengl.GLTexture;
 import net.survival.graphics.opengl.GLWrapMode;
 
-class BlockDisplay implements GraphicsResource
-{
+class BlockDisplay implements GraphicsResource {
     private final Map<Long, Column> columns = new HashMap<>();
     private final HashMap<Column, ColumnDisplay> columnDisplays = new HashMap<>();
     private final HashMap<Long, Column> invalidatedColumns = new HashMap<>();
@@ -27,7 +26,7 @@ class BlockDisplay implements GraphicsResource
     private Matrix4f modelViewMatrix = new Matrix4f();
 
     public BlockDisplay(PerspectiveCamera camera) {
-        var overlayBitmap = Bitmap.fromFile("../assets/textures/overlays/low_contrast.png");
+        var overlayBitmap = Bitmap.fromFile("./assets/textures/overlays/low_contrast.png");
         overlayTexture = new GLTexture();
         overlayTexture.beginBind()
                 .setMinFilter(GLFilterMode.LINEAR_MIPMAP_LINEAR)

@@ -1,4 +1,4 @@
-package net.survival.block;
+package net.survival.block.io;
 
 import java.nio.ByteBuffer;
 

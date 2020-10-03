@@ -1,14 +1,13 @@
-package net.survival.graphics.markup;
+package net.survival.graphics.markdown;
 
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-public class PrintedElementCollection implements Collection<PrintedElement>
-{
-    private final List<PrintedElement> list;
+public class RenderedElementCollection implements Collection<RenderedElement> {
+    private final List<RenderedElement> list;
 
-    public PrintedElementCollection(Collection<PrintedElement> collection) {
+    public RenderedElementCollection(Collection<RenderedElement> collection) {
         list = List.copyOf(collection);
     }
 
@@ -28,7 +27,7 @@ public class PrintedElementCollection implements Collection<PrintedElement>
     }
 
     @Override
-    public Iterator<PrintedElement> iterator() {
+    public Iterator<RenderedElement> iterator() {
         return list.iterator();
     }
 
@@ -43,7 +42,7 @@ public class PrintedElementCollection implements Collection<PrintedElement>
     }
 
     @Override
-    public boolean add(PrintedElement e) {
+    public boolean add(RenderedElement e) {
         return list.add(e);
     }
 
@@ -58,7 +57,7 @@ public class PrintedElementCollection implements Collection<PrintedElement>
     }
 
     @Override
-    public boolean addAll(Collection<? extends PrintedElement> c) {
+    public boolean addAll(Collection<? extends RenderedElement> c) {
         return list.addAll(c);
     }
 

@@ -1,7 +1,6 @@
 package net.survival.block;
 
-public interface ColumnProvider
-{
+public interface ColumnProvider {
     Column provideColumn(long hashedPos);
 
     default Column provideColumn(int cx, int cz) {

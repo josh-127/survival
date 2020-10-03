@@ -1,7 +1,6 @@
 package net.survival.client.input;
 
-public enum Key
-{
+public enum Key {
     SPACE,
     APOSTROPHE,
     COMMA,

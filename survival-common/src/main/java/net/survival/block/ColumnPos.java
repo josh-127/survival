@@ -1,7 +1,6 @@
 package net.survival.block;
 
-public class ColumnPos
-{
+public class ColumnPos {
     private ColumnPos() {}
 
     public static boolean positionEquals(int cx1, int cz1, int cx2, int cz2) {

@@ -3,8 +3,7 @@ package net.survival.block.state;
 import net.survival.block.BlockSerializable;
 
 @BlockSerializable(2)
-public final class CactusBlock extends BlockState
-{
+public final class CactusBlock extends BlockState {
     public static final CactusBlock INSTANCE = new CactusBlock();
 
     private CactusBlock() {}

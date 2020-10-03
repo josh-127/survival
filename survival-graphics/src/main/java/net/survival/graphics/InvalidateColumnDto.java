@@ -2,8 +2,7 @@ package net.survival.graphics;
 
 import net.survival.block.Column;
 
-class InvalidateColumnDto
-{
+class InvalidateColumnDto {
     private final long columnPos;
     private final Column column;
     private final ColumnInvalidationPriority invalidationPriority;

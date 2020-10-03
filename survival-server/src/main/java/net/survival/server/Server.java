@@ -1,15 +1,12 @@
 package net.survival.server;
 
-public class Server
-{
+public class Server {
     private static final double TICKS_PER_SECOND = 60.0;
     private static final double SECONDS_PER_TICK = 1.0 / TICKS_PER_SECOND;
 
-    private Server() {
-    }
+    private Server() {}
 
-    public void tick(double elapsedTime) {
-    }
+    public void tick(double elapsedTime) {}
 
     public static void main(String[] args) {
         Server program = new Server();

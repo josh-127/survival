@@ -2,8 +2,7 @@ package net.survival.graphics.opengl;
 
 import static org.lwjgl.opengl.GL11.*;
 
-public enum GLFilterMode
-{
+public enum GLFilterMode {
     NEAREST,
     NEAREST_MIPMAP_NEAREST,
     NEAREST_MIPMAP_LINEAR,

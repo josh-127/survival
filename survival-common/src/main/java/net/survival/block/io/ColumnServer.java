@@ -1,4 +1,4 @@
-package net.survival.block;
+package net.survival.block.io;
 
 import java.io.File;
 import java.io.IOException;
@@ -7,13 +7,14 @@ import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import net.survival.block.Column;
+import net.survival.block.ColumnProvider;
 import net.survival.block.message.CloseColumnRequest;
 import net.survival.block.message.ColumnResponse;
 import net.survival.block.message.GetColumnRequest;
 import net.survival.block.message.PostColumnRequest;
 
-public class ColumnServer implements Runnable
-{
+public class ColumnServer implements Runnable {
     private static int FOOTER_LENGTH = 2 * VirtualAllocationUnit.STRUCTURE_SIZE;
 
     private final File file;

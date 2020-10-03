@@ -1,7 +1,6 @@
 package net.survival.graphics;
 
-public final class VisibilityFlags
-{
+public final class VisibilityFlags {
     public static final int BLOCKS = 0x1;
     public static final int ENTITIES = 0x2;
     public static final int PARTICLES = 0x4;

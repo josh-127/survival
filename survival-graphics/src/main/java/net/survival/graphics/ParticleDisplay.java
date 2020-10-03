@@ -7,8 +7,7 @@ import net.survival.graphics.opengl.GLMatrixStack;
 import net.survival.graphics.particle.ClientParticleSpace;
 import net.survival.util.MathEx;
 
-class ParticleDisplay
-{
+class ParticleDisplay {
     private final ClientParticleSpace clientParticleSpace;
     private final PerspectiveCamera camera;
 

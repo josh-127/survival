@@ -2,8 +2,7 @@ package net.survival.util;
 
 import java.util.Arrays;
 
-public class XIntegerArray
-{
+public class XIntegerArray {
     public final long[] underlyingArray;
     public final int length;
     public final int bitsPerElement;

@@ -5,8 +5,7 @@ import java.util.Random;
 import net.survival.gen.ColumnPrimer;
 import net.survival.gen.SurfaceDescription;
 
-class SurfaceDecorator extends ColumnDecorator
-{
+class SurfaceDecorator extends ColumnDecorator {
     private final SurfaceDescription description;
     private final Random random = new Random();
 

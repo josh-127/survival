@@ -3,8 +3,7 @@ package net.survival.client.input;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWKeyCallbackI;
 
-public class GlfwKeyboardAdapter extends KeyboardAdapter implements GLFWKeyCallbackI
-{
+public class GlfwKeyboardAdapter extends KeyboardAdapter implements GLFWKeyCallbackI {
     @Override
     public void invoke(long window, int key, int scancode, int action, int mods) {
         Key convertedKey = null;

@@ -1,7 +1,6 @@
 package net.survival.block.state;
 
-public abstract class BlockState
-{
+public abstract class BlockState {
     public abstract void accept(BlockStateVisitor visitor);
 
     public String getDisplayName() {

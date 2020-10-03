@@ -6,8 +6,7 @@ import org.lwjgl.opengl.GL;
 
 import net.survival.graphics.GraphicsResource;
 
-public class GLDisplay implements GraphicsResource
-{
+public class GLDisplay implements GraphicsResource {
     private static int totalWindows = 0;
 
     private final long window;

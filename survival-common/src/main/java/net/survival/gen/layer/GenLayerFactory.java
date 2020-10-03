@@ -1,8 +1,7 @@
 package net.survival.gen.layer;
 
 @Deprecated
-public interface GenLayerFactory
-{
+public interface GenLayerFactory {
     GenLayer create(int lengthX, int lengthZ, long seed);
 
     public static GenLayer createBiomeLayer(int lengthX, int lengthZ, long baseSeed) {

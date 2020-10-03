@@ -2,8 +2,7 @@ package net.survival.graphics;
 
 import net.survival.render.ModelType;
 
-final class DrawModelCommand extends DrawCommand
-{
+final class DrawModelCommand extends DrawCommand {
     private final double x;
     private final double y;
     private final double z;

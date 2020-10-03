@@ -6,8 +6,7 @@ import net.survival.block.state.GrassBlock;
 import net.survival.block.state.SandBlock;
 import net.survival.block.state.StoneBlock;
 
-public enum BiomeType
-{
+public enum BiomeType {
     OCEAN((bt) -> {
         bt.topBlock = DirtBlock.INSTANCE;
         bt.minElevation = 48.0;

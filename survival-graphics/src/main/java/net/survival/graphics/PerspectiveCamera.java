@@ -2,8 +2,7 @@ package net.survival.graphics;
 
 import org.joml.Matrix4f;
 
-class PerspectiveCamera implements Camera
-{
+class PerspectiveCamera implements Camera {
     private float x;
     private float y;
     private float z;

@@ -2,8 +2,7 @@ package net.survival.graphics.opengl;
 
 import static org.lwjgl.opengl.GL11.*;
 
-public class GLImmediateDrawCall
-{
+public class GLImmediateDrawCall {
     static final GLImmediateDrawCall instance = new GLImmediateDrawCall();
 
     public GLImmediateDrawCall color(float r, float g, float b) {

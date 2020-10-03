@@ -3,8 +3,7 @@ package net.survival.block.state;
 import net.survival.block.BlockSerializable;
 
 @BlockSerializable(0x00000000)
-public final class AirBlock extends BlockState
-{
+public final class AirBlock extends BlockState {
     public static final AirBlock INSTANCE = new AirBlock();
 
     private AirBlock() {}

@@ -1,4 +1,4 @@
-package net.survival.block;
+package net.survival.block.io;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -6,8 +6,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import net.survival.block.message.ColumnRequest;
 import net.survival.block.message.ColumnResponse;
 
-public class ColumnDbPipe
-{
+public class ColumnDbPipe {
     private final LinkedBlockingQueue<ColumnRequest> requests = new LinkedBlockingQueue<>();
     private final ConcurrentLinkedQueue<ColumnResponse> responses = new ConcurrentLinkedQueue<>();
     private final ServerSide serverSide = new ServerSide();

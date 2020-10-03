@@ -1,7 +1,6 @@
 package net.survival.graphics;
 
-public enum ColumnInvalidationPriority
-{
+public enum ColumnInvalidationPriority {
     LOW,
     NOW
 }

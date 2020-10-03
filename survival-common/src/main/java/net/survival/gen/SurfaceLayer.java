@@ -2,8 +2,7 @@ package net.survival.gen;
 
 import net.survival.block.state.BlockState;
 
-public class SurfaceLayer
-{
+public class SurfaceLayer {
     private final BlockState block;
     private final int minThickness;
     private final int maxThickness;

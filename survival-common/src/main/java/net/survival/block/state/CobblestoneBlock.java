@@ -3,8 +3,7 @@ package net.survival.block.state;
 import net.survival.block.BlockSerializable;
 
 @BlockSerializable(3)
-public final class CobblestoneBlock extends BlockState
-{
+public final class CobblestoneBlock extends BlockState {
     public static final CobblestoneBlock INSTANCE = new CobblestoneBlock();
 
     private CobblestoneBlock() {}

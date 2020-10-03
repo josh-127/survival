@@ -5,8 +5,7 @@ import java.util.Stack;
 import net.survival.block.state.AirBlock;
 import net.survival.block.state.BlockState;
 
-public class Column
-{
+public class Column {
     public static final int XLENGTH = Chunk.XLENGTH;
     public static final int ZLENGTH = Chunk.ZLENGTH;
     public static final int BASE_AREA = XLENGTH * ZLENGTH;

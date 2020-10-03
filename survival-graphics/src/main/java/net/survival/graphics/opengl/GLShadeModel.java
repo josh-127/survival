@@ -2,8 +2,7 @@ package net.survival.graphics.opengl;
 
 import static org.lwjgl.opengl.GL11.*;
 
-public enum GLShadeModel
-{
+public enum GLShadeModel {
     FLAT,
     SMOOTH;
 

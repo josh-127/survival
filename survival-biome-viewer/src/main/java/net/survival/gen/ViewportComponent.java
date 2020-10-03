@@ -15,8 +15,7 @@ import javax.swing.Timer;
 import net.survival.gen.layer.GenLayer;
 import net.survival.gen.layer.GenLayerFactory;
 
-public class ViewportComponent extends Canvas implements ActionListener, KeyListener
-{
+public class ViewportComponent extends Canvas implements ActionListener, KeyListener {
     private static final long serialVersionUID = 1L;
 
     private GenLayer map;

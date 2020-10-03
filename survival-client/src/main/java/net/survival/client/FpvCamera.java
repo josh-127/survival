@@ -1,7 +1,6 @@
 package net.survival.client;
 
-class FpvCamera
-{
+class FpvCamera {
     public double yaw;
     public double pitch;
     

@@ -5,8 +5,7 @@ import java.util.Set;
 
 import net.survival.block.ColumnPos;
 
-public final class ColumnMaskFactory
-{
+public final class ColumnMaskFactory {
     private ColumnMaskFactory() {}
 
     public static Set<Long> createCircle(int radius, double offsetX, double offsetZ) {

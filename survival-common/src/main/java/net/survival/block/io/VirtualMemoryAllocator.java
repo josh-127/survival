@@ -1,10 +1,9 @@
-package net.survival.block;
+package net.survival.block.io;
 
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 
-class VirtualMemoryAllocator
-{
+class VirtualMemoryAllocator {
     // TODO: Insertion is slow. Look for a different data structure.
     //       Also, the data structure has to be hand-written for
     //       backwards compatibility.

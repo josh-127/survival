@@ -7,12 +7,11 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import net.survival.block.Column;
-import net.survival.block.ColumnDbPipe;
+import net.survival.block.io.ColumnDbPipe;
 import net.survival.block.message.GetColumnRequest;
 import net.survival.block.message.PostColumnRequest;
 
-public class ColumnIO
-{
+public class ColumnIO {
     private Map<Long, Column> columns = new HashMap<>();
     private Set<Long> loadingColumns = new HashSet<>();
     private final ColumnDbPipe.ClientSide columnPipe;

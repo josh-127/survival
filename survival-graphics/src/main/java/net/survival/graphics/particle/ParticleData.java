@@ -1,7 +1,6 @@
 package net.survival.graphics.particle;
 
-public class ParticleData
-{
+public class ParticleData {
     public final double[] xs;
     public final double[] ys;
     public final double[] zs;

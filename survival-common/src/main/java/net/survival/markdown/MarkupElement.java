@@ -1,9 +1,8 @@
-package net.survival.markup;
+package net.survival.markdown;
 
-import net.survival.markup.style.Style;
+import net.survival.markdown.style.Style;
 
-public abstract class MarkupElement
-{
+public abstract class MarkupElement {
     private final Style style;
 
     public MarkupElement(Style style) {

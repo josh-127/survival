@@ -1,7 +1,6 @@
 package net.survival.graphics.opengl;
 
-public class GLException extends RuntimeException
-{
+public class GLException extends RuntimeException {
     private static final long serialVersionUID = 1L;
 
     public GLException() {}

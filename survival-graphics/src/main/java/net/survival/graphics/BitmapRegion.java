@@ -1,7 +1,6 @@
 package net.survival.graphics;
 
-public class BitmapRegion
-{
+public class BitmapRegion {
     private int left;
     private int top;
     private int right;

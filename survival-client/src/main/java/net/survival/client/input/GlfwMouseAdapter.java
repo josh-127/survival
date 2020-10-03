@@ -5,8 +5,7 @@ import static org.lwjgl.glfw.GLFW.*;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWCursorPosCallbackI;
 
-public class GlfwMouseAdapter extends MouseAdapter implements GLFWCursorPosCallbackI
-{
+public class GlfwMouseAdapter extends MouseAdapter implements GLFWCursorPosCallbackI {
     private final long window;
 
     private double mouseX;

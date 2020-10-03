@@ -1,7 +1,6 @@
 package net.survival.util;
 
-public class IntNoise
-{
+public class IntNoise {
     private IntNoise() {}
 
     public static int white(int x, long seed) {

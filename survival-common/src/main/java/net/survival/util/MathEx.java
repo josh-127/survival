@@ -1,7 +1,6 @@
 package net.survival.util;
 
-public class MathEx
-{
+public class MathEx {
     private MathEx() {}
 
     public static double clamp(double value, double min, double max) {

@@ -1,9 +1,8 @@
-package net.survival.markup;
+package net.survival.markdown;
 
-import net.survival.markup.style.Style;
+import net.survival.markdown.style.Style;
 
-public final class TextElement extends MarkupElement
-{
+public final class TextElement extends MarkupElement {
     private final String text;
 
     public TextElement(Style style, String text) {

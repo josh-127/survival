@@ -1,7 +1,6 @@
-package net.survival.markup.style;
+package net.survival.markdown.style;
 
-public class Style
-{
+public class Style {
     private final Background background;
 
     public Style(Background background) {

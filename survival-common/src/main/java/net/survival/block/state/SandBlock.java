@@ -3,8 +3,7 @@ package net.survival.block.state;
 import net.survival.block.BlockSerializable;
 
 @BlockSerializable(10)
-public final class SandBlock extends BlockState
-{
+public final class SandBlock extends BlockState {
     public static final SandBlock INSTANCE = new SandBlock();
 
     private SandBlock() {}

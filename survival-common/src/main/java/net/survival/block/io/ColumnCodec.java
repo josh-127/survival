@@ -1,14 +1,15 @@
-package net.survival.block;
+package net.survival.block.io;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 
+import net.survival.block.Chunk;
+import net.survival.block.Column;
 import net.survival.block.state.BlockState;
 import net.survival.util.XIntegerArray;
 
-class ColumnCodec
-{
+class ColumnCodec {
     private static final int COLUMN_HEADER_SIZE = 2;
     private static final int CHUNK_HEADER_SIZE = 6;
     private static final int MAX_COLUMN_VOLUME = Column.BASE_AREA * 4096;

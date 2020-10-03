@@ -2,8 +2,7 @@ package net.survival.gen;
 
 import java.util.ArrayList;
 
-public class SurfaceDescription
-{
+public class SurfaceDescription {
     private final ArrayList<SurfaceLayer> layers;
 
     private SurfaceDescription(ArrayList<SurfaceLayer> layers) {

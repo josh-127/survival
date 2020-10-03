@@ -2,8 +2,7 @@ package net.survival.graphics.opengl;
 
 import static org.lwjgl.opengl.GL11.*;
 
-class GLTextureEnvironment
-{
+class GLTextureEnvironment {
     private static GLTexture lastUsedTexture;
 
     public static void useTexture(GLTexture texture) {

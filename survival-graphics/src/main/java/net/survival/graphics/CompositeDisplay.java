@@ -15,9 +15,8 @@ import net.survival.graphics.opengl.GLState;
 import net.survival.graphics.particle.ClientParticleSpace;
 import net.survival.render.ModelType;
 
-public class CompositeDisplay implements GraphicsResource
-{
-    private static final String ASSET_ROOT_PATH = "../assets/";
+public class CompositeDisplay implements GraphicsResource {
+    private static final String ASSET_ROOT_PATH = "./assets/";
     private static final String TEXTURE_PATH = ASSET_ROOT_PATH;
     private static final String FONT_PATH = "textures/fonts/default";
     private static final int PIXELS_PER_EM = 24;

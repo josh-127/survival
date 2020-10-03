@@ -2,8 +2,7 @@ package net.survival.graphics.opengl;
 
 import static org.lwjgl.opengl.GL11.*;
 
-public class GLRenderContext
-{
+public class GLRenderContext {
     private GLRenderContext() {}
 
     public static void init() {

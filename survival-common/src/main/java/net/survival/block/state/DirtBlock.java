@@ -3,8 +3,7 @@ package net.survival.block.state;
 import net.survival.block.BlockSerializable;
 
 @BlockSerializable(4)
-public final class DirtBlock extends BlockState
-{
+public final class DirtBlock extends BlockState {
     public static final DirtBlock INSTANCE = new DirtBlock();
 
     private DirtBlock() {}

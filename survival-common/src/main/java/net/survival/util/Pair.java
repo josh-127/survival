@@ -1,7 +1,6 @@
 package net.survival.util;
 
-public final class Pair<A, B>
-{
+public final class Pair<A, B> {
     private final A item1;
     private final B item2;
 

@@ -3,8 +3,7 @@ package net.survival.block.state;
 import net.survival.block.BlockSerializable;
 
 @BlockSerializable(1)
-public final class BedrockBlock extends BlockState
-{
+public final class BedrockBlock extends BlockState {
     public static final BedrockBlock INSTANCE = new BedrockBlock();
 
     private BedrockBlock() {}

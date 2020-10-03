@@ -1,7 +1,6 @@
 package net.survival.graphics;
 
-final class DrawTextCommand extends DrawCommand
-{
+final class DrawTextCommand extends DrawCommand {
     private final String text;
     private final double x;
     private final double y;

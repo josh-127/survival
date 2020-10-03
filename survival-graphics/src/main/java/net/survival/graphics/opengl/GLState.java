@@ -11,8 +11,7 @@ import it.unimi.dsi.fastutil.floats.FloatStack;
 import it.unimi.dsi.fastutil.longs.LongArrayList;
 import it.unimi.dsi.fastutil.longs.LongStack;
 
-public class GLState
-{
+public class GLState {
     // ================================================================
     // GL_ALPHA_TEST
     // ================================================================

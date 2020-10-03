@@ -1,7 +1,6 @@
 package net.survival.block.state;
 
-public enum BlockModel
-{
+public enum BlockModel {
     DEFAULT(bm -> {
         bm.blockingTop = true;
         bm.blockingBottom = true;

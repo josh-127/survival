@@ -7,8 +7,7 @@ import net.survival.graphics.opengl.GLImmediateDrawCall;
 import net.survival.graphics.opengl.GLMatrixStack;
 import net.survival.graphics.opengl.GLState;
 
-class SkyboxDisplay
-{
+class SkyboxDisplay {
     public static final float DEFAULT_BOTTOM_R = 0.8f;
     public static final float DEFAULT_BOTTOM_G = 1.0f;
     public static final float DEFAULT_BOTTOM_B = 1.0f;

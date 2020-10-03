@@ -2,8 +2,7 @@ package net.survival.util;
 
 import java.util.Date;
 
-public class Random64
-{
+public class Random64 {
     private static final long MULTIPLIER = 6364136223846793005L;
     private static final long INCREMENT = 1442695040888963407L;
 

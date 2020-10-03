@@ -1,7 +1,6 @@
 package net.survival.block.state;
 
-public interface BlockStateVisitor
-{
+public interface BlockStateVisitor {
     void visit(AirBlock block);
     void visit(BedrockBlock block);
     void visit(CactusBlock block);

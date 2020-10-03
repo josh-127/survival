@@ -8,8 +8,7 @@ import net.survival.graphics.model.ModelRenderer;
 import net.survival.graphics.model.StaticModel;
 import net.survival.graphics.opengl.GLMatrixStack;
 
-class ModelDisplay
-{
+class ModelDisplay {
     private final ArrayList<DrawModelCommand> modelsToDraw = new ArrayList<>();
     private final PerspectiveCamera camera;
 

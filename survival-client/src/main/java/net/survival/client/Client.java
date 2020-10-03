@@ -2,15 +2,15 @@ package net.survival.client;
 
 import java.io.File;
 
+import net.survival.block.io.ColumnDbPipe;
+import net.survival.block.io.ColumnServer;
 import org.lwjgl.glfw.GLFW;
 
 import net.survival.actor.Jump;
 import net.survival.actor.Move;
 import net.survival.actor.Physics;
 import net.survival.actor.Player;
-import net.survival.block.ColumnDbPipe;
 import net.survival.block.ColumnPos;
-import net.survival.block.ColumnServer;
 import net.survival.block.message.CloseColumnRequest;
 import net.survival.block.state.AirBlock;
 import net.survival.client.input.GlfwKeyboardAdapter;
@@ -29,8 +29,7 @@ import net.survival.util.HitBox;
 import net.survival.world.ColumnIO;
 import net.survival.world.World;
 
-public class Client implements AutoCloseable
-{
+public class Client implements AutoCloseable {
     private static final int WINDOW_WIDTH = 1600;
     private static final int WINDOW_HEIGHT = 900;
     private static final String WINDOW_TITLE = "Survival";
@@ -127,7 +126,7 @@ public class Client implements AutoCloseable
 
         var columnDbPipe = new ColumnDbPipe();
         var columnServer = new ColumnServer(
-                new File(System.getProperty("user.dir") + "/../.world/columns"),
+                new File(System.getProperty("user.dir") + "/.world/columns"),
                 columnDbPipe.getServerSide(),
                 columnGenerator);
 

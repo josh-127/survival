@@ -1,7 +1,6 @@
 package net.survival.block.message;
 
-public class GetColumnRequest extends ColumnRequest
-{
+public class GetColumnRequest extends ColumnRequest {
     private final long columnPos;
 
     public GetColumnRequest(long columnPos) {

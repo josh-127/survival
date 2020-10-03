@@ -1,7 +1,6 @@
 package net.survival.util;
 
-public class ByteMap2D implements ByteSampler2D
-{
+public class ByteMap2D implements ByteSampler2D {
     protected final byte[] map;
     protected final int lengthX;
     protected final int lengthZ;

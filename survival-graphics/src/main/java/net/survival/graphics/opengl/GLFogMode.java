@@ -2,8 +2,7 @@ package net.survival.graphics.opengl;
 
 import static org.lwjgl.opengl.GL11.*;
 
-enum GLFogMode
-{
+enum GLFogMode {
     LINEAR, EXP, EXP2;
 
     int toGLConstant() {

@@ -7,8 +7,7 @@ import net.survival.block.state.AirBlock;
 import net.survival.block.state.BlockState;
 import net.survival.util.XIntegerArray;
 
-public class Chunk
-{
+public class Chunk {
     public static final int XLENGTH = 16;
     public static final int YLENGTH = 16;
     public static final int ZLENGTH = 16;

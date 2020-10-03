@@ -8,8 +8,7 @@ import net.survival.graphics.opengl.GLDisplayList;
 import net.survival.graphics.opengl.GLRenderContext;
 import net.survival.graphics.opengl.GLTexture;
 
-class ColumnDisplay implements GraphicsResource
-{
+class ColumnDisplay implements GraphicsResource {
     private static final Chunk EMPTY_CHUNK = new Chunk();
 
     private final GLDisplayList displayList;

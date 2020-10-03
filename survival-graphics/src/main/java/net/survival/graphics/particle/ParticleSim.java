@@ -1,7 +1,6 @@
 package net.survival.graphics.particle;
 
-public class ParticleDomain
-{
+public class ParticleSim {
     private static final double GRAVITY = -8.0;
 
     private final ParticleData data = new ParticleData(32);

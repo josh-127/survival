@@ -1,7 +1,6 @@
 package net.survival.graphics;
 
-public class TextStyle
-{
+public class TextStyle {
     public static final double DEFAULT_RED = 1.0;
     public static final double DEFAULT_GREEN = 1.0;
     public static final double DEFAULT_BLUE = 1.0;

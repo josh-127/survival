@@ -10,8 +10,7 @@ import org.junit.runner.RunWith;
 import junitparams.JUnitParamsRunner;
 
 @RunWith(JUnitParamsRunner.class)
-public class XIntegerArrayTest
-{
+public class XIntegerArrayTest {
     @Test
     public void givenRandomValues_getAndSetAreConsistent() {
         final int ARRAY_LENGTH = 4096;

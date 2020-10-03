@@ -2,8 +2,7 @@ package net.survival.graphics;
 
 import static org.lwjgl.stb.STBImage.*;
 
-public class Bitmap
-{
+public class Bitmap {
     private int width;
     private int height;
     private int[] pixels;

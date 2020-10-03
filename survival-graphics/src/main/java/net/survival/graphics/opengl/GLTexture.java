@@ -7,8 +7,7 @@ import static org.lwjgl.opengl.GL14.*;
 import net.survival.graphics.Bitmap;
 import net.survival.graphics.GraphicsResource;
 
-public class GLTexture implements GraphicsResource
-{
+public class GLTexture implements GraphicsResource {
     final int id;
 
     public GLTexture() {

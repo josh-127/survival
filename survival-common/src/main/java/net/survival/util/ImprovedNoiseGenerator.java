@@ -2,8 +2,7 @@ package net.survival.util;
 
 import java.util.Random;
 
-public final class ImprovedNoiseGenerator
-{
+public final class ImprovedNoiseGenerator {
     private ImprovedNoiseGenerator() {}
 
     public static void generate2D(

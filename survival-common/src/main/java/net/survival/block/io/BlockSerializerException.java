@@ -1,7 +1,6 @@
-package net.survival.block;
+package net.survival.block.io;
 
-class BlockSerializerException extends RuntimeException
-{
+class BlockSerializerException extends RuntimeException {
     private static final long serialVersionUID = 1L;
 
     public BlockSerializerException() {}

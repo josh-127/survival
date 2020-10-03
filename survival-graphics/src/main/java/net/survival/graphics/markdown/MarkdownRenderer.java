@@ -1,4 +1,4 @@
-package net.survival.graphics.markup;
+package net.survival.graphics.markdown;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -6,17 +6,16 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Stack;
 
-import net.survival.markup.DivisionElement;
-import net.survival.markup.MarkupElement;
-import net.survival.markup.Page;
-import net.survival.markup.TextElement;
+import net.survival.markdown.DivisionElement;
+import net.survival.markdown.MarkupElement;
+import net.survival.markdown.Page;
+import net.survival.markdown.TextElement;
 
-public final class MarkupPrinter
-{
-    private MarkupPrinter() {}
+public final class MarkdownRenderer {
+    private MarkdownRenderer() {}
 
-    public static PrintedPage printPage(Page page, double width, double height) {
-        var printedElements = new ArrayList<PrintedElement>();
+    public static RenderedPage printPage(Page page, double width, double height) {
+        var printedElements = new ArrayList<RenderedElement>();
 
         var elementParents = getElementParents(page);
 
@@ -38,7 +37,7 @@ public final class MarkupPrinter
             }
         }
 
-        return new PrintedPage(printedElements, width, height);
+        return new RenderedPage(printedElements, width, height);
     }
 
     private static HashMap<MarkupElement, MarkupElement> getElementParents(Page page) {

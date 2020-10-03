@@ -7,8 +7,7 @@ import net.survival.graphics.opengl.GLFilterMode;
 import net.survival.graphics.opengl.GLTexture;
 import net.survival.graphics.opengl.GLWrapMode;
 
-public class TextureAtlas implements GraphicsResource
-{
+public class TextureAtlas implements GraphicsResource {
     private static final int INITIAL_WIDTH = 64;
     private static final int INITIAL_HEIGHT = 64;
 

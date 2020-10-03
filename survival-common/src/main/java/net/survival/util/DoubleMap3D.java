@@ -2,8 +2,7 @@ package net.survival.util;
 
 import static net.survival.util.MathEx.lerp;
 
-public class DoubleMap3D implements DoubleSampler3D
-{
+public class DoubleMap3D implements DoubleSampler3D {
     protected final double[] map;
     private final int lengthX;
     private final int lengthY;

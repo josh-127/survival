@@ -2,8 +2,7 @@ package net.survival.block.message;
 
 import net.survival.block.Column;
 
-public class PostColumnRequest extends ColumnRequest
-{
+public class PostColumnRequest extends ColumnRequest {
     private final long columnPos;
     private final Column column;
 

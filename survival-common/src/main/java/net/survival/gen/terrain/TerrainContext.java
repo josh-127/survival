@@ -3,8 +3,7 @@ package net.survival.gen.terrain;
 import net.survival.block.ColumnPos;
 import net.survival.gen.ColumnPrimer;
 
-public class TerrainContext
-{
+public class TerrainContext {
     private final long columnPos;
     private final ColumnPrimer primer;
 

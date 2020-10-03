@@ -3,8 +3,7 @@ package net.survival.gen.decoration;
 import net.survival.block.state.BedrockBlock;
 import net.survival.gen.ColumnPrimer;
 
-class BedrockDecorator extends ColumnDecorator
-{
+class BedrockDecorator extends ColumnDecorator {
     @Override
     public void decorate(DecoratorContext context) {
         var primer = context.getColumnPrimer();

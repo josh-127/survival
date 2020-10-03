@@ -7,8 +7,7 @@ import net.survival.gen.decoration.DefaultColumnDecorator;
 import net.survival.gen.terrain.DefaultTerrainGenerator;
 import net.survival.gen.terrain.TerrainContext;
 
-public class DefaultColumnGenerator implements ColumnProvider
-{
+public class DefaultColumnGenerator implements ColumnProvider {
     private final DefaultTerrainGenerator terrainGenerator;
     private final DefaultColumnDecorator decorator;
 

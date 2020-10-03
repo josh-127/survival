@@ -1,15 +1,15 @@
-package net.survival.block;
+package net.survival.block.io;
 
 import java.lang.reflect.InvocationTargetException;
 import java.nio.ByteBuffer;
 import java.util.HashMap;
 
+import net.survival.block.BlockSerializable;
 import org.reflections.Reflections;
 
 import net.survival.block.state.BlockState;
 
-final class BlockSerializer
-{
+final class BlockSerializer {
     private static final HashMap<Class<?>, Integer> classToTagMap = new HashMap<>();
     private static final HashMap<Integer, Class<?>> tagToClassMap = new HashMap<>();
 

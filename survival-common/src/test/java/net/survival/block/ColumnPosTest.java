@@ -10,8 +10,7 @@ import junitparams.Parameters;
 import net.survival.block.ColumnPos;
 
 @RunWith(JUnitParamsRunner.class)
-public class ColumnPosTest
-{
+public class ColumnPosTest {
     @Test
     @Parameters(method = "getSetOfGeneralCasePositions")
     public void hashPos_givenASetOfGeneralCasePositions_returnsCorrectResult(int cx, int cz,

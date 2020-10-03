@@ -5,8 +5,7 @@ import net.survival.block.state.GrassBlock;
 import net.survival.gen.SurfaceDescription;
 import net.survival.gen.SurfaceLayer;
 
-public class DefaultColumnDecorator extends ColumnDecorator
-{
+public class DefaultColumnDecorator extends ColumnDecorator {
     private final BedrockDecorator bedrockDecorator = new BedrockDecorator();
 
     private final SurfaceDescription grasslandSurface = new SurfaceDescription.Builder()

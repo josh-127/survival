@@ -1,7 +1,6 @@
 package net.survival.client.input;
 
-public final class Mouse
-{
+public final class Mouse {
     public static final int MODE_CENTERED = 0;
     public static final int MODE_NORMAL = 1;
 

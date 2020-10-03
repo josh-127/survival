@@ -1,8 +1,7 @@
 
 package net.survival.util;
 
-public class Fnv1a
-{
+public class Fnv1a {
     private static final int PRIME = 0x1000193;
     private static final int OFFSET_BASIS = 0x811C9DC5;
 

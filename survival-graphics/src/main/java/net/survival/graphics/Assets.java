@@ -1,7 +1,6 @@
 package net.survival.graphics;
 
-public final class Assets
-{
+public final class Assets {
     private static TextureAtlas mipmappedTextureAtlas;
     private static TextureAtlas textureAtlas;
     private static boolean initialized;

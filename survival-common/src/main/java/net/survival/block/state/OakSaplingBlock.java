@@ -3,8 +3,7 @@ package net.survival.block.state;
 import net.survival.block.BlockSerializable;
 
 @BlockSerializable(9)
-public final class OakSaplingBlock extends BlockState
-{
+public final class OakSaplingBlock extends BlockState {
     public static final OakSaplingBlock INSTANCE = new OakSaplingBlock();
 
     private OakSaplingBlock() {}

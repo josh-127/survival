@@ -10,8 +10,7 @@ import org.junit.runner.RunWith;
 import junitparams.JUnitParamsRunner;
 
 @RunWith(JUnitParamsRunner.class)
-public class MathExTest
-{
+public class MathExTest {
     private static final long SEED = 0L;
     private static final double EPSILON = 0.0009765625;
 

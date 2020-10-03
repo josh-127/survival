@@ -1,7 +1,6 @@
 package net.survival.util;
 
-public class Rectangle
-{
+public class Rectangle {
     private double left;
     private double top;
     private double right;

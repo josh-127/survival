@@ -1,7 +1,6 @@
-package net.survival.markup.style;
+package net.survival.markdown.style;
 
-public final class ColoredBackground extends Background
-{
+public final class ColoredBackground extends Background {
     private final double red;
     private final double green;
     private final double blue;

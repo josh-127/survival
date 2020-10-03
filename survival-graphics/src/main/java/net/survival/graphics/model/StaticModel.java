@@ -13,13 +13,7 @@ import java.io.File;
 import java.nio.IntBuffer;
 import java.nio.file.Paths;
 
-//
-// TODO: Pre-process all of this importing code in the build system.
-//       The game should just transfer a file's model data directly to the GPU.
-//
-
-public class StaticModel
-{
+public class StaticModel {
     public static final StaticModel chicken = fromFile("../../assets/models/entities/chicken.obj");
     public static final StaticModel cow = fromFile("../../assets/models/entities/cow.obj");
     public static final StaticModel goat = fromFile("../../assets/models/entities/goat.obj");

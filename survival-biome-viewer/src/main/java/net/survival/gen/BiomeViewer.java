@@ -9,8 +9,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 
-public class BiomeViewer extends JFrame
-{
+public class BiomeViewer extends JFrame {
     private static final long serialVersionUID = 1L;
 
     private static final String TITLE = "Biome Viewer";

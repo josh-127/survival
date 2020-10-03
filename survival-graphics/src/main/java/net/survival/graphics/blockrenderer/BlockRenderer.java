@@ -4,8 +4,7 @@ import net.survival.block.state.BlockModel;
 import net.survival.block.state.BlockState;
 import net.survival.graphics.opengl.GLDisplayList;
 
-public abstract class BlockRenderer
-{
+public abstract class BlockRenderer {
     protected static final float NON_CUBIC_SHADE = 1.0f;
     protected static final float TOP_FACE_SHADE = 1.0f;
     protected static final float BOTTOM_FACE_SHADE = 0.25f;

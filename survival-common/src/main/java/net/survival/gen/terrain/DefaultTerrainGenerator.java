@@ -5,8 +5,7 @@ import net.survival.gen.ColumnPrimer;
 import net.survival.util.DoubleMap3D;
 import net.survival.util.ImprovedNoiseGenerator;
 
-public class DefaultTerrainGenerator implements TerrainGenerator
-{
+public class DefaultTerrainGenerator implements TerrainGenerator {
     private static final int NBLOCK_YLENGTH = ColumnPrimer.YLENGTH / 32;
     private static final int NBLOCK_ZLENGTH = ColumnPrimer.ZLENGTH / 4;
     private static final int NBLOCK_XLENGTH = ColumnPrimer.XLENGTH / 4;

@@ -5,8 +5,7 @@ import net.survival.block.state.BlockState;
 import net.survival.graphics.Assets;
 import net.survival.graphics.opengl.GLDisplayList;
 
-class SaplingRenderer extends BlockRenderer
-{
+class SaplingRenderer extends BlockRenderer {
     private static final float PADDING = 0.125f;
 
     @Override

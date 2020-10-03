@@ -7,8 +7,7 @@ import static org.lwjgl.opengl.GL11.*;
 
 import java.nio.FloatBuffer;
 
-public class GLMatrixStack
-{
+public class GLMatrixStack {
     private static final FloatBuffer matrixParam = BufferUtils.createFloatBuffer(16);
     private static final Matrix4f identityMatrix = new Matrix4f();
 

@@ -1,7 +1,6 @@
 package net.survival.client.input;
 
-public abstract class KeyboardAdapter
-{
+public abstract class KeyboardAdapter {
     protected void pressKey(Key key) {
         Keyboard.keyState[key.ordinal()] = true;
     }

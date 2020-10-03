@@ -1,11 +1,10 @@
-package net.survival.block;
+package net.survival.block.io;
 
 import java.nio.ByteBuffer;
 
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 
-class ColumnDirectory
-{
+class ColumnDirectory {
     // The ordering of on-disk columnDirectory entries depends on Long2LongMap's implementation.
     // However, any change in the implementation will still be backwards compatible with
     // ColumnServer's file format.

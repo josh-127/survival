@@ -3,8 +3,7 @@ package net.survival.gen.layer;
 import net.survival.util.IntNoise;
 
 @Deprecated
-class FuzzyMagnifiedGenLayer extends GenLayer
-{
+class FuzzyMagnifiedGenLayer extends GenLayer {
     private final GenLayer source;
 
     private FuzzyMagnifiedGenLayer(int lengthX, int lengthZ, long seed,

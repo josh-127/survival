@@ -4,8 +4,7 @@ import static org.lwjgl.opengl.GL11.*;
 
 import net.survival.graphics.GraphicsResource;
 
-public class GLDisplayList implements GraphicsResource
-{
+public class GLDisplayList implements GraphicsResource {
     final int id;
 
     private GLDisplayList(int id) {

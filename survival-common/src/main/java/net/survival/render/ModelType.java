@@ -1,7 +1,6 @@
 package net.survival.render;
 
-public enum ModelType
-{
+public enum ModelType {
     CHICKEN,
     COW,
     GOAT,

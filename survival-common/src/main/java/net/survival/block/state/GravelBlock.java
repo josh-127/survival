@@ -3,8 +3,7 @@ package net.survival.block.state;
 import net.survival.block.BlockSerializable;
 
 @BlockSerializable(6)
-public final class GravelBlock extends BlockState
-{
+public final class GravelBlock extends BlockState {
     public static final GravelBlock INSTANCE = new GravelBlock();
 
     private GravelBlock() {}

@@ -1,13 +1,12 @@
-package net.survival.graphics.markup;
+package net.survival.graphics.markdown;
 
 import net.survival.util.Rectangle;
 
-public class PrintedElement
-{
+public class RenderedElement {
     private final Rectangle boundingBox;
     private final double z;
 
-    public PrintedElement(Rectangle boundingBox, double z) {
+    public RenderedElement(Rectangle boundingBox, double z) {
         this.boundingBox = boundingBox;
         this.z = z;
     }

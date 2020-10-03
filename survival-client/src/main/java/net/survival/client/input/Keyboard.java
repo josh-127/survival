@@ -1,7 +1,6 @@
 package net.survival.client.input;
 
-public final class Keyboard
-{
+public final class Keyboard {
     static boolean[] prevKeyState = new boolean[Key.getCachedValues().length];
     static boolean[] keyState = new boolean[Key.getCachedValues().length];
 

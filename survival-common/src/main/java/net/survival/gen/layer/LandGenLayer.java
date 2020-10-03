@@ -4,8 +4,7 @@ import net.survival.gen.BiomeType;
 import net.survival.util.IntNoise;
 
 @Deprecated
-class LandGenLayer extends GenLayer
-{
+class LandGenLayer extends GenLayer {
     public LandGenLayer(int lengthX, int lengthZ, long seed) {
         super(lengthX, lengthZ, seed);
     }

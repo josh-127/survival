@@ -3,8 +3,7 @@ package net.survival.gen.decoration;
 import net.survival.block.ColumnPos;
 import net.survival.gen.ColumnPrimer;
 
-public class DecoratorContext
-{
+public class DecoratorContext {
     private final long columnPos;
     private final ColumnPrimer primer;
 

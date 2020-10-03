@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="survival-graphics" />
+        <module name="survival-biomeviewer" />
+        <module name="survival-texturepacker" />
+        <module name="survival-common" />
+        <module name="survival-server" />
+        <module name="survival-client" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="survival-biomeviewer" target="11" />
+      <module name="survival-client" target="11" />
+      <module name="survival-common" target="11" />
+      <module name="survival-graphics" target="11" />
+      <module name="survival-server" target="13" />
+      <module name="survival-texturepacker" target="13" />
+    </bytecodeTargetLevel>
+  </component>
+</project>

@@ -2,8 +2,7 @@ package net.survival.graphics;
 
 import java.util.ArrayList;
 
-public class BitmapAtlasBuilder
-{
+public class BitmapAtlasBuilder {
     // TODO: Use custom balanced BST structure for best-match lookup optimization.
 
     private final ArrayList<BitmapRegion> allocatedRegions;

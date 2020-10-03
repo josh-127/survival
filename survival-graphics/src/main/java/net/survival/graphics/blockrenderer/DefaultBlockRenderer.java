@@ -5,8 +5,7 @@ import net.survival.block.state.BlockState;
 import net.survival.graphics.Assets;
 import net.survival.graphics.opengl.GLDisplayList;
 
-class DefaultBlockRenderer extends BlockRenderer
-{
+class DefaultBlockRenderer extends BlockRenderer {
     @Override
     public void pushVertices(
             int x,

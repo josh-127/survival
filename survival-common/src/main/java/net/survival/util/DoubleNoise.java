@@ -3,8 +3,7 @@ package net.survival.util;
 import static java.lang.Math.*;
 import static net.survival.util.MathEx.*;
 
-public class DoubleNoise
-{
+public class DoubleNoise {
     private DoubleNoise() {}
 
     public static double white(double x, long seed) {

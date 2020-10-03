@@ -3,8 +3,7 @@ package net.survival.gen.decoration;
 import net.survival.block.state.WaterBlock;
 import net.survival.gen.ColumnPrimer;
 
-public class WaterDecorator extends ColumnDecorator
-{
+public class WaterDecorator extends ColumnDecorator {
     private static final int SEA_LEVEL = 63;
 
     @Override

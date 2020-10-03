@@ -7,8 +7,7 @@ import net.survival.graphics.opengl.GLComparisonFunc;
 import net.survival.graphics.opengl.GLImmediateDrawCall;
 import net.survival.graphics.opengl.GLState;
 
-class TextRenderer
-{
+class TextRenderer {
     private final String[] texturePaths;
 
     public TextRenderer(String fontPath) {
