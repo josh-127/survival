@@ -2,15 +2,13 @@ package net.survival.client;
 
 import java.io.File;
 
+import net.survival.actor.Actor;
 import net.survival.block.io.ColumnDbPipe;
 import net.survival.block.io.ColumnServer;
 import net.survival.block.StandardBlocks;
 import org.lwjgl.glfw.GLFW;
 
-import net.survival.actor.Jump;
-import net.survival.actor.Move;
 import net.survival.actor.Physics;
-import net.survival.actor.Player;
 import net.survival.block.ColumnPos;
 import net.survival.block.message.CloseColumnRequest;
 import net.survival.client.input.GlfwKeyboardAdapter;
@@ -40,7 +38,7 @@ public class Client implements AutoCloseable {
     private final ClientParticleSpace particleSpace = new ClientParticleSpace();
     private final CompositeDisplay compositeDisplay;
     private final World world = new World();
-    private final Player player = new Player();
+    private final Actor player = new Actor();
     private final FpvCamera fpvCamera = new FpvCamera(0.0f, -1.0f);
 
     private final ColumnIO columnIO;
@@ -50,11 +48,11 @@ public class Client implements AutoCloseable {
 
     private Client(ColumnDbPipe.ClientSide columnPipe) {
         compositeDisplay = new CompositeDisplay(particleSpace, WINDOW_WIDTH, WINDOW_HEIGHT);
-        player.setX(60.0);
-        player.setY(128.0);
-        player.setZ(20.0);
-        player.setHitBox(HitBox.PLAYER);
-        player.setMovementSpeed(5.0);
+        player.x = 60.0;
+        player.y = 128.0;
+        player.z = 20.0;
+        player.hitBox = HitBox.PLAYER;
+        player.movementSpeed = 5.0;
 
         columnIO = new ColumnIO(columnPipe);
     }
@@ -69,7 +67,7 @@ public class Client implements AutoCloseable {
         saveTimer -= elapsedTime;
         if (saveTimer <= 0.0) {
             saveTimer = SAVE_INTERVAL;
-            columnIO.maskColumns(ColumnMaskFactory.createCircle(12, player.getX(), player.getZ()));
+            columnIO.maskColumns(ColumnMaskFactory.createCircle(12, player.x, player.z));
         }
 
         columnIO.update();
@@ -86,12 +84,12 @@ public class Client implements AutoCloseable {
         if (Keyboard.isKeyDown(Key.D)) { jsX += Math.sin(camYaw + PI / 2.0); jsZ -= Math.cos(camYaw + PI / 2.0); }
 
         if (Mouse.getMode() == Mouse.MODE_CENTERED) fpvCamera.rotate(-cursorDX / 128.0, -cursorDY / 128.0);
-        Move.dispatch(player, jsX, jsZ);
-        if (Keyboard.isKeyPressed(Key.SPACE)) Jump.dispatch(player, 1.1);
+        player.move(jsX, jsZ);
+        if (Keyboard.isKeyPressed(Key.SPACE)) player.jump(1.1);
 
         temporaryTestCode(elapsedTime);
         
-        Physics.dispatch(player, world, elapsedTime);
+        Physics.tick(player, world, elapsedTime);
         
         for (var entry : world.getColumns().entrySet()) {
             var columnPos = entry.getKey();
@@ -106,15 +104,15 @@ public class Client implements AutoCloseable {
             }
         }
         
-        compositeDisplay.moveCamera((float) player.getX(), (float) (player.getY() + 1.0), (float) player.getZ());
+        compositeDisplay.moveCamera((float) player.x, (float) (player.y + 1.0), (float) player.z);
         compositeDisplay.orientCamera((float) fpvCamera.yaw, (float) fpvCamera.pitch);
         compositeDisplay.setCameraParams((float) Math.toRadians(60.0), WINDOW_WIDTH, WINDOW_HEIGHT, 0.0625f, 1536.0f);
         
         compositeDisplay.drawLabel(String.format("Memory Usage: %.2f MiB", (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 1024.0 / 1024.0), 3.0, 0.0, 0.0);
         compositeDisplay.drawLabel(String.format("Frame Rate: %d FPS", frameRate), 3.0, 0.0, 1.1);
-        compositeDisplay.drawLabel(String.format("X: %d", (int) Math.floor(player.getX())), 1.0, 0.0, 2.2);
-        compositeDisplay.drawLabel(String.format("Y: %d", (int) Math.floor(player.getY())), 1.0, 0.0, 3.3);
-        compositeDisplay.drawLabel(String.format("Z: %d", (int) Math.floor(player.getZ())), 1.0, 0.0, 4.4);
+        compositeDisplay.drawLabel(String.format("X: %d", (int) Math.floor(player.x)), 1.0, 0.0, 2.2);
+        compositeDisplay.drawLabel(String.format("Y: %d", (int) Math.floor(player.y)), 1.0, 0.0, 3.3);
+        compositeDisplay.drawLabel(String.format("Z: %d", (int) Math.floor(player.z)), 1.0, 0.0, 4.4);
     }
 
     private void render() {
@@ -189,7 +187,7 @@ public class Client implements AutoCloseable {
 
     private void temporaryTestCode(double elapsedTime) {
         if (Mouse.isLmbPressed() || Mouse.isRmbPressed()) {
-            var px = player.getX(); var py = player.getY() + 1.0; var pz = player.getZ();
+            var px = player.x; var py = player.y + 1.0; var pz = player.z;
             final var DELTA = 0.0078125;
             for (var zz = 0.0; zz < 7.0; zz += DELTA) {
                 px += DELTA * Math.sin(fpvCamera.yaw) * Math.cos(fpvCamera.pitch);
