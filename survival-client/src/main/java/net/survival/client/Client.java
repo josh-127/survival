@@ -43,7 +43,7 @@ public class Client implements AutoCloseable {
 
     private final ColumnIO columnIO;
 
-    private static final double SAVE_INTERVAL = 30.0;
+    private static final double SAVE_INTERVAL = 10.0;
     private double saveTimer;
 
     private Client(ColumnDbPipe.ClientSide columnPipe) {
@@ -88,9 +88,9 @@ public class Client implements AutoCloseable {
         if (Keyboard.isKeyPressed(Key.SPACE)) player.jump(1.1);
 
         temporaryTestCode(elapsedTime);
-        
+
         Physics.tick(player, world, elapsedTime);
-        
+
         for (var entry : world.getColumns().entrySet()) {
             var columnPos = entry.getKey();
             var column = entry.getValue();
@@ -103,7 +103,7 @@ public class Client implements AutoCloseable {
                 column.clearModifiedFlag();
             }
         }
-        
+
         compositeDisplay.moveCamera((float) player.x, (float) (player.y + 1.0), (float) player.z);
         compositeDisplay.orientCamera((float) fpvCamera.yaw, (float) fpvCamera.pitch);
         compositeDisplay.setCameraParams((float) Math.toRadians(60.0), WINDOW_WIDTH, WINDOW_HEIGHT, 0.0625f, 1536.0f);
@@ -124,9 +124,10 @@ public class Client implements AutoCloseable {
 
         var columnDbPipe = new ColumnDbPipe();
         var columnServer = new ColumnServer(
-                new File(System.getProperty("user.dir") + "/.world/columns"),
-                columnDbPipe.getServerSide(),
-                columnGenerator);
+            new File(System.getProperty("user.dir") + "/.world/columns"),
+            columnDbPipe.getServerSide(),
+            columnGenerator
+        );
 
         var columnServerThread = new Thread(columnServer);
         columnServerThread.start();

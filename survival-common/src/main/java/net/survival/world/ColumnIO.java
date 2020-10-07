@@ -13,7 +13,7 @@ import net.survival.block.message.PostColumnRequest;
 
 public class ColumnIO {
     private Map<Long, Column> columns = new HashMap<>();
-    private Set<Long> loadingColumns = new HashSet<>();
+    private final Set<Long> loadingColumns = new HashSet<>();
     private final ColumnDbPipe.ClientSide columnPipe;
 
     public ColumnIO(ColumnDbPipe.ClientSide columnPipe) {
@@ -47,16 +47,16 @@ public class ColumnIO {
 
         // Mask out columns.
         columns = columns.entrySet().stream()
-                .filter(e -> mask.contains(e.getKey()))
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+            .filter(e -> mask.contains(e.getKey()))
+            .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
         // Check out columns.
         mask.stream()
-                .filter(pos -> !columns.containsKey(pos))
-                .filter(pos -> !loadingColumns.contains(pos))
-                .forEach(pos -> {
-                    loadingColumns.add(pos);
-                    columnPipe.request(new GetColumnRequest(pos));
-                });
+            .filter(pos -> !columns.containsKey(pos))
+            .filter(pos -> !loadingColumns.contains(pos))
+            .forEach(pos -> {
+                loadingColumns.add(pos);
+                columnPipe.request(new GetColumnRequest(pos));
+            });
     }
 }

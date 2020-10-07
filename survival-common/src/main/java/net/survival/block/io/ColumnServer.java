@@ -15,7 +15,7 @@ import net.survival.block.message.GetColumnRequest;
 import net.survival.block.message.PostColumnRequest;
 
 public class ColumnServer implements Runnable {
-    private static int FOOTER_LENGTH = 2 * VirtualAllocationUnit.STRUCTURE_SIZE;
+    private static final int FOOTER_LENGTH = 2 * VirtualAllocationUnit.STRUCTURE_SIZE;
 
     private final File file;
     private final VirtualMemoryAllocator allocator = new VirtualMemoryAllocator();
@@ -42,19 +42,20 @@ public class ColumnServer implements Runnable {
             var fileExists = file.exists();
             fileChannel = new RandomAccessFile(file, "rw").getChannel();
 
-            if (fileExists)
+            if (fileExists) {
                 loadMetadata();
+            }
 
             while (running.get()) {
                 var request = columnPipe.waitForRequest();
-                
+
                 if (request instanceof CloseColumnRequest) {
                     running.set(false);
                 }
                 else if (request instanceof GetColumnRequest) {
                     var gcr = (GetColumnRequest) request;
                     var columnPos = gcr.getColumnPos();
-                    
+
                     try {
                         var column = loadColumn(columnPos);
                         columnPipe.respond(new ColumnResponse(columnPos, column));
@@ -100,22 +101,25 @@ public class ColumnServer implements Runnable {
 
         var compressedData = columnCodec.compressColumn(column);
         var columnVau = allocator.allocateMemoryAndReturnVau(compressedData.limit());
-        if (columnVau == null)
+        if (columnVau == null) {
             throw new RuntimeException("Cannot allocate anymore columns.");
+        }
 
         directory.put(columnPos, columnVau);
 
         fileChannel.position(columnVau.address);
-        while (compressedData.hasRemaining())
+        while (compressedData.hasRemaining()) {
             fileChannel.write(compressedData);
+        }
         compressedData.flip();
     }
 
     private void loadMetadata() throws IOException {
         var buffer = ByteBuffer.allocate(FOOTER_LENGTH);
         fileChannel.position(file.length() - FOOTER_LENGTH);
-        while (buffer.hasRemaining())
+        while (buffer.hasRemaining()) {
             fileChannel.read(buffer);
+        }
         buffer.flip();
 
         var allocatorVau = new VirtualAllocationUnit();
@@ -139,21 +143,24 @@ public class ColumnServer implements Runnable {
         fileChannel.position(allocator.size());
 
         var metadataBuffer = ByteBuffer.allocateDirect(
-                allocator.getSerializedSize() +
-                directory.getSerializedSize() +
-                FOOTER_LENGTH);
+            allocator.getSerializedSize() +
+            directory.getSerializedSize() +
+            FOOTER_LENGTH
+        );
 
         var allocatorVau = new VirtualAllocationUnit(
-                fileChannel.position(),
-                allocator.getSerializedSize(),
-                true);
+            fileChannel.position(),
+            allocator.getSerializedSize(),
+            true
+        );
 
         allocator.writeTo(metadataBuffer);
 
         var directoryVau = new VirtualAllocationUnit(
-                fileChannel.position(),
-                directory.getSerializedSize(),
-                true);
+            fileChannel.position(),
+            directory.getSerializedSize(),
+            true
+        );
 
         directory.writeTo(metadataBuffer);
 

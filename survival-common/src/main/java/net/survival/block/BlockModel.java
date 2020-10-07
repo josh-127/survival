@@ -26,11 +26,11 @@ public final class BlockModel {
     public static final byte BLOCKING_NEG_X = (byte) (1 << FACE_NEG_X);
     public static final byte BLOCKING_POS_X = (byte) (1 << FACE_POS_X);
 
-    private final float[][] vertexData;
-    private final String[] textures;
-    private final byte blocking;
+    public final float[][] vertexData;
+    public final String[] textures;
+    public final byte blocking;
 
-    private BlockModel(float[][] vertexData, String[] textures, byte blocking) {
+    public BlockModel(float[][] vertexData, String[] textures, byte blocking) {
         if (vertexData.length != NUM_FACES) {
             throw new IllegalArgumentException("vertexData");
         }

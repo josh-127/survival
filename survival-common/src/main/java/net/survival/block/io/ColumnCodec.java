@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 
+import net.survival.block.BlockModel;
 import net.survival.block.Chunk;
 import net.survival.block.Column;
 import net.survival.block.Block;
@@ -47,7 +48,7 @@ class ColumnCodec {
         }
 
         for (var block : blockPalette) {
-            BlockSerializer.serializeBlock(block, buffer);
+            serializeBlock(block, buffer);
         }
     }
 
@@ -89,9 +90,81 @@ class ColumnCodec {
 
         var blockPalette = new Block[blockPaletteLength];
         for (var i = 0; i < blockPalette.length; ++i) {
-            blockPalette[i] = BlockSerializer.deserializeBlock(buffer);
+            blockPalette[i] = deserializeBlock(buffer);
         }
 
         return new Chunk(rawData, blockPalette);
+    }
+
+    private void serializeBlock(Block block, ByteBuffer buffer) {
+        buffer.putDouble(block.hardness);
+        buffer.putDouble(block.resistance);
+        buffer.put(block.solid ? (byte) 1 : 0);
+        serializeBlockModel(block.model, buffer);
+    }
+
+    private Block deserializeBlock(ByteBuffer buffer) {
+        var hardness = buffer.getDouble();
+        var resistance = buffer.getDouble();
+        var solid = buffer.get() == 1;
+        var model = deserializeBlockModel(buffer);
+        return new Block(hardness, resistance, solid, model);
+    }
+
+    private void serializeBlockModel(BlockModel model, ByteBuffer buffer) {
+        buffer.putInt(model.vertexData.length);
+        for (var i = 0; i < model.vertexData.length; ++i) {
+            if (model.vertexData[i] != null) {
+                buffer.putInt(model.vertexData[i].length);
+                for (var j = 0; j < model.vertexData[i].length; ++j) {
+                    buffer.putFloat(model.vertexData[i][j]);
+                }
+            }
+            else {
+                buffer.putInt(0);
+            }
+        }
+
+        buffer.putInt(model.textures.length);
+        for (var i = 0; i < model.textures.length; ++i) {
+            if (model.textures[i] != null) {
+                buffer.putInt(model.textures[i].length());
+                buffer.put(model.textures[i].getBytes());
+            }
+            else {
+                buffer.putInt(0);
+            }
+        }
+
+        buffer.put(model.blocking);
+    }
+
+    private BlockModel deserializeBlockModel(ByteBuffer buffer) {
+        var numFaces = buffer.getInt();
+        var vertexData = new float[numFaces][];
+        for (var i = 0; i < numFaces; ++i) {
+            var length = buffer.getInt();
+            if (length != 0) {
+                vertexData[i] = new float[length];
+                for (var j = 0; j < length; ++j) {
+                    vertexData[i][j] = buffer.getFloat();
+                }
+            }
+        }
+
+        var numTextures = buffer.getInt();
+        var textures = new String[numTextures];
+        for (var i = 0; i < numTextures; ++i) {
+            var length = buffer.getInt();
+            if (length != 0) {
+                var bytes = new byte[length];
+                buffer.get(bytes);
+                textures[i] = new String(bytes);
+            }
+        }
+
+        var blocking = buffer.get();
+
+        return new BlockModel(vertexData, textures, blocking);
     }
 }
