@@ -23,6 +23,6 @@ public final class Actor {
     }
 
     public void jump(double height) {
-        velY += Math.sqrt(2.0 * GRAVITY * height);
+        velY = Math.sqrt(2.0 * GRAVITY * height);
     }
 }
