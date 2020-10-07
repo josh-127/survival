@@ -34,13 +34,9 @@ Building
 | Java JDK     | 11.0.2 or later |
 | Apache Maven | 3.6.0 or later  |
 
-### For Windows 7, 8.1, or 10
-Install Chocolatey.
-https://chocolatey.org/docs/installation#installing-chocolatey
-
 Install SDK and Build System:
 ```
-choco install jdk11
+choco install jdk13
 choco install maven
 ```
 
@@ -55,12 +51,3 @@ To build on command line:
 ```
 mvn install
 ```
-
-### For macOS
-Will support later.
-
-### For Ubuntu (server only)
-Will support later.
-
-### Other distributions
-Unsupported.
