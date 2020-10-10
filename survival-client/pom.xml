@@ -5,6 +5,11 @@
     <groupId>net.survival.client</groupId>
     <artifactId>survival-client</artifactId>
     <version>0.3.0-SNAPSHOT</version>
+
+    <properties>
+        <kotlin.version>1.4.10</kotlin.version>
+    </properties>
+
     <profiles>
         <profile><id>lwjgl-natives-linux</id><activation><os><family>unix</family></os></activation><properties><lwjgl.natives>natives-linux</lwjgl.natives></properties></profile>
         <profile><id>lwjgl-natives-macos</id><activation><os><family>mac</family></os></activation><properties><lwjgl.natives>natives-macos</lwjgl.natives></properties></profile>
@@ -34,13 +39,69 @@
         <dependency><groupId>org.lwjgl</groupId><artifactId>lwjgl-opengl</artifactId><version>3.2.1</version><classifier>${lwjgl.natives}</classifier></dependency>
         <dependency><groupId>org.lwjgl</groupId><artifactId>lwjgl-stb</artifactId><version>3.2.1</version><classifier>${lwjgl.natives}</classifier></dependency>
         <dependency><groupId>org.joml</groupId><artifactId>joml</artifactId><version>1.9.12</version></dependency>
+        <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-stdlib-jdk8</artifactId>
+            <version>${kotlin.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-test</artifactId>
+            <version>${kotlin.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-stdlib-jdk8</artifactId>
+            <version>${kotlin.version}</version>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
             <plugin>
+                <groupId>org.jetbrains.kotlin</groupId>
+                <artifactId>kotlin-maven-plugin</artifactId>
+                <version>${kotlin.version}</version>
+                <executions>
+                    <execution>
+                        <id>compile</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>test-compile</id>
+                        <phase>test-compile</phase>
+                        <goals>
+                            <goal>test-compile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <jvmTarget>1.8</jvmTarget>
+                </configuration>
+            </plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.1</version>
+                <executions>
+                    <execution>
+                        <id>compile</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>testCompile</id>
+                        <phase>test-compile</phase>
+                        <goals>
+                            <goal>testCompile</goal>
+                        </goals>
+                    </execution>
+                </executions>
                 <configuration>
                     <release>11</release>
                 </configuration>

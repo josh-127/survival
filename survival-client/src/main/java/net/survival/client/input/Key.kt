@@ -1,6 +1,6 @@
-package net.survival.client.input;
+package net.survival.client.input
 
-public enum Key {
+enum class Key {
     SPACE,
     APOSTROPHE,
     COMMA,
@@ -55,9 +55,7 @@ public enum Key {
     RIGHT_SUPER,
     MENU;
 
-    private static final Key[] cachedValues = values();
-
-    public static Key[] getCachedValues() {
-        return cachedValues;
+    companion object {
+        val cachedValues = values()
     }
 }
