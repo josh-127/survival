@@ -1,5 +1,6 @@
 package net.survival.world;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -9,15 +10,15 @@ import net.survival.block.ColumnPos;
 import net.survival.block.Block;
 
 public class World {
+    private ArrayList<Actor> actors = new ArrayList<>();
     private Map<Long, Column> columns = new HashMap<>();
-    private Map<Integer, Actor> actors = new HashMap<>();
+
+    public void addActor(Actor actor) {
+        actors.add(actor);
+    }
 
     public Map<Long, Column> getColumns() {
         return columns;
-    }
-
-    public Map<Integer, Actor> getActors() {
-        return actors;
     }
 
     public Block getBlock(int x, int y, int z) {
