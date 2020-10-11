@@ -47,37 +47,37 @@ internal class ColumnDisplay private constructor(
                 var frontAdjChunk: Chunk? = null
                 var backAdjChunk: Chunk? = null
 
-                topAdjChunk = column.getChunk(i + 1)
+                topAdjChunk = column.getChunkOrNull(i + 1)
                 if (topAdjChunk == null) {
                     topAdjChunk = EMPTY_CHUNK
                 }
 
                 if (i > 0) {
-                    bottomAdjChunk = column.getChunk(i - 1)
+                    bottomAdjChunk = column.getChunkOrNull(i - 1)
                     if (bottomAdjChunk == null) {
                         bottomAdjChunk = EMPTY_CHUNK
                     }
                 }
                 if (leftAdjColumn != null) {
-                    leftAdjChunk = leftAdjColumn.getChunk(i)
+                    leftAdjChunk = leftAdjColumn.getChunkOrNull(i)
                     if (leftAdjChunk == null) {
                         leftAdjChunk = EMPTY_CHUNK
                     }
                 }
                 if (rightAdjColumn != null) {
-                    rightAdjChunk = rightAdjColumn.getChunk(i)
+                    rightAdjChunk = rightAdjColumn.getChunkOrNull(i)
                     if (rightAdjChunk == null) {
                         rightAdjChunk = EMPTY_CHUNK
                     }
                 }
                 if (frontAdjColumn != null) {
-                    frontAdjChunk = frontAdjColumn.getChunk(i)
+                    frontAdjChunk = frontAdjColumn.getChunkOrNull(i)
                     if (frontAdjChunk == null) {
                         frontAdjChunk = EMPTY_CHUNK
                     }
                 }
                 if (backAdjColumn != null) {
-                    backAdjChunk = backAdjColumn.getChunk(i)
+                    backAdjChunk = backAdjColumn.getChunkOrNull(i)
                     if (backAdjChunk == null) {
                         backAdjChunk = EMPTY_CHUNK
                     }

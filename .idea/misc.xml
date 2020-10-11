@@ -10,7 +10,6 @@
         <option value="$PROJECT_DIR$/survival-common/pom.xml" />
         <option value="$PROJECT_DIR$/survival-server/pom.xml" />
         <option value="$PROJECT_DIR$/survival-graphics/pom.xml" />
-        <option value="$PROJECT_DIR$/survival-biome-viewer/pom.xml" />
         <option value="$PROJECT_DIR$/survival-texturepacker/pom.xml" />
       </list>
     </option>

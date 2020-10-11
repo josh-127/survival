@@ -7,7 +7,6 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="survival-graphics" />
-        <module name="survival-biomeviewer" />
         <module name="survival-texturepacker" />
         <module name="survival-common" />
         <module name="survival-server" />

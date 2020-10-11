@@ -3,7 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/survival.iml" filepath="$PROJECT_DIR$/.idea/survival.iml" />
-      <module fileurl="file://$PROJECT_DIR$/survival-biome-viewer/survival-biomeviewer.iml" filepath="$PROJECT_DIR$/survival-biome-viewer/survival-biomeviewer.iml" />
       <module fileurl="file://$PROJECT_DIR$/survival-client/survival-client.iml" filepath="$PROJECT_DIR$/survival-client/survival-client.iml" />
       <module fileurl="file://$PROJECT_DIR$/survival-common/survival-common.iml" filepath="$PROJECT_DIR$/survival-common/survival-common.iml" />
       <module fileurl="file://$PROJECT_DIR$/survival-graphics/survival-graphics.iml" filepath="$PROJECT_DIR$/survival-graphics/survival-graphics.iml" />

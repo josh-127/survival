@@ -21,7 +21,7 @@ internal class ColumnCodec {
         columnBuffer.putInt(column.height)
         for (i in 0 until column.height) {
             val chunk = column.getChunk(i)
-            chunk?.let { compressChunk(it, columnBuffer) }
+            compressChunk(chunk, columnBuffer)
         }
         columnBuffer.flip()
         return columnBuffer
@@ -73,13 +73,12 @@ internal class ColumnCodec {
         }
 
         val rawData = XIntegerArray.moveUnderlyingArray(underlyingArray, Chunk.VOLUME, bitsPerElement)
-        val blockPalette = arrayOfNulls<Block>(blockPaletteLength)
-
-        for (i in blockPalette.indices) {
-            blockPalette[i] = deserializeBlock(buffer)
+        val blockPalette = ArrayList<Block>(blockPaletteLength)
+        for (i in 0 until blockPaletteLength) {
+            blockPalette.add(deserializeBlock(buffer))
         }
 
-        return Chunk(rawData, blockPalette)
+        return Chunk(rawData, blockPalette.toTypedArray())
     }
 
     private fun serializeBlock(block: Block, buffer: ByteBuffer) {
@@ -100,9 +99,10 @@ internal class ColumnCodec {
     private fun serializeBlockModel(model: BlockModel, buffer: ByteBuffer) {
         buffer.putInt(model.vertexData.size)
         for (i in model.vertexData.indices) {
-            if (model.vertexData[i] != null) {
-                buffer.putInt(model.vertexData[i].size)
-                for (vertex in model.vertexData[i]) {
+            val vertexDataAtFace = model.vertexData[i]
+            if (vertexDataAtFace != null) {
+                buffer.putInt(vertexDataAtFace.size)
+                for (vertex in vertexDataAtFace) {
                     buffer.putFloat(vertex)
                 }
             }
@@ -113,16 +113,17 @@ internal class ColumnCodec {
 
         buffer.putInt(model.textures.size)
         for (i in model.textures.indices) {
-            if (model.textures[i] != null) {
-                buffer.putInt(model.textures[i].length)
-                buffer.put(model.textures[i].toByteArray())
+            val textureAtFace = model.textures[i]
+            if (textureAtFace != null) {
+                buffer.putInt(textureAtFace.length)
+                buffer.put(textureAtFace.toByteArray())
             }
             else {
                 buffer.putInt(0)
             }
         }
 
-        buffer.put(model.blocking)
+        buffer.put(model.blockingFlags)
     }
 
     private fun deserializeBlockModel(buffer: ByteBuffer): BlockModel {
