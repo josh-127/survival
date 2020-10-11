@@ -2,6 +2,7 @@ package net.survival.graphics
 
 import net.survival.graphics.model.ModelRenderer
 import net.survival.graphics.model.StaticModel
+import net.survival.graphics.opengl.GLMatrixStack
 import net.survival.render.ModelType
 import org.joml.Matrix4f
 import org.joml.Matrix4fStack
@@ -33,7 +34,11 @@ class RenderServer {
     }
 
     fun drawModel(type: ModelType) {
+        GLMatrixStack.setProjectionMatrix(projectionMatrix)
+        GLMatrixStack.push()
+        GLMatrixStack.load(matrixStack)
         ModelRenderer.displayStaticModel(StaticModel.fromModelType(type))
+        GLMatrixStack.pop()
     }
 
     fun drawClouds() {

@@ -11,6 +11,7 @@ import net.survival.client.input.GlfwMouseAdapter
 import net.survival.graphics.*
 import org.lwjgl.glfw.GLFW
 import net.survival.graphics.opengl.GLRenderContext
+import net.survival.render.ModelType
 import org.joml.Matrix4f
 import java.util.concurrent.ConcurrentLinkedQueue
 
@@ -21,6 +22,11 @@ private const val NANOS_PER_TICK = SECONDS_PER_TICK * 1000000000.0
 private const val WINDOW_WIDTH = 1600
 private const val WINDOW_HEIGHT = 900
 private const val WINDOW_TITLE = "Survival"
+
+private const val ASSET_ROOT_PATH = "./assets/"
+private const val TEXTURE_PATH = ASSET_ROOT_PATH
+private const val FONT_PATH = "textures/fonts/default"
+private const val PIXELS_PER_EM = 24
 
 object Main {
     @Throws(InterruptedException::class)
@@ -69,7 +75,6 @@ private class Tick(
     override fun run() {
         resetTimer()
 
-
         while (true) {
             tick {
                 renderClient.send(RenderCommand.SetProjectionMatrix(
@@ -87,6 +92,19 @@ private class Tick(
                     0.8f, 1.0f, 1.0f,
                     0.25f, 0.5f, 1.0f
                 ))
+                renderClient.send(RenderCommand.PushMatrix(
+                    Matrix4f().apply {
+                        lookAt(
+                            0.0f, 2.0f, -5.0f,
+                            0.0f, 0.0f, 0.0f,
+                            0.0f, 1.0f, 0.0f,
+                        )
+                    }
+                ))
+                renderClient.send(RenderCommand.DrawModel(
+                    ModelType.HUMAN
+                ))
+                renderClient.send(RenderCommand.PopMatrix)
                 renderClient.send(RenderCommand.DrawClouds)
             }
         }
@@ -133,13 +151,20 @@ private class Render(
         mouseAdapter = GlfwMouseAdapter(display.underlyingGlfwWindow)
         GLFW.glfwSetKeyCallback(display.underlyingGlfwWindow, keyboardAdapter)
         GLFW.glfwSetCursorPosCallback(display.underlyingGlfwWindow, mouseAdapter)
-        GLRenderContext.init()
 
+        GLRenderContext.init()
+        Assets.setup(
+            TextureAtlas(TEXTURE_PATH, true),
+            TextureAtlas(TEXTURE_PATH, false)
+        )
         val renderer = RenderServer()
 
         resetTimer()
         while (!shouldQuit.get()) {
             render {
+                Assets.getMipmappedTextureAtlas().updateTextures()
+                Assets.getTextureAtlas().updateTextures()
+
                 GLRenderContext.clearColorBuffer(0.0f, 0.0f, 0.0f, 0.0f)
                 GLRenderContext.clearDepthBuffer(1.0f)
 

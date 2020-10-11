@@ -83,12 +83,12 @@ class StaticModel private constructor(
     }
 
     companion object {
-        val chicken = fromFile("../../assets/models/entities/chicken.obj")
-        val cow = fromFile("../../assets/models/entities/cow.obj")
-        val goat = fromFile("../../assets/models/entities/goat.obj")
-        val human = fromFile("../../assets/models/entities/human.obj")
-        val pig = fromFile("../../assets/models/entities/pig.obj")
-        val slime = fromFile("../../assets/models/entities/slime.obj")
+        val chicken = fromFile("./assets/models/entities/chicken.obj")
+        val cow = fromFile("./assets/models/entities/cow.obj")
+        val goat = fromFile("./assets/models/entities/goat.obj")
+        val human = fromFile("./assets/models/entities/human.obj")
+        val pig = fromFile("./assets/models/entities/pig.obj")
+        val slime = fromFile("./assets/models/entities/slime.obj")
 
         @JvmStatic
         fun fromModelType(modelType: ModelType): StaticModel =
