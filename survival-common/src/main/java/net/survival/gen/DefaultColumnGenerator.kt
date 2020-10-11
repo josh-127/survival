@@ -1,17 +1,16 @@
 package net.survival.gen
 
 import net.survival.block.Column
-import net.survival.block.ColumnProvider
 
-class DefaultColumnGenerator(seed: Long): ColumnProvider {
+class DefaultColumnGenerator(seed: Long) {
     private val terrainGenerator: DefaultTerrainGenerator = DefaultTerrainGenerator(seed)
     private val decorator: DefaultColumnDecorator = DefaultColumnDecorator(true)
     private val primer: ColumnPrimer = ColumnPrimer()
 
-    override fun provideColumn(hashedPos: Long): Column {
+    fun generate(columnPos: Long): Column {
         primer.clear()
-        terrainGenerator.generate(hashedPos, primer)
-        decorator.decorate(hashedPos, primer)
+        terrainGenerator.generate(columnPos, primer)
+        decorator.decorate(columnPos, primer)
         return primer.toColumn()
     }
 }

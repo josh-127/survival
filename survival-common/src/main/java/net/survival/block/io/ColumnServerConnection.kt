@@ -3,7 +3,7 @@ package net.survival.block.io
 import java.util.concurrent.ConcurrentLinkedQueue
 import java.util.concurrent.LinkedBlockingQueue
 
-class ColumnDbPipe {
+class ColumnServerConnection {
     private val requests = LinkedBlockingQueue<ColumnRequest>()
     private val responses = ConcurrentLinkedQueue<ColumnResponse>()
 

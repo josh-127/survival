@@ -16,8 +16,8 @@ private const val TICKS_PER_SECOND = 60.0
 private const val SECONDS_PER_TICK = 1.0 / TICKS_PER_SECOND
 private const val NANOS_PER_TICK = SECONDS_PER_TICK * 1000000000.0
 
-private const val WINDOW_WIDTH = 1600;
-private const val WINDOW_HEIGHT = 900;
+private const val WINDOW_WIDTH = 1600
+private const val WINDOW_HEIGHT = 900
 private const val WINDOW_TITLE = "Survival"
 
 object Main {

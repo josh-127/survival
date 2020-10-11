@@ -4,7 +4,7 @@ import net.survival.actor.Actor
 import net.survival.actor.Physics
 import net.survival.block.ColumnPos
 import net.survival.block.StandardBlocks
-import net.survival.block.io.ColumnDbPipe
+import net.survival.block.io.ColumnServerConnection
 import net.survival.block.io.ColumnRequest
 import net.survival.block.io.ColumnServer
 import net.survival.client.input.*
@@ -32,7 +32,7 @@ private const val SECONDS_PER_TICK = 1.0 / TICKS_PER_SECOND
 private const val MILLIS_PER_TICK = SECONDS_PER_TICK * 1000.0
 private const val SAVE_INTERVAL = 10.0
 
-private class OldClient(columnPipe: ColumnDbPipe): AutoCloseable {
+private class OldClient(columnPipe: ColumnServerConnection): AutoCloseable {
     private val particleSpace = ClientParticleSpace()
     private val compositeDisplay: CompositeDisplay
     private val world = World()
@@ -151,12 +151,12 @@ object OldMain {
     @JvmStatic
     fun main(args: Array<String>) {
         val columnGenerator = DefaultColumnGenerator(4000L)
-        val columnDbPipe = ColumnDbPipe()
+        val columnDbPipe = ColumnServerConnection()
 
         val columnServer = ColumnServer(
             File(System.getProperty("user.dir") + "/.world/columns"),
             columnDbPipe,
-            columnGenerator
+            columnGenerator::generate
         )
         val columnServerThread = Thread(columnServer)
         columnServerThread.start()

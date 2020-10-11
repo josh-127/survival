@@ -1,7 +1,6 @@
 package net.survival.block.io
 
 import net.survival.block.Column
-import net.survival.block.ColumnProvider
 import java.io.File
 import java.io.IOException
 import java.io.RandomAccessFile
@@ -13,8 +12,8 @@ private const val FOOTER_LENGTH = 2 * VirtualAllocationUnit.STRUCTURE_SIZE
 
 class ColumnServer(
     private val file: File,
-    private val columnPipe: ColumnDbPipe,
-    private val columnGenerator: ColumnProvider
+    private val columnPipe: ColumnServerConnection,
+    private val columnGenerator: (Long) -> Column
 ): Runnable {
     private val allocator = VirtualMemoryAllocator()
     private val directory = ColumnDirectory()
@@ -64,7 +63,7 @@ class ColumnServer(
     }
 
     private fun loadColumn(columnPos: Long): Column {
-        val existingVau = directory[columnPos] ?: return columnGenerator.provideColumn(columnPos)
+        val existingVau = directory[columnPos] ?: return columnGenerator(columnPos)
         fileChannel!!.position(existingVau.address)
         return columnCodec.decompressColumn(fileChannel!!, existingVau.length.toInt())
     }

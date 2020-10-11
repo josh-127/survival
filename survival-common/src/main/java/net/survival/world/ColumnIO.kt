@@ -1,11 +1,11 @@
 package net.survival.world
 
 import net.survival.block.Column
-import net.survival.block.io.ColumnDbPipe
+import net.survival.block.io.ColumnServerConnection
 import net.survival.block.io.ColumnRequest
 
 class ColumnIO(
-    private val columnPipe: ColumnDbPipe
+    private val columnPipe: ColumnServerConnection
 ) {
     var columns: MutableMap<Long, Column> = HashMap(); private set
     private val loadingColumns: MutableSet<Long> = HashSet()
