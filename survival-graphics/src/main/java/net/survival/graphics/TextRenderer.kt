@@ -20,14 +20,14 @@ internal class TextRenderer(fontPath: String) {
     fun drawText(
         text: String,
         textStyle: TextStyle,
-        x: Double,
-        y: Double,
-        z: Double
+        x: Float,
+        y: Float,
+        z: Float
     ) {
         val textureAtlas = Assets.getTextureAtlas()
         val textureObject = textureAtlas.textureObject
 
-        if (textStyle.alpha == 1.0) {
+        if (textStyle.alpha == 1.0f) {
             GLState.pushAlphaTestEnabled(true)
             GLState.pushAlphaFunction(GLComparisonFunc.EQUAL, 1.0f)
         }
@@ -38,10 +38,10 @@ internal class TextRenderer(fontPath: String) {
 
         val drawCall = GLImmediateDrawCall.beginTriangles(textureObject)
         drawCall.color(
-            textStyle.red.toFloat(),
-            textStyle.green.toFloat(),
-            textStyle.blue.toFloat(),
-            textStyle.alpha.toFloat()
+            textStyle.red,
+            textStyle.green,
+            textStyle.blue,
+            textStyle.alpha
         )
 
         val lineHeight = getLineHeight(textStyle)
@@ -63,7 +63,7 @@ internal class TextRenderer(fontPath: String) {
 
         drawCall.end()
 
-        if (textStyle.alpha == 1.0) {
+        if (textStyle.alpha == 1.0f) {
             GLState.popAlphaTestEnabled()
             GLState.popAlphaFunction()
         }
@@ -76,16 +76,16 @@ internal class TextRenderer(fontPath: String) {
     fun drawTextBounded(
         text: String,
         textStyle: TextStyle,
-        left: Double,
-        top: Double,
-        right: Double,
-        bottom: Double,
-        depth: Double
+        left: Float,
+        top: Float,
+        right: Float,
+        bottom: Float,
+        depth: Float
     ) {
         val textureAtlas = Assets.getTextureAtlas()
         val textureObject = textureAtlas.textureObject
 
-        if (textStyle.alpha == 1.0) {
+        if (textStyle.alpha == 1.0f) {
             GLState.pushAlphaTestEnabled(true)
             GLState.pushAlphaFunction(GLComparisonFunc.EQUAL, 1.0f)
         }
@@ -96,10 +96,10 @@ internal class TextRenderer(fontPath: String) {
 
         val drawCall = GLImmediateDrawCall.beginTriangles(textureObject)
         drawCall.color(
-            textStyle.red.toFloat(),
-            textStyle.green.toFloat(),
-            textStyle.blue.toFloat(),
-            textStyle.alpha.toFloat()
+            textStyle.red,
+            textStyle.green,
+            textStyle.blue,
+            textStyle.alpha
         )
         val lineHeight = getLineHeight(textStyle)
         var cursorX = left
@@ -154,7 +154,7 @@ internal class TextRenderer(fontPath: String) {
 
         drawCall.end()
 
-        if (textStyle.alpha == 1.0) {
+        if (textStyle.alpha == 1.0f) {
             GLState.popAlphaFunction()
             GLState.popAlphaTestEnabled()
         }
@@ -168,9 +168,9 @@ internal class TextRenderer(fontPath: String) {
         drawCall: GLImmediateDrawCall,
         text: String,
         textStyle: TextStyle,
-        x: Double,
-        y: Double,
-        z: Double
+        x: Float,
+        y: Float,
+        z: Float
     ) {
         var cursorX = x
         for (ch in text) {
@@ -182,15 +182,15 @@ internal class TextRenderer(fontPath: String) {
         drawCall: GLImmediateDrawCall,
         character: Char,
         textStyle: TextStyle,
-        x: Double,
-        y: Double,
-        z: Double
-    ): Double {
+        x: Float,
+        y: Float,
+        z: Float
+    ): Float {
         val textureAtlas = Assets.getTextureAtlas()
         val path = texturePaths[character.toInt()]!!
 
-        val pixelHeight = textureAtlas.getHeight(path).toDouble()
-        var emWidth = textureAtlas.getWidth(path).toDouble() / pixelHeight
+        val pixelHeight = textureAtlas.getHeight(path).toFloat()
+        var emWidth = textureAtlas.getWidth(path).toFloat() / pixelHeight
         emWidth *= textStyle.fontSize
 
         val u1 = textureAtlas.getTexCoordU1(path)
@@ -198,22 +198,22 @@ internal class TextRenderer(fontPath: String) {
         val u2 = textureAtlas.getTexCoordU2(path)
         val v2 = textureAtlas.getTexCoordV2(path)
 
-        val left = x.toFloat()
-        val right = (x + emWidth).toFloat()
-        val top = y.toFloat()
-        val bottom = (y + textStyle.fontSize).toFloat()
-        drawCall.texturedVertex(left, bottom, z.toFloat(), u1, v1)
-        drawCall.texturedVertex(right, bottom, z.toFloat(), u2, v1)
-        drawCall.texturedVertex(right, top, z.toFloat(), u2, v2)
-        drawCall.texturedVertex(right, top, z.toFloat(), u2, v2)
-        drawCall.texturedVertex(left, top, z.toFloat(), u1, v2)
-        drawCall.texturedVertex(left, bottom, z.toFloat(), u1, v1)
+        val left = x
+        val right = (x + emWidth)
+        val top = y
+        val bottom = (y + textStyle.fontSize)
+        drawCall.texturedVertex(left, bottom, z, u1, v1)
+        drawCall.texturedVertex(right, bottom, z, u2, v1)
+        drawCall.texturedVertex(right, top, z, u2, v2)
+        drawCall.texturedVertex(right, top, z, u2, v2)
+        drawCall.texturedVertex(left, top, z, u1, v2)
+        drawCall.texturedVertex(left, bottom, z, u1, v1)
 
         return x + emWidth + textStyle.horizontalSpacing
     }
 
-    private fun getTextWidth(text: String, textStyle: TextStyle): Double {
-        var totalWidth = 0.0
+    private fun getTextWidth(text: String, textStyle: TextStyle): Float {
+        var totalWidth = 0.0f
         val textureAtlas = Assets.getTextureAtlas()
 
         for (ch in text) {
@@ -225,8 +225,8 @@ internal class TextRenderer(fontPath: String) {
             }
             else {
                 val path = texturePaths[ch.toInt()]!!
-                val pixelHeight = textureAtlas.getHeight(path).toDouble()
-                var emWidth = textureAtlas.getWidth(path).toDouble() / pixelHeight
+                val pixelHeight = textureAtlas.getHeight(path).toFloat()
+                var emWidth = textureAtlas.getWidth(path).toFloat() / pixelHeight
                 emWidth *= textStyle.fontSize
                 totalWidth += emWidth + textStyle.horizontalSpacing
             }
@@ -262,10 +262,10 @@ internal class TextRenderer(fontPath: String) {
         return text.length
     }
 
-    private fun getLineHeight(textStyle: TextStyle): Double {
+    private fun getLineHeight(textStyle: TextStyle): Float {
         val fontSize = textStyle.fontSize
         val verticalSpacing = textStyle.verticalSpacing
-        return fontSize * (1.0 + verticalSpacing)
+        return fontSize * (1.0f + verticalSpacing)
     }
 }
 

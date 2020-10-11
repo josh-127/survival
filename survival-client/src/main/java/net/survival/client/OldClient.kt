@@ -14,7 +14,6 @@ import net.survival.graphics.CompositeDisplay
 import net.survival.graphics.VisibilityFlags
 import net.survival.graphics.opengl.GLDisplay
 import net.survival.graphics.opengl.GLRenderContext
-import net.survival.graphics.particle.ClientParticleSpace
 import net.survival.util.HitBox
 import net.survival.world.ColumnIO
 import net.survival.world.World
@@ -33,8 +32,7 @@ private const val MILLIS_PER_TICK = SECONDS_PER_TICK * 1000.0
 private const val SAVE_INTERVAL = 10.0
 
 private class OldClient(columnPipe: ColumnServerConnection): AutoCloseable {
-    private val particleSpace = ClientParticleSpace()
-    private val compositeDisplay: CompositeDisplay
+    private val compositeDisplay: CompositeDisplay = CompositeDisplay(WINDOW_WIDTH, WINDOW_HEIGHT)
     private val world = World()
     private val player = Actor().apply {
         x = 60.0; y = 128.0; z = 20.0
@@ -42,13 +40,8 @@ private class OldClient(columnPipe: ColumnServerConnection): AutoCloseable {
         movementSpeed = 5.0
     }
     private val fpvCamera = FpvCamera(0.0, -1.0)
-    private val columnIO: ColumnIO
+    private val columnIO: ColumnIO = ColumnIO(columnPipe)
     private var saveTimer = 0.0
-
-    init {
-        compositeDisplay = CompositeDisplay(particleSpace, WINDOW_WIDTH, WINDOW_HEIGHT)
-        columnIO = ColumnIO(columnPipe)
-    }
 
     override fun close() {
         compositeDisplay.close()
@@ -81,11 +74,11 @@ private class OldClient(columnPipe: ColumnServerConnection): AutoCloseable {
 
         for ((columnPos, column) in world.columns) {
             if (column.isNew) {
-                compositeDisplay.invalidateColumn(columnPos, column, ColumnInvalidationPriority.LOW)
+                compositeDisplay.setColumn(columnPos, column, ColumnInvalidationPriority.LOW)
                 column.clearNewFlag()
             }
             else if (column.isModified) {
-                compositeDisplay.invalidateColumn(columnPos, column, ColumnInvalidationPriority.LOW)
+                compositeDisplay.setColumn(columnPos, column, ColumnInvalidationPriority.LOW)
                 column.clearModifiedFlag()
             }
         }
@@ -93,11 +86,11 @@ private class OldClient(columnPipe: ColumnServerConnection): AutoCloseable {
         compositeDisplay.moveCamera(player.x.toFloat(), (player.y + 1.0).toFloat(), player.z.toFloat())
         compositeDisplay.orientCamera(fpvCamera.yaw.toFloat(), fpvCamera.pitch.toFloat())
         compositeDisplay.setCameraParams(Math.toRadians(60.0).toFloat(), WINDOW_WIDTH.toFloat(), WINDOW_HEIGHT.toFloat(), 0.0625f, 1536.0f)
-        compositeDisplay.drawLabel(String.format("Memory Usage: %.2f MiB", (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 1024.0 / 1024.0), 3.0, 0.0, 0.0)
-        compositeDisplay.drawLabel(String.format("Frame Rate: %d FPS", frameRate), 3.0, 0.0, 1.1)
-        compositeDisplay.drawLabel(String.format("X: %d", floor(player.x).toInt()), 1.0, 0.0, 2.2)
-        compositeDisplay.drawLabel(String.format("Y: %d", floor(player.y).toInt()), 1.0, 0.0, 3.3)
-        compositeDisplay.drawLabel(String.format("Z: %d", floor(player.z).toInt()), 1.0, 0.0, 4.4)
+        compositeDisplay.drawText(String.format("Memory Usage: %.2f MiB", (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 1024.0 / 1024.0), 3.0f, 0.0f, 0.0f)
+        compositeDisplay.drawText(String.format("Frame Rate: %d FPS", frameRate), 3.0f, 0.0f, 1.1f)
+        compositeDisplay.drawText(String.format("X: %d", floor(player.x).toInt()), 1.0f, 0.0f, 2.2f)
+        compositeDisplay.drawText(String.format("Y: %d", floor(player.y).toInt()), 1.0f, 0.0f, 3.3f)
+        compositeDisplay.drawText(String.format("Z: %d", floor(player.z).toInt()), 1.0f, 0.0f, 4.4f)
         compositeDisplay.tick(elapsedTime)
     }
 

@@ -46,14 +46,10 @@ internal class ModelDisplay(
     private fun displayModel(model: DrawModelCommand) {
         GLMatrixStack.push()
 
-        GLMatrixStack.translate(
-            model.x.toFloat(),
-            model.y.toFloat(),
-            model.z.toFloat()
-        )
-        GLMatrixStack.rotate(model.yaw.toFloat(), 0.0f, 1.0f, 0.0f)
-        GLMatrixStack.rotate(model.pitch.toFloat(), 1.0f, 0.0f, 0.0f)
-        GLMatrixStack.rotate(model.roll.toFloat(), 0.0f, 0.0f, 1.0f)
+        GLMatrixStack.translate(model.x, model.y, model.z)
+        GLMatrixStack.rotate(model.yaw, 0.0f, 1.0f, 0.0f)
+        GLMatrixStack.rotate(model.pitch, 1.0f, 0.0f, 0.0f)
+        GLMatrixStack.rotate(model.roll, 0.0f, 0.0f, 1.0f)
 
         val displayable = fromModelType(model.modelType)
         displayStaticModel(displayable)

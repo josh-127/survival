@@ -16,7 +16,6 @@ private const val FONT_PATH = "textures/fonts/default"
 private const val PIXELS_PER_EM = 24
 
 class CompositeDisplay(
-    clientParticleSpace: ClientParticleSpace?,
     viewportWidth: Int,
     viewportHeight: Int,
 ) {
@@ -28,6 +27,8 @@ class CompositeDisplay(
     private val skyboxDisplay = SkyboxDisplay()
     private val cloudDisplay = CloudDisplay()
     private val textRenderer: TextRenderer
+
+    val clientParticleSpace: ClientParticleSpace = ClientParticleSpace()
 
     private val drawTextCommandQueue: Queue<DrawTextCommand>
 
@@ -45,7 +46,7 @@ class CompositeDisplay(
     init {
         blockDisplay = BlockDisplay(camera)
         modelDisplay = ModelDisplay(camera)
-        particleDisplay = ParticleDisplay(clientParticleSpace!!, camera)
+        particleDisplay = ParticleDisplay(clientParticleSpace, camera)
         textRenderer = TextRenderer(FONT_PATH)
 
         drawTextCommandQueue = LinkedList()
@@ -199,9 +200,9 @@ class CompositeDisplay(
     }
 
     fun drawModel(
-        x: Double, y: Double, z: Double,
-        yaw: Double, pitch: Double, roll: Double,
-        scaleX: Double, scaleY: Double, scaleZ: Double,
+        x: Float, y: Float, z: Float,
+        yaw: Float, pitch: Float, roll: Float,
+        scaleX: Float, scaleY: Float, scaleZ: Float,
         modelType: ModelType,
     ) {
         modelDisplay.drawModel(DrawModelCommand(
@@ -212,7 +213,7 @@ class CompositeDisplay(
         ))
     }
 
-    fun invalidateColumn(
+    fun setColumn(
         columnPos: Long,
         column: Column?,
         invalidationPriority: ColumnInvalidationPriority,
@@ -267,8 +268,8 @@ class CompositeDisplay(
         skyboxDisplay.setColor(br, bg, bb, mr, mg, mb, tr, tg, tb)
     }
 
-    fun drawLabel(text: String, fontSize: Double, left: Double, top: Double) {
-        drawTextCommandQueue.add(DrawTextCommand(text, left, top, 0.0))
+    fun drawText(text: String, fontSize: Float, left: Float, top: Float) {
+        drawTextCommandQueue.add(DrawTextCommand(text, left, top, 0.0f))
     }
 }
 
@@ -295,11 +296,11 @@ private class InvalidateColumn(
 
 internal sealed class DrawCommand
 
-internal class DrawTextCommand(val text: String, val x: Double, val y: Double, val z: Double): DrawCommand()
+internal class DrawTextCommand(val text: String, val x: Float, val y: Float, val z: Float): DrawCommand()
 
 internal class DrawModelCommand(
-    val x: Double, val y: Double, val z: Double,
-    val yaw: Double, val pitch: Double, val roll: Double,
-    val scaleX: Double, val scaleY: Double, val scaleZ: Double,
+    val x: Float, val y: Float, val z: Float,
+    val yaw: Float, val pitch: Float, val roll: Float,
+    val scaleX: Float, val scaleY: Float, val scaleZ: Float,
     val modelType: ModelType,
 ): DrawCommand()
