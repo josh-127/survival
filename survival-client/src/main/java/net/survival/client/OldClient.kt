@@ -5,9 +5,8 @@ import net.survival.actor.Physics
 import net.survival.block.ColumnPos
 import net.survival.block.StandardBlocks
 import net.survival.block.io.ColumnDbPipe
-import net.survival.block.io.ColumnDbPipe.ClientSide
+import net.survival.block.io.ColumnRequest
 import net.survival.block.io.ColumnServer
-import net.survival.block.message.CloseColumnRequest
 import net.survival.client.input.*
 import net.survival.gen.DefaultColumnGenerator
 import net.survival.graphics.ColumnInvalidationPriority
@@ -33,7 +32,7 @@ private const val SECONDS_PER_TICK = 1.0 / TICKS_PER_SECOND
 private const val MILLIS_PER_TICK = SECONDS_PER_TICK * 1000.0
 private const val SAVE_INTERVAL = 10.0
 
-private class OldClient(columnPipe: ClientSide): AutoCloseable {
+private class OldClient(columnPipe: ColumnDbPipe): AutoCloseable {
     private val particleSpace = ClientParticleSpace()
     private val compositeDisplay: CompositeDisplay
     private val world = World()
@@ -156,7 +155,7 @@ object OldMain {
 
         val columnServer = ColumnServer(
             File(System.getProperty("user.dir") + "/.world/columns"),
-            columnDbPipe.serverSide,
+            columnDbPipe,
             columnGenerator
         )
         val columnServerThread = Thread(columnServer)
@@ -169,7 +168,7 @@ object OldMain {
         GLFW.glfwSetCursorPosCallback(display.underlyingGlfwWindow, mouseAdapter)
 
         GLRenderContext.init()
-        val program = OldClient(columnDbPipe.clientSide)
+        val program = OldClient(columnDbPipe)
 
         var now = System.currentTimeMillis()
         var prevTime = now
@@ -208,7 +207,7 @@ object OldMain {
 
         program.close()
         display.close()
-        columnDbPipe.clientSide.request(CloseColumnRequest())
+        columnDbPipe.request(ColumnRequest.Close)
         columnServerThread.join()
     }
 }

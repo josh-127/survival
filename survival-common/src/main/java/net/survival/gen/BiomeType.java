@@ -3,6 +3,7 @@ package net.survival.gen;
 import net.survival.block.Block;
 import net.survival.block.StandardBlocks;
 
+@Deprecated
 public enum BiomeType {
     OCEAN((bt) -> {
         bt.topBlock = StandardBlocks.DIRT;
