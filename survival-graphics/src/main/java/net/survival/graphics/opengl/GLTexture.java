@@ -5,16 +5,14 @@ import static org.lwjgl.opengl.GL12.*;
 import static org.lwjgl.opengl.GL14.*;
 
 import net.survival.graphics.Bitmap;
-import net.survival.graphics.GraphicsResource;
 
-public class GLTexture implements GraphicsResource {
+public class GLTexture {
     final int id;
 
     public GLTexture() {
         id = glGenTextures();
     }
 
-    @Override
     public void close() {
         glDeleteTextures(id);
     }
@@ -23,8 +21,7 @@ public class GLTexture implements GraphicsResource {
         return new BindGuard(this);
     }
 
-    public static class BindGuard
-    {
+    public static class BindGuard {
         private final int id;
 
         private BindGuard(GLTexture texture) {

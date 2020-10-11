@@ -4,9 +4,7 @@ import static org.lwjgl.glfw.GLFW.*;
 
 import org.lwjgl.opengl.GL;
 
-import net.survival.graphics.GraphicsResource;
-
-public class GLDisplay implements GraphicsResource {
+public class GLDisplay {
     private static int totalWindows = 0;
 
     private final long window;
@@ -40,15 +38,16 @@ public class GLDisplay implements GraphicsResource {
         GL.createCapabilities();
     }
 
-    @Override
     public void close() {
         glfwDestroyWindow(window);
 
-        if (totalWindows > 0)
+        if (totalWindows > 0) {
             --totalWindows;
+        }
 
-        if (totalWindows == 0)
+        if (totalWindows == 0) {
             glfwTerminate();
+        }
     }
 
     public long getUnderlyingGlfwWindow() {

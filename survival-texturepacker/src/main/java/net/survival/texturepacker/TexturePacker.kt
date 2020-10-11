@@ -63,10 +63,10 @@ class TexturePacker private constructor(): JFrame() {
 
                     if (bitmaps != null) {
                         for (bitmap in bitmaps) {
-                            atlasBuilder.addBitmap(bitmap)
+                            atlasBuilder.addBitmap(bitmap!!)
                         }
                         val newAtlas = atlasBuilder.build()
-                        viewport.bitmap = newAtlas
+                        viewport.bmp = newAtlas
                     }
                 }
             }

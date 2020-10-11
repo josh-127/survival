@@ -2,16 +2,13 @@ package net.survival.graphics.opengl;
 
 import static org.lwjgl.opengl.GL11.*;
 
-import net.survival.graphics.GraphicsResource;
-
-public class GLDisplayList implements GraphicsResource {
+public class GLDisplayList {
     final int id;
 
     private GLDisplayList(int id) {
         this.id = id;
     }
 
-    @Override
     public void close() {
         glDeleteLists(id, 1);
     }

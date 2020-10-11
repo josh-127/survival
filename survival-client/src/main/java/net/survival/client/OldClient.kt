@@ -99,6 +99,7 @@ private class OldClient(columnPipe: ClientSide): AutoCloseable {
         compositeDisplay.drawLabel(String.format("X: %d", floor(player.x).toInt()), 1.0, 0.0, 2.2)
         compositeDisplay.drawLabel(String.format("Y: %d", floor(player.y).toInt()), 1.0, 0.0, 3.3)
         compositeDisplay.drawLabel(String.format("Z: %d", floor(player.z).toInt()), 1.0, 0.0, 4.4)
+        compositeDisplay.tick(elapsedTime)
     }
 
     fun render() {

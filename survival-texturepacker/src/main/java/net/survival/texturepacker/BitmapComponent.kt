@@ -7,14 +7,14 @@ import javax.swing.JComponent
 import kotlin.math.min
 
 internal class BitmapComponent: JComponent() {
-    private var bitmap: Bitmap? = null
+    var bmp: Bitmap? = null
 
     fun getBitmap(): Bitmap? {
-        return bitmap
+        return bmp
     }
 
     fun setBitmap(bitmap: Bitmap?) {
-        this.bitmap = bitmap
+        this.bmp = bitmap
         repaint()
     }
 
@@ -23,12 +23,12 @@ internal class BitmapComponent: JComponent() {
         g.color = Color.BLACK
         g.fillRect(0, 0, width, height)
 
-        if (bitmap != null) {
-            val width = min(width, bitmap!!.width)
-            val height = min(height, bitmap!!.height)
+        if (bmp != null) {
+            val width = min(width, bmp!!.width)
+            val height = min(height, bmp!!.height)
             for (y in 0 until height) {
                 for (x in 0 until width) {
-                    val srcColor = bitmap!!.getPixel(x, y)
+                    val srcColor = bmp!!.getPixel(x, y)
                     val red = srcColor and 0xFF
                     val green = srcColor and 0xFF00 ushr 8
                     val blue = srcColor and 0xFF0000 ushr 16
