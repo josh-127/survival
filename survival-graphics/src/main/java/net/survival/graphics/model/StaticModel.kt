@@ -91,17 +91,15 @@ class StaticModel private constructor(
         val slime = fromFile("../../assets/models/entities/slime.obj")
 
         @JvmStatic
-        fun fromModelType(modelType: ModelType?): StaticModel {
-            return when (modelType) {
+        fun fromModelType(modelType: ModelType): StaticModel =
+            when (modelType) {
                 ModelType.CHICKEN -> chicken
                 ModelType.COW -> cow
                 ModelType.GOAT -> goat
                 ModelType.HUMAN -> human
                 ModelType.PIG -> pig
                 ModelType.SLIME -> slime
-                else -> throw IllegalArgumentException("modelType")
             }
-        }
 
         fun fromFile(filePath: String): StaticModel {
             val file = File(filePath)

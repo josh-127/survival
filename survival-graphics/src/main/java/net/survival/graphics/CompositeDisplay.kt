@@ -28,14 +28,14 @@ class CompositeDisplay(
     private val cloudDisplay = CloudDisplay()
     private val textRenderer: TextRenderer
 
-    val clientParticleSpace: ClientParticleSpace = ClientParticleSpace()
+    private val clientParticleSpace: ClientParticleSpace = ClientParticleSpace()
 
     private val drawTextCommandQueue: Queue<DrawTextCommand>
 
-    val viewportWidth: Int
-    val viewportHeight: Int
+    private val viewportWidth: Int
+    private val viewportHeight: Int
 
-    var visibilityFlags = VisibilityFlags.DEFAULT
+    private var visibilityFlags = VisibilityFlags.DEFAULT
 
     private val cameraViewMatrix = Matrix4f()
     private val cameraProjectionMatrix = Matrix4f()
@@ -64,31 +64,7 @@ class CompositeDisplay(
         Assets.tearDown()
     }
 
-    val cameraX: Float get() = camera.x
-    val cameraY: Float get() = camera.y
-    val cameraZ: Float get() = camera.z
-    val cameraYaw: Float get() = camera.yaw
-    val cameraPitch: Float get() = camera.pitch
-    val cameraFov: Float get() = camera.fov
-    val cameraWidth: Float get() = camera.width
-    val cameraHeight: Float get() = camera.height
-    val cameraNearClipPlane: Float get() = camera.nearClipPlane
-    val cameraFarClipPlane: Float get() = camera.farClipPlane
-    val skyboxBottomR: Float get() = skyboxDisplay.bottomR
-    val skyboxBottomG: Float get() = skyboxDisplay.bottomG
-    val skyboxBottomB: Float get() = skyboxDisplay.bottomB
-    val skyboxTopR: Float get() = skyboxDisplay.topR
-    val skyboxTopG: Float get() = skyboxDisplay.topG
-    val skyboxTopB: Float get() = skyboxDisplay.topB
-    val cloudSeed: Long get() = cloudDisplay.seed
-    val cloudDensity: Float get() = cloudDisplay.getDensity()
-    val cloudElevation: Float get() = cloudDisplay.elevation
-    val cloudSpeedX: Float get() = cloudDisplay.speedX
-    val cloudSpeedZ: Float get() = cloudDisplay.speedZ
-    val cloudAlpha: Float get() = cloudDisplay.alpha
-    val viewportAspectRatio: Float get() = viewportWidth.toFloat() / viewportHeight
-
-    fun isVisible(flag: Int): Boolean = visibilityFlags and flag != 0
+    private fun isVisible(flag: Int): Boolean = visibilityFlags and flag != 0
 
     fun toggleVisibilityFlags(flags: Int) {
         visibilityFlags = visibilityFlags xor flags

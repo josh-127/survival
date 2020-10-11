@@ -49,7 +49,7 @@ internal class SkyboxDisplay {
         topB = tb
     }
 
-    fun display(view: Matrix4f, projection: Matrix4f?) {
+    fun display(view: Matrix4f, projection: Matrix4f) {
         view.get3x3(tempMatrix)
         viewWithoutTranslation.identity()
         viewWithoutTranslation.set(tempMatrix)

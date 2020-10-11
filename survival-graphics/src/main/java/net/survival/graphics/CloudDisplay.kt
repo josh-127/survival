@@ -49,10 +49,6 @@ internal class CloudDisplay {
         rebuildVertexArray()
     }
 
-    fun getDensity(): Float {
-        return density
-    }
-
     fun setDensity(to: Float) {
         density = to
         shouldRebuild = true

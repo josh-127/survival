@@ -8,11 +8,10 @@ import java.lang.Runnable
 import net.survival.graphics.opengl.GLDisplay
 import net.survival.client.input.GlfwKeyboardAdapter
 import net.survival.client.input.GlfwMouseAdapter
-import net.survival.graphics.CompositeDisplay
-import net.survival.graphics.RenderClient
-import net.survival.graphics.RenderCommand
+import net.survival.graphics.*
 import org.lwjgl.glfw.GLFW
 import net.survival.graphics.opengl.GLRenderContext
+import org.joml.Matrix4f
 import java.util.concurrent.ConcurrentLinkedQueue
 
 private const val TICKS_PER_SECOND = 60.0
@@ -70,17 +69,25 @@ private class Tick(
     override fun run() {
         resetTimer()
 
+
         while (true) {
             tick {
-                renderClient.send(RenderCommand.MoveCamera(0.0f, 0.0f, 0.0f))
-                renderClient.send(RenderCommand.OrientCamera(0.0f, 0.0f, 0.0f))
-                renderClient.send(RenderCommand.SetCameraParams(
-                    Math.toRadians(60.0).toFloat(),
-                    WINDOW_WIDTH.toFloat(),
-                    WINDOW_HEIGHT.toFloat(),
-                    1.0f / 16.0f,
-                    1536.0f
+                renderClient.send(RenderCommand.SetProjectionMatrix(
+                    Matrix4f().apply {
+                        perspective(
+                            Math.toRadians(60.0).toFloat(),
+                            WINDOW_WIDTH.toFloat() / WINDOW_HEIGHT.toFloat(),
+                            1.0f / 16.0f,
+                            1536.0f
+                        )
+                    }
                 ))
+                renderClient.send(RenderCommand.DrawSkybox(
+                    0.8f, 1.0f, 1.0f,
+                    0.8f, 1.0f, 1.0f,
+                    0.25f, 0.5f, 1.0f
+                ))
+                renderClient.send(RenderCommand.DrawClouds)
             }
         }
 
@@ -128,48 +135,34 @@ private class Render(
         GLFW.glfwSetCursorPosCallback(display.underlyingGlfwWindow, mouseAdapter)
         GLRenderContext.init()
 
-        val compositeDisplay = CompositeDisplay(WINDOW_WIDTH, WINDOW_HEIGHT)
+        val renderer = RenderServer()
 
         resetTimer()
         while (!shouldQuit.get()) {
             render {
+                GLRenderContext.clearColorBuffer(0.0f, 0.0f, 0.0f, 0.0f)
+                GLRenderContext.clearDepthBuffer(1.0f)
+
                 var cmd = renderClient.poll()
                 while (cmd != null) {
                     when (cmd) {
-                        is RenderCommand.DrawModel -> compositeDisplay.drawModel(
-                            cmd.x, cmd.y, cmd.z,
-                            cmd.yaw, cmd.pitch, cmd.roll,
-                            cmd.scaleX, cmd.scaleY, cmd.scaleZ,
-                            cmd.modelType
-                        )
-                        is RenderCommand.SetColumn -> compositeDisplay.setColumn(
-                            cmd.columnPos, cmd.column, cmd.invalidationPriority
-                        )
-                        is RenderCommand.MoveCamera -> compositeDisplay.moveCamera(
-                            cmd.x, cmd.y, cmd.z
-                        )
-                        is RenderCommand.OrientCamera -> compositeDisplay.orientCamera(
-                            cmd.yaw, cmd.pitch
-                        )
-                        is RenderCommand.SetCameraParams -> compositeDisplay.setCameraParams(
-                            cmd.fov, cmd.width, cmd.height, cmd.nearClipPlane, cmd.farClipPlane
-                        )
-                        is RenderCommand.SetCloudParams -> compositeDisplay.setCloudParams(
-                            cmd.seed, cmd.density, cmd.elevation, cmd.speedX, cmd.speedZ, cmd.alpha
-                        )
-                        is RenderCommand.SetSkyColor -> compositeDisplay.setSkyColor(
+                        is RenderCommand.SetProjectionMatrix -> renderer.setProjectionMatrix(cmd.matrix)
+                        is RenderCommand.PushMatrix -> renderer.pushMatrix(cmd.matrix)
+                        RenderCommand.PopMatrix -> renderer.popMatrix()
+                        is RenderCommand.DrawModel -> renderer.drawModel(cmd.modelType)
+                        is RenderCommand.SetColumn -> {}
+                        RenderCommand.DrawClouds -> renderer.drawClouds()
+                        is RenderCommand.DrawSkybox -> renderer.drawSkybox(
                             cmd.br, cmd.bg, cmd.bb,
                             cmd.mr, cmd.mg, cmd.mb,
-                            cmd.tr, cmd.tg, cmd.tb
+                            cmd.tr, cmd.tg, cmd.tb,
                         )
-                        is RenderCommand.DrawText -> compositeDisplay.drawText(
-                            cmd.text, cmd.fontSize, cmd.x, cmd.z
+                        is RenderCommand.DrawText -> renderer.drawText(
+                            cmd.text, cmd.x, cmd.z
                         )
                     }
                     cmd = renderClient.poll()
                 }
-
-                compositeDisplay.display()
             }
         }
     }
