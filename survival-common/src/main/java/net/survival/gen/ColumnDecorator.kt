@@ -1,34 +1,29 @@
 package net.survival.gen
 
+import net.survival.block.Block
 import net.survival.block.StandardBlocks
 import java.util.*
 
-abstract class ColumnDecorator {
-    abstract fun decorate(columnPos: Long, primer: ColumnPrimer)
-}
-
 class DefaultColumnDecorator(
     private val includeWater: Boolean
-): ColumnDecorator() {
-    private val bedrockDecorator = BedrockDecorator()
-    private val grasslandSurface = SurfaceDescription(listOf(
+) {
+    private val grasslandSurface = listOf(
         SurfaceLayer(StandardBlocks.GRASS, 1, 1),
         SurfaceLayer(StandardBlocks.GRASS, 3, 5),
-    ))
+    )
     private val grasslandSurfaceDecorator = SurfaceDecorator(grasslandSurface)
-    private val waterDecorator = WaterDecorator()
 
-    override fun decorate(columnPos: Long, primer: ColumnPrimer) {
-        bedrockDecorator.decorate(columnPos, primer)
+    fun decorate(columnPos: Long, primer: ColumnPrimer) {
+        BedrockDecorator.decorate(primer)
         grasslandSurfaceDecorator.decorate(columnPos, primer)
         if (includeWater) {
-            waterDecorator.decorate(columnPos, primer)
+            WaterDecorator.decorate(primer)
         }
     }
 }
 
-private class BedrockDecorator: ColumnDecorator() {
-    override fun decorate(columnPos: Long, primer: ColumnPrimer) {
+object BedrockDecorator {
+    fun decorate(primer: ColumnPrimer) {
         for (z in 0 until ColumnPrimer.ZLENGTH) {
             for (x in 0 until ColumnPrimer.XLENGTH) {
                 primer.setBlock(x, 0, z, StandardBlocks.BEDROCK)
@@ -37,12 +32,10 @@ private class BedrockDecorator: ColumnDecorator() {
     }
 }
 
-private class WaterDecorator: ColumnDecorator() {
-    companion object {
-        private const val SEA_LEVEL = 63
-    }
+object WaterDecorator {
+    private const val SEA_LEVEL = 63
 
-    override fun decorate(columnPos: Long, primer: ColumnPrimer) {
+    fun decorate(primer: ColumnPrimer) {
         for (x in 0 until ColumnPrimer.XLENGTH) {
             for (z in 0 until ColumnPrimer.ZLENGTH) {
                 val surfaceY = primer.getTopLevel(x, z)
@@ -58,11 +51,11 @@ private class WaterDecorator: ColumnDecorator() {
 }
 
 private class SurfaceDecorator(
-    private val description: SurfaceDescription
-): ColumnDecorator() {
+    private val layers: List<SurfaceLayer>
+) {
     private val random = Random()
 
-    override fun decorate(columnPos: Long, primer: ColumnPrimer) {
+    fun decorate(columnPos: Long, primer: ColumnPrimer) {
         random.setSeed(columnPos)
         for (z in 0 until ColumnPrimer.ZLENGTH) {
             for (x in 0 until ColumnPrimer.XLENGTH) {
@@ -74,9 +67,9 @@ private class SurfaceDecorator(
     private fun decorateStrip(x: Int, z: Int, primer: ColumnPrimer) {
         var y = primer.getTopLevel(x, z)
         if (y == -1) return
-        val layerCount = description.layers.size
+        val layerCount = layers.size
         for (i in 0 until layerCount) {
-            val layer = description.layers[i]
+            val layer = layers[i]
             val minThickness = layer.minThickness
             val thicknessRange = layer.thicknessRange
             var thickness = minThickness + random.nextInt(thicknessRange)
@@ -92,4 +85,12 @@ private class SurfaceDecorator(
             }
         }
     }
+}
+
+private data class SurfaceLayer(
+    val block: Block,
+    val minThickness: Int,
+    val maxThickness: Int
+) {
+    val thicknessRange: Int get() = maxThickness - minThickness + 1
 }

@@ -8,7 +8,7 @@ import net.survival.block.io.ColumnServerConnection
 import net.survival.block.io.ColumnRequest
 import net.survival.block.io.ColumnServer
 import net.survival.client.input.*
-import net.survival.gen.DefaultColumnGenerator
+import net.survival.gen.ColumnGenerator
 import net.survival.graphics.ColumnInvalidationPriority
 import net.survival.graphics.CompositeDisplay
 import net.survival.graphics.VisibilityFlags
@@ -150,7 +150,7 @@ private class OldClient(columnPipe: ColumnServerConnection): AutoCloseable {
 object OldMain {
     @JvmStatic
     fun main(args: Array<String>) {
-        val columnGenerator = DefaultColumnGenerator(4000L)
+        val columnGenerator = ColumnGenerator(4000L)
         val columnDbPipe = ColumnServerConnection()
 
         val columnServer = ColumnServer(

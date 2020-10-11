@@ -5,10 +5,6 @@ import net.survival.block.StandardBlocks
 import net.survival.util.DoubleMap3D
 import net.survival.util.ImprovedNoiseGenerator
 
-interface TerrainGenerator {
-    fun generate(columnPos: Long, primer: ColumnPrimer)
-}
-
 private const val NBLOCK_YLENGTH = ColumnPrimer.YLENGTH / 32
 private const val NBLOCK_ZLENGTH = ColumnPrimer.ZLENGTH / 4
 private const val NBLOCK_XLENGTH = ColumnPrimer.XLENGTH / 4
@@ -26,10 +22,10 @@ private const val ELEVATION_RANGE = 96.0
 
 class DefaultTerrainGenerator(
     private val seed: Long
-): TerrainGenerator {
+) {
     private val densityMap: DoubleMap3D = DoubleMap3D(NMAP_XLENGTH, NMAP_YLENGTH, NMAP_ZLENGTH)
 
-    override fun generate(columnPos: Long, primer: ColumnPrimer) {
+    fun generate(columnPos: Long, primer: ColumnPrimer) {
         val cx = ColumnPos.columnXFromHashedPos(columnPos)
         val cz = ColumnPos.columnZFromHashedPos(columnPos)
         val offsetX = cx * (NMAP_XLENGTH - 1)

@@ -2,7 +2,7 @@ package net.survival.gen
 
 import net.survival.block.Column
 
-class DefaultColumnGenerator(seed: Long) {
+class ColumnGenerator(seed: Long) {
     private val terrainGenerator: DefaultTerrainGenerator = DefaultTerrainGenerator(seed)
     private val decorator: DefaultColumnDecorator = DefaultColumnDecorator(true)
     private val primer: ColumnPrimer = ColumnPrimer()
