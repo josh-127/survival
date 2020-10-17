@@ -138,7 +138,7 @@ private class Tick(
     private fun resetAndTickWhile(condition: () -> Boolean, tickFunc: (Double) -> Unit) {
         resetTimer()
         while (condition()) {
-            tickFunc(SECONDS_PER_TICK)
+            tick(tickFunc)
         }
     }
 }
