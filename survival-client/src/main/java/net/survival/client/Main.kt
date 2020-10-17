@@ -1,19 +1,13 @@
 package net.survival.client
 
-import kotlin.Throws
-import java.lang.InterruptedException
-import kotlin.jvm.JvmStatic
-import java.util.concurrent.atomic.AtomicBoolean
-import java.lang.Runnable
-import net.survival.graphics.opengl.GLDisplay
-import net.survival.client.input.GlfwKeyboardAdapter
-import net.survival.client.input.GlfwMouseAdapter
 import net.survival.graphics.*
-import org.lwjgl.glfw.GLFW
+import net.survival.graphics.opengl.GLDisplay
 import net.survival.graphics.opengl.GLRenderContext
 import net.survival.render.ModelType
 import org.joml.Matrix4f
+import org.lwjgl.glfw.GLFW
 import java.util.concurrent.ConcurrentLinkedQueue
+import java.util.concurrent.atomic.AtomicBoolean
 
 private const val TICKS_PER_SECOND = 60.0
 private const val SECONDS_PER_TICK = 1.0 / TICKS_PER_SECOND
@@ -34,9 +28,11 @@ object Main {
     fun main(args: Array<String>) {
         val shouldQuit = AtomicBoolean()
         val renderClient = RenderClientImpl()
+        val keyboard = MutableKeyboard()
+        val mouse = MutableMouse()
 
-        val tick = Tick(shouldQuit, renderClient)
-        val render = Render(shouldQuit, renderClient)
+        val tick = Tick(shouldQuit, renderClient, keyboard, mouse)
+        val render = Render(shouldQuit, renderClient, keyboard, mouse)
         val worldSave = WorldSave(shouldQuit)
 
         val tickThread = Thread(tick, "Tick")
@@ -66,7 +62,9 @@ private class RenderClientImpl: RenderClient {
 
 private class Tick(
     private val shouldQuit: AtomicBoolean,
-    private val renderClient: RenderClientImpl
+    private val renderClient: RenderClientImpl,
+    private val keyboard: Keyboard,
+    private val mouse: Mouse
 ): Runnable {
     private var now: Long = 0L
     private var prevTime: Long = 0L
@@ -75,8 +73,17 @@ private class Tick(
     override fun run() {
         resetTimer()
 
-        while (true) {
+        var cameraX = 0.0f
+
+        while (!keyboard.isKeyDown(Key.ESCAPE)) {
             tick {
+                if (keyboard.isKeyDown(Key.LEFT)) {
+                    cameraX -= 0.1f
+                }
+                else if (keyboard.isKeyDown(Key.RIGHT)) {
+                    cameraX += 0.1f
+                }
+
                 renderClient.send(RenderCommand.SetProjectionMatrix(
                     Matrix4f().apply {
                         perspective(
@@ -95,7 +102,7 @@ private class Tick(
                 renderClient.send(RenderCommand.PushMatrix(
                     Matrix4f().apply {
                         lookAt(
-                            0.0f, 2.0f, -5.0f,
+                            cameraX, 2.0f, -5.0f,
                             0.0f, 0.0f, 0.0f,
                             0.0f, 1.0f, 0.0f,
                         )
@@ -135,7 +142,9 @@ private class Tick(
 
 private class Render(
     private val shouldQuit: AtomicBoolean,
-    private val renderClient: RenderClientImpl
+    private val renderClient: RenderClientImpl,
+    private val keyboard: MutableKeyboard,
+    private val mouse: MutableMouse
 ): Runnable {
     private lateinit var display: GLDisplay
     private lateinit var keyboardAdapter: GlfwKeyboardAdapter
@@ -147,8 +156,8 @@ private class Render(
 
     override fun run() {
         display = GLDisplay(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE)
-        keyboardAdapter = GlfwKeyboardAdapter()
-        mouseAdapter = GlfwMouseAdapter(display.underlyingGlfwWindow)
+        keyboardAdapter = GlfwKeyboardAdapter(keyboard)
+        mouseAdapter = GlfwMouseAdapter(display.underlyingGlfwWindow, mouse)
         GLFW.glfwSetKeyCallback(display.underlyingGlfwWindow, keyboardAdapter)
         GLFW.glfwSetCursorPosCallback(display.underlyingGlfwWindow, mouseAdapter)
 
@@ -199,6 +208,10 @@ private class Render(
     }
 
     private fun render(renderFunc: (Int) -> Unit) {
+        GLDisplay.pollEvents()
+        keyboardAdapter.swapBuffers()
+        mouseAdapter.swapBuffers()
+
         if (renderClient.shouldPresent()) {
             renderFunc(frameRate)
             display.swapBuffers()
@@ -209,8 +222,6 @@ private class Render(
             frameRate = frameCounter
             frameCounter = 0
         }
-
-        GLDisplay.pollEvents()
     }
 }
 

@@ -1,5 +1,6 @@
 package net.survival.client
 
+/*
 import net.survival.actor.Actor
 import net.survival.actor.Physics
 import net.survival.block.ColumnPos
@@ -7,7 +8,6 @@ import net.survival.block.StandardBlocks
 import net.survival.block.io.ColumnServerConnection
 import net.survival.block.io.ColumnRequest
 import net.survival.block.io.ColumnServer
-import net.survival.client.input.*
 import net.survival.gen.ColumnGenerator
 import net.survival.graphics.ColumnInvalidationPriority
 import net.survival.graphics.CompositeDisplay
@@ -204,3 +204,4 @@ object OldMain {
         columnServerThread.join()
     }
 }
+*/
