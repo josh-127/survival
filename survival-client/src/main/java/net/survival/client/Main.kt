@@ -71,49 +71,45 @@ private class Tick(
     private var unprocessedTicks: Double = 0.0
 
     override fun run() {
-        resetTimer()
-
         var cameraX = 0.0f
 
-        while (!keyboard.isKeyDown(Key.ESCAPE)) {
-            tick {
-                if (keyboard.isKeyDown(Key.LEFT)) {
-                    cameraX -= 0.1f
-                }
-                else if (keyboard.isKeyDown(Key.RIGHT)) {
-                    cameraX += 0.1f
-                }
-
-                renderClient.send(RenderCommand.SetProjectionMatrix(
-                    Matrix4f().apply {
-                        perspective(
-                            Math.toRadians(60.0).toFloat(),
-                            WINDOW_WIDTH.toFloat() / WINDOW_HEIGHT.toFloat(),
-                            1.0f / 16.0f,
-                            1536.0f
-                        )
-                    }
-                ))
-                renderClient.send(RenderCommand.DrawSkybox(
-                    0.8f, 1.0f, 1.0f,
-                    0.8f, 1.0f, 1.0f,
-                    0.25f, 0.5f, 1.0f
-                ))
-                renderClient.send(RenderCommand.PushMatrix(
-                    Matrix4f().apply {
-                        lookAt(
-                            cameraX, 2.0f, -5.0f,
-                            0.0f, 0.0f, 0.0f,
-                            0.0f, 1.0f, 0.0f,
-                        )
-                    }
-                ))
-                renderClient.send(RenderCommand.DrawModel(
-                    ModelType.HUMAN
-                ))
-                renderClient.send(RenderCommand.PopMatrix)
-                renderClient.send(RenderCommand.DrawClouds)
+        resetAndTickWhile({ !keyboard.isKeyDown(Key.ESCAPE) }) {
+            if (keyboard.isKeyDown(Key.LEFT)) {
+                cameraX -= 0.1f
             }
+            else if (keyboard.isKeyDown(Key.RIGHT)) {
+                cameraX += 0.1f
+            }
+
+            renderClient.send(RenderCommand.SetProjectionMatrix(
+                Matrix4f().apply {
+                    perspective(
+                        Math.toRadians(60.0).toFloat(),
+                        WINDOW_WIDTH.toFloat() / WINDOW_HEIGHT.toFloat(),
+                        1.0f / 16.0f,
+                        1536.0f
+                    )
+                }
+            ))
+            renderClient.send(RenderCommand.DrawSkybox(
+                0.8f, 1.0f, 1.0f,
+                0.8f, 1.0f, 1.0f,
+                0.25f, 0.5f, 1.0f
+            ))
+            renderClient.send(RenderCommand.PushMatrix(
+                Matrix4f().apply {
+                    lookAt(
+                        cameraX, 2.0f, -5.0f,
+                        0.0f, 0.0f, 0.0f,
+                        0.0f, 1.0f, 0.0f,
+                    )
+                }
+            ))
+            renderClient.send(RenderCommand.DrawModel(
+                ModelType.HUMAN
+            ))
+            renderClient.send(RenderCommand.PopMatrix)
+            renderClient.send(RenderCommand.DrawClouds)
         }
 
         shouldQuit.set(true)
@@ -136,6 +132,13 @@ private class Tick(
                 tickFunc(SECONDS_PER_TICK)
             }
             renderClient.present()
+        }
+    }
+
+    private fun resetAndTickWhile(condition: () -> Boolean, tickFunc: (Double) -> Unit) {
+        resetTimer()
+        while (condition()) {
+            tickFunc(SECONDS_PER_TICK)
         }
     }
 }
