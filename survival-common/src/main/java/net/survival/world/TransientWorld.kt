@@ -29,7 +29,7 @@ class TransientWorld: World {
         if (actors.containsKey(actor.id)) {
             throw Exception("Actor ${actor.id} already exists.")
         }
-        actors[actor.id] = actor
+        actors[actor.id] = Actor(actor.id).apply { update(actor) }
         changes.add(WorldCommand.InsertActor(actor))
     }
 
@@ -92,7 +92,9 @@ class TransientWorld: World {
         if (players[player.uuid] != null) {
             throw Exception("Player ${player.uuid} already exists.")
         }
-        players[player.uuid] = player
+        players[player.uuid] = Player(
+            player.uuid, player.username, player.displayName, player.actorId
+        )
         changes.add(WorldCommand.InsertPlayer(player))
     }
 
