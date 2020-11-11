@@ -4,7 +4,7 @@ import net.survival.util.HitBox
 import java.nio.ByteBuffer
 import kotlin.math.sqrt
 
-class Actor {
+class Actor(val id: Long) {
     companion object {
         private const val GRAVITY = 32.0
     }
@@ -44,6 +44,7 @@ class Actor {
 }
 
 fun ByteBuffer.putActor(actor: Actor) {
+    putLong(actor.id)
     putDouble(actor.x)
     putDouble(actor.y)
     putDouble(actor.z)
@@ -57,7 +58,8 @@ fun ByteBuffer.putActor(actor: Actor) {
 }
 
 fun ByteBuffer.getActor(): Actor {
-    val actor = Actor()
+    val id = long
+    val actor = Actor(id)
     actor.x = double
     actor.y = double
     actor.z = double

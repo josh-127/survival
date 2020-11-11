@@ -21,11 +21,11 @@ interface World {
     fun containsActor(id: Long): Boolean {
         return getActorOrNull(id) != null
     }
-    fun insertActor(id: Long, actor: Actor)
+    fun insertActor(actor: Actor)
     fun deleteActor(id: Long)
-    fun updateActor(id: Long, actor: Actor)
+    fun updateActor(actor: Actor)
     fun markActor(id: Long) {
-        updateActor(id, getActor(id))
+        updateActor(getActor(id))
     }
 
     //
@@ -67,9 +67,9 @@ interface World {
     fun replicate(changes: List<WorldCommand>) {
         for (ch in changes) {
             when (ch) {
-                is WorldCommand.InsertActor -> insertActor(ch.id, ch.actor)
+                is WorldCommand.InsertActor -> insertActor(ch.actor)
                 is WorldCommand.DeleteActor -> deleteActor(ch.id)
-                is WorldCommand.UpdateActor -> updateActor(ch.id, ch.actor)
+                is WorldCommand.UpdateActor -> updateActor(ch.actor)
                 is WorldCommand.SetColumn -> setColumn(ch.columnPos, ch.column)
                 is WorldCommand.SetBlock -> setBlock(ch.x, ch.y, ch.z, ch.block)
                 is WorldCommand.InsertPlayer -> insertPlayer(ch.player)
@@ -81,9 +81,9 @@ interface World {
 }
 
 sealed class WorldCommand {
-    data class InsertActor(val id: Long, val actor: Actor): WorldCommand()
+    data class InsertActor(val actor: Actor): WorldCommand()
     data class DeleteActor(val id: Long): WorldCommand()
-    data class UpdateActor(val id: Long, val actor: Actor): WorldCommand()
+    data class UpdateActor(val actor: Actor): WorldCommand()
     data class SetColumn(val columnPos: Long, val column: Column?): WorldCommand()
     data class SetBlock(val x: Int, val y: Int, val z: Int, val block: Block): WorldCommand()
     data class InsertPlayer(val player: Player): WorldCommand()
@@ -95,7 +95,7 @@ sealed class WorldCommand {
         fun serialize(commandList: List<WorldCommand>, dest: ByteBuffer) {
             for (cmd in commandList) {
                 when (cmd) {
-                    is InsertActor -> { dest.put(0); dest.putLong(cmd.id); dest.putActor(cmd.actor) }
+                    is InsertActor -> { dest.put(0); dest.putActor(cmd.actor) }
                     is DeleteActor -> { dest.put(1); dest.putLong(cmd.id) }
                     is UpdateActor -> { dest.put(2); dest.putActor(cmd.actor) }
                     is SetColumn -> {

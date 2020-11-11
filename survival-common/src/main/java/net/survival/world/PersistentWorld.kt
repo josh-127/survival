@@ -16,7 +16,7 @@ class PersistentWorld(val file: File): World {
         TODO("Not yet implemented")
     }
 
-    override fun insertActor(id: Long, actor: Actor) {
+    override fun insertActor(actor: Actor) {
         TODO("Not yet implemented")
     }
 
@@ -24,7 +24,7 @@ class PersistentWorld(val file: File): World {
         TODO("Not yet implemented")
     }
 
-    override fun updateActor(id: Long, actor: Actor) {
+    override fun updateActor(actor: Actor) {
         TODO("Not yet implemented")
     }
 

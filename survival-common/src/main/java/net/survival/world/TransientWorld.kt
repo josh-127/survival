@@ -6,21 +6,16 @@ import net.survival.block.Column
 import net.survival.block.ColumnPos
 import net.survival.player.Player
 import java.util.*
-import kotlin.collections.LinkedHashSet
 
 class TransientWorld: World {
     private val actors: MutableMap<Long, Actor> = LinkedHashMap()
-    private val markedActors: MutableSet<Long> = LinkedHashSet()
     private val columns: MutableMap<Long, Column> = LinkedHashMap()
     private val players: MutableMap<UUID, Player> = LinkedHashMap()
-    private val markedPlayers: MutableSet<UUID> = LinkedHashSet()
     private var changes: ArrayList<WorldCommand> = ArrayList()
 
     fun getAndResetChanges(): List<WorldCommand> {
         val result = changes
         changes = ArrayList()
-        markedActors.clear()
-        markedPlayers.clear()
         return result
     }
 
@@ -30,12 +25,12 @@ class TransientWorld: World {
     override fun getActors(): Iterable<Actor> = actors.values
     override fun getActorOrNull(id: Long): Actor? = actors[id]
 
-    override fun insertActor(id: Long, actor: Actor) {
-        if (actors.containsKey(id)) {
-            throw Exception("Actor $id already exists.")
+    override fun insertActor(actor: Actor) {
+        if (actors.containsKey(actor.id)) {
+            throw Exception("Actor ${actor.id} already exists.")
         }
-        actors[id] = actor
-        changes.add(WorldCommand.InsertActor(id, actor))
+        actors[actor.id] = actor
+        changes.add(WorldCommand.InsertActor(actor))
     }
 
     override fun deleteActor(id: Long) {
@@ -45,9 +40,9 @@ class TransientWorld: World {
         changes.add(WorldCommand.DeleteActor(id))
     }
 
-    override fun updateActor(id: Long, actor: Actor) {
-        getActor(id).update(actor)
-        changes.add(WorldCommand.UpdateActor(id, actor))
+    override fun updateActor(actor: Actor) {
+        getActor(actor.id).update(actor)
+        changes.add(WorldCommand.UpdateActor(actor))
     }
 
     //

@@ -6,7 +6,7 @@ class Player(
     val uuid: UUID,
     val username: String,
     var displayName: String,
-    var actorId: Int?
+    var actorId: Long?
 ) {
     fun update(player: Player) {
         displayName = player.displayName
