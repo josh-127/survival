@@ -18,6 +18,13 @@ public class XIntegerArray {
         this.elementMask = (1L << bitsPerElement) - 1L;
     }
 
+    public XIntegerArray(XIntegerArray array) {
+        underlyingArray = Arrays.copyOf(array.underlyingArray, array.underlyingArray.length);
+        length = array.length;
+        bitsPerElement = array.bitsPerElement;
+        elementMask = array.elementMask;
+    }
+
     private XIntegerArray(long[] underlyingArray, int length, int bitsPerElement, long elementMask) {
         this.underlyingArray = underlyingArray;
         this.length = length;
@@ -29,25 +36,18 @@ public class XIntegerArray {
         return new XIntegerArray(underlyingArray, length, bitsPerElement, (1L << bitsPerElement) - 1L);
     }
 
-    public static XIntegerArray fromUnderlyingArray(long[] underlyingArray, int length, int bitsPerElement) {
-        var copyOfUnderlyingArray = Arrays.copyOf(underlyingArray, underlyingArray.length);
-        return moveUnderlyingArray(copyOfUnderlyingArray, length, bitsPerElement);
-    }
-
-    public XIntegerArray makeCopy() {
-        var copyOfArray = Arrays.copyOf(underlyingArray, underlyingArray.length);
-        return new XIntegerArray(copyOfArray, length, bitsPerElement, elementMask);
-    }
-
     public XIntegerArray getResized(int newBitsPerElement) {
-        if (newBitsPerElement == bitsPerElement)
-            return makeCopy();
-        else if (newBitsPerElement < bitsPerElement)
+        if (newBitsPerElement == bitsPerElement) {
+            return new XIntegerArray(this);
+        }
+        else if (newBitsPerElement < bitsPerElement) {
             throw new IllegalArgumentException("newBitsPerElement");
+        }
 
         var newArray = new XIntegerArray(length, newBitsPerElement);
-        for (var i = 0; i < length; ++i)
+        for (var i = 0; i < length; ++i) {
             newArray.set(i, get(i));
+        }
 
         return newArray;
     }
