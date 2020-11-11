@@ -12,35 +12,19 @@ private const val COLUMN_HEADER_SIZE = 2
 private const val CHUNK_HEADER_SIZE = 6
 private const val MAX_COLUMN_VOLUME = Column.BASE_AREA * 4096
 
-internal class ColumnCodec {
+class ColumnCodec {
     private val columnBuffer = ByteBuffer.allocateDirect(
         COLUMN_HEADER_SIZE + 8 * CHUNK_HEADER_SIZE + 8 * MAX_COLUMN_VOLUME)
 
     fun compressColumn(column: Column): ByteBuffer {
         columnBuffer.clear()
-        columnBuffer.putInt(column.height)
+        compressColumn(column, columnBuffer)
         for (i in 0 until column.height) {
             val chunk = column.getChunk(i)
             compressChunk(chunk, columnBuffer)
         }
         columnBuffer.flip()
         return columnBuffer
-    }
-
-    private fun compressChunk(chunk: Chunk, buffer: ByteBuffer) {
-        val rawData = chunk.rawData
-        val underlyingArray = rawData.underlyingArray
-        val blockPalette = chunk.blockPalette
-        buffer.putShort(underlyingArray.size.toShort())
-        buffer.putShort(rawData.bitsPerElement.toShort())
-        buffer.putShort(blockPalette.size.toShort())
-
-        for (i in underlyingArray.indices) {
-            buffer.putLong(underlyingArray[i])
-        }
-        for (block in blockPalette) {
-            serializeBlock(block, buffer)
-        }
     }
 
     fun decompressColumn(fileChannel: FileChannel, bufferSize: Int): Column {
@@ -51,106 +35,134 @@ internal class ColumnCodec {
         }
         columnBuffer.flip()
 
-        val column = Column()
-        val columnHeight = columnBuffer.int
-
-        for (i in 0 until columnHeight) {
-            val chunk = decompressChunk(columnBuffer)
-            column.pushChunk(chunk)
-        }
-
-        return column
+        return decompressColumn(columnBuffer)
     }
 
-    private fun decompressChunk(buffer: ByteBuffer): Chunk {
-        val underlyingArrayLength = buffer.short.toInt()
-        val bitsPerElement = buffer.short.toInt()
-        val blockPaletteLength = buffer.short.toInt()
-        val underlyingArray = LongArray(underlyingArrayLength)
-
-        for (i in underlyingArray.indices) {
-            underlyingArray[i] = buffer.long
-        }
-
-        val rawData = XIntegerArray.moveUnderlyingArray(underlyingArray, Chunk.VOLUME, bitsPerElement)
-        val blockPalette = ArrayList<Block>(blockPaletteLength)
-        for (i in 0 until blockPaletteLength) {
-            blockPalette.add(deserializeBlock(buffer))
-        }
-
-        return Chunk(rawData, blockPalette.toTypedArray())
-    }
-
-    private fun serializeBlock(block: Block, buffer: ByteBuffer) {
-        buffer.putDouble(block.hardness)
-        buffer.putDouble(block.resistance)
-        buffer.put(if (block.solid) 1.toByte() else 0)
-        serializeBlockModel(block.model, buffer)
-    }
-
-    private fun deserializeBlock(buffer: ByteBuffer): Block {
-        val hardness = buffer.double
-        val resistance = buffer.double
-        val solid = buffer.get().toInt() == 1
-        val model = deserializeBlockModel(buffer)
-        return Block(hardness, resistance, solid, model)
-    }
-
-    private fun serializeBlockModel(model: BlockModel, buffer: ByteBuffer) {
-        buffer.putInt(model.vertexData.size)
-        for (i in model.vertexData.indices) {
-            val vertexDataAtFace = model.vertexData[i]
-            if (vertexDataAtFace != null) {
-                buffer.putInt(vertexDataAtFace.size)
-                for (vertex in vertexDataAtFace) {
-                    buffer.putFloat(vertex)
-                }
-            }
-            else {
-                buffer.putInt(0)
+    companion object {
+        fun compressColumn(column: Column, buffer: ByteBuffer) {
+            buffer.putInt(column.height)
+            for (i in 0 until column.height) {
+                val chunk = column.getChunk(i)
+                compressChunk(chunk, buffer)
             }
         }
 
-        buffer.putInt(model.textures.size)
-        for (i in model.textures.indices) {
-            val textureAtFace = model.textures[i]
-            if (textureAtFace != null) {
-                buffer.putInt(textureAtFace.length)
-                buffer.put(textureAtFace.toByteArray())
+        fun decompressColumn(buffer: ByteBuffer): Column {
+            val column = Column()
+            val columnHeight = buffer.int
+            for (i in 0 until columnHeight) {
+                val chunk = decompressChunk(buffer)
+                column.addChunk(chunk)
             }
-            else {
-                buffer.putInt(0)
+            return column
+        }
+
+        private fun compressChunk(chunk: Chunk, buffer: ByteBuffer) {
+            val rawData = chunk.rawData
+            val underlyingArray = rawData.underlyingArray
+            val blockPalette = chunk.blockPalette
+            buffer.putShort(underlyingArray.size.toShort())
+            buffer.putShort(rawData.bitsPerElement.toShort())
+            buffer.putShort(blockPalette.size.toShort())
+
+            for (i in underlyingArray.indices) {
+                buffer.putLong(underlyingArray[i])
+            }
+            for (block in blockPalette) {
+                serializeBlock(block, buffer)
             }
         }
 
-        buffer.put(model.blockingFlags)
+        private fun decompressChunk(buffer: ByteBuffer): Chunk {
+            val underlyingArrayLength = buffer.short.toInt()
+            val bitsPerElement = buffer.short.toInt()
+            val blockPaletteLength = buffer.short.toInt()
+            val underlyingArray = LongArray(underlyingArrayLength)
+
+            for (i in underlyingArray.indices) {
+                underlyingArray[i] = buffer.long
+            }
+
+            val rawData = XIntegerArray.moveUnderlyingArray(underlyingArray, Chunk.VOLUME, bitsPerElement)
+            val blockPalette = ArrayList<Block>(blockPaletteLength)
+            for (i in 0 until blockPaletteLength) {
+                blockPalette.add(deserializeBlock(buffer))
+            }
+
+            return Chunk(rawData, blockPalette.toTypedArray())
+        }
+
+        fun serializeBlock(block: Block, buffer: ByteBuffer) {
+            buffer.putDouble(block.hardness)
+            buffer.putDouble(block.resistance)
+            buffer.put(if (block.solid) 1.toByte() else 0)
+            serializeBlockModel(block.model, buffer)
+        }
+
+        fun deserializeBlock(buffer: ByteBuffer): Block {
+            val hardness = buffer.double
+            val resistance = buffer.double
+            val solid = buffer.get().toInt() == 1
+            val model = deserializeBlockModel(buffer)
+            return Block(hardness, resistance, solid, model)
+        }
+    }
+}
+
+private fun serializeBlockModel(model: BlockModel, buffer: ByteBuffer) {
+    buffer.putInt(model.vertexData.size)
+    for (i in model.vertexData.indices) {
+        val vertexDataAtFace = model.vertexData[i]
+        if (vertexDataAtFace != null) {
+            buffer.putInt(vertexDataAtFace.size)
+            for (vertex in vertexDataAtFace) {
+                buffer.putFloat(vertex)
+            }
+        }
+        else {
+            buffer.putInt(0)
+        }
     }
 
-    private fun deserializeBlockModel(buffer: ByteBuffer): BlockModel {
-        val numFaces = buffer.int
-        val vertexData = arrayOfNulls<FloatArray>(numFaces)
-        for (i in 0 until numFaces) {
-            val length = buffer.int
-            if (length != 0) {
-                vertexData[i] = FloatArray(length)
-                for (j in 0 until length) {
-                    vertexData[i]!![j] = buffer.float
-                }
-            }
+    buffer.putInt(model.textures.size)
+    for (i in model.textures.indices) {
+        val textureAtFace = model.textures[i]
+        if (textureAtFace != null) {
+            buffer.putInt(textureAtFace.length)
+            buffer.put(textureAtFace.toByteArray())
         }
-
-        val numTextures = buffer.int
-        val textures = arrayOfNulls<String>(numTextures)
-        for (i in 0 until numTextures) {
-            val length = buffer.int
-            if (length != 0) {
-                val bytes = ByteArray(length)
-                buffer[bytes]
-                textures[i] = String(bytes)
-            }
+        else {
+            buffer.putInt(0)
         }
-
-        val blocking = buffer.get()
-        return BlockModel(vertexData, textures, blocking)
     }
+
+    buffer.put(model.blockingFlags)
+}
+
+private fun deserializeBlockModel(buffer: ByteBuffer): BlockModel {
+    val numFaces = buffer.int
+    val vertexData = arrayOfNulls<FloatArray>(numFaces)
+    for (i in 0 until numFaces) {
+        val length = buffer.int
+        if (length != 0) {
+            vertexData[i] = FloatArray(length)
+            for (j in 0 until length) {
+                vertexData[i]!![j] = buffer.float
+            }
+        }
+    }
+
+    val numTextures = buffer.int
+    val textures = arrayOfNulls<String>(numTextures)
+    for (i in 0 until numTextures) {
+        val length = buffer.int
+        if (length != 0) {
+            val bytes = ByteArray(length)
+            buffer[bytes]
+            textures[i] = String(bytes)
+        }
+    }
+
+    val blocking = buffer.get()
+    return BlockModel(vertexData, textures, blocking)
 }

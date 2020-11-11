@@ -18,7 +18,7 @@ object Physics {
         val columnX = ColumnPos.toColumnX(floor(x).toInt())
         val columnZ = ColumnPos.toColumnZ(floor(z).toInt())
 
-        if (!world.columns.containsKey(ColumnPos.hashPos(columnX, columnZ))) {
+        if (!world.containsColumn(ColumnPos.hashPos(columnX, columnZ))) {
             return
         }
 

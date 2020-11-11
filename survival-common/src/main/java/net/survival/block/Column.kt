@@ -9,24 +9,23 @@ class Column {
         const val BASE_AREA = XLENGTH * ZLENGTH
     }
 
-    private val chunks: Stack<Chunk>
-    var isNew = true; private set
-    var isModified = false; private set
+    private val chunks: ArrayList<Chunk>
 
     constructor() {
-        chunks = Stack()
+        chunks = ArrayList(8)
     }
 
-    private constructor(chunks: Stack<Chunk>) {
-        this.chunks = chunks
+    constructor(column: Column) {
+        chunks = ArrayList(column.chunks.size)
+        for (chunk in column.chunks) {
+            chunks.add(Chunk(chunk))
+        }
     }
 
     fun getChunk(index: Int): Chunk = chunks[index]
-    fun getChunkOrNull(index: Int): Chunk? = if (index < chunks.size) chunks[index] else null
-    val topChunk: Chunk get() = chunks.peek()
-
-    fun pushChunk(chunk: Chunk) {
-        chunks.push(chunk)
+    fun getChunkOrNull(index: Int): Chunk? = chunks.getOrNull(index)
+    fun addChunk(chunk: Chunk) {
+        chunks.add(chunk)
     }
 
     val height: Int get() = chunks.size
@@ -39,23 +38,14 @@ class Column {
         }
     }
 
-    fun setBlock(x: Int, y: Int, z: Int, to: Block?) {
+    fun setBlock(x: Int, y: Int, z: Int, block: Block) {
         val index = y / Chunk.YLENGTH
         while (index >= chunks.size) {
-            chunks.push(Chunk())
+            chunks.add(Chunk())
         }
-        chunks[index].setBlock(x, y % Chunk.YLENGTH, z, to)
-        isModified = true
+        chunks[index].setBlock(x, y % Chunk.YLENGTH, z, block)
     }
 
     fun isInBounds(lx: Int, ly: Int, lz: Int): Boolean =
         lx >= 0 && ly >= 0 && lz >= 0 && lx < XLENGTH && lz < ZLENGTH
-
-    fun clearNewFlag() {
-        isNew = false
-    }
-
-    fun clearModifiedFlag() {
-        isModified = false
-    }
 }

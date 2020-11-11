@@ -25,6 +25,12 @@ class Chunk {
         blockToRawIdMap[StandardBlocks.AIR] = 0.toShort()
     }
 
+    constructor(chunk: Chunk) {
+        rawData = XIntegerArray(chunk.rawData)
+        rawIdToBlockMap = ArrayList(chunk.rawIdToBlockMap)
+        blockToRawIdMap = Object2ShortArrayMap(chunk.blockToRawIdMap)
+    }
+
     constructor(rawData: XIntegerArray, blockPalette: Array<Block>) {
         this.rawData = rawData
         rawIdToBlockMap = ArrayList(blockPalette.size)
@@ -47,15 +53,14 @@ class Chunk {
         return getBlock(localPositionToIndex(x, y, z))
     }
 
-    fun setBlock(index: Int, to: Block?) {
-        requireNotNull(to) { "to" }
-        if (blockToRawIdMap.containsKey(to)) {
-            rawData[index] = blockToRawIdMap.getShort(to).toLong()
+    fun setBlock(index: Int, block: Block) {
+        if (blockToRawIdMap.containsKey(block)) {
+            rawData[index] = blockToRawIdMap.getShort(block).toLong()
         }
         else {
             val newRawId = blockToRawIdMap.size
-            blockToRawIdMap[to] = newRawId.toShort()
-            rawIdToBlockMap.add(to)
+            blockToRawIdMap[block] = newRawId.toShort()
+            rawIdToBlockMap.add(block)
             if (!rawData.isValidValue(newRawId.toLong())) {
                 rawData = rawData.getResized(rawData.bitsPerElement + 1)
 
@@ -65,9 +70,9 @@ class Chunk {
         }
     }
 
-    fun setBlock(x: Int, y: Int, z: Int, to: Block?) {
+    fun setBlock(x: Int, y: Int, z: Int, block: Block) {
         val index = localPositionToIndex(x, y, z)
-        setBlock(index, to)
+        setBlock(index, block)
     }
 
     fun localPositionToIndex(x: Int, y: Int, z: Int): Int =
