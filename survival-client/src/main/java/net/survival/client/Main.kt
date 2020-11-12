@@ -132,12 +132,12 @@ private class Tick(
 
             // Render
             renderClient.send(RenderCommand.SetProjectionMatrix(cam.getProjectionMatrix()))
-            renderClient.send(RenderCommand.DrawSkybox(0.8f, 1.0f, 1.0f, 0.8f, 1.0f, 1.0f, 0.25f, 0.5f, 1.0f))
             renderClient.send(RenderCommand.PushMatrix(cam.getViewMatrix()))
+            renderClient.send(RenderCommand.DrawSkybox(0.8f, 1.0f, 1.0f, 0.8f, 1.0f, 1.0f, 0.25f, 0.5f, 1.0f))
+            renderClient.send(RenderCommand.DrawClouds)
             renderClient.send(RenderCommand.PushMatrix(Matrix4f().apply { translate(0.0f, 72.0f, 0.0f) }))
             renderClient.send(RenderCommand.DrawModel(ModelType.HUMAN))
             renderClient.send(RenderCommand.PopMatrix)
-            renderClient.send(RenderCommand.DrawClouds)
             renderClient.send(RenderCommand.PopMatrix)
         }
 
